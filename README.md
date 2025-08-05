@@ -1,135 +1,103 @@
-# Turborepo starter
+# Ask Richter - Meu CV Interativo com IA
 
-This Turborepo starter is maintained by the Turborepo core team.
+[![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Express.js](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)](https://expressjs.com/)
+[![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://reactjs.org/)
+[![Turborepo](https://img.shields.io/badge/Turborepo-EF4444?style=for-the-badge&logo=turborepo&logoColor=white)](https://turbo.build/)
+[![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
+[![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com/)
 
-## Using this example
+Este projeto transforma um currículo tradicional em uma experiência de diálogo. O **Ask Richter** é um chatbot especialista na minha trajetória profissional, permitindo que recrutadores e líderes técnicos façam perguntas em linguagem natural e recebam respostas inteligentes e contextuais, baseadas nos meus dados profissionais consolidados.
 
-Run the following command:
+Mais do que um portfólio, é uma ferramenta de marketing profissional e uma demonstração prática de competências em arquitetura de software moderna, desenvolvimento full-stack e integração com IA.
 
-```sh
-npx create-turbo@latest
-```
+## 🚀 Principais Features
 
-## What's inside?
+- **Interface de Chat Conversacional:** Uma UI limpa e reativa para um diálogo fluido.
+- **Respostas Contextuais com IA:** Utiliza um modelo de linguagem (LLM) da OpenAI para interpretar perguntas e formular respostas com base no meu CV.
+- **Arquitetura Full-Stack Moderna:** Backend em Node.js/Express e Frontend em Next.js, ambos com TypeScript.
+- **Desenvolvimento Type-Safe:** Código 100% tipado, com tipos e interfaces compartilhados entre o cliente e o servidor para máxima robustez.
+- **Estrutura em Monorepo:** Organizado com Turborepo para um desenvolvimento integrado e eficiente.
 
-This Turborepo includes the following packages/apps:
+## 🛠️ Stack Tecnológica
 
-### Apps and Packages
+| Camada               | Tecnologia                        | Descrição                                                                                                  |
+| :------------------- | :-------------------------------- | :--------------------------------------------------------------------------------------------------------- |
+| **Backend**          | Node.js, Express.js, TypeScript   | API RESTful responsável pela lógica de negócio e comunicação com o serviço de IA.                          |
+| **Frontend**         | Next.js, React, Tailwind CSS      | Interface de usuário reativa e moderna, utilizando o Vercel AI SDK para a gestão do estado do chat.        |
+| **DevOps & Tooling** | Turborepo, Docker, Vercel, Render | Monorepo para gestão do código, Docker para conteinerização do backend e deploy em plataformas otimizadas. |
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+## 🏗️ Arquitetura do Sistema
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+O fluxo de dados é projetado para ser simples e desacoplado, garantindo uma comunicação eficiente entre o usuário e o serviço de IA.
 
-### Utilities
+```mermaid
+graph TD
+    subgraph "Usuário (Recrutador)"
+        Frontend["🌐 Interface de Chat (Next.js)"]
+    end
 
-This Turborepo has some additional tools already setup for you:
+    subgraph "Aplicação (Monorepo)"
+        Backend["🔌 API Backend (Node.js/Express)"]
+        Loader["📄 Loader do CV (lê o CV.md)"]
+        PromptEngine["⚙️ Motor de Prompt"]
+    end
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+    subgraph "Serviços Externos"
+        IA_API["🤖 API do LLM (OpenAI)"]
+    end
 
-### Build
-
-To build all apps and packages, run the following command:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
-```
-
-You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
-
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
-
-### Develop
-
-To develop all apps and packages, run the following command:
+    Frontend -- "1\. Envia pergunta do usuário" --> Backend
+    Backend -- "2\. Carrega contexto do CV" --> Loader
+    Backend -- "3\. Cria o prompt final" --> PromptEngine
+    Backend -- "4\. Envia prompt para a IA" --> IA_API
+    IA_API -- "5\. Retorna resposta gerada" --> Backend
+    Backend -- "6\. Envia resposta para o Frontend" --> Frontend
 
 ```
-cd my-turborepo
 
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
+## ⚙️ Rodando o Projeto Localmente
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
-```
+Para executar o projeto no seu ambiente de desenvolvimento, siga os passos abaixo.
 
-You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+1.  **Clone o repositório:**
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
+    ```bash
+    git clone [https://github.com/seu-usuario/ask-richter.git](https://github.com/seu-usuario/ask-richter.git)
+    cd ask-richter
+    ```
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
+2.  **Instale as dependências:**
+    Na raiz do monorepo, o Turborepo gerencia a instalação para todos os `apps` e `packages`.
 
-### Remote Caching
+    ```bash
+    npm install
+    ```
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+3.  **Configure as Variáveis de Ambiente:**
+    Você precisará de uma chave de API da OpenAI. Crie um arquivo `.env` na raiz da aplicação do backend (`apps/backend/.env`) a partir do exemplo:
 
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+    ```
+    # Em apps/backend/.env
+    OPENAI_API_KEY="sua_chave_aqui"
+    ```
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
+4.  **Execute o Ambiente de Desenvolvimento:**
+    Este comando iniciará o backend e o frontend simultaneamente.
 
-```
-cd my-turborepo
+    ```bash
+    npm run dev
+    ```
 
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
+      - O frontend estará disponível em `http://localhost:3000`.
+      - O backend estará disponível em `http://localhost:3001`.
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
-```
+## 🤝 Como Contribuir
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+Este é um projeto pessoal, mas estou aberto a sugestões e melhorias. Para garantir a qualidade e a consistência do código, por favor, siga as diretrizes detalhadas no nosso **[Guia de Contribuição](https://www.google.com/search?q=CONTRIBUTING.md)**.
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+## 📄 Licença
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+Este projeto está sob a licença MIT. Veja o arquivo `LICENSE` para mais detalhes.
