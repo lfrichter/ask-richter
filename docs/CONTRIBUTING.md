@@ -3,9 +3,9 @@ status: permanent
 tags:
   - AI/Gemini25Pro
 date: 2025-08-05
-project: 
-related: 
-prompt: 
+project:
+related:
+prompt:
 Version: "1.0"
 ---
 # Guia de Contribuição - Ask Richter
@@ -26,15 +26,23 @@ Primeiramente, obrigado pelo seu interesse em contribuir com o projeto **Ask Ric
 
 **Ask Richter** é um "CV Interativo", um chatbot especialista na minha trajetória profissional. O objetivo é transformar um currículo estático em uma ferramenta de marketing poderosa e memorável, onde recrutadores, líderes técnicos e outros profissionais possam fazer perguntas em linguagem natural e obter respostas detalhadas e contextuais sobre minhas experiências, projetos e competências.
 
+A aplicação utiliza uma arquitetura **RAG (Retrieval-Augmented Generation)** para fornecer respostas precisas. As informações do meu CV e projetos são processadas, fragmentadas e convertidas em vetores (embeddings), que são armazenados em um banco de dados vetorial local **FAISS**.
+
+Quando um usuário faz uma pergunta, a aplicação busca os trechos de informação mais relevantes no banco FAISS e os injeta como contexto em um prompt para um Large Language Model (LLM), garantindo respostas focadas e baseadas em fatos.
+
 #### Arquitetura e Stack Tecnológica:
+- **Estrutura:** Monorepo gerenciado com Turborepo.
+- **Backend:** API RESTful desenvolvida em **Node.js** com **Express.js** e **TypeScript**. Responsável por:
+    - Um script offline para indexar documentos no banco vetorial **FAISS**.
+    - Um endpoint online para orquestrar o fluxo RAG.
+- **Frontend:** Interface de chat reativa desenvolvida com **Next.js** e **TypeScript**, utilizando o **Vercel AI SDK**.
+- **Integração de IA:**
+    - **LLM Gateway:** **OpenRouter** é utilizado para acessar uma variedade de modelos de linguagem.
+    - **Modelos Utilizados (Gratuitos):** Meta Llama 3 (8B, 70B), Mistral (7B), Mixtral (8x7B), Google Gemma (7B), OpenChat 3.5, entre outros.
+    - **Embeddings:** O modelo `text-embedding-3-small` da OpenAI é usado para a vetorização dos documentos.
+- **Deploy:** O backend será hospedado no **Render.com** (via Docker) e o frontend na **Vercel**.
 
-  - **Estrutura:** Monorepo gerenciado com Turborepo.
-  - **Backend:** API RESTful desenvolvida em **Node.js** com **Express.js** e **TypeScript**. Responsável por carregar o contexto, montar os prompts e se comunicar com a API do LLM.
-  - **Frontend:** Interface de chat reativa desenvolvida com **Next.js** e **TypeScript**, utilizando o **Vercel AI SDK** para uma experiência de usuário fluida.
-  - **Integração de IA:** A lógica central utiliza a biblioteca oficial da **OpenAI** para Node.js para interagir com os modelos de linguagem.
-  - **Deploy:** O backend será hospedado no **Render.com** (via Docker) e o frontend na **Vercel**, garantindo uma integração perfeita e performance otimizada.
-
-O projeto visa demonstrar não apenas a habilidade de construir uma aplicação full-stack, mas também proficiência em arquitetura moderna, desenvolvimento "type-safe", integração com serviços de IA e práticas de DevOps.
+Este plano detalhado te dá um caminho claro e estruturado. Cada fase é um marco importante. Estou à disposição para detalhar qualquer um desses pontos quando você começar a implementação.
 
 ## 2\. Como Contribuir
 
