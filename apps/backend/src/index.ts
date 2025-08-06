@@ -4,6 +4,7 @@ import cors from 'cors';
 import 'dotenv/config';
 import express from 'express';
 import { callHuggingFaceAPI } from './core/huggingface.js';
+import path from 'path';
 import { callOllamaAPI } from './core/ollama.js';
 
 // ... (declaração do vectorStore e configuração do embeddings)

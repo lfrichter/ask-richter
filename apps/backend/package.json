@@ -5,7 +5,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "npx ts-node-dev --respawn --transpile-only src/index.ts",
+    "dev": "npx ts-node-dev --esm --respawn --transpile-only src/index.ts",
     "build-index": "npx ts-node-dev src/scripts/generate-index.ts"
   },
   "keywords": [],
