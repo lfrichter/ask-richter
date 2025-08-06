@@ -5,16 +5,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useChat } from 'ai/react';
 import { SendHorizonal } from 'lucide-react';
-import { FormEvent } from 'react';
+import { FormEvent, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import remarkGfm from 'remark-gfm';
 
 export default function Chat() {
-  // Usamos o useChat apenas para gerenciar o estado das mensagens
-  const { messages, input, handleInputChange, append, isLoading, setMessages } = useChat({
-    // Removemos a propriedade 'api' para assumir o controle
+  const { messages, input, handleInputChange, append } = useChat({
     initialMessages: [
       {
         id: 'initial',
@@ -24,36 +22,37 @@ export default function Chat() {
     ],
   });
 
-  // Criamos nossa própria função para lidar com o envio do formulário
+  const [isLoading, setIsLoading] = useState(false);
+
   async function customHandleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (!input.trim()) return;
 
-    // Adiciona a mensagem do usuário à lista imediatamente
-    const userMessage = { role: 'user' as const, content: input };
+    const userMessage = { id: crypto.randomUUID(), role: 'user' as const, content: input };
     append(userMessage);
 
-    // Faz a chamada para nossa API backend
+    setIsLoading(true);
+
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: [...messages, userMessage] }), // Envia o histórico de mensagens
+        body: JSON.stringify({ messages: [...messages, userMessage] }),
       });
 
       if (!response.ok) {
-        throw new Error('A resposta da rede não foi bem-sucedida.');
+        const errorData = await response.json().catch(() => ({ error: 'A resposta da rede não foi bem-sucedida.' }));
+        throw new Error(errorData.error);
       }
 
-      // Lê a resposta JSON do backend
       const data = await response.json();
-
-      // Adiciona a resposta do assistente à lista
-      append({ role: 'assistant', content: data.answer });
+      append({ id: crypto.randomUUID(), role: 'assistant', content: data.answer });
 
     } catch (error) {
       console.error("Erro ao chamar a API:", error);
-      // Adiciona uma mensagem de erro na UI
-      append({ role: 'assistant', content: "Desculpe, não consegui obter uma resposta. Tente novamente." });
+      append({ id: crypto.randomUUID(), role: 'assistant', content: `Desculpe, ocorreu um erro: ${error instanceof Error ? error.message : 'Tente novamente.'}` });
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -92,14 +91,14 @@ export default function Chat() {
             {isLoading && <div className="flex justify-center items-center"><span className="text-sm text-gray-500">Pensando...</span></div>}
           </div>
 
-          {/* Usamos nossa nova função customHandleSubmit */}
           <form onSubmit={customHandleSubmit} className="flex gap-2">
             <Input
               value={input}
               placeholder="Pergunte sobre a otimização de performance no projeto Toot..."
               onChange={handleInputChange}
+              disabled={isLoading}
             />
-            <Button type="submit">
+            <Button type="submit" disabled={isLoading}>
               <SendHorizonal className="h-4 w-4" />
             </Button>
           </form>
