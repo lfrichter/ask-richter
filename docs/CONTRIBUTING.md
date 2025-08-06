@@ -25,7 +25,7 @@ Primeiramente, obrigado pelo seu interesse em contribuir com o projeto **Ask Ric
 
 ## 1\. Contexto do Projeto
 
-**Ask Richter** é um "CV Interativo", um chatbot especialista na minha trajetória profissional. O objetivo é transformar um currículo estático em uma ferramenta de marketing poderosa e memorável, onde recrutadores, líderes técnicos e outros profissionais possam fazer perguntas em linguagem natural e obter respostas detalhadas e contextuais sobre minhas experiências, projetos e competências.
+**Ask Richter** é um "CV Interativo", um chatbot especialista na minha trajetória profissional. Ele utiliza uma arquitetura **RAG (Retrieval-Augmented Generation)** para fornecer respostas precisas, buscando informações em um banco de dados vetorial local **FAISS** antes de consultar um Large Language Model (LLM).
 
 A aplicação utiliza uma arquitetura **RAG (Retrieval-Augmented Generation)** para fornecer respostas precisas. As informações do meu CV e projetos são processadas, fragmentadas e convertidas em vetores (embeddings), que são armazenados em um banco de dados vetorial local **FAISS**.
 
@@ -57,40 +57,45 @@ O desenvolvimento segue um fluxo padrão baseado em Git:
 ## 3\. Configuração do Ambiente Local
 
 1.  **Pré-requisitos:**
-
-      - **Node.js:** Utilize a versão LTS mais recente. Recomenda-se o uso de um gerenciador de versões como o `nvm`.
-      - **Package Manager:** O projeto utiliza `npm`.
+    - **Node.js:** Versão LTS (recomenda-se `nvm`).
+    - **npm:** Versão compatível.
+    - **Ollama:** Instale o [Ollama](https://ollama.com/) e puxe um modelo: `ollama pull llama3`.
 
 2.  **Instalação:**
-
-      - Clone o repositório.
-      - Na raiz do projeto, rode `npm install` para instalar todas as dependências do monorepo.
+    - Clone o repositório.
+    - Na raiz do projeto, rode `npm install --legacy-peer-deps`.
 
 3.  **Variáveis de Ambiente:**
-
-      - Navegue até a pasta do backend: `apps/backend`.
-      - Crie uma cópia do arquivo `.env.example` e renomeie para `.env`.
-      - Preencha as chaves de API necessárias no arquivo `.env`:
+    - Crie o arquivo `apps/backend/.env` e preencha as chaves:
         ```env
-        OPENROUTER_API_KEY="sua_chave_aqui_do_openrouter"
-        OPENAI_API_KEY="sua_chave_aqui_da_openai_para_embeddings"
+        # Chave da OpenAI (APENAS para gerar os embeddings)
+        OPENAI_API_KEY="sk-..."
+
+        # Provedor de IA a ser usado: 'ollama' ou 'huggingface'
+        AI_PROVIDER="ollama"
+
+        # URL da sua instância Ollama
+        OLLAMA_BASE_URL="http://localhost:11434"
+
+        # (Opcional) Chave da Hugging Face
+        HUGGINGFACE_API_KEY="hf_..."
+        ```
+    - Crie o arquivo `apps/frontend/.env.local` e preencha a URL do backend:
+        ```env
+        NEXT_PUBLIC_API_BASE_URL=http://localhost:3001
         ```
 
 4.  **Geração do Banco Vetorial:**
-
-      - Antes de iniciar a aplicação, você precisa gerar o índice vetorial. Execute o script de indexação a partir da raiz do projeto:
-        ```bash
-        npm run build-index --workspace=backend
-        ```
-      - Isso criará o arquivo `faiss.index` dentro de `apps/backend/src`.
+    - Antes de iniciar, execute o script de indexação a partir da raiz do projeto:
+      ```bash
+      npm run build-index --workspace=backend
+      ```
 
 5.  **Iniciando o Desenvolvimento:**
-
-      - A partir da raiz do projeto, execute:
-        ```bash
-        npm run dev
-        ```
-      - Este comando, gerenciado pelo Turborepo, iniciará o servidor do backend e do frontend simultaneamente.
+    - A partir da raiz do projeto, execute:
+      ```bash
+      npm run dev
+      ```
 
 ## 4\. Regras e Padrões de Desenvolvimento
 

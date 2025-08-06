@@ -5,6 +5,7 @@
 [![Express.js](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)](https://expressjs.com/)
 [![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://reactjs.org/)
+[![Ollama](https://img.shields.io/badge/Ollama-000000?style=for-the-badge&logo=ollama&logoColor=white)](https://ollama.com/)
 [![Turborepo](https://img.shields.io/badge/Turborepo-EF4444?style=for-the-badge&logo=turborepo&logoColor=white)](https://turbo.build/)
 [![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
 [![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com/)
@@ -17,7 +18,7 @@ Mais do que um portfólio, é uma ferramenta de marketing profissional e uma dem
 
 - **Interface de Chat Conversacional:** Uma UI limpa e reativa para um diálogo fluido.
 - **Respostas Contextuais com RAG:** Utiliza a técnica de Retrieval-Augmented Generation, buscando informações em um banco vetorial **FAISS** para gerar respostas precisas.
-- **Gateway de LLMs com OpenRouter:** Flexibilidade para usar diversos modelos de linguagem como Llama 3, Mistral, Gemma, entre outros.
+- **Suporte a LLMs Locais com Ollama:** Configurado por padrão para rodar com modelos de linguagem locais (ex: Llama 3), permitindo testes e uso sem custo e com total privacidade.
 - **Arquitetura Full-Stack Moderna:** Backend em Node.js/Express e Frontend em Next.js, ambos com TypeScript.
 - **Estrutura em Monorepo:** Organizado com Turborepo para um desenvolvimento integrado e eficiente.
 
@@ -61,8 +62,13 @@ Para executar o projeto no seu ambiente de desenvolvimento, siga os passos abaix
 
 #### 1\. Pré-requisitos
 
-  - **Node.js:** Versão LTS (recomenda-se usar um gerenciador como `nvm`).
-  - **npm:** Versão compatível com a sua instalação do Node.js.
+  - **Node.js:** Versão LTS (recomenda-se `nvm`).
+  - **npm:** Versão compatível com Node.js.
+  - **Ollama:** A aplicação requer o [Ollama](https://ollama.com/) instalado e rodando localmente.
+      - Após instalar, puxe um modelo de linguagem no seu terminal:
+        ```bash
+        ollama pull llama3
+        ```
 
 #### 2\. Instalação
 
@@ -86,9 +92,17 @@ cp .env.example .env
 Agora, edite o arquivo `.env` e adicione suas chaves de API.
 
 ```env
-# Em apps/backend/.env
-OPENROUTER_API_KEY="sua_chave_aqui_do_openrouter"
-OPENAI_API_KEY="sua_chave_aqui_da_openai_para_embeddings"
+# Chave da OpenAI (APENAS para gerar os embeddings, não para o chat)
+OPENAI_API_KEY="sk-..."
+
+# Provedor de IA padrão. Mude para 'huggingface' para usar a API externa.
+AI_PROVIDER="ollama"
+
+# URL da sua instância Ollama
+OLLAMA_BASE_URL="http://localhost:11434"
+
+# (Opcional) Chave da Hugging Face, se for usar
+HUGGINGFACE_API_KEY="hf_..."
 ```
 
 #### 4\. Geração do Banco Vetorial
