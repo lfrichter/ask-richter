@@ -3,10 +3,7 @@ services:
     type: web
     env: node
     plan: free
-    buildCommand: "npm install && npx turbo run build --filter=backend"
-    # --- MUDANÇA CRÍTICA AQUI ---
-    # Primeiro, roda o script de download usando tsx.
-    # Se for bem-sucedido (&&), então inicia o servidor principal.
+    buildCommand: "npm install && npx turbo run build --filter=backend --no-cache"
     startCommand: "npx tsx apps/backend/src/scripts/download-index.ts && node apps/backend/dist/index.js"
     healthCheckPath: /api/health
     envVars:
