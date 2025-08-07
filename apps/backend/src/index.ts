@@ -81,6 +81,10 @@ async function main() {
   app.listen(port, () => {
     console.log(`[server]: Backend rodando em http://localhost:${port}`);
   });
+
+  app.get('/api/health', (req, res) => {
+    res.status(200).json({ status: 'ok' });
+  });
 }
 
 main().catch(console.error);
