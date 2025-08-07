@@ -1,5 +1,7 @@
 'use client';
 
+'use client';
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -9,6 +11,8 @@ import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import remarkGfm from 'remark-gfm';
+import Image from 'next/image';
+import myAdjustedOk from '../../images/MyAdjustedOk.png';
 
 // Definimos uma interface clara para nossas mensagens
 interface Message {
@@ -98,8 +102,13 @@ export default function Chat() {
     <div className="flex justify-center items-start min-h-screen bg-gray-50 p-4">
       <Card className="w-full max-w-3xl shadow-lg">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold">Ask Richter</CardTitle>
-          <p className="text-sm text-gray-500">Meu CV Interativo com IA</p>
+          <div className="flex justify-center items-center">
+            <Image src={myAdjustedOk} alt="Luis Fernando Richter" width={50} height={50} className="rounded-full mr-4" />
+            <div>
+              <CardTitle className="text-2xl font-bold">Ask Richter</CardTitle>
+              <p className="text-sm text-gray-500">Meu CV Interativo com IA</p>
+            </div>
+          </div>
         </CardHeader>
         <CardContent>
           <div className="space-y-4 h-[60vh] overflow-y-auto pr-4 mb-4">
