@@ -3,15 +3,16 @@ services:
     type: web
     env: node
     plan: free
-    # rootDir não é mais necessário aqui, pois o turbo gerencia os caminhos
     buildCommand: "npm install && npx turbo run build --filter=backend"
-    startCommand: "node apps/backend/dist/index.js" # Caminho completo para o arquivo de início
+    # --- MUDANÇA CRÍTICA AQUI ---
+    # Primeiro, roda o script de download usando tsx.
+    # Se for bem-sucedido (&&), então inicia o servidor principal.
+    startCommand: "npx tsx apps/backend/src/scripts/download-index.ts && node apps/backend/dist/index.js"
     healthCheckPath: /api/health
     envVars:
       - fromGroup: ask-richter-secrets
-      # Outras variáveis públicas podem ser adicionadas aqui
-      # - key: AI_PROVIDER
-      #   value: huggingface
+      - key: NODE_ENV
+        value: production
     buildFilter:
       paths:
         - "apps/backend/**"
