@@ -1,3 +1,13 @@
+# Define os grupos de variáveis de ambiente primeiro
+envVarGroups:
+  - name: ask-richter-secrets
+    envVars:
+      - key: OPENAI_API_KEY
+      - key: SUPABASE_URL
+      - key: SUPABASE_SERVICE_ROLE_KEY
+      - key: SUPABASE_BUCKET_NAME
+      - key: HUGGINGFACE_API_KEY
+
 services:
   # Serviço para o nosso backend Node.js
   - name: ask-richter-backend
@@ -5,29 +15,16 @@ services:
     env: node
     plan: free
     rootDir: apps/backend
-    buildCommand: npm install && npx tsc
-    startCommand: node dist/index.js
-    healthCheckPath: /api/health # Vamos adicionar esta rota para o Render saber se o app está saudável
+    buildCommand: "npm install && npx tsc"
+    startCommand: "node dist/index.js"
+    healthCheckPath: /api/health
     envVars:
       - key: NODE_ENV
         value: production
       - key: AI_PROVIDER
-        value: ollama # Ou 'huggingface' se preferir usar em produção
-    buildFilter: # Isso garante que o deploy só aconteça se o backend ou pacotes compartilhados mudarem
+        value: huggingface # Lembre-se de mudar para 'huggingface' em produção se desejar
+      - fromGroup: ask-richter-secrets # Referencia o grupo de segredos definido acima
+    buildFilter:
       paths:
-      - "apps/backend/**"
-      - "packages/**"
-    # As chaves secretas serão injetadas pelo grupo abaixo
-    secretFile:
-      name: .env
-      mountPath: ./
-
-# Grupo para nossas chaves de API secretas
-sync:
-  - group: ask-richter-secrets
-    vars:
-      - key: OPENAI_API_KEY
-      - key: SUPABASE_URL
-      - key: SUPABASE_SERVICE_ROLE_KEY
-      - key: SUPABASE_BUCKET_NAME
-      - key: HUGGINGFACE_API_KEY # Mesmo que não seja o padrão, é bom ter configurado
+        - "apps/backend/**"
+        - "packages/**"
