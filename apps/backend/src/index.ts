@@ -14,7 +14,7 @@ const embeddings = new OpenAIEmbeddings({
     configuration: { baseURL: "https://api.openai.com/v1" }
 });
 
-const FAISS_INDEX_PATH = path.join(process.cwd(), 'src/faiss_index');
+const FAISS_INDEX_PATH = process.env.FAISS_INDEX_PATH || path.join(process.cwd(), 'src/faiss_index');
 
 async function main() {
   try {
