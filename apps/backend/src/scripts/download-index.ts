@@ -11,7 +11,7 @@ if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY || !SUPABASE_BUCKET_NAME) {
 }
 
 // Com a verificação acima, o TypeScript agora sabe que estas variáveis são strings.
-const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+const supabase = createClient(SUPABASE_URL as string, SUPABASE_SERVICE_ROLE_KEY as string);
 
 const FAISS_INDEX_PATH = path.join('/tmp', 'faiss_index');
 
