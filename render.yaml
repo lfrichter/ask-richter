@@ -1,0 +1,33 @@
+services:
+  # Serviço para o nosso backend Node.js
+  - name: ask-richter-backend
+    type: web
+    env: node
+    plan: free
+    rootDir: apps/backend
+    buildCommand: npm install && npm run build-index && npx tsc
+    startCommand: node dist/index.js
+    healthCheckPath: /api/health # Usaremos nossa rota de health check
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: AI_PROVIDER
+        value: huggingface # Em produção, usaremos a Hugging Face
+      - key: FAISS_INDEX_PATH
+        value: /data/faiss/index # Caminho do disco persistente
+      - fromGroup: ask-richter-secrets # Grupo de segredos que criaremos
+    disk:
+      name: faiss-disk
+      mountPath: /data/faiss
+      sizeGB: 1
+    buildFilter:
+      paths:
+      - "apps/backend/**"
+      - "packages/**"
+
+# Grupo para nossas chaves de API secretas
+sync:
+  - group: ask-richter-secrets
+    vars:
+      - key: OPENAI_API_KEY
+      - key: HUGGINGFACE_API_KEY

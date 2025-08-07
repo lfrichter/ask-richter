@@ -13,7 +13,7 @@ if (!process.env.OPENAI_API_KEY) {
 
 // Define os caminhos relativos ao diretório do projeto
 const KNOWLEDGE_BASE_PATH = path.join(process.cwd(), 'src/knowledge-base');
-const FAISS_INDEX_PATH = path.join(process.cwd(), 'src/faiss_index');
+const FAISS_INDEX_PATH = process.env.FAISS_INDEX_PATH || path.join(process.cwd(), 'src/faiss_index');
 
 /**
  * Função principal para gerar e salvar o índice vetorial.
