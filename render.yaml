@@ -12,7 +12,7 @@ services:
       - key: NODE_ENV
         value: production
       - key: AI_PROVIDER
-        value: ollama # Lembre-se de mudar para 'huggingface' em produção se desejar
+        value: huggingface # Lembre-se de mudar para 'huggingface' em produção se desejar
       - fromGroup: ask-richter-secrets # Apenas referenciamos o nome do grupo
     buildFilter:
       paths:
