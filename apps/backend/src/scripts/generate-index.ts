@@ -11,7 +11,7 @@ import fs from 'fs';
 if (!process.env.OPENAI_API_KEY) { throw new Error('OPENAI_API_KEY não definida.'); }
 
 const KNOWLEDGE_BASE_PATH = path.join(process.cwd(), 'src/knowledge-base');
-const FAISS_INDEX_PATH = path.join(process.cwd(), 'src/faiss_index');
+const FAISS_INDEX_PATH = path.join(process.cwd(), 'faiss_index');
 
 // --- NOVA FUNÇÃO DE UPLOAD ROBUSTA ---
 async function uploadIndexToSupabase(directoryPath: string) {
