@@ -1,19 +1,17 @@
 services:
-  # Serviço para o nosso backend Node.js
   - name: ask-richter-backend
     type: web
     env: node
     plan: free
-    rootDir: apps/backend
-    buildCommand: "npm install && npx tsc"
-    startCommand: "node dist/index.js"
+    # rootDir não é mais necessário aqui, pois o turbo gerencia os caminhos
+    buildCommand: "npm install && npx turbo run build --filter=backend"
+    startCommand: "node apps/backend/dist/index.js" # Caminho completo para o arquivo de início
     healthCheckPath: /api/health
     envVars:
-      - key: NODE_ENV
-        value: production
-      - key: AI_PROVIDER
-        value: huggingface # Lembre-se de mudar para 'huggingface' em produção se desejar
-      - fromGroup: ask-richter-secrets # Apenas referenciamos o nome do grupo
+      - fromGroup: ask-richter-secrets
+      # Outras variáveis públicas podem ser adicionadas aqui
+      # - key: AI_PROVIDER
+      #   value: huggingface
     buildFilter:
       paths:
         - "apps/backend/**"
