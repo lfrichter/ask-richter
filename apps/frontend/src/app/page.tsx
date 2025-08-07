@@ -3,54 +3,92 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { useChat } from 'ai/react';
 import { SendHorizonal } from 'lucide-react';
-import { FormEvent, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import remarkGfm from 'remark-gfm';
 
-export default function Chat() {
-  const { messages, input, handleInputChange, append } = useChat({
-    initialMessages: [
-      {
-        id: 'initial',
-        role: 'assistant',
-        content: 'Olá! Sou o **Ask Richter**, um assistente de carreira interativo. Faça uma pergunta sobre a experiência profissional, projetos ou competências de Luis Fernando Richter.',
-      },
-    ],
-  });
+// Definimos uma interface clara para nossas mensagens
+interface Message {
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+}
 
+export default function Chat() {
+  // Substituímos o useChat por hooks useState padrão do React
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      id: 'initial',
+      role: 'assistant',
+      content: 'Olá! Sou o **Ask Richter**, um assistente de carreira interativo. Faça uma pergunta sobre a experiência profissional, projetos ou competências de Luis Fernando Richter.',
+    },
+  ]);
+  const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  async function customHandleSubmit(e: FormEvent<HTMLFormElement>) {
+  // Referência para o contêiner de mensagens para auto-scroll
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setInput(e.target.value);
+  };
+
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (!input.trim()) return;
+    if (!input.trim() || isLoading) return;
 
-    const userMessage = { id: crypto.randomUUID(), role: 'user' as const, content: input };
-    append(userMessage);
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      role: 'user',
+      content: input,
+    };
 
+    // Adicionamos a mensagem do usuário e limpamos o input
+    setMessages(prev => [...prev, userMessage]);
+    setInput('');
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/chat`, {
+      const response = await fetch('http://localhost:3001/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ messages: [...messages, userMessage] }),
       });
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: 'A resposta da rede não foi bem-sucedida.' }));
-        throw new Error(errorData.error);
+        throw new Error(`Erro na API: ${response.statusText}`);
       }
 
       const data = await response.json();
-      append({ id: crypto.randomUUID(), role: 'assistant', content: data.answer });
+
+      const assistantMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: data.answer || "Não recebi uma resposta válida.",
+      };
+
+      setMessages(prev => [...prev, assistantMessage]);
 
     } catch (error) {
       console.error("Erro ao chamar a API:", error);
-      append({ id: crypto.randomUUID(), role: 'assistant', content: `Desculpe, ocorreu um erro: ${error instanceof Error ? error.message : 'Tente novamente.'}` });
+      const errorMessage: Message = {
+        id: (Date.now() + 2).toString(),
+        role: 'assistant',
+        content: "Desculpe, não consegui obter uma resposta. Verifique se o backend está rodando e tente novamente.",
+      };
+      setMessages(prev => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
     }
@@ -68,18 +106,19 @@ export default function Chat() {
             {messages.map(m => (
               <div key={m.id} className={`flex gap-3 text-sm ${m.role === 'user' ? 'justify-end' : ''}`}>
                 {m.role === 'assistant' && <span className="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-full items-center justify-center bg-gray-800 text-white font-bold">AI</span>}
-                <div className={`rounded-lg p-3 prose ${m.role === 'user' ? 'bg-blue-500 text-white prose-invert' : 'bg-gray-100'}`}>
+                <div className={`rounded-lg p-3 prose prose-sm max-w-none ${m.role === 'user' ? 'bg-blue-500 text-white prose-invert' : 'bg-gray-100'}`}>
                   <ReactMarkdown
                     remarkPlugins={[remarkGfm]}
                     components={{
-                      code({ node, inline, className, children, ...props }) {
+                      code(props) {
+                        const { children, className, node, ...rest } = props;
                         const match = /language-(\w+)/.exec(className || '');
-                        return !inline && match ? (
-                          <SyntaxHighlighter style={vscDarkPlus} language={match[1]} PreTag="div" {...props}>
+                        return match ? (
+                          <SyntaxHighlighter style={vscDarkPlus} language={match[1]} PreTag="div" {...rest}>
                             {String(children).replace(/\n$/, '')}
                           </SyntaxHighlighter>
                         ) : (
-                          <code className="bg-gray-200 px-1 rounded" {...props}>{children}</code>
+                          <code {...rest} className="bg-gray-200 text-black px-1 rounded">{children}</code>
                         );
                       }
                     }}
@@ -88,10 +127,16 @@ export default function Chat() {
                  {m.role === 'user' && <span className="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-full items-center justify-center bg-blue-500 text-white font-bold">LR</span>}
               </div>
             ))}
-            {isLoading && <div className="flex justify-center items-center"><span className="text-sm text-gray-500">Pensando...</span></div>}
+            {isLoading && (
+              <div className="flex gap-3 text-sm animate-pulse">
+                <span className="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-full items-center justify-center bg-gray-800 text-white font-bold">AI</span>
+                <div className="rounded-lg p-3 bg-gray-200 w-24 h-10"></div>
+              </div>
+            )}
+            <div ref={messagesEndRef} />
           </div>
 
-          <form onSubmit={customHandleSubmit} className="flex gap-2">
+          <form onSubmit={handleSubmit} className="flex gap-2">
             <Input
               value={input}
               placeholder="Pergunte sobre a otimização de performance no projeto Toot..."

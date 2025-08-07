@@ -3,5 +3,13 @@
     "distilbert",
     "finetuned",
     "mistralai"
-  ]
+  ],
+  "search.exclude": {
+  "**/node_modules": true,
+  "**/dist": true, // Adiciona TODAS as pastas 'dist' à lista de exclusão da busca
+  "**/coverage": true
+  },
+  "files.watcherExclude": {
+    "**/dist": true // BÔNUS: Também diz ao VS Code para não "observar" mudanças nesta pasta, melhorando a performance
+  }
 }
