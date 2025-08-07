@@ -3,16 +3,24 @@ import fs from 'fs';
 import path from 'path';
 import { createClient } from '@supabase/supabase-js';
 
-// --- Validação Explícita de Variáveis de Ambiente no Topo do Arquivo ---
-const { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, SUPABASE_BUCKET_NAME } = process.env;
+// 1. Extrai as variáveis de ambiente primeiro
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const bucketName = process.env.SUPABASE_BUCKET_NAME;
 
-if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY || !SUPABASE_BUCKET_NAME) {
-  throw new Error('Uma ou mais variáveis de ambiente do Supabase não estão definidas.');
+// 2. Valida cada uma individualmente, garantindo a tipagem para o compilador
+if (!supabaseUrl) {
+  throw new Error('Variável de ambiente SUPABASE_URL não está definida.');
+}
+if (!supabaseKey) {
+  throw new Error('Variável de ambiente SUPABASE_SERVICE_ROLE_KEY não está definida.');
+}
+if (!bucketName) {
+  throw new Error('Variável de ambiente SUPABASE_BUCKET_NAME não está definida.');
 }
 
-// Com a verificação acima, o TypeScript agora sabe que estas variáveis são strings.
-const supabase = createClient(SUPABASE_URL as string, SUPABASE_SERVICE_ROLE_KEY as string);
-
+// 3. Agora o TypeScript sabe que são strings, e o código compilará com sucesso
+const supabase = createClient(supabaseUrl, supabaseKey);
 const FAISS_INDEX_PATH = path.join('/tmp', 'faiss_index');
 
 async function downloadIndexFromSupabase() {
@@ -21,32 +29,32 @@ async function downloadIndexFromSupabase() {
     return;
   }
 
-  console.log(`[DOWNLOAD-SCRIPT] Iniciando download do bucket: ${SUPABASE_BUCKET_NAME}...`);
+  console.log(`[DOWNLOAD-SCRIPT] Iniciando download do bucket: ${bucketName}...`);
   fs.mkdirSync(FAISS_INDEX_PATH, { recursive: true });
 
-  const { data: files, error } = await supabase.storage.from(SUPABASE_BUCKET_NAME).list();
+  const { data: files, error } = await supabase.storage.from(bucketName).list();
   if (error) throw new Error(`[DOWNLOAD-SCRIPT] Não foi possível listar arquivos: ${error.message}`);
   if (!files || files.length === 0) {
-    throw new Error(`[DOWNLOAD-SCRIPT] Nenhum arquivo encontrado no bucket '${SUPABASE_BUCKET_NAME}'. Você já rodou o script 'build-index' localmente para fazer o upload?`);
+    throw new Error(`[DOWNLOAD-SCRIPT] Nenhum arquivo encontrado no bucket '${bucketName}'. Você já rodou o script 'build-index' localmente para fazer o upload?`);
   }
 
   for (const file of files) {
     console.log(`[DOWNLOAD-SCRIPT] Baixando: ${file.name}`);
     const { data: blob, error: downloadError } = await supabase.storage
-      .from(SUPABASE_BUCKET_NAME)
+      .from(bucketName)
       .download(file.name);
 
     if (downloadError) throw new Error(`[DOWNLOAD-SCRIPT] Erro no download de ${file.name}: ${downloadError.message}`);
     if (blob) {
-      fs.writeFileSync(path.join(FAISS_INDEX_PATH, file.name), Buffer.from(await blob.arrayBuffer()));
+      const buffer = Buffer.from(await blob.arrayBuffer());
+      fs.writeFileSync(path.join(FAISS_INDEX_PATH, file.name), buffer);
       console.log(`[DOWNLOAD-SCRIPT] ✓ Salvo: ${file.name}`);
     }
   }
   console.log('[DOWNLOAD-SCRIPT] Download do índice concluído com sucesso.');
 }
 
-// Executa a função principal com o logging melhorado sugerido pelo Qwen
-downloadIndexFromSupabase().catch(error => {
-  console.error("[DOWNLOAD-SCRIPT] Falha crítica ao baixar o índice:", error);
+downloadIndexFromSupabase().catch((error) => {
+  console.error('[DOWNLOAD-SCRIPT] Falha crítica ao baixar o índice:', error);
   process.exit(1);
 });
