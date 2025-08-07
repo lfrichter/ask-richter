@@ -1,25 +1,23 @@
+import { createClient } from '@supabase/supabase-js';
 import 'dotenv/config';
 import fs from 'fs';
 import path from 'path';
-import { createClient } from '@supabase/supabase-js';
 
-// 1. Extrai as variáveis de ambiente primeiro
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const bucketName = process.env.SUPABASE_BUCKET_NAME;
-
-// 2. Valida cada uma individualmente, garantindo a tipagem para o compilador
-if (!supabaseUrl) {
-  throw new Error('Variável de ambiente SUPABASE_URL não está definida.');
-}
-if (!supabaseKey) {
-  throw new Error('Variável de ambiente SUPABASE_SERVICE_ROLE_KEY não está definida.');
-}
-if (!bucketName) {
-  throw new Error('Variável de ambiente SUPABASE_BUCKET_NAME não está definida.');
+// --- FUNÇÃO AUXILIAR DE VALIDAÇÃO (MELHOR PRÁTICA) ---
+function requiredEnv(varName: string): string {
+  const value = process.env[varName];
+  if (!value) {
+    throw new Error(`Variável de ambiente obrigatória '${varName}' não está definida.`);
+  }
+  return value;
 }
 
-// 3. Agora o TypeScript sabe que são strings, e o código compilará com sucesso
+// --- Variáveis de Ambiente Validadas ---
+const supabaseUrl = requiredEnv('SUPABASE_URL');
+const supabaseKey = requiredEnv('SUPABASE_SERVICE_ROLE_KEY');
+const bucketName = requiredEnv('SUPABASE_BUCKET_NAME');
+
+// Com a validação acima, o TypeScript sabe que as variáveis são strings.
 const supabase = createClient(supabaseUrl, supabaseKey);
 const FAISS_INDEX_PATH = path.join('/tmp', 'faiss_index');
 
