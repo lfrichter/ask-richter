@@ -4,13 +4,21 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { SendHorizonal } from 'lucide-react';
+import Markdown from 'markdown-to-jsx'; // <-- Nova importação
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
-import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import remarkGfm from 'remark-gfm';
 
-// ... (Interface Message e a maior parte do componente permanecem iguais)
+// Componente customizado para blocos de código, para ser usado com a nova biblioteca
+const CodeBlock = ({ className, children }: { className?: string; children: React.ReactNode }) => {
+  const language = className?.replace('lang-', '') || 'text';
+  return (
+    <SyntaxHighlighter style={vscDarkPlus as any} language={language} PreTag="div">
+      {String(children).replace(/\n$/, '')}
+    </SyntaxHighlighter>
+  );
+};
+
 interface Message {
   id: string;
   role: 'user' | 'assistant';
@@ -18,12 +26,9 @@ interface Message {
 }
 
 export default function Chat() {
+  // A lógica de estado e a função handleSubmit permanecem as mesmas
   const [messages, setMessages] = useState<Message[]>([
-    {
-      id: 'initial',
-      role: 'assistant',
-      content: 'Olá! Sou o **Ask Richter**, um assistente de carreira interativo...',
-    },
+    { id: 'initial', role: 'assistant', content: 'Olá! Sou o **Ask Richter**...' },
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -43,7 +48,7 @@ export default function Chat() {
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/chat'); // Usando a URL relativa via proxy do Next.js
+      const response = await fetch('/api/chat');
       if (!response.ok) { throw new Error(`Erro na API: ${response.statusText}`); }
       const data = await response.json();
       const assistantMessage: Message = { id: (Date.now() + 1).toString(), role: 'assistant', content: data.answer || "Resposta inválida." };
@@ -68,28 +73,14 @@ export default function Chat() {
               <div key={m.id} className={`flex gap-3 text-sm ${m.role === 'user' ? 'justify-end' : ''}`}>
                 {m.role === 'assistant' && <span className="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-full items-center justify-center bg-gray-800 text-white font-bold">AI</span>}
                 <div className={`rounded-lg p-3 prose prose-sm max-w-none ${m.role === 'user' ? 'bg-blue-500 text-white prose-invert' : 'bg-gray-100'}`}>
-                   <ReactMarkdown
-                    remarkPlugins={[remarkGfm]}
-                    components={{
-                      code(props) {
-                        const { children, className, node, ...rest } = props;
-                        const match = /language-(\w+)/.exec(className || '');
-                        return match ? (
-                          <SyntaxHighlighter
-                            // --- CORREÇÃO APLICADA AQUI ---
-                            style={vscDarkPlus as any}
-                            language={match[1]}
-                            PreTag="div"
-                            {...rest}
-                          >
-                            {String(children).replace(/\n$/, '')}
-                          </SyntaxHighlighter>
-                        ) : (
-                          <code {...rest} className="bg-gray-200 text-black px-1 rounded">{children}</code>
-                        );
-                      }
-                    }}
-                  >{m.content}</ReactMarkdown>
+                  {/* --- USANDO A NOVA BIBLIOTECA markdown-to-jsx --- */}
+                  <Markdown options={{
+                    overrides: {
+                      code: { component: CodeBlock },
+                    },
+                  }}>
+                    {m.content}
+                  </Markdown>
                 </div>
                  {m.role === 'user' && <span className="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-full items-center justify-center bg-blue-500 text-white font-bold">LR</span>}
               </div>
