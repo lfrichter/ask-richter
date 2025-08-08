@@ -1,0 +1,25 @@
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+
+const defaultLocale = 'pt';
+
+export function middleware(req: NextRequest) {
+  const pathname = req.nextUrl.pathname;
+
+  // Se o caminho já for '/pt' ou '/en', ou se for um arquivo estático, continua.
+  if (pathname.startsWith(`/${defaultLocale}/`) || pathname.startsWith('/en/') || pathname.match(/\.(css|js|png|jpg|gif|svg)$/)) {
+    return NextResponse.next();
+  }
+
+  // Redireciona qualquer outra rota para o locale padrão
+  const url = req.nextUrl.clone();
+  url.pathname = `/${defaultLocale}${pathname}`;
+  return NextResponse.redirect(url);
+}
+
+export const config = {
+  matcher: [
+    '/', // Captura a rota raiz
+    '/((?!api|_next/static|_next/image|assets|favicon.ico|sw.js).*)' // Captura outras rotas, excluindo arquivos estáticos
+  ]
+};

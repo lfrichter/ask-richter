@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css"; // A importação crucial dos estilos do Tailwind
+import "./globals.css";
+import { TranslationsProvider } from "@/lib/i18n"; // Importa nosso provedor
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,7 +17,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" suppressHydrationWarning={true}>
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <TranslationsProvider locale="pt"> {/* Locale fixo para 'pt' */}
+          {children}
+        </TranslationsProvider>
+      </body>
     </html>
   );
 }

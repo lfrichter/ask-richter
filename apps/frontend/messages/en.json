@@ -1,0 +1,19 @@
+{
+  "HomePage": {
+    "title": "Ask Richter - Interactive CV",
+    "description": "My Interactive CV with AI"
+  },
+  "AIChatInput": {
+    "placeholders": [
+      "What is your experience with system architecture?",
+      "Tell me about a technical challenge you overcame.",
+      "How do you handle technical debt?",
+      "What is your favorite programming language?",
+      "Describe your experience with automated testing.",
+      "Tell me about your projects."
+    ]
+  },
+  "TestPage": {
+    "title": "Test Page"
+  }
+}
