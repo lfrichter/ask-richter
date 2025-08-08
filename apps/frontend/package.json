@@ -14,6 +14,7 @@
     "autoprefixer": "^10.4.21",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "framer-motion": "^12.23.12",
     "lucide-react": "^0.536.0",
     "markdown-to-jsx": "^7.7.13",
     "next": "^14.2.3",

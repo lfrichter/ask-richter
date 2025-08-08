@@ -1,9 +1,7 @@
 'use client';
 
-import { Button } from "@/components/ui/button";
+import { AIChatInput } from "@/components/ui/ai-chat-input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { SendHorizonal } from 'lucide-react';
 import Markdown from 'markdown-to-jsx';
 import Image from 'next/image'; // Adicionado import da imagem
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
@@ -109,10 +107,19 @@ export default function Chat() {
             {isLoading && <div className="flex gap-3 text-sm animate-pulse"><span className="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-full items-center justify-center bg-gray-800 text-white font-bold">AI</span><div className="rounded-lg p-3 bg-gray-200 w-24 h-10"></div></div>}
             <div ref={messagesEndRef} />
           </div>
-          <form onSubmit={handleSubmit} className="flex gap-2">
+          <div className="w-full max-w-3xl mx-auto p-4">
+            <form onSubmit={handleSubmit} className="flex justify-center">
+              <AIChatInput
+                input={input}
+                handleInputChange={handleInputChange}
+                isLoading={isLoading}
+              />
+            </form>
+          </div>
+          {/* <form onSubmit={handleSubmit} className="flex gap-2">
             <Input value={input} placeholder="Pergunte sobre otimização de performance..." onChange={handleInputChange} disabled={isLoading} />
             <Button type="submit" disabled={isLoading}><SendHorizonal className="h-4 w-4" /></Button>
-          </form>
+          </form> */}
         </CardContent>
       </Card>
     </div>
