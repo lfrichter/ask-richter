@@ -23,11 +23,7 @@ export async function callHuggingFaceAPI(model: string, prompt: string): Promise
       },
       body: JSON.stringify({
         inputs: prompt,
-        parameters: {
-          max_new_tokens: 512,
-          temperature: 0.7,
-          return_full_text: false,
-        }
+        parameters: { max_new_tokens: 512, temperature: 0.7, return_full_text: false }
       }),
     });
 
@@ -37,8 +33,7 @@ export async function callHuggingFaceAPI(model: string, prompt: string): Promise
     }
 
     const result = await response.json() as any[];
-    return result[0]?.generated_text || "Não foi possível gerar uma resposta.";
-
+    return result[0]?.generated_text || "Não foi possível gerar uma resposta da Hugging Face.";
   } catch (error) {
     console.error("Erro ao chamar a API da Hugging Face:", error);
     throw error;
