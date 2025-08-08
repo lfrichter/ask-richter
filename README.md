@@ -94,8 +94,6 @@ O Supabase é utilizado para hospedar o banco de dados PostgreSQL e, crucialment
 * **Supabase Storage:** Um bucket específico (`faiss-index`) é usado para armazenar os arquivos do índice vetorial. Políticas de Row Level Security (RLS) foram configuradas para proteger o acesso aos arquivos, garantindo que apenas o backend autenticado possa interagir com eles.
 * **Variáveis de Ambiente:** As credenciais de conexão com o Supabase (URL e chave de serviço) são armazenadas como variáveis de ambiente no backend (Render) para acesso seguro.
 
-
-
 ### 🛠️ Stack Tecnológica Completa
 
 | Camada                        | Tecnologia           | Descrição                                                                                                                                               |
@@ -290,6 +288,106 @@ npm run dev
 
   * O frontend estará disponível em `http://localhost:3000`.
   * O backend estará disponível em `http://localhost:3001`.
+
+
+### ⚛️ Documentação do Frontend UI
+
+#### 🎯 Objetivo
+
+O frontend do "Ask Richter" tem como objetivo fornecer uma interface de usuário limpa, moderna, responsiva e intuitiva para que os usuários possam interagir com a IA de forma conversacional. A aplicação foi construída como uma Single Page Application (SPA) para garantir uma experiência fluida e em tempo real.
+
+#### ✨ Features Principais
+
+  * **💬 Interface de Chat:** Exibição do histórico da conversa em um layout clássico de mensagens.
+  * **✍️ Formulário de Envio:** Campo de texto e botão para o usuário digitar e enviar suas perguntas.
+  * **⏳ Indicador de Carregamento:** Feedback visual (animação de "pulse") para o usuário enquanto o backend e a IA processam a resposta.
+  * **📜 Renderização de Markdown:** As respostas da IA são processadas para exibir formatações como **negrito**, listas e outras, usando a biblioteca `markdown-to-jsx`.
+  * **💻 Destaque de Sintaxe:** Blocos de código retornados pela IA são automaticamente estilizados com destaque de sintaxe para melhor legibilidade.
+  * **📱 Design Responsivo:** A interface se adapta a diferentes tamanhos de tela, de desktops a dispositivos móveis.
+
+-----
+
+### 🛠️ Stack Tecnológica
+
+| Componente                    | Tecnologia                            | Propósito                                                                                                                                         |
+| :---------------------------- | :------------------------------------ | :------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Framework Principal**       | Next.js (App Router)                  | Estrutura principal da aplicação, otimizada para performance, SEO e uma excelente experiência de desenvolvimento com React.                       |
+| **Linguagem**                 | TypeScript                            | Garante a segurança de tipos (`type-safety`) em todo o projeto, reduzindo bugs e melhorando a manutenibilidade.                                   |
+| **Gerenciamento de Estado**   | React Hooks (`useState`, `useEffect`) | Controle manual e explícito do estado da aplicação (mensagens, input, status de carregamento), eliminando a complexidade de bibliotecas externas. |
+| **Estilização**               | Tailwind CSS                          | Framework CSS utility-first para a criação rápida de interfaces modernas e customizadas.                                                          |
+| **Biblioteca de Componentes** | Shadcn/ui                             | Coleção de componentes de UI (Card, Button, Input) pré-construídos, acessíveis e totalmente estilizáveis com Tailwind CSS.                        |
+| **Ícones**                    | Lucide React                          | Biblioteca de ícones leve e consistente, integrada à estética do Shadcn/ui.                                                                       |
+| **Renderização de Markdown**  | markdown-to-jsx                       | Converte as respostas da IA (em formato Markdown) para componentes React, permitindo a customização da renderização.                              |
+| **Destaque de Sintaxe**       | react-syntax-highlighter              | Estiliza automaticamente os blocos de código que aparecem nas respostas da IA, usando o tema `vscDarkPlus`.                                       |
+
+-----
+
+### 📂 Estrutura de Arquivos Relevantes
+
+A estrutura dentro de `apps/frontend` segue as convenções modernas do Next.js.
+
+```
+apps/frontend/
+├── src/
+│   ├── app/
+│   │   ├── globals.css      # Estilos globais e diretivas do Tailwind CSS.
+│   │   ├── layout.tsx       # Layout raiz da aplicação, onde a fonte e os estilos globais são importados.
+│   │   └── page.tsx         # O componente principal que contém toda a lógica e JSX da interface do chat.
+│   └── components/
+│       ├── ui/              # Componentes instalados via Shadcn/ui (Button.tsx, Card.tsx, etc.).
+│       └── SafeMarkdown.tsx # (Removido) Componente que usamos para depurar o build.
+├── .env.local               # Arquivo para variáveis de ambiente locais (não versionado).
+├── .env.example             # Exemplo de variáveis de ambiente necessárias.
+├── next.config.mjs          # Arquivo de configuração do Next.js.
+├── package.json             # Dependências e scripts do frontend.
+└── tsconfig.json            # Configurações do compilador TypeScript para o frontend.
+```
+
+-----
+
+### ⚙️ Lógica Central e Componentes
+
+Toda a lógica da interface está centralizada no arquivo `page.tsx`.
+
+1.  **Gerenciamento de Estado com `useState`**
+
+      * Após uma longa depuração, decidimos abandonar o hook `useChat` da Vercel AI SDK para ter controle total sobre o fluxo.
+      * Usamos três `useState` para gerenciar a aplicação:
+          * `const [messages, setMessages]` para armazenar e exibir o histórico da conversa.
+          * `const [input, setInput]` para controlar o valor do campo de texto.
+          * `const [isLoading, setIsLoading]` para saber quando exibir o indicador de carregamento e desabilitar o formulário.
+
+2.  **Comunicação com a API (`handleSubmit`)**
+
+      * Criamos uma função `async function handleSubmit` que é acionada pelo `onSubmit` do formulário.
+      * Ela é a única responsável por:
+          * Adicionar a mensagem do usuário à tela imediatamente.
+          * Limpar o campo de input.
+          * Ativar o estado de `isLoading`.
+          * Fazer a chamada `fetch` para o nosso backend na porta `3001` (usando a variável de ambiente `NEXT_PUBLIC_API_BASE_URL`).
+          * Esperar a resposta, convertê-la de JSON e extrair o campo `answer`.
+          * Adicionar a resposta da IA à tela.
+          * Desativar o estado de `isLoading` ao final.
+
+3.  **Renderização Customizada com `markdown-to-jsx`**
+
+      * As respostas da IA, que estão na propriedade `content` de cada mensagem, são passadas para o componente `<Markdown>`.
+      * Usamos a propriedade `options.overrides` para substituir a renderização padrão da tag `<code>`. Quando o componente encontra um bloco de código, ele usa nosso componente customizado `CodeBlock`, que por sua vez usa o `SyntaxHighlighter` para aplicar o estilo.
+
+-----
+
+### 🚀 Executando Localmente
+
+1.  **Garanta que o backend esteja rodando** (na raiz, `npm run dev`).
+2.  **Configure o ambiente do frontend:**
+      * Navegue até `apps/frontend`.
+      * Crie o arquivo `.env.local` a partir do exemplo: `cp .env.example .env.local`.
+      * O valor `NEXT_PUBLIC_API_BASE_URL=http://localhost:3001` já estará correto.
+3.  **Inicie o servidor de desenvolvimento:** O comando `npm run dev` na raiz do projeto já inicia o frontend na porta `3000`.
+
+### ☁️ Deploy na Vercel
+
+O deploy é automatizado. Cada `git push` para a branch `main` aciona um novo build na Vercel. A única configuração manual necessária no painel da Vercel é a definição da variável de ambiente `NEXT_PUBLIC_API_BASE_URL` com a URL pública do backend hospedado no Render.com.
 
 ## 🤝 Como Contribuir
 
