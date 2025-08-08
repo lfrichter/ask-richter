@@ -1,13 +1,12 @@
 'use client';
 
-import { SafeMarkdown } from '@/components/SafeMarkdown'; // <-- Importamos nosso novo componente
+import { SafeMarkdown } from '@/components/SafeMarkdown'; // <-- Importa o novo componente
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { SendHorizonal } from 'lucide-react';
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
 
-// Definimos uma interface clara para nossas mensagens
 interface Message {
   id: string;
   role: 'user' | 'assistant';
@@ -15,12 +14,11 @@ interface Message {
 }
 
 export default function Chat() {
-  // ... (toda a lógica com useState e handleSubmit permanece a mesma)
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 'initial',
       role: 'assistant',
-      content: 'Olá! Sou o **Ask Richter**, um assistente de carreira interativo. Faça uma pergunta sobre a experiência profissional, projetos ou competências de Luis Fernando Richter.',
+      content: 'Olá! Sou o **Ask Richter**, um assistente de carreira interativo.',
     },
   ]);
   const [input, setInput] = useState('');
@@ -41,18 +39,13 @@ export default function Chat() {
     setIsLoading(true);
 
     try {
-      const response = await fetch('http://localhost:3001/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: [...messages, userMessage] }),
-      });
+      const response = await fetch('/api/chat'); // Usando a URL relativa via proxy do Next.js
       if (!response.ok) { throw new Error(`Erro na API: ${response.statusText}`); }
       const data = await response.json();
-      const assistantMessage: Message = { id: (Date.now() + 1).toString(), role: 'assistant', content: data.answer || "Não recebi uma resposta válida." };
+      const assistantMessage: Message = { id: (Date.now() + 1).toString(), role: 'assistant', content: data.answer || "Resposta inválida." };
       setMessages(prev => [...prev, assistantMessage]);
     } catch (error) {
-      console.error("Erro ao chamar a API:", error);
-      const errorMessage: Message = { id: (Date.now() + 2).toString(), role: 'assistant', content: "Desculpe, não consegui obter uma resposta." };
+      const errorMessage: Message = { id: (Date.now() + 2).toString(), role: 'assistant', content: "Desculpe, erro ao conectar." };
       setMessages(prev => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
@@ -64,7 +57,6 @@ export default function Chat() {
       <Card className="w-full max-w-3xl shadow-lg">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold">Ask Richter</CardTitle>
-          <p className="text-sm text-gray-500">Meu CV Interativo com IA</p>
         </CardHeader>
         <CardContent>
           <div className="space-y-4 h-[60vh] overflow-y-auto pr-4 mb-4">
@@ -72,31 +64,19 @@ export default function Chat() {
               <div key={m.id} className={`flex gap-3 text-sm ${m.role === 'user' ? 'justify-end' : ''}`}>
                 {m.role === 'assistant' && <span className="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-full items-center justify-center bg-gray-800 text-white font-bold">AI</span>}
                 <div className={`rounded-lg p-3 prose prose-sm max-w-none ${m.role === 'user' ? 'bg-blue-500 text-white prose-invert' : 'bg-gray-100'}`}>
-                  {/* --- USANDO O NOVO COMPONENTE SEGURO --- */}
+                  {/* Usa o novo componente SafeMarkdown */}
                   <SafeMarkdown content={m.content} />
                 </div>
                  {m.role === 'user' && <span className="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-full items-center justify-center bg-blue-500 text-white font-bold">LR</span>}
               </div>
             ))}
-            {isLoading && (
-              <div className="flex gap-3 text-sm animate-pulse">
-                <span className="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-full items-center justify-center bg-gray-800 text-white font-bold">AI</span>
-                <div className="rounded-lg p-3 bg-gray-200 w-24 h-10"></div>
-              </div>
-            )}
+            {isLoading && <div className="flex gap-3 text-sm animate-pulse"><span className="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-full items-center justify-center bg-gray-800 text-white font-bold">AI</span><div className="rounded-lg p-3 bg-gray-200 w-24 h-10"></div></div>}
             <div ref={messagesEndRef} />
           </div>
 
           <form onSubmit={handleSubmit} className="flex gap-2">
-            <Input
-              value={input}
-              placeholder="Pergunte sobre a otimização de performance no projeto Toot..."
-              onChange={handleInputChange}
-              disabled={isLoading}
-            />
-            <Button type="submit" disabled={isLoading}>
-              <SendHorizonal className="h-4 w-4" />
-            </Button>
+            <Input value={input} placeholder="Pergunte sobre otimização de performance..." onChange={handleInputChange} disabled={isLoading} />
+            <Button type="submit" disabled={isLoading}><SendHorizonal className="h-4 w-4" /></Button>
           </form>
         </CardContent>
       </Card>
