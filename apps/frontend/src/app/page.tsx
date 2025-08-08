@@ -1,18 +1,11 @@
 'use client';
 
-'use client';
-
+import { SafeMarkdown } from '@/components/SafeMarkdown'; // <-- Importamos nosso novo componente
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { SendHorizonal } from 'lucide-react';
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
-import ReactMarkdown from 'react-markdown';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import remarkGfm from 'remark-gfm';
-import Image from 'next/image';
-import myAdjustedOk from '../../images/MyAdjustedOk.png';
 
 // Definimos uma interface clara para nossas mensagens
 interface Message {
@@ -22,7 +15,7 @@ interface Message {
 }
 
 export default function Chat() {
-  // Substituímos o useChat por hooks useState padrão do React
+  // ... (toda a lógica com useState e handleSubmit permanece a mesma)
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 'initial',
@@ -32,34 +25,17 @@ export default function Chat() {
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-
-  // Referência para o contêiner de mensagens para auto-scroll
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+  const scrollToBottom = () => { messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); };
+  useEffect(() => { scrollToBottom(); }, [messages]);
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
-
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setInput(e.target.value);
-  };
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => { setInput(e.target.value); };
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!input.trim() || isLoading) return;
-
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      role: 'user',
-      content: input,
-    };
-
-    // Adicionamos a mensagem do usuário e limpamos o input
+    const userMessage: Message = { id: Date.now().toString(), role: 'user', content: input };
     setMessages(prev => [...prev, userMessage]);
     setInput('');
     setIsLoading(true);
@@ -70,28 +46,13 @@ export default function Chat() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ messages: [...messages, userMessage] }),
       });
-
-      if (!response.ok) {
-        throw new Error(`Erro na API: ${response.statusText}`);
-      }
-
+      if (!response.ok) { throw new Error(`Erro na API: ${response.statusText}`); }
       const data = await response.json();
-
-      const assistantMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        role: 'assistant',
-        content: data.answer || "Não recebi uma resposta válida.",
-      };
-
+      const assistantMessage: Message = { id: (Date.now() + 1).toString(), role: 'assistant', content: data.answer || "Não recebi uma resposta válida." };
       setMessages(prev => [...prev, assistantMessage]);
-
     } catch (error) {
       console.error("Erro ao chamar a API:", error);
-      const errorMessage: Message = {
-        id: (Date.now() + 2).toString(),
-        role: 'assistant',
-        content: "Desculpe, não consegui obter uma resposta. Verifique se o backend está rodando e tente novamente.",
-      };
+      const errorMessage: Message = { id: (Date.now() + 2).toString(), role: 'assistant', content: "Desculpe, não consegui obter uma resposta." };
       setMessages(prev => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
@@ -102,13 +63,8 @@ export default function Chat() {
     <div className="flex justify-center items-start min-h-screen bg-gray-50 p-4">
       <Card className="w-full max-w-3xl shadow-lg">
         <CardHeader className="text-center">
-          <div className="flex justify-center items-center">
-            <Image src={myAdjustedOk} alt="Luis Fernando Richter" width={50} height={50} className="rounded-full mr-4" />
-            <div>
-              <CardTitle className="text-2xl font-bold">Ask Richter</CardTitle>
-              <p className="text-sm text-gray-500">Meu CV Interativo com IA</p>
-            </div>
-          </div>
+          <CardTitle className="text-2xl font-bold">Ask Richter</CardTitle>
+          <p className="text-sm text-gray-500">Meu CV Interativo com IA</p>
         </CardHeader>
         <CardContent>
           <div className="space-y-4 h-[60vh] overflow-y-auto pr-4 mb-4">
@@ -116,22 +72,8 @@ export default function Chat() {
               <div key={m.id} className={`flex gap-3 text-sm ${m.role === 'user' ? 'justify-end' : ''}`}>
                 {m.role === 'assistant' && <span className="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-full items-center justify-center bg-gray-800 text-white font-bold">AI</span>}
                 <div className={`rounded-lg p-3 prose prose-sm max-w-none ${m.role === 'user' ? 'bg-blue-500 text-white prose-invert' : 'bg-gray-100'}`}>
-                  <ReactMarkdown
-                    remarkPlugins={[remarkGfm]}
-                    components={{
-                      code(props) {
-                        const { children, className, node, ...rest } = props;
-                        const match = /language-(\w+)/.exec(className || '');
-                        return match ? (
-                          <SyntaxHighlighter style={vscDarkPlus} language={match[1]} PreTag="div" {...rest}>
-                            {String(children).replace(/\n$/, '')}
-                          </SyntaxHighlighter>
-                        ) : (
-                          <code {...rest} className="bg-gray-200 text-black px-1 rounded">{children}</code>
-                        );
-                      }
-                    }}
-                  >{m.content}</ReactMarkdown>
+                  {/* --- USANDO O NOVO COMPONENTE SEGURO --- */}
+                  <SafeMarkdown content={m.content} />
                 </div>
                  {m.role === 'user' && <span className="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-full items-center justify-center bg-blue-500 text-white font-bold">LR</span>}
               </div>
