@@ -5,9 +5,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { SendHorizonal } from 'lucide-react';
 import Markdown from 'markdown-to-jsx'; // <-- Nova importação
+import Image from 'next/image';
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import myAdjustedOk from '../../images/AvatarCircle.png';
 
 // Componente customizado para blocos de código, para ser usado com a nova biblioteca
 const CodeBlock = ({ className, children }: { className?: string; children: React.ReactNode }) => {
@@ -65,7 +67,13 @@ export default function Chat() {
     <div className="flex justify-center items-start min-h-screen bg-gray-50 p-4">
       <Card className="w-full max-w-3xl shadow-lg">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold">Ask Richter</CardTitle>
+          <div className="flex justify-center items-center">
+            <Image src={myAdjustedOk} alt="Luis Fernando Richter" width={50} height={50} className="rounded-full mr-4" />
+            <div>
+              <CardTitle className="text-2xl font-bold">Ask Richter</CardTitle>
+              <p className="text-sm text-gray-500">My Interactive CV with AI</p>
+            </div>
+          </div>
         </CardHeader>
         <CardContent>
           <div className="space-y-4 h-[60vh] overflow-y-auto pr-4 mb-4">
