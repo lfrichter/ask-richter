@@ -107,6 +107,8 @@ HUGGINGFACE_API_KEY="hf_..."
 
 #### 4\. Geração do Banco Vetorial
 
+!["Store Faiss.index"](https://i.imgur.com/KRuhmbs.png)
+
 Antes de iniciar a aplicação, você precisa gerar o índice vetorial com os seus documentos. A partir da **raiz do projeto**, execute:
 
 ```bash
@@ -114,6 +116,12 @@ npm run build-index --workspace=backend
 ```
 
 Este comando criará o arquivo `faiss.index` no diretório `apps/backend/src`, que será usado pela aplicação para as buscas de similaridade.
+
+
+
+
+
+!["Faiss.index in the Supabase"](https://i.imgur.com/h7KmEJY.png)
 
 #### 5\. Execução
 
