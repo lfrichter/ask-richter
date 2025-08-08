@@ -1,12 +1,12 @@
 import { FaissStore } from '@langchain/community/vectorstores/faiss';
 import { OpenAIEmbeddings } from '@langchain/openai';
+import { createClient } from '@supabase/supabase-js';
 import 'dotenv/config';
+import fs from 'fs';
 import { DirectoryLoader } from 'langchain/document_loaders/fs/directory';
 import { TextLoader } from 'langchain/document_loaders/fs/text';
 import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
 import path from 'path';
-import { createClient } from '@supabase/supabase-js';
-import fs from 'fs';
 
 if (!process.env.OPENAI_API_KEY) { throw new Error('OPENAI_API_KEY não definida.'); }
 
@@ -18,10 +18,11 @@ async function uploadIndexToSupabase(directoryPath: string) {
   const { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, SUPABASE_BUCKET_NAME } = process.env;
 
   if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY || !SUPABASE_BUCKET_NAME) {
-    throw new Error('Variáveis de ambiente do Supabase não configuradas');
+    console.warn('\n[AVISO] Variáveis de ambiente do Supabase não encontradas. Pulando etapa de upload para a nuvem.');
+    return; // Encerra a função de upload graciosamente
   }
 
-  console.log('Configurando cliente Supabase...');
+  console.log(`\nIniciando upload para o bucket Supabase: ${SUPABASE_BUCKET_NAME}...`);
   console.log('Bucket:', SUPABASE_BUCKET_NAME);
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
