@@ -105,23 +105,35 @@ OLLAMA_BASE_URL="http://localhost:11434"
 HUGGINGFACE_API_KEY="hf_..."
 ```
 
-#### 4\. Geração do Banco Vetorial
+#### 4. Geração do Banco Vetorial
+
+O processo de indexação pode ser executado de duas formas, dependendo do seu ambiente.
+
+**Modo 1: Geração Apenas Local (para Desenvolvimento)**
+
+Neste modo, o índice é criado na sua máquina e usado diretamente pelo backend. É ideal para rodar o projeto localmente sem dependências externas.
 
 !["Store Faiss.index"](https://i.imgur.com/KRuhmbs.png)
 
-Antes de iniciar a aplicação, você precisa gerar o índice vetorial com os seus documentos. A partir da **raiz do projeto**, execute:
+1.  Certifique-se de que as variáveis de ambiente do Supabase (`SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`) **não** estejam definidas no seu arquivo `apps/backend/.env`.
+2.  Execute o comando de build a partir da **raiz do projeto**:
+    ```bash
+    npm run build-index --workspace=backend
+    ```
+O script criará o índice no diretório `/tmp/faiss_index` e exibirá um erro ao tentar fazer o upload para o Supabase, o que é esperado. O servidor local usará esse índice automaticamente.
 
-```bash
-npm run build-index --workspace=backend
-```
+**Modo 2: Geração Local com Upload para o Supabase (para Produção/Deploy)**
 
-Este comando criará o arquivo `faiss.index` no diretório `apps/backend/src`, que será usado pela aplicação para as buscas de similaridade.
-
-
-
-
+Este modo é usado para gerar o índice e enviá-lo para um armazenamento persistente (Supabase Storage), de onde ele pode ser baixado por um ambiente de produção (ex: Render, Vercel).
 
 !["Faiss.index in the Supabase"](https://i.imgur.com/h7KmEJY.png)
+
+1.  Adicione as variáveis `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` e `SUPABASE_BUCKET_NAME` ao seu arquivo `apps/backend/.env`.
+2.  Execute o mesmo comando:
+    ```bash
+    npm run build-index --workspace=backend
+    ```
+O script criará o índice localmente e, em seguida, fará o upload dos arquivos para o seu bucket no Supabase, tornando-os disponíveis para download em ambientes de produção.
 
 #### 5\. Execução
 
