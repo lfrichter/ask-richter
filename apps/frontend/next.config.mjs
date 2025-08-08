@@ -8,15 +8,15 @@ const nextConfig = {
   },
 
   // Manteremos estas configurações por robustez
-  transpilePackages: ['react-markdown', 'remark-gfm'],
-  async rewrites() {
-    return [
-      {
-        source: '/api/chat',
-        destination: 'http://localhost:3001/api/chat',
-      },
-    ];
-  },
+  // transpilePackages: ['react-markdown', 'remark-gfm'],
+  // async rewrites() {
+  //   return [
+  //     {
+  //       source: '/api/chat',
+  //       destination: 'http://localhost:3001/api/chat',
+  //     },
+  //   ];
+  // },
 };
 
 export default nextConfig;

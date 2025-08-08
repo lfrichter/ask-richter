@@ -50,7 +50,12 @@ export default function Chat() {
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/chat');
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/chat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: [...messages, userMessage] }),
+      });
+
       if (!response.ok) { throw new Error(`Erro na API: ${response.statusText}`); }
       const data = await response.json();
       const assistantMessage: Message = { id: (Date.now() + 1).toString(), role: 'assistant', content: data.answer || "Resposta inválida." };
