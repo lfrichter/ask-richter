@@ -24,11 +24,19 @@ export const SafeMarkdown = memo(({ content }: SafeMarkdownProps) => {
           const { children, className, node, ...rest } = props;
           const match = /language-(\w+)/.exec(className || '');
           return match ? (
-            <SyntaxHighlighter style={vscDarkPlus} language={match[1]} PreTag="div" {...rest}>
+            <SyntaxHighlighter
+              // --- CORREÇÃO APLICADA AQUI ---
+              style={vscDarkPlus as any}
+              language={match[1]}
+              PreTag="div"
+              {...rest}
+            >
               {String(children).replace(/\n$/, '')}
             </SyntaxHighlighter>
           ) : (
-            <code {...rest} className="bg-gray-200 text-black px-1 rounded">{children}</code>
+            <code {...rest} className="bg-gray-200 text-black px-1 rounded">
+              {children}
+            </code>
           );
         }
       }}
