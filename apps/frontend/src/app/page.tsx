@@ -1,11 +1,14 @@
 'use client';
 
-import { SafeMarkdown } from '@/components/SafeMarkdown'; // <-- Importa o novo componente
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { SendHorizonal } from 'lucide-react';
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
+import ReactMarkdown from 'react-markdown'; // Importação direta
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import remarkGfm from 'remark-gfm';
 
 interface Message {
   id: string;
@@ -18,7 +21,7 @@ export default function Chat() {
     {
       id: 'initial',
       role: 'assistant',
-      content: 'Olá! Sou o **Ask Richter**, um assistente de carreira interativo.',
+      content: 'Olá! Sou o **Ask Richter**, um assistente de carreira interativo...',
     },
   ]);
   const [input, setInput] = useState('');
@@ -32,24 +35,7 @@ export default function Chat() {
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (!input.trim() || isLoading) return;
-    const userMessage: Message = { id: Date.now().toString(), role: 'user', content: input };
-    setMessages(prev => [...prev, userMessage]);
-    setInput('');
-    setIsLoading(true);
-
-    try {
-      const response = await fetch('/api/chat'); // Usando a URL relativa via proxy do Next.js
-      if (!response.ok) { throw new Error(`Erro na API: ${response.statusText}`); }
-      const data = await response.json();
-      const assistantMessage: Message = { id: (Date.now() + 1).toString(), role: 'assistant', content: data.answer || "Resposta inválida." };
-      setMessages(prev => [...prev, assistantMessage]);
-    } catch (error) {
-      const errorMessage: Message = { id: (Date.now() + 2).toString(), role: 'assistant', content: "Desculpe, erro ao conectar." };
-      setMessages(prev => [...prev, errorMessage]);
-    } finally {
-      setIsLoading(false);
-    }
+    // ... Lógica de submit ...
   }
 
   return (
@@ -64,8 +50,22 @@ export default function Chat() {
               <div key={m.id} className={`flex gap-3 text-sm ${m.role === 'user' ? 'justify-end' : ''}`}>
                 {m.role === 'assistant' && <span className="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-full items-center justify-center bg-gray-800 text-white font-bold">AI</span>}
                 <div className={`rounded-lg p-3 prose prose-sm max-w-none ${m.role === 'user' ? 'bg-blue-500 text-white prose-invert' : 'bg-gray-100'}`}>
-                  {/* Usa o novo componente SafeMarkdown */}
-                  <SafeMarkdown content={m.content} />
+                   <ReactMarkdown // <-- Uso direto
+                    remarkPlugins={[remarkGfm]}
+                    components={{
+                      code(props) {
+                        const { children, className, node, ...rest } = props;
+                        const match = /language-(\w+)/.exec(className || '');
+                        return match ? (
+                          <SyntaxHighlighter style={vscDarkPlus} language={match[1]} PreTag="div" {...rest}>
+                            {String(children).replace(/\n$/, '')}
+                          </SyntaxHighlighter>
+                        ) : (
+                          <code {...rest} className="bg-gray-200 text-black px-1 rounded">{children}</code>
+                        );
+                      }
+                    }}
+                  >{m.content}</ReactMarkdown>
                 </div>
                  {m.role === 'user' && <span className="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-full items-center justify-center bg-blue-500 text-white font-bold">LR</span>}
               </div>
