@@ -4,81 +4,149 @@ tags:
   - AI/Gemini25Pro
   - ai/tools/GoogleAIStudio
 project: 
-related: 
+related: "[[Experiência - Plugae]]"
 prompt: Com base nesses dados, crie um histórico detalhado das tarefas que realizei na Plugae relacionadas ao Spider, principalmente com foco nas Integrações. O importante é destacar as habilidades que desempenhei no papel de Engenheiro de integração
 source: Folder Plugae
 ---
-### **Histórico de Atividades como Engenheiro de Integração - Projeto Spider**
+### 🚀 Projeto Spider - Hub de Integração E-commerce
 
-#### **Sumário Executivo**
+#### 🎯 Visão Geral e Arquitetura da Solução
 
-Atuando como Engenheiro de Integração no projeto Spider, fui responsável por desenhar, desenvolver, implementar e manter o ecossistema de integrações que automatiza as operações de e-commerce para múltiplos clientes. Meu trabalho foi central para conectar sistemas de ERP (Bling, BDI), plataformas de marketplace (Plugg.to, Skyhub, B2W) e ferramentas de gestão interna, garantindo o fluxo contínuo e confiável de dados de produtos, estoque, preços e pedidos. Utilizando tecnologias como PHP/Laravel, MongoDB, e jobs em fila (Redis), construí soluções escaláveis para resolver desafios complexos de sincronização e processamento de dados em tempo real e em lote.
+No coração de um ecossistema de e-commerce complexo e multifacetado, o projeto Spider nasceu como a espinha dorsal de automação, um hub de integração projetado para orquestrar o fluxo de operações para múltiplos clientes. O objetivo era claro: conectar de forma transparente e confiável sistemas de ERP (como Bling e bancos de dados customizados), plataformas de marketplace (Plugg.to, Skyhub, B2W) e ferramentas de gestão, garantindo um fluxo de dados à prova de falhas para produtos, estoque, preços e pedidos.
+
+A solução foi arquitetada como um sistema centralizado, construído em **PHP/Laravel**, que adota uma abordagem orientada a serviços e eventos. Do ponto de vista funcional, o Spider opera como o cérebro da operação:
+
+  * **Recebe Dados:** Ele ingere informações de diversas fontes, utilizando **webhooks** para notificações em tempo real (ex: uma nota fiscal emitida no Bling) e **Artisan Commands** agendados para importações em lote (ex: buscar novos pedidos da Plugg.to).
+  * **Processa de Forma Inteligente:** Ao receber os dados, o Spider não apenas os armazena. Ele os enriquece e processa. Um pedido, por exemplo, passa por um job que identifica o cliente correto com base nos SKUs dos produtos antes de ser enviado ao ERP adequado.
+  * **Garante a Consistência:** Para tarefas críticas como atualizações de estoque e preço, o sistema utiliza um robusto mecanismo de **filas em Redis**. Isso garante que as operações sejam processadas de forma assíncrona, resiliente e controlada, evitando sobrecarga nas APIs externas e garantindo que as informações fluam de maneira ordenada para todos os canais de venda.
+  * **Centraliza a Informação:** Todas as operações, dados e logs são persistidos em um banco de dados **MongoDB**, que serve como a única fonte da verdade para o estado de pedidos, produtos e transações financeiras.
+
+#### 👨‍💻 Meu Papel no Projeto
+
+Como **Engenheiro de Integração**, minha atuação foi central na concepção, desenvolvimento e manutenção deste ecossistema. Minhas principais responsabilidades incluíram:
+
+  * **Arquitetura de Integração:** Desenhar os fluxos de dados, modelar entidades críticas no MongoDB (como a de `checking_account` para controle financeiro) e definir a arquitetura de webhooks para processamento de eventos em tempo real.
+  * **Desenvolvimento Back-End:** Construir e manter os pilares da plataforma, incluindo Artisan Commands para importação, Jobs para processamento assíncrono e a lógica de integração com APIs de terceiros como Bling, Plugg.to e Skyhub.
+  * **Orquestração do Ciclo de Pedidos:** Automatizar o fluxo completo de um pedido, desde sua criação no marketplace, passando pelo envio ao ERP, até a atualização de seu status após o faturamento, tratando inclusive cancelamentos.
+  * **Sincronização Multi-plataforma:** Implementar a complexa lógica de sincronização de estoque e preços, garantindo consistência entre o "dono" do estoque (ERP) e múltiplos canais de venda para evitar overselling.
+  * **Onboarding e Migração de Clientes:** Liderar os processos técnicos para integrar novos clientes à plataforma, incluindo a migração massiva de produtos e pedidos de sistemas como Magento e Plugg.to.
+  * **Manutenção e Qualidade:** Criar ferramentas internas, como o `LogTrait` para padronizar logs, e executar scripts de manutenção no MongoDB para garantir a qualidade e a integridade dos dados.
+
+#### ✨ Pontos Fortes e Desafios Superados
+
+O maior ponto forte da solução é sua **arquitetura assíncrona e resiliente**. O uso intensivo de filas (Queues) não apenas tornou a plataforma mais responsiva, mas também permitiu escalar o processamento de um volume massivo de dados sem comprometer a estabilidade.
+
+Um dos desafios mais significativos foi **garantir a sincronização de estoque em tempo real**. Vender um produto que não existe no estoque (overselling) é um dos maiores problemas do e-commerce. Superamos isso abandonando o polling ineficiente e implementando uma **arquitetura reativa a eventos**. Ao configurar webhooks no Bling, o Spider passou a ser notificado instantaneamente sobre qualquer mudança, disparando jobs para filas dedicadas (`pluggto`, `skyhub`) que atualizavam os marketplaces de forma quase imediata e controlada. Essa mudança transformou um ponto de fragilidade em uma fortaleza da plataforma.
+
+Outro grande desafio foi lidar com a **inconsistência de dados** provenientes de múltiplas fontes. Enfrentamos SKUs inválidos, produtos duplicados e pedidos sem associação clara de cliente. A vitória aqui foi conquistada através da engenharia: desenvolvi scripts e rotinas de tratamento, como o job `ProcessCodeOrders`, que implementou uma lógica robusta para **identificar e associar corretamente os pedidos aos seus respectivos clientes**, utilizando os SKUs dos itens como chave primária. Essa automação eliminou um processo manual e propenso a erros, garantindo a fluidez da operação.
+
+#### 🌱 Pontos para Evolução Futura
+
+Apesar da robustez da solução, sempre há espaço para melhorias. Duas evoluções naturais seriam:
+
+1.  **Dashboard de Observabilidade:** Implementar um painel de controle visual para monitorar em tempo real a saúde das filas, o status dos jobs e as métricas de integração, oferecendo uma visão proativa sobre possíveis gargalos.
+2.  **Centralização de Logs Avançada:** Expandir o `LogTrait` para integrar-se a uma plataforma de observabilidade como Datadog ou ELK Stack, permitindo buscas complexas e criação de alertas inteligentes sobre o comportamento das integrações.
+
+-----
+
+#### 🛠️ Pilha de Tecnologias (Tech Stack)
+
+| Componente | Tecnologia Utilizada | Papel na Arquitetura |
+| :--- | :--- | :--- |
+| **Backend & Lógica** | **PHP / Laravel** | Framework principal para toda a aplicação, incluindo Artisan Commands para tarefas agendadas e Jobs para processamento em segundo plano. |
+| **Banco de Dados Principal** | **MongoDB** | Banco de dados NoSQL central para armazenar produtos, pedidos, clientes e logs, oferecendo flexibilidade para modelos de dados complexos. |
+| **Filas Assíncronas** | **Redis** | Utilizado como o motor do sistema de filas (Queues), garantindo o processamento assíncrono e resiliente de tarefas como atualizações de estoque e importações. |
+| **Integrações (APIs)** | **REST & Webhooks** | Protocolos usados para comunicação com sistemas externos, tanto para buscar dados (REST) quanto para receber notificações em tempo real (Webhooks). |
+| **Plataformas Conectadas** | **Plugg.to, Skyhub, Bling** | Principais sistemas de e-commerce (marketplaces e ERP) com os quais o Spider se integrava para orquestrar as operações. |
+| **Infraestrutura & DevOps** | **Docker, AWS S3, SSH** | Docker para conteinerização do ambiente, S3 para armazenamento de arquivos (ex: planilhas de importação) e SSH para gerenciamento do servidor. |
+| **Bancos de Dados Legados** | **MySQL** | Utilizado para integração direta com o sistema ERP de clientes específicos que não possuíam uma API moderna, como o Novo Século. |
+
+-----
+
+#### 🗺️ Diagrama da Arquitetura
+
+```mermaid
+---
+config:
+  theme: default
+  look: handDrawn
+---
+flowchart LR
+    %% Fontes externas
+    subgraph EX["Fontes de Dados Externas"]
+        direction TB
+        ERP_Bling["🏢 ERP Bling"]
+        ERP_BDI["🗃️ ERP Custom (MySQL)"]
+        Marketplaces["🛒 Marketplaces (Plugg.to, Skyhub)"]
+    end
+
+    %% Entrada de dados
+    subgraph IN["Entrada de Dados"]
+        API["📡 API / Webhooks"]
+        Commands["⚙️ Artisan Commands"]
+    end
+
+    %% Processamento
+    subgraph PR["Processamento Assíncrono"]
+        Job_Stock["🧬 Atualizar Estoque"]
+        Job_Order["📄 Processar Pedidos"]
+        Job_Others["… Outros Jobs"]
+    end
+
+    %% Armazenamento
+    MongoDB[("🗄️ MongoDB")]
+    Queues["📦 Filas (Redis)"]
+
+    %% Fluxos
+    ERP_Bling -- "Webhooks (Estoque, NF-e)" --> API
+    ERP_BDI -- "Leitura via Job" --> Commands
+    Marketplaces -- "Importação via Job" --> Commands
+
+    API --> Queues
+    Commands --> Queues
+    Queues --> Job_Stock & Job_Order & Job_Others
+
+    Job_Stock <--> MongoDB
+    Job_Order <--> MongoDB
+    Job_Others <--> MongoDB
+
+    Job_Order -- "Pedido Processado" --> ERP_Bling
+    Job_Stock -- "Atualizar Estoque" --> Marketplaces
+    Job_Order -- "Atualizar Status" --> Marketplaces
+
+    style PR fill:#E8F5E9,stroke:#81C784,stroke-width:2px
+    style EX fill:#FFF3E0,stroke:#FFB74D,stroke-width:2px
+    style IN fill:#E3F2FD,stroke:#64B5F6,stroke-width:2px
+    style MongoDB fill:#F3E5F5,stroke:#BA68C8,stroke-width:2px
+    style Queues fill:#FFEBEE,stroke:#E57373,stroke-width:2px
+```
+
+---
+### RESUMO TÉCNICO PARA EMBEDDING
+
+Desenvolvimento e arquitetura do "Spider", um hub de integração de e-commerce centralizado, construído em **PHP/Laravel** para orquestrar operações entre múltiplos sistemas. A arquitetura é orientada a serviços e eventos, utilizando **processamento assíncrono** com **Jobs** e **filas em Redis** para garantir resiliência e escalabilidade. O sistema ingere dados via **APIs REST** e **Webhooks** de plataformas como **Bling**, **Plugg.to**, e **Skyhub**, além de realizar extrações de bancos de dados legados **MySQL**. As operações de **ETL (Extract, Transform, Load)** são executadas por **Artisan Commands** para migração e importação em massa. Todos os dados operacionais (pedidos, produtos, logs) são persistidos em um banco de dados **MongoDB**, que funciona como fonte única da verdade. Desafios de sincronização de estoque e preço foram solucionados implementando uma **arquitetura reativa a eventos**, abandonando o polling em favor de webhooks que disparam jobs para filas dedicadas, prevenindo overselling. A inconsistência de dados foi tratada com rotinas de normalização e enriquecimento, como o `ProcessCodeOrders`. A infraestrutura utiliza **Docker** para conteinerização, **AWS S3** para armazenamento e **SSH** para gerenciamento, com processos agendados via **cron**. A gestão do projeto foi feita com **Jira**, e a padronização de logs foi implementada com um `LogTrait` customizado.
+
+### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
+
+| Categoria | Tecnologias e Conceitos |
+| :--- | :--- |
+| **AI & Machine Learning** | N/A |
+| **Software Development** | PHP, Laravel, Artisan Commands, Jobs, Traits (`LogTrait`), Controllers, Backend Development |
+| **Architecture**| Arquitetura Orientada a Serviços, Arquitetura Orientada a Eventos, Arquitetura Assíncrona, Arquitetura Reativa, Hub de Integração, Modelagem de Entidades, Fluxos de Dados |
+| **Cloud Computing** | AWS S3 |
+| **API RESTFul development** | API REST, Webhooks, Consumo de API (Bling, Plugg.to, Skyhub) |
+| **Frontend Development** | N/A |
+| **Mobile Development** | N/A |
+| **Database** | MongoDB, Redis, MySQL, SQLite, NoSQL |
+| **Data Management** | ETL (Extração, Transformação, Carga), Migração de Dados (Magento, Plugg.to), Sincronização de Dados (Estoque, Preço), Qualidade de Dados, Normalização de Dados, Logs (`LogTrait`) |
+| **Content Management - CMS** | N/A |
+| **System Administration** | Gerenciamento de Servidor (SSH), Cron Jobs |
+| **DevOps** | Docker, Docker Compose, Monitoramento, Logging, Automação de Tarefas |
+| **Leadership** | Liderança Técnica, Documentação Técnica, Mentoria (Coaching) |
+| **Coaching** | N/A |
+| **Agile Project Management** | Jira, Gestão de Tarefas, Acompanhamento de Status |
+
 
 ---
 
-### **Principais Responsabilidades e Realizações**
 
-#### **1. Arquitetura e Design de Integração**
-
-Minha função ia além da simples codificação; participei ativamente do planejamento e da arquitetura de novas funcionalidades e fluxos de integração.
-
-*   **Modelagem de Dados:** Colaborei no design de modelos de dados críticos no MongoDB, como o `checking_account` (Conta Corrente), para rastrear transações financeiras complexas (comissões, fretes, estornos) entre a Plugae, clientes e canais de venda.
-*   **Definição de Fluxos de Processo:** Mapeei e documentei os fluxos de sincronização de estoque e pedidos, definindo o "owner" do estoque (ERP ou Spider) e as regras de negócio para atualização em diferentes cenários (compra no marketplace, atualização manual no ERP).
-*   **Desenvolvimento Orientado a Eventos:** Projetei e implementei a arquitetura de webhooks para o Bling, permitindo que o Spider reagisse em tempo real a eventos de alteração de pedido, estoque e faturamento, substituindo processos de polling menos eficientes.
-*   **Criação de Componentes Reutilizáveis:** Desenvolvi o `LogTrait`, uma ferramenta padronizada para logging de operações no MongoDB, melhorando a rastreabilidade e a capacidade de depuração em todos os processos de integração.
-
-#### **2. Sincronização de Estoque e Preços Multi-plataforma**
-
-Um dos pilares do meu trabalho foi garantir que o estoque e os preços dos produtos estivessem sempre consistentes em todos os canais de venda, evitando overselling e erros de precificação.
-
-*   **Integração com ERPs:**
-    *   **Bling:** Criei jobs (ex: `product:stockUpdate`) que se conectavam à API do Bling para obter o estoque de clientes como Ultrabrands, ILS e NewLux, comparando com o estoque no Spider e disparando atualizações para os marketplaces.
-    *   **BDI (Banco de Dados do Cliente):** Desenvolvi integrações diretas com o banco de dados MySQL do cliente Novo Século para sincronizar estoque e preços com a Skyhub e a Plugg.to.
-*   **Integração com Marketplaces:**
-    *   **Plugg.to:** Implementei a lógica para enviar atualizações de estoque e preço para a Plugg.to, tratando tanto produtos simples quanto produtos com variações (SKUs filhos). Depurei e resolvi problemas de sincronização, como os SKUs duplicados da Ultrabrands.
-    *   **Skyhub:** Criei processos para atualizar o estoque de produtos do cliente Novo Século diretamente na API da Skyhub.
-*   **Gerenciamento de Fila de Jobs:** Utilizei filas (`pluggto`, `skyhub`, `default`) para processar as atualizações de forma assíncrona, garantindo que a plataforma se mantivesse responsiva e que as requisições para as APIs fossem executadas de forma controlada e resiliente.
-
-#### **3. Gerenciamento do Ciclo de Vida de Pedidos (Order Lifecycle Management)**
-
-Automatizei o fluxo completo de pedidos, desde a sua criação no marketplace até o faturamento e o envio, orquestrando a comunicação entre as diversas plataformas.
-
-*   **Importação de Pedidos:** Desenvolvi e mantive Artisan Commands (`pluggto:ordersImport`, `skyhub:orderImport`) para importar pedidos de diferentes fontes (Plugg.to, Skyhub) para o banco de dados do Spider.
-*   **Processamento e Enriquecimento de Dados:** Criei o `ProcessCodeOrders`, um job responsável por:
-    *   Padronizar e normalizar os dados dos pedidos.
-    *   **Identificar o cliente associado ao pedido**, utilizando uma lógica robusta que primeiro verificava os SKUs dos itens e, como fallback, o `channel_account`.
-    *   Enviar os pedidos processados para o ERP correspondente (Bling para Ultrabrands, BDI para Novo Século).
-*   **Tratamento de Status e Faturamento:**
-    *   Implementei a lógica de webhook para receber notificações do Bling sobre notas fiscais emitidas (`invoiced`).
-    *   Ao receber a confirmação de faturamento, o sistema atualizava o status do pedido no Spider e, em seguida, na plataforma de origem (Plugg.to/Skyhub).
-    *   Desenvolvi a rotina para tratar cancelamentos de pedidos (ex: pedido B2W `Submarino-349687674206`), propagando o status `canceled` do marketplace para o Spider e notificando o ERP.
-
-#### **4. Migração e Onboarding de Clientes**
-
-Fui peça-chave no processo de trazer novos clientes para a plataforma Spider, lidando com a complexidade de migrar dados de diferentes sistemas.
-
-*   **Cliente Amo Ler / Novo Século:** Executei o processo de importação de produtos no Magento. Isso incluiu:
-    *   Configuração do Amazon S3 para hospedar as planilhas e imagens.
-    *   Tratamento de planilhas CSV para ajustar os dados (ex: remoção de endereços completos de imagens).
-    *   Configuração da ferramenta Magmi para a importação em massa, definindo `Image search path` e URLs das planilhas.
-*   **Cliente ShopUD e Redes de Dormir:** Conduzi a importação de produtos e pedidos da conta Plugg.to para o Spider, associando-os aos seus respectivos clientes e preparando-os para integração com o Bling.
-*   **Manutenção Operacional:** Realizei tarefas operacionais críticas, como a exclusão em massa de produtos de clientes descontinuados (Bric, Latinex, Tomdo) da Plugg.to, liberando recursos e limpando a base de dados.
-
-#### **5. Desenvolvimento e Manutenção da Plataforma**
-
-Além das integrações, contribui para a saúde e a evolução da plataforma Spider.
-
-*   **Manutenção de Banco de Dados:** Executei scripts de manutenção no MongoDB para corrigir inconsistências de dados, como a padronização de campos (`espected_delivery_date` para `expected_delivery_date`), garantindo a integridade dos dados para todos os processos.
-*   **Infraestrutura e Deploy:** Trabalhei diretamente no ambiente de produção (servidor `165.227.191.82`), utilizando Docker e SSH para deploy e execução de comandos, demonstrando familiaridade com o ciclo de vida completo do software.
-*   **Documentação Técnica:** Criei documentação interna sobre os processos de integração, fluxos de dados e modelos de webhook, facilitando a manutenção e a colaboração da equipe.
-
----
-
-### **Habilidades e Tecnologias**
-
-*   **Linguagens e Frameworks:** PHP, Laravel (Artisan Commands, Jobs, Eloquent).
-*   **Bancos de Dados:** MongoDB (queries avançadas, scripts de manutenção), MySQL, Redis (para filas de jobs).
-*   **APIs e Protocolos:** REST, Webhooks.
-*   **Plataformas de E-commerce e ERPs:** Plugg.to, Skyhub, Bling, B2W, Cnova, Magento.
-*   **Ferramentas e Infraestrutura:** Docker, AWS S3, Git, SSH, Magmi, OpenRefine.
-*   **Conceitos de Engenharia:** Arquitetura de Microservices, Processamento Assíncrono (Job Queues), ETL (Extração, Transformação e Carga), Modelagem de Dados, Análise de Requisitos.

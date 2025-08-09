@@ -1,10 +1,11 @@
 ---
 status: permanent
-tags:
-  - particular/Curriculo/History
-  - AI/Gemini25Pro
+tags: 
+date: 2025-08-09
+project:
+related:
+prompt: 
 ---
-
 ### Gerenciador de Tarefas Conversacional via E-mail  📥  Postmark Challenge
 *Junho de 2025 – Junho de 2025*
 Desenvolvi este projeto como uma entrada para o **Postmark Challenge da Dev.to**, com o objetivo de resolver um problema comum de produtividade: a transferência manual de tarefas que surgem em e-mails para uma lista de afazeres separada. A solução transforma a caixa de e-mail em uma interface de gestão, permitindo ao usuário criar, atualizar e concluir tarefas simplesmente enviando ou respondendo e-mails com comandos simples (ex: `#prioridade`).
@@ -40,16 +41,13 @@ Desenvolvi uma Prova de Conceito (PoC) de um cache semântico de alta performanc
 ### Twin Quest 🚀 Desafio Full-Stack com IA Generativa (Stack LVTPP)
 *Maio de 2025 – Maio de 2025*
 
-Desenvolvi o "Twin Quest" como um projeto de desafio pessoal para demonstrar a construção de uma aplicação moderna e integrada de ponta a ponta, utilizando o stack LVTPP (Laravel, Vue, TypeScript, Pinia, Pest) e explorando o uso de IA Generativa.
-
-A aplicação utiliza IA Generativa para criar duas interpretações textuais únicas e criativas ("gêmeas") a partir de um tema inserido pelo usuário, explorando técnicas de Engenharia de Prompt para garantir resultados de alta qualidade.
+Desenvolvi o "Twin Quest" como um projeto de desafio pessoal para demonstrar a construção de uma aplicação moderna e integrada de ponta a ponta, utilizando o stack LVTPP (Laravel, Vue, TypeScript, Pinia, Pest).
 
 **Principais realizações técnicas:**
 
 - **Implementação Full-Stack Coesa:** Construí o backend com **Laravel**, servindo uma API RESTful, e o frontend com **Vue 3 (Composition API)**, utilizando **TypeScript** para garantir a tipagem e a segurança do código em toda a aplicação.
 - **Gerenciamento de Estado Reativo:** Utilizei **Pinia** para um gerenciamento de estado centralizado e reativo no frontend, criando uma experiência de usuário fluida ao receber e exibir os dados da IA.
 - **Qualidade e Testes Automatizados:** Garanti a confiabilidade da API e da lógica de negócio com uma suíte de testes robusta escrita com **Pest**, seguindo as melhores práticas de desenvolvimento orientado a testes (TDD).
-- **Integração com IA:** Orquestrei a comunicação com a API de IA Generativa no backend, com foco em uma engenharia de prompts eficiente para gerar as duas respostas distintas e criativas que dão nome ao projeto.
 
 🖇️ **Código-fonte:** [https://github.com/lfrichter/twin-quest](https://github.com/lfrichter/twin-quest)
 🎬 **Apresentação:** [Assesment Twin Quest](http://www.youtube.com/watch?v=JKFs6_091-A)
