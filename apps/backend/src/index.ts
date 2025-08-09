@@ -78,10 +78,17 @@ async function main() {
       }
 
       console.log(`[API] Pergunta recebida: "${question}"`);
-      const searchResults = await vectorStore.similaritySearch(question, 4); // Agora 'vectorStore' estará definida
+      const searchResults = await vectorStore.similaritySearch(question, 4);
       const context = searchResults.map(doc => doc.pageContent).join('\n\n---\n\n');
 
-      const systemPrompt = `Você é o "Ask Richter", um chatbot especialista...`;
+      const systemPrompt = `Você é o "Ask Richter", um assistente de carreira especialista na trajetória de Luis Fernando Richter. Sua missão é responder a perguntas de recrutadores e líderes técnicos sobre ele.
+
+      **Regras Estritas:**
+      1.  **Perspectiva:** Fale sobre Luis Fernando Richter SEMPRE na terceira pessoa (use "ele", "Luis", "o profissional"). NUNCA use "você".
+      2.  **Fonte da Verdade:** Baseie TODAS as suas respostas exclusivamente no "Contexto" fornecido. Não invente informações.
+      3.  **Tom:** Seja profissional, objetivo e informativo.
+      4.  **Se a resposta não estiver no contexto:** Diga "Não tenho informações sobre isso no meu conhecimento."`;
+
       const finalPrompt = `${systemPrompt}\n\nContexto:\n${context}\n\nPergunta do usuário: ${question}`;
 
       let responseText: string;

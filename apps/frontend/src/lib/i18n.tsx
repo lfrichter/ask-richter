@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, ReactNode } from 'react';
+import { createContext, ReactNode, useContext } from 'react';
 
 // Importa diretamente os arquivos JSON. O bundler irá lidar com isso.
 import enMessages from '../../messages/en.json';
@@ -23,10 +23,8 @@ interface TranslationsProviderProps {
 
 // Cria o componente Provedor
 export function TranslationsProvider({ locale, children }: TranslationsProviderProps) {
-  console.log('[TranslationsProvider] Locale recebido:', locale);
   // Seleciona as mensagens corretas com base no locale
   const messages = messagesData[locale] || ptMessages; // Usa 'pt' como fallback
-  console.log('[TranslationsProvider] Mensagens carregadas para', locale, ':', messages);
 
   return (
     <TranslationsContext.Provider value={messages}>

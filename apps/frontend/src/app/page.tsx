@@ -1,6 +1,7 @@
 'use client';
 
 import { AIChatInput } from "@/components/ui/ai-chat-input";
+import { BackgroundPaths } from "@/components/ui/background-paths";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Markdown from 'markdown-to-jsx';
 import Image from 'next/image'; // Adicionado import da imagem
@@ -79,49 +80,53 @@ export default function Chat() {
   }
 
   return (
-    <div className="flex justify-center items-start min-h-screen bg-gray-50 p-4">
-      <Card className="w-full max-w-3xl shadow-lg">
-        {/* --- SEU CABEÇALHO COM A IMAGEM RESTAURADO --- */}
-        <CardHeader className="text-center">
-          <div className="flex justify-center items-center">
-            <Image src={myAdjustedOk} alt="Luis Fernando Richter" width={50} height={50} className="rounded-full mr-4" />
-            <div>
-              <CardTitle className="text-2xl font-bold">Ask Richter</CardTitle>
-              <p className="text-sm text-gray-500">My Interactive CV with AI</p>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4 h-[60vh] overflow-y-auto pr-4 mb-4">
-            {messages.map(m => (
-              <div key={m.id} className={`flex gap-3 text-sm ${m.role === 'user' ? 'justify-end' : ''}`}>
-                {m.role === 'assistant' && <span className="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-full items-center justify-center bg-gray-800 text-white font-bold">AI</span>}
-                <div className={`rounded-lg p-3 prose prose-sm max-w-none ${m.role === 'user' ? 'bg-blue-500 text-white prose-invert' : 'bg-gray-100'}`}>
-                  <Markdown options={{ overrides: { code: { component: CodeBlock } } }}>
-                    {m.content}
-                  </Markdown>
+    <div className="relative w-full min-h-screen">
+      <BackgroundPaths />
+        <div className="relative z-10 flex justify-center items-start min-h-screen p-4 pt-8 sm:pt-12 md:pt-16">
+        {/* <div className="flex justify-center items-start min-h-screen bg-gray-50 p-4"> */}
+          <Card className="w-full max-w-3xl shadow-lg">
+            {/* --- SEU CABEÇALHO COM A IMAGEM RESTAURADO --- */}
+            <CardHeader className="text-center">
+              <div className="flex justify-center items-center">
+                <Image src={myAdjustedOk} alt="Luis Fernando Richter" width={50} height={50} className="rounded-full mr-4" />
+                <div>
+                  <CardTitle className="text-2xl font-bold">Ask Richter</CardTitle>
+                  <p className="text-sm text-gray-500">My Interactive CV with AI</p>
                 </div>
-                 {m.role === 'user' && <span className="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-full items-center justify-center bg-blue-500 text-white font-bold">LR</span>}
               </div>
-            ))}
-            {isLoading && <div className="flex gap-3 text-sm animate-pulse"><span className="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-full items-center justify-center bg-gray-800 text-white font-bold">AI</span><div className="rounded-lg p-3 bg-gray-200 w-24 h-10"></div></div>}
-            <div ref={messagesEndRef} />
-          </div>
-          <div className="w-full max-w-3xl mx-auto p-4">
-            <form onSubmit={handleSubmit} className="flex justify-center">
-              <AIChatInput
-                input={input}
-                handleInputChange={handleInputChange}
-                isLoading={isLoading}
-              />
-            </form>
-          </div>
-          {/* <form onSubmit={handleSubmit} className="flex gap-2">
-            <Input value={input} placeholder="Pergunte sobre otimização de performance..." onChange={handleInputChange} disabled={isLoading} />
-            <Button type="submit" disabled={isLoading}><SendHorizonal className="h-4 w-4" /></Button>
-          </form> */}
-        </CardContent>
-      </Card>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4 h-[60vh] overflow-y-auto pr-4 mb-4">
+                {messages.map(m => (
+                  <div key={m.id} className={`flex gap-3 text-sm ${m.role === 'user' ? 'justify-end' : ''}`}>
+                    {m.role === 'assistant' && <span className="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-full items-center justify-center bg-gray-800 text-white font-bold">AI</span>}
+                    <div className={`rounded-lg p-3 prose prose-sm max-w-none ${m.role === 'user' ? 'bg-blue-500 text-white prose-invert' : 'bg-gray-100'}`}>
+                      <Markdown options={{ overrides: { code: { component: CodeBlock } } }}>
+                        {m.content}
+                      </Markdown>
+                    </div>
+                    {m.role === 'user' && <span className="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-full items-center justify-center bg-blue-500 text-white font-bold">ME</span>}
+                  </div>
+                ))}
+                {isLoading && <div className="flex gap-3 text-sm animate-pulse"><span className="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-full items-center justify-center bg-gray-800 text-white font-bold">AI</span><div className="rounded-lg p-3 bg-gray-200 w-24 h-10"></div></div>}
+                <div ref={messagesEndRef} />
+              </div>
+              <div className="w-full max-w-3xl mx-auto p-4">
+                <form onSubmit={handleSubmit} className="flex justify-center">
+                  <AIChatInput
+                    input={input}
+                    handleInputChange={handleInputChange}
+                    isLoading={isLoading}
+                  />
+                </form>
+              </div>
+              {/* <form onSubmit={handleSubmit} className="flex gap-2">
+                <Input value={input} placeholder="Pergunte sobre otimização de performance..." onChange={handleInputChange} disabled={isLoading} />
+                <Button type="submit" disabled={isLoading}><SendHorizonal className="h-4 w-4" /></Button>
+              </form> */}
+            </CardContent>
+          </Card>
+        </div>
     </div>
   );
 }

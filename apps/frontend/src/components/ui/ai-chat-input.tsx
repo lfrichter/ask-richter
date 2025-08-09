@@ -10,11 +10,11 @@ import { useEffect, useRef, useState } from "react";
 // Lista de placeholders para o input
 const PLACEHOLDERS = [
   "Qual sua experiência com arquitetura de sistemas?",
-  "Fale sobre um desafio técnico que você superou.",
+  "Tell me about a technical challenge you overcame.",
   "Como você lida com débitos técnicos?",
-  "Qual a sua linguagem de programação preferida?",
+  "What is your favorite programming language?",
   "Descreva sua experiência com testes automatizados.",
-  "Fale sobre seus projetos com Next.js e Node.js.",
+  "Tell me about your projects",
 ];
 
 // Definindo a interface de props para o componente
