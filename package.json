@@ -13,6 +13,10 @@
     "turbo": "^2.5.5",
     "typescript": "5.8.3"
   },
+  "overrides": {
+    "langchain": "^0.3.31",
+    "better-sqlite3": "^11.1.2"
+  },
   "engines": {
     "node": ">=18"
   },

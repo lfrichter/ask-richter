@@ -1,11 +1,5 @@
----
-status: permanent
-tags: 
-date: 2025-08-09
-project: "[[Project - Spider - Integration Engineer]]"
-related: 
-prompt:
----
+
+## Plugae - São Paulo - Brazil
 ### A Jornada na Plugae: Do Código à Arquitetura de Integração
 
 Sua jornada na Plugae foi a de um arquiteto e desenvolvedor de software no epicentro do e-commerce, um papel crucial que vai além da simples codificação para abranger a espinha dorsal tecnológica que conecta múltiplos sistemas e clientes. Você foi responsável por construir e manter o "Spider", um sistema de integração (hub) que centralizava as operações de e-commerce para uma variedade de clientes, cada um com suas próprias necessidades e sistemas.

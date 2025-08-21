@@ -55,7 +55,6 @@ async function downloadIndexFromSupabase() {
 
 // --- Função Principal de Inicialização ---
 async function main() {
-  // LÓGICA DE INICIALIZAÇÃO RESTAURADA
   await downloadIndexFromSupabase();
   console.log('[INIT] Carregando índice FAISS para a memória...');
   vectorStore = await FaissStore.load(FAISS_INDEX_PATH, embeddings);
@@ -78,18 +77,45 @@ async function main() {
       }
 
       console.log(`[API] Pergunta recebida: "${question}"`);
-      const searchResults = await vectorStore.similaritySearch(question, 4);
-      const context = searchResults.map(doc => doc.pageContent).join('\n\n---\n\n');
 
-      const systemPrompt = `Você é o "Ask Richter", um assistente de carreira especialista na trajetória de Luis Fernando Richter. Sua missão é responder a perguntas de recrutadores e líderes técnicos sobre ele.
+      // --- PASSO 1.2: LIMITAR E ESTRUTURAR O CONTEXTO ---
+      // 1. Busca inicial com score para permitir o sort
+      const searchResults = await vectorStore.similaritySearchWithScore(question, 5);
 
-      **Regras Estritas:**
-      1.  **Perspectiva:** Fale sobre Luis Fernando Richter SEMPRE na terceira pessoa (use "ele", "Luis", "o profissional"). NUNCA use "você".
-      2.  **Fonte da Verdade:** Baseie TODAS as suas respostas exclusivamente no "Contexto" fornecido. Não invente informações.
-      3.  **Tom:** Seja profissional, objetivo e informativo.
-      4.  **Se a resposta não estiver no contexto:** Diga "Não tenho informações sobre isso no meu conhecimento."`;
+      // 2. Re-ranking simples por score e limitação aos 3 melhores resultados
+      const topResults = searchResults.sort((a, b) => b[1] - a[1]).slice(0, 3);
 
-      const finalPrompt = `${systemPrompt}\n\nContexto:\n${context}\n\nPergunta do usuário: ${question}`;
+      // 3. Construção do contexto estruturado, agora com o cabeçalho da seção
+      const structuredContext = topResults
+        .map((result, idx) => {
+          const doc = result[0];
+          const source = doc.metadata.source?.split('/').pop() || 'Fonte desconhecida';
+          const section = doc.metadata.section_header || 'Seção';
+          // Incluímos o cabeçalho para dar mais contexto ao LLM
+          return `[Fonte ${idx + 1}: ${source} | Seção: ${section}]\n${doc.pageContent}`;
+        })
+        .join('\n\n---\n\n');
+
+
+      console.log("================ CONTEXTO ESTRUTURADO PARA A IA (TOP 3) ================");
+      console.log(structuredContext);
+      console.log("=======================================================================");
+
+      // --- PASSO 1.1: IMPLEMENTAR O NOVO PROMPT BLINDADO ---
+      const systemPrompt = `Você é um assistente que responde EXCLUSIVAMENTE baseado no contexto fornecido.
+
+REGRAS OBRIGATÓRIAS:
+1.  Use APENAS informações presentes no contexto fornecido.
+2.  Se a informação não estiver no contexto, responda: "Com base nas informações que tenho, não consigo responder a essa pergunta."
+3.  NÃO faça inferências, suposições ou combine informações de forma criativa.
+
+PROCESSO DE RESPOSTA:
+1.  Leia o contexto completamente.
+2.  Identifique as partes EXATAS que são relevantes para a pergunta.
+3.  Responda usando APENAS essas partes, citando diretamente sempre que possível.`;
+
+      // Formato final do prompt injetando as variáveis
+      const finalPrompt = `${systemPrompt}\n\nCONTEXTO:\n${structuredContext}\n\nPERGUNTA:\n${question}\n\nRESPOSTA (seguindo rigorosamente as regras acima):\n`;
 
       let responseText: string;
       const provider = process.env.AI_PROVIDER || 'ollama';

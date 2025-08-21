@@ -1,4 +1,6 @@
 
+## Basic CV
+
 **Luis Fernando Richter**
 Senior Software Developer | Tech Lead
 +55 15 981308235 | ✉ fernando.richter@gmail.com | linkedin.com/in/lfrichter
@@ -342,9 +344,11 @@ São Paulo Area, Brazil
 ---
 
 
-## AI & Machine Learning
 
-### Hypno Methodology for Advanced Evaluation and Robustness Testing of AI Models
+## Courses and Certificates
+### AI & Machine Learning
+
+#### Hypno Methodology for Advanced Evaluation and Robustness Testing of AI Models
 
 ![Outlier logo](https://media.licdn.com/dms/image/v2/D560BAQHCka-jTkjqlA/company-logo_100_100/B56ZfltPyuGQAQ-/0/1751905533639/try_outlier_logo?e=1756944000&v=beta&t=837J21OA6fmngybkmVf3PBXJVGh9oRK8VwwRF1E5Xjc)
 
@@ -352,21 +356,21 @@ São Paulo Area, Brazil
 **Credential ID:** 683dccd9382ba43d3970c9b9
 **Skills:** Prompt Engineering
 
-## Software Development & Architecture
+### Software Development & Architecture
 
 
 ![Full Cycle logo](https://media.licdn.com/dms/image/v2/C4D0BAQHwahyQD-Rolg/company-logo_100_100/company-logo_100_100/0/1630578196249?e=1756944000&v=beta&t=OuHLQlsZYFhkuXjKByj3M0dV10GC0CM1mwkciHDjgr4)
-### SOLID Express
+#### SOLID Express
 
 **Full Cycle** | Issued Sep 2023
 **Credential ID:** [d97e149e-e515-4dc4-9103-094163204584](https://fullcycle.com.br/certificado/d97e149e-e515-4dc4-9103-094163204584)
 
-### Introduction to OpenTelemetry
+#### Introduction to OpenTelemetry
 
 **Full Cycle** | Issued Dec 2022
 **Credential ID:** [741d2979-b4cd-4edd-8a94-142fac00627c](https://fullcycle.com.br/certificado/741d2979-b4cd-4edd-8a94-142fac00627c)
 
-### Advanced Patterns and Techniques with Git and Github
+#### Advanced Patterns and Techniques with Git and Github
 
 **Full Cycle** | Issued Feb 2022
 **Credential ID:** [e0ba885f-aa8c-46d9-a917-39016b31c557](https://fullcycle.com.br/certificado/e0ba885f-aa8c-46d9-a917-39016b31c557)
@@ -378,255 +382,255 @@ São Paulo Area, Brazil
 
 
 
-## Cloud Computing & AWS
+### Cloud Computing & AWS
 
 ![School of Net logo](https://media.licdn.com/dms/image/v2/C4D0BAQH1yYpvcNDwIQ/company-logo_100_100/company-logo_100_100/0/1630530376388/school_of_net_logo?e=1756944000&v=beta&t=erJNtq13OSVJuvqZdgOh_J584O5j2CIfToQssGeCO1w)
-### AWS - S3 and CloudFront - Rev 2
+#### AWS - S3 and CloudFront - Rev 2
 
 **School of Net** | Issued Nov 2022
 **Credential ID:** [b8755b58-b507-49b3-8a9c-42f8ad61b3ca](http://www.schoolofnet.com/validar-certificado/validate/number/b8755b58-b507-49b3-8a9c-42f8ad61b3ca/)
 
-### AWS Code Deploy
+#### AWS Code Deploy
 
 **School of Net** | Issued Nov 2022
 **Credential ID:** [1ad63afa-47ea-4994-ac9f-4b00b96f9343](http://www.schoolofnet.com/validar-certificado/validate/number/1ad63afa-47ea-4994-ac9f-4b00b96f9343/)
 
-### AWS EC2 - Rev 2
+#### AWS EC2 - Rev 2
 
 **School of Net** | Issued Nov 2022
 **Credential ID:** [4f563d7d-88f3-4611-a7ca-f948e1e6581c](http://www.schoolofnet.com/validar-certificado/validate/number/4f563d7d-88f3-4611-a7ca-f948e1e6581c/)
 
-### AWS Lambda
+#### AWS Lambda
 
 **School of Net** | Issued Nov 2022
 **Credential ID:** [46c40172-69da-4ea8-9b84-04d50c53f2b1](http://www.schoolofnet.com/validar-certificado/validate/number/46c40172-69da-4ea8-9b84-04d50c53f2b1/)
 
-## Laravel & PHP Development
+### Laravel & PHP Development
 
-### Laravel: Blade Component
+#### Laravel: Blade Component
 
 **School of Net** | Issued Aug 2021
 **Credential ID:** [35a39cd4-8d09-4300-922a-4e96a35ae76a](http://www.schoolofnet.com/validar-certificado/?certificate=35a39cd4-8d09-4300-922a-4e96a35ae76a)
-### Laravel Dusk
+#### Laravel Dusk
 
 **School of Net** | Issued May 2021
 **Credential ID:** [2609a6a8-0f06-4c26-aeef-b7dd8257627b](http://www.schoolofnet.com/validar-certificado/?certificate=2609a6a8-0f06-4c26-aeef-b7dd8257627b)
-### Laravel Jetstream
+#### Laravel Jetstream
 
 **School of Net** | Issued Nov 2020
 **Credential ID:** [29ef3a2c-e654-4c8a-97ec-5b9587bc1b17](https://www.evernote.com/shard/s96/sh/34e44d74-e7fa-1878-275d-d2d71e7278b8/bc45d26674e2e65c32567dd76a3e9a19)
 
-### API RESTFul development with Laravel - Update 2 📕
+#### API RESTFul development with Laravel - Update 2 📕
 
 **School of Net** | Issued Mar 2018
 **Credential ID:** [5c1f2e2719d6e4034e9cd6263449e718](https://www.evernote.com/shard/s96/sh/8c23b99a-3c68-4e24-873c-fb0902232c30/5c1f2e2719d6e4034e9cd6263449e718)
 
-### Laravel 5.5 features 📕
+#### Laravel 5.5 features 📕
 
 **School of Net** | Issued Sep 2017
 **Credential ID:** [aa5319ff93440c9c83e381190b78b180](https://www.evernote.com/shard/s96/sh/ee5889ec-aac5-4f55-846d-540dd76df01f/aa5319ff93440c9c83e381190b78b180)
 
-### Integrating PayPal with PHP 🐘
+#### Integrating PayPal with PHP 🐘
 
 **School of Net** | Issued Aug 2017
 **Credential ID:** [1f1c6bd0f21227e5c21ae211133e875e](https://www.evernote.com/shard/s96/sh/f305585e-71e8-46f6-91ef-cde776d34ed8/1f1c6bd0f21227e5c21ae211133e875e)
 
-### Laravel - Multi-Tenancy applications 📕
+#### Laravel - Multi-Tenancy applications 📕
 
 **School of Net** | Issued Jul 2017
 **Credential ID:** [d144e2bb-abb8-48e0-8458-20262e57847d](https://www.evernote.com/shard/s96/sh/acd82b07-a21e-4f57-a165-0add8a8ae76f/125e0472d2efad5743f5ae1f0f2be4e0)
 
-### Authentication with Laravel and JWT 📕
+#### Authentication with Laravel and JWT 📕
 
 **School of Net** | Issued Jun 2017
 **Credential ID:** [b2a3ac86-19a7-42ad-b814-6c004b0f2e99](https://www.evernote.com/shard/s96/sh/c7f2aaea-8bd0-4e3e-bcb8-ee5434dd4766/ab64e7a493dc3142a272488d36da95c3)
 
-### Laravel Passport 📕
+#### Laravel Passport 📕
 
 **School of Net** | Issued Jun 2017
 **Credential ID:** [57114fa0ddcca7cb560439689fd0c2a9](https://www.evernote.com/shard/s96/sh/3607dbfd-b103-430c-91f3-697e67344323/57114fa0ddcca7cb560439689fd0c2a9)
 
-### Test Driven Development (TDD) with PHP 🐘
+#### Test Driven Development (TDD) with PHP 🐘
 
 **School of Net** | Issued Jun 2017
 **Credential ID:** [84e0b1eb-de17-4a97-9d89-511fc041d2eb](https://www.evernote.com/shard/s96/sh/fcdd24d0-0859-4c0d-8eba-4288d7a7b7b8/e2e62488155904f4b4ec046d5b30fbf4)
 
-### Modularization in Laravel 📕
+#### Modularization in Laravel 📕
 
 **School of Net** | Issued May 2017
 **Credential ID:** [586dcbf093890c677050e0faca468c7b](https://www.evernote.com/shard/s96/sh/7b90f125-3697-41e5-b6e6-bf1bf4111662/586dcbf093890c677050e0faca468c7b)
 
-### Laravel 5.4 good practices, events and queues 📕
+#### Laravel 5.4 good practices, events and queues 📕
 
 **School of Net** | Issued Apr 2017
 **Credential ID:** [d262f669-0893-42a8-b2f4-a2d9a895c8b0](https://www.evernote.com/shard/s96/sh/bedd27a8-8f8a-4cc8-88e2-a9a8f1ac3743/536f414b349d116f1742b8b415c6cab2)
 
-### API RESTFul development with Laravel 📕
+#### API RESTFul development with Laravel 📕
 
 **School of Net** | Issued Mar 2017
 **Credential ID:** [5ae50017-a58b-4c94-9804-cd736a59112ec](https://www.evernote.com/shard/s96/sh/9a699fc2-c42d-4942-a0a9-d63758ce6cd9/a0b92e47d2d6a7c4025e3b8c5bc6794c)
 
-### Laravel Authentication 📕
+#### Laravel Authentication 📕
 
 **School of Net** | Issued Mar 2017
 **Credential ID:** [acd628d9-8323-4bfc-af80-465549744ee6](https://www.evernote.com/shard/s96/sh/33066783-5087-4f09-bf4f-677513eb61bc/cb463fc0e3a5c1b11ed9ebd4fe9611be)
 
-### Laravel Events and Queues 📕
+#### Laravel Events and Queues 📕
 
 **School of Net** | Issued Mar 2017
 **Credential ID:** [5ae50017-a58b-4c94-9804-cd736a5912ec](https://www.evernote.com/shard/s96/sh/2d72e193-124a-4418-b421-5eda5bcd8696/ff075c81d73ecee536e6c0f023fad37b)
 
-### Laravel - Scout and Realtime Search in Frontend 📕
+#### Laravel - Scout and Realtime Search in Frontend 📕
 
 **School of Net** | Issued Feb 2017
 **Credential ID:** [c2ddc94a-00cb-4a9b-922d-9bb6e5b4a4b2](https://www.evernote.com/shard/s96/sh/e441bb09-9b9f-4b13-a8c9-bea438ffee26/c6b869710baf18aad7b87263f39ecfb3)
 
-### Laravel - Validation and Forms 📕
+#### Laravel - Validation and Forms 📕
 
 **School of Net** | Issued Jan 2017
 **Credential ID:** [6b93a5dc-294e-4da0-9a74-558947128f18](https://www.evernote.com/shard/s96/sh/a09f331e-6cda-47d2-a0f5-c82506f84291/b000c413fac1eaeb77c479e6fbaec44b)
 
-### Laravel 5.3 📕
+#### Laravel 5.3 📕
 
 **School of Net** | Issued Jan 2017
 **Credential ID:** [e29b9dab-c775-4129-bcb0-f5d4eb9d8cfd](https://www.evernote.com/shard/s96/sh/35391b6c-3974-4680-ab22-053d1a53a49a/a95cc45dff14937651a2297aa57b5d23)
 
-## Frontend Development
+### Frontend Development
 
-### Vue.js 2 with Laravel 📗+📕
+#### Vue.js 2 with Laravel 📗+📕
 
 **School of Net** | Issued Mar 2018
 **Credential ID:** [5f2ba45adc546bf08437e4e5a8d2a3ec](https://www.evernote.com/shard/s96/sh/1dc6063c-0ff2-4747-9964-00d9c0ccd5af/5f2ba45adc546bf08437e4e5a8d2a3ec)
 
-### Flexbox CSS
+#### Flexbox CSS
 
 **School of Net** | Issued Jan 2021
 **Credential ID:** [d3390bf6-4134-4bd0-964a-413ea6429381](http://www.schoolofnet.com/validar-certificado/?certificate=d3390bf6-4134-4bd0-964a-413ea6429381)
-### Google Material Design Lite 🎨
+#### Google Material Design Lite 🎨
 
 **School of Net** | Issued Apr 2017
 **Credential ID:** [930d1851-df6e-445c-bb80-591e7538b3a1](https://www.evernote.com/shard/s96/sh/5f90720b-d233-476c-af1f-a362fdb6bf2a/48eeb6cd35e2f067699c6ad02da04ce7)
-### HTML5 📙
+#### HTML5 📙
 
 **School of Net** | Issued Jan 2017
 **Credential ID:** [73441be8-5244-4c8d-973e-6a2fbba5d2ea](https://www.evernote.com/shard/s96/sh/94534b2c-ee38-48f2-8645-f8fbc97d5780/093920974efc69c8d4c9de84b09fe556)
 
-### Javascript Advanced 📗
+#### Javascript Advanced 📗
 
 **School of Net** | Issued Jan 2017
 **Credential ID:** [0855916f-351c-43c5-aab9-69301bba5f6e](https://www.evernote.com/shard/s96/sh/8f7bbeeb-f19d-4f9d-99be-fced10bda7da/b299ff9ee71855565208358650302160)
-### Webpack 2 🎒
+#### Webpack 2 🎒
 
 **School of Net** | Issued Oct 2017
 **Credential ID:** [2eeca1a42b01aceba6fcc6265fd22a63](https://www.evernote.com/shard/s96/sh/e33b8b27-5975-4494-b041-f8b53187bc90/2eeca1a42b01aceba6fcc6265fd22a63)
-### Typescript 📱
+#### Typescript 📱
 
 **School of Net** | Issued Apr 2017
 **Credential ID:** [6130af35-dbb2-4d4d-99b4-1d486cafbc29](https://www.evernote.com/shard/s96/sh/da4eb4dd-990b-4c84-8c05-c02c6c35ce96/1888172e09a2205d6382a0baddded169)
 
-## Mobile Development
+### Mobile Development
 
-### Introduction to Ionic 2 📱
+#### Introduction to Ionic 2 📱
 
 **School of Net** | Issued Apr 2017
 **Credential ID:** [c76c90d0-a9fd-488a-9279-c9563536044c](https://www.evernote.com/shard/s96/sh/0396ac4c-37ce-41fc-842c-c933a446ce24/49a8fe18bc3e29a8f320b90013c02852)
 
-## Database & Data Management
+### Database & Data Management
 
-### Database and Eloquent 📕
+#### Database and Eloquent 📕
 
 **School of Net** | Issued Feb 2017
 **Credential ID:** [1862a1b7-2213-4b5e-b26e-735999332e10](https://www.evernote.com/shard/s96/sh/bd3a51c6-5a88-48c1-a91d-fdb7b2166db5/8b002cc870ad6449b5ef8696ea0d4b77)
 
-### MongoDB 🌿
+#### MongoDB 🌿
 
 **School of Net** | Issued Oct 2017
 **Credential ID:** [e3ef33ad85f7410737f07143604ce0c0](https://www.evernote.com/shard/s96/sh/e6f28fcc-d2ae-4a2d-b758-69d282a24da0/e3ef33ad85f7410737f07143604ce0c0)
 
-### MySQL Tunning - Part 1
+#### MySQL Tunning - Part 1
 
 **School of Net** | Issued Jul 2020
 **Credential ID:** [21be028b-1ea3-4fde-b049-2683a93395fb](https://www.evernote.com/shard/s96/sh/c87b0ffa-1e92-9ecc-f7e4-b8621e41f783/94e3223779ca4d843ffc672038db2926)
 
-### Redis 🌰
+#### Redis 🌰
 
 **School of Net** | Issued Jan 2018
 **Credential ID:** [58595811662261ba07fa0ccb27c49ba7](https://www.evernote.com/shard/s96/sh/8039800e-7853-4961-8efa-db0468fe2345/58595811662261ba07fa0ccb27c49ba7)
 
 
 
-## DevOps & Infrastructure
+### DevOps & Infrastructure
 
 ![Alura logo](https://media.licdn.com/dms/image/v2/D4D0BAQEZkMsv5FwbDA/company-logo_100_100/company-logo_100_100/0/1710187635900/aluracursos_logo?e=1756944000&v=beta&t=tIl1uJ_TlOfcW0-ecPeIUcngXIdnBb6OK4UUfGBkDoE)
-### Docker: Creating containers without headache 🐋
+#### Docker: Creating containers without headache 🐋
 
 **Alura** | Issued Feb 2018
 **Credential ID:** [d88ca56676a27a263dc3e9123151f851](https://www.evernote.com/shard/s96/sh/cc4bf4ab-3400-4ceb-a94c-ae26df799d09/d88ca56676a27a263dc3e9123151f851)
 
 ![School of Net logo](https://media.licdn.com/dms/image/v2/C4D0BAQH1yYpvcNDwIQ/company-logo_100_100/company-logo_100_100/0/1630530376388/school_of_net_logo?e=1756944000&v=beta&t=erJNtq13OSVJuvqZdgOh_J584O5j2CIfToQssGeCO1w)
-### Git Flow 🐾
+#### Git Flow 🐾
 
 **School of Net** | Issued Jan 2018
 **Credential ID:** [3b359834d83e015a8ef54204a20db6ed](https://www.evernote.com/shard/s96/sh/d5c74f92-f8e1-4fa7-95f0-a820e8137ff0/3b359834d83e015a8ef54204a20db6ed)
-### Jenkins ⚙️
+#### Jenkins ⚙️
 
 **School of Net** | Issued Jun 2017
 **Credential ID:** [931458a139eb3dbb138e51338234ec34](https://www.evernote.com/shard/s96/sh/d87add0a-626c-47e2-bdda-01f62282147c/931458a139eb3dbb138e51338234ec34)
 
-### Laravel Echo 📕
+#### Laravel Echo 📕
 
 **School of Net** | Issued Oct 2017
 **Credential ID:** [d74c900eb27ecca4a70c5f2d22841697](https://www.evernote.com/shard/s96/sh/53d85960-4459-49c8-af13-18f9a83e8a4e/d74c900eb27ecca4a70c5f2d22841697)
 
-## Programming Languages & Frameworks
-### Starting with Python 🐍
+### Programming Languages & Frameworks
+#### Starting with Python 🐍
 
 **School of Net** | Issued Jun 2018
 **Credential ID:** [1b410652385c5bf736379f19e1568227](https://www.evernote.com/shard/s96/sh/e9963dcf-4ac5-46e3-92a7-a78b2224127e/1b410652385c5bf736379f19e1568227)
 
-### Yii2 Basic 🍃
+#### Yii2 Basic 🍃
 
 **School of Net** | Issued Dec 2016
 **Credential ID:** [5533149b-158c-4475-98e1-394b8c93763b](https://www.evernote.com/shard/s96/sh/baf91fb1-e681-4348-945f-05e91a5e2160/497021713d6b28e1f4173684dcbe84cd)
 
 
-## Content Management - CMS
+### Content Management - CMS
 
-### Theme Development with Wordpress ✍️
+#### Theme Development with Wordpress ✍️
 
 **School of Net** | Issued May 2018
 **Credential ID:** [57e6f4c4f5812f986c27ee673caf90a3](https://www.evernote.com/shard/s96/sh/4183fada-9b1f-4b3a-b9ed-1254fd020962/57e6f4c4f5812f986c27ee673caf90a3)
 
-### Plugin development advanced with Wordpress ✍️
+#### Plugin development advanced with Wordpress ✍️
 
 **School of Net** | Issued Apr 2018
 **Credential ID:** [c92a461071b4dda4b0e624a159e85d31](https://www.evernote.com/shard/s96/sh/52b2a2b8-7384-49b2-a586-11362d948c4c/c92a461071b4dda4b0e624a159e85d31)
 
-### Plugin development with Wordpress ✍️
+#### Plugin development with Wordpress ✍️
 
 **School of Net** | Issued Apr 2018
 **Credential ID:** [b36e1053a61231c75039f0b049794fce](https://www.evernote.com/shard/s96/sh/fa9dc8b4-497e-45a9-a0cd-59c2a992f1ef/b36e1053a61231c75039f0b049794fce)
 
-## System Administration
+### System Administration
 
-### Terminal in Linux 🐧
+#### Terminal in Linux 🐧
 
 **School of Net** | Issued Aug 2018
 **Credential ID:** [2bca2b71a88fbfe32feace235943d118](https://www.evernote.com/shard/s96/sh/0acc621a-2a7a-42ab-bb09-b2f3b812fbda/2bca2b71a88fbfe32feace235943d118)
 
 
-## Languages Proficiency
+### Languages Proficiency
 
 
 ![The City of Liverpool College logo](https://media.licdn.com/dms/image/v2/D4E0BAQEOuGg4EJzHUg/company-logo_100_100/B4EZaLFZZAHoAQ-/0/1746090170351/colcollege_logo?e=1756944000&v=beta&t=40inwLDfmKeYyhxuymjs1JZfHN08p9diOsgLcDqVoIg)
-### English for speakers of other languages
+#### English for speakers of other languages
 
 **The City of Liverpool College** | Issued Nov 2020
 
-## Leadership & Coaching
+### Leadership & Coaching
 
 ![SBCoaching logo](https://media.licdn.com/dms/image/v2/C4E0BAQE8GTokDIqgfA/company-logo_100_100/company-logo_100_100/0/1631353983404?e=1756944000&v=beta&t=bY-aN0Ggx9Mlda4egvkGZdQqIW8HV2uWregvobTOxQ0)
-### Leader Coach
+#### Leader Coach
 
 **SBCoaching** | Issued Aug 2012
 **Credential ID:** By Behavioral Coaching Institute
@@ -639,37 +643,37 @@ São Paulo Area, Brazil
 
 
 
-## Agile Project Management
+### Agile Project Management
 
  ![Scrum Alliance logo](https://media.licdn.com/dms/image/v2/D560BAQFdepbfdMhg3g/company-logo_100_100/company-logo_100_100/0/1719256430021/scrum_alliance_logo?e=1756944000&v=beta&t=7DxcG_KUTxZhG8tgUQiLHVhtsxWyjjg0W46O6qfLg6A)
-### Certified ScrumMaster (CSM)
+#### Certified ScrumMaster (CSM)
 
 **Scrum Alliance** | Issued Aug 2011
 **Credential ID:** 000150851
 
 
 
-## Enterprise Java Development
+### Enterprise Java Development
 ![IBTA](https://i.imgur.com/A2B6nMQ.png)
-### J2EE (Java 2 Platform, Enterprise Edition)
+#### J2EE (Java 2 Platform, Enterprise Edition)
 **Instituto Brasileiro de Tecnologia Avançada - IBTA** | Issued Jul 2005
 **Skills:** Servlets and JSP (JavaServer Pages) · Enterprise JavaBeans (EJB) · Java Database Connectivity (JDBC) · Web Application Architecture · Session Management · JNDI (Java Naming and Directory Interface) · Deployment Descriptors and Web Servers
 
-### Java Fundamentals and Object-Oriented Programming (OOP)
+#### Java Fundamentals and Object-Oriented Programming (OOP)
 **Instituto Brasileiro de Tecnologia Avançada - IBTA** | Issued Mar 2005  
 **Skills:** Basic Java Programming · Object-Oriented Programming (OOP) · Classes and Objects · Data Structures · Exception Handling · Java Standard Library · Debugging and Troubleshooting
 
-## Comprehensive Training
+### Comprehensive Training
 
 ![School of Net logo](https://media.licdn.com/dms/image/v2/C4D0BAQH1yYpvcNDwIQ/company-logo_100_100/company-logo_100_100/0/1630530376388/school_of_net_logo?e=1756944000&v=beta&t=erJNtq13OSVJuvqZdgOh_J584O5j2CIfToQssGeCO1w)
 
-### All courses completed at School of Net
+#### All courses completed at School of Net
 **School of Net** | Issued Jan 2010
 **Credential ID:** [luis-fernando-richter-pereira-dos-santos-2527](http://www.schoolofnet.com/portfolio/luis-fernando-richter-pereira-dos-santos-2527)
 
 
 ---
-### Adendo de Experiência
+## Another expertises
 
 #### **Orquestração de Contêineres (Kubernetes)**
 

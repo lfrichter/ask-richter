@@ -13,9 +13,11 @@ import myAdjustedOk from '../../public/images/AvatarCircle.png';
 const CodeBlock = ({ className, children }: { className?: string; children: React.ReactNode }) => {
   const language = className?.replace('lang-', '') || 'text';
   return (
-    <SyntaxHighlighter style={vscDarkPlus as any} language={language} PreTag="div">
-      {String(children).replace(/\n$/, '')}
-    </SyntaxHighlighter>
+    <div className="relative">
+      <SyntaxHighlighter style={vscDarkPlus as any} language={language} PreTag="div">
+        {String(children).replace(/\n$/, '')}
+      </SyntaxHighlighter>
+    </div>
   );
 };
 
@@ -101,7 +103,28 @@ export default function Chat() {
                   <div key={m.id} className={`flex gap-3 text-sm ${m.role === 'user' ? 'justify-end' : ''}`}>
                     {m.role === 'assistant' && <span className="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-full items-center justify-center bg-gray-800 text-white font-bold">AI</span>}
                     <div className={`rounded-lg p-3 prose prose-sm max-w-none ${m.role === 'user' ? 'bg-blue-500 text-white prose-invert' : 'bg-gray-100'}`}>
-                      <Markdown options={{ overrides: { code: { component: CodeBlock } } }}>
+                      {/* <Markdown options={{ overrides: { code: { component: CodeBlock } } }}>
+                        {m.content}
+                      </Markdown> */}
+                      <Markdown
+                        options={{
+                          overrides: {
+                            code: ({ children, className }) => <CodeBlock className={className}>{children}</CodeBlock>,
+                            // Adicione este override para a tag <p>
+                            p: ({ children }) => {
+                              // Verifica se o filho é um CodeBlock (que renderiza como um div)
+                              // Se for, renderiza sem a tag <p> para evitar aninhamento inválido.
+                              if (
+                                React.isValidElement(children) &&
+                                (children.type as any).name === 'CodeBlock'
+                              ) {
+                                return <>{children}</>;
+                              }
+                              return <p className="mb-2 last:mb-0">{children}</p>;
+                            },
+                          },
+                        }}
+                      >
                         {m.content}
                       </Markdown>
                     </div>

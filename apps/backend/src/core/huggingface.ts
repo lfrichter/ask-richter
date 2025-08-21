@@ -1,5 +1,3 @@
-// Usaremos o fetch nativo do Node.js.
-
 const API_URL = "https://api-inference.huggingface.co/models/";
 
 if (!process.env.HUGGINGFACE_API_KEY) {
@@ -7,14 +5,21 @@ if (!process.env.HUGGINGFACE_API_KEY) {
 }
 
 /**
- * Faz uma chamada para a API de Inferência da Hugging Face.
- * (Renomeado para mais clareza no roteador)
+ * Faz uma chamada para a API de Inferência da Hugging Face com parâmetros conservadores.
  * @param model - O nome do modelo a ser usado.
  * @param prompt - O prompt formatado a ser enviado para o modelo.
  * @returns O texto gerado pelo modelo.
  */
 export async function callHuggingFaceAPI(model: string, prompt: string): Promise<string> {
   try {
+    // Parâmetros para reduzir a criatividade e alucinações
+    const conservativeParams = {
+      max_new_tokens: 256, // Limita o tamanho da resposta
+      temperature: 0.1,    // Reduz drasticamente a criatividade
+      top_p: 0.3,          // Limita a diversidade de tokens
+      return_full_text: false,
+    };
+
     const response = await fetch(`${API_URL}${model}`, {
       method: 'POST',
       headers: {
@@ -23,7 +28,7 @@ export async function callHuggingFaceAPI(model: string, prompt: string): Promise
       },
       body: JSON.stringify({
         inputs: prompt,
-        parameters: { max_new_tokens: 512, temperature: 0.7, return_full_text: false }
+        parameters: conservativeParams, // Parâmetros atualizados aqui
       }),
     });
 
