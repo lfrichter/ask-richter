@@ -9,9 +9,27 @@
       "command": "ollama run opencoder:8b",
       "group": {
         "kind": "build",
+        "isDefault": false
+      }
+    },
+    {
+      "label": "ollama run mistral:7b",
+      "type": "shell",
+      "command": "ollama run mistral:7b",
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      }
+    },
+    {
+      "label": "ollama run mistral:latest",
+      "type": "shell",
+      "command": "ollama run mistral:latest",
+      "group": {
+        "kind": "build",
         "isDefault": true
       }
-    }
+    },
   ]
 
 }
