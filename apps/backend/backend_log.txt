@@ -1,0 +1,308 @@
+
+> backend@1.0.0 start
+> node dist/index.js
+
+⚠️  Node.js 18 and below are deprecated and will no longer be supported in future versions of @supabase/supabase-js. Please upgrade to Node.js 20 or later. For more information, visit: https://github.com/orgs/supabase/discussions/37217
+[INIT] Índice FAISS já existe localmente. Pulando download.
+[INIT] Carregando índice FAISS para a memória...
+[INIT] Índice FAISS carregado com sucesso.
+[INIT] Carregando documentos para o retriever híbrido...
+Unknown file type: .DS_Store
+[INIT] Retriever híbrido inicializado com sucesso.
+[server]: Backend rodando em http://localhost:3001
+[API] Pergunta recebida: "Me mostre projetos laravel ou React"
+[API] Plano de consulta gerado: SIMPLE_SEARCH
+[SMART SEARCH] Executando plano de consulta: SIMPLE_SEARCH
+[SMART SEARCH] Intenção classificada como: GENERAL
+[SMART SEARCH] Executando busca geral...
+================ CONTEXTO ESTRUTURADO PARA A IA (TOP 3) ================
+PROJETO: 🚀 Twin Quest: Desafio Full-Stack
+  - # CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS (Fonte: Projects All Consolidated.md)
+    #### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
+
+| Categoria                    | Tecnologias e Conceitos                                                                                               |
+| :--------------------------- | :-------------------------------------------------------------------------------------------------------------------- |
+| **Software Development**     | Desenvolvedor Full-Stack, Laravel, Vue 3, TypeScript, Pinia, Pest, Test-Driven Development (TDD), Qualidade de Código |
+| **Architecture**             | Arquitetura Full-Stack, API RESTful, Gestão de Estado (Pinia), Sistema de Cache (Redis), Autenticação de Usuários     |
+| **Cloud Computing**          | N/A                                                                                                                   |
+| **API RESTFul development**  | API RESTful, Laravel, Endpoints, Requisição HTTP, Resposta JSON                                                       |
+| **Frontend Development**     | Vue 3 (Composition API), TypeScript, Pinia, Interface de Usuário Reativa                                              |
+| **Mobile Development**       | N/A                                                                                                                   |
+| **Database**                 | PostgreSQL, Redis                                                                                                     |
+| **Data Management**          | N/A                                                                                                                   |
+| **Content Management - CMS** | N/A                                                                                                                   |
+| **System Administration**    | N/A                                                                                                                   |
+| **DevOps**                   | Testes Automatizados, Pest, Docker                                                                                    |
+| **Leadership**               | Liderança Técnica (Idealizador e único desenvolvedor)                                                                 |
+| **Coaching**                 | N/A                                                                                                                   |
+| **Agile Project Management** | N/A                                                                                                                   |
+
+
+PROJETO: 🚀 Gerenciador de Tarefas Conversacional via E-mail 📥 Postmark Challenge
+  - # 🛠️ Pilha de Tecnologias (Tech Stack) (Fonte: Projects All Consolidated.md)
+    #### 🛠️ Pilha de Tecnologias (Tech Stack)
+
+| Componente | Tecnologia Utilizada | Papel na Arquitetura |
+| :--- | :--- | :--- |
+| **Backend** | **Laravel** | Orquestra toda a lógica de negócio, rotas, processamento de webhooks e interação com o banco de dados. |
+| **Frontend Reativo** | **Livewire & Tailwind CSS** | Constrói uma interface de usuário dinâmica e moderna para a visualização das tarefas, com atualizações em tempo real. |
+| **Testes Automatizados**| **Pest** | Garante a confiabilidade e a robustez das regras de negócio e do motor de comandos com uma suíte de testes limpa. |
+| **Gateway de E-mail** | **Postmark API & Webhooks** | Recebe os e-mails, dispara os eventos via webhook para a aplicação e gerencia o envio de respostas. |
+| **Modelo Arquitetural** | **Arquitetura Orientada a Eventos** | Permite que a aplicação reaja de forma assíncrona aos e-mails recebidos, garantindo um fluxo desacoplado e escalável. |
+
+-----
+
+
+  - # **Head of Full-stack Development** (Fonte: CV ALL Consolidated.md)
+    #### **Head of Full-stack Development**
+**Full Comms · Full-time**
+Apr 2021 - Nov 2022 · 1 yr 8 mos
+Manchester Area, United Kingdom · Remote
+**Skills:** Vue.js · Vuetify · TypeScript · Lumen · DevOps · PHP
+
+* **Desenvolveu aplicações CMS com Laravel** e um aplicativo de gerenciamento de widgets baseado em Vue.js, otimizando a gestão de conteúdo e a experiência do usuário.
+* **Construiu e manteve um sistema API escalável** com Lumen, garantindo alto desempenho.
+* **Colaborou com uma pequena equipe para implementar o novo módulo de Pós-Venda** para Kpro.
+* **Otimizou o desempenho de projetos** por meio de avaliações e melhorias contínuas, e gerenciou atualizações de PHP e Laravel para segurança e compatibilidade.
+* **Implementou testes automatizados com Dusk** (Selenium) para melhorar a confiabilidade e utilizou DeployHQ, Cercel e Laravel Forge para implantação contínua.
+
+---
+=======================================================================
+[API] Roteando para o provedor: ollama
+[API] Resposta recebida do ollama com sucesso.
+[API] Pergunta recebida: "Me de a lista de projetos laravel"
+[API] Plano de consulta gerado: SIMPLE_SEARCH
+[SMART SEARCH] Executando plano de consulta: SIMPLE_SEARCH
+[SMART SEARCH] Intenção classificada como: GENERAL
+[SMART SEARCH] Executando busca geral...
+================ CONTEXTO ESTRUTURADO PARA A IA (TOP 3) ================
+PROJETO: 🚀 Kpro After Sales: API para Otimização de Processos de Pós-Venda
+  - # CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS (Fonte: Projects All Consolidated.md)
+    #### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
+
+| Categoria                    | Tecnologias e Conceitos                                                                                        |
+| :--------------------------- | :------------------------------------------------------------------------------------------------------------- |
+| **AI & Machine Learning**    | N/A                                                                                                            |
+| **Software Development**     | 👨‍💻 Laravel Lumen (PHP), PHPUnit, Testes Automatizados, Cobertura de Código, Regras de Negócio, Query Tuning |
+| **Architecture**             | 🏗️ Arquitetura Desacoplada, API RESTful, Cache, Baixa Latência                                                |
+| **Cloud Computing**          | N/A                                                                                                            |
+| **API RESTFul development**  | 🔌 API RESTful, Endpoints, Swagger (OpenAPI), Documentação da API                                              |
+| **Frontend Development**     | 🖥️ Vue.js                                                                                                     |
+| **Mobile Development**       | N/A                                                                                                            |
+| **Database**                 | 🗃️ MySQL, Query Tuning                                                                                        |
+| **Data Management**          | N/A                                                                                                            |
+| **Content Management - CMS** | N/A                                                                                                            |
+| **System Administration**    | ⚙️ Monitoramento e Observabilidade (Proposto), Prometheus/Grafana (Proposto)                                   |
+| **DevOps**                   | 🚀 CI/CD (Proposto), Monitoramento e Observabilidade (Proposto)                                                |
+| **Leadership**               | 👨‍🏫 Arquiteto de Soluções                                                                                    |
+| **Coaching**                 | N/A                                                                                                            |
+| **Agile Project Management** | N/A                                                                                                            |
+
+
+PROJETO: 🚀 Projeto Spider - Hub de Integração E-commerce
+  - # CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS (Fonte: Projects All Consolidated.md)
+    #### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
+
+| Categoria | Tecnologias e Conceitos |
+| :--- | :--- |
+| **AI & Machine Learning** | N/A |
+| **Software Development** | PHP, Laravel, Artisan Commands, Jobs, Traits (`LogTrait`), Controllers, Backend Development |
+| **Architecture**| Arquitetura Orientada a Serviços, Arquitetura Orientada a Eventos, Arquitetura Assíncrona, Arquitetura Reativa, Hub de Integração, Modelagem de Entidades, Fluxos de Dados |
+| **Cloud Computing** | AWS S3 |
+| **API RESTFul development** | API REST, Webhooks, Consumo de API (Bling, Plugg.to, Skyhub) |
+| **Frontend Development** | N/A |
+| **Mobile Development** | N/A |
+| **Database** | MongoDB, Redis, MySQL, SQLite, NoSQL |
+| **Data Management** | ETL (Extração, Transformação, Carga), Migração de Dados (Magento, Plugg.to), Sincronização de Dados (Estoque, Preço), Qualidade de Dados, Normalização de Dados, Logs (`LogTrait`) |
+| **Content Management - CMS** | N/A |
+| **System Administration** | Gerenciamento de Servidor (SSH), Cron Jobs |
+| **DevOps** | Docker, Docker Compose, Monitoramento, Logging, Automação de Tarefas |
+| **Leadership** | Liderança Técnica, Documentação Técnica, Mentoria (Coaching) |
+| **Coaching** | N/A |
+| **Agile Project Management** | Jira, Gestão de Tarefas, Acompanhamento de Status |
+
+
+---
+
+
+  - # **Software Development & Architecture** (Fonte: Experience All Consolidated.md)
+    #### **Software Development & Architecture**
+Você atuou como um desenvolvedor full-stack com um forte foco no backend, construindo a lógica central do sistema de integração.
+
+*   **Stacks e Metodologias:**
+    *   **Backend:** O uso de `Artisan`, `Jobs`, `Controllers` e a estrutura de diretórios (`App\Console\Commands\Traits\LogTrait`) indicam o uso do framework **PHP Laravel**.
+    *   **Arquitetura:** Você projetou e implementou uma arquitetura orientada a serviços e eventos. O sistema era composto por múltiplos processos que reagiam a webhooks (de Bling e Pluggto) e se comunicavam através de uma robusta **arquitetura de filas (Queues)** para processamento assíncrono de tarefas, como importação de pedidos e atualização de estoque (Plugae - Spider - Estoque.md, Plugae - Spider - Pedidos em fila.md).
+    *   **Padrões Utilizados:** O código demonstra o uso de padrões como `Traits` para reutilização de código (`LogTrait`), `Commands` para tarefas de linha de comando, e uma clara separação de responsabilidades entre controladores, jobs e serviços.
+=======================================================================
+[API] Roteando para o provedor: ollama
+[API] Resposta recebida do ollama com sucesso.
+[API] Pergunta recebida: "Qual tecnologia ele usa no frontend"
+[API] Plano de consulta gerado: SIMPLE_SEARCH
+[SMART SEARCH] Executando plano de consulta: SIMPLE_SEARCH
+[SMART SEARCH] Intenção classificada como: TECH_QUESTION
+[SMART SEARCH] Executando busca por tecnologia (via intent)...
+[SMART SEARCH] Query expandida: "Qual tecnologia ele usa no frontend"
+================ CONTEXTO ESTRUTURADO PARA A IA (TOP 3) ================
+PROJETO: 🚀 Air Combat 3D: Um Estudo de Caso sobre Produtividade com IAs
+  - # 🛠️ Pilha de Tecnologias (Tech Stack) (Fonte: Projects All Consolidated.md)
+    #### 🛠️ Pilha de Tecnologias (Tech Stack)
+
+| Componente | Tecnologia Utilizada | Papel na Arquitetura |
+| :--- | :--- | :--- |
+| **Renderização e Interação 3D** | **Three.js** | Criação do ambiente 3D, renderização dos aviões e gerenciamento da câmera e controles do jogador no navegador. |
+| **Servidor de Aplicação** | **Node.js com Express** | Orquestra a lógica de negócio, gerencia o matchmaking e serve como a base para a comunicação em tempo real. |
+| **Comunicação em Tempo Real** | **WebSockets** | Estabelece um canal de comunicação bidirecional e de baixa latência entre o cliente e o servidor para sincronizar as ações. |
+| **Conteinerização** | **Docker** | Empacota a aplicação e suas dependências em um contêiner, garantindo consistência entre os ambientes de desenvolvimento e produção. |
+| **Hospedagem e Deploy** | **Render.com** | Plataforma de nuvem utilizada para hospedar a aplicação conteinerizada e disponibilizá-la publicamente online. |
+| **Aceleração de Código** | **IA Generativa (Cursor, Trae)** | Ferramentas integradas à IDE para acelerar a escrita de código, prototipagem de funcionalidades e resolução de problemas. |
+
+-----
+
+
+PROJETO: 🚀 Gerenciador de Tarefas Conversacional via E-mail 📥 Postmark Challenge
+  - # 🛠️ Pilha de Tecnologias (Tech Stack) (Fonte: Projects All Consolidated.md)
+    #### 🛠️ Pilha de Tecnologias (Tech Stack)
+
+| Componente | Tecnologia Utilizada | Papel na Arquitetura |
+| :--- | :--- | :--- |
+| **Backend** | **Laravel** | Orquestra toda a lógica de negócio, rotas, processamento de webhooks e interação com o banco de dados. |
+| **Frontend Reativo** | **Livewire & Tailwind CSS** | Constrói uma interface de usuário dinâmica e moderna para a visualização das tarefas, com atualizações em tempo real. |
+| **Testes Automatizados**| **Pest** | Garante a confiabilidade e a robustez das regras de negócio e do motor de comandos com uma suíte de testes limpa. |
+| **Gateway de E-mail** | **Postmark API & Webhooks** | Recebe os e-mails, dispara os eventos via webhook para a aplicação e gerencia o envio de respostas. |
+| **Modelo Arquitetural** | **Arquitetura Orientada a Eventos** | Permite que a aplicação reaja de forma assíncrona aos e-mails recebidos, garantindo um fluxo desacoplado e escalável. |
+
+-----
+
+
+PROJETO: 🚀 Twin Quest: Desafio Full-Stack
+  - # 🛠️ Pilha de Tecnologias (Tech Stack) (Fonte: Projects All Consolidated.md)
+    #### 🛠️ Pilha de Tecnologias (Tech Stack)
+
+| Componente                  | Tecnologia Utilizada        | Papel na Arquitetura                                                                                                |
+| :-------------------------- | :-------------------------- | :------------------------------------------------------------------------------------------------------------------ |
+| **Backend (API)**           | **Laravel**                 | Orquestra a lógica de negócio, gerencia as rotas da API e se comunica com o serviço de IA Generativa.               |
+| **Frontend (UI)**           | **Vue 3 (Composition API)** | Constrói a interface de usuário reativa e dinâmica, permitindo uma interação fluida com o usuário.                  |
+| **Tipagem de Código**       | **TypeScript**              | Garante a segurança de tipos em todo o projeto, tanto no frontend quanto no backend (se aplicável), reduzindo bugs. |
+| **Gerenciamento de Estado** | **Pinia**                   | Centraliza e gerencia o estado da aplicação no frontend de forma simples, reativa e eficiente.                      |
+| **Testes Automatizados**    | **Pest**                    | Garante a confiabilidade e a qualidade da API do Laravel através de uma suíte de testes elegante e poderosa (TDD).  |
+
+
+-----
+=======================================================================
+[API] Roteando para o provedor: ollama
+[API] Resposta recebida do ollama com sucesso.
+[API] Pergunta recebida: "Me de a lista de projetos e me fale alguma tecnologia utilizada em cada um"
+[API] Plano de consulta gerado: SIMPLE_SEARCH
+[SMART SEARCH] Executando plano de consulta: SIMPLE_SEARCH
+[SMART SEARCH] Intenção classificada como: TECH_QUESTION
+[SMART SEARCH] Executando busca por tecnologia (via intent)...
+[SMART SEARCH] Query expandida: "Me de a lista de projetos e me fale alguma tecnologia utilizada em cada um realizações trabalhos exemplos"
+================ CONTEXTO ESTRUTURADO PARA A IA (TOP 3) ================
+PROJETO: 🚀 Cache Semântico de Alta Performance para Otimização de LLMs (PoC)
+  - # CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS (Fonte: Projects All Consolidated.md)
+    #### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
+
+| Categoria                    | Tecnologias e Conceitos                                                                                                                                              |
+| :--------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **AI & Machine Learning**    | Cache Semântico, LLMs (Grandes Modelos de Linguagem), Vetor de Embedding, Busca por Similaridade, FAISS (Facebook AI Similarity Search), Ollama, Limiar de Confiança |
+| **Software Development**     | Python, NumPy                                                                                                                                                        |
+| **Architecture**             | Prova de Conceito (PoC), Sistema de Cache, Cache Hit/Miss, Arquitetura Local, Otimização de Performance, Redução de Latência, Índice em Memória                      |
+| **Cloud Computing**          | N/A                                                                                                                                                                  |
+| **API RESTFul development**  | N/A                                                                                                                                                                  |
+| **Frontend Development**     | N/A                                                                                                                                                                  |
+| **Mobile Development**       | N/A                                                                                                                                                                  |
+| **Database**                 | N/A                                                                                                                                                                  |
+| **Data Management**          | Índice Vetorial                                                                                                                                                      |
+| **Content Management - CMS** | N/A                                                                                                                                                                  |
+| **System Administration**    | N/A                                                                                                                                                                  |
+| **DevOps**                   | N/A                                                                                                                                                                  |
+| **Leadership**               | Idealizador, Desenvolvedor Principal                                                                                                                                 |
+| **Coaching**                 | N/A                                                                                                                                                                  |
+| **Agile Project Management** | Prova de Conceito (PoC)                                                                                                                                              |
+
+
+PROJETO: 🚀 Ask Richter: Meu CV Interativo com IA
+  - # CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS (Fonte: Projects All Consolidated.md)
+    #### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
+
+| Categoria                    | Tecnologias e Conceitos                                                                                                                                                                                                                                                                 |
+| :--------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **AI & Machine Learning**    | Retrieval-Augmented Generation (RAG), FAISS, `faiss-node`, LangChain.js, OpenAI Embeddings (`text-embedding-3-small`), LLMs, Ollama, Llama 3, Mistral 7B, Hugging Face API, `DirectoryLoader`, `RecursiveCharacterTextSplitter`, Busca por Similaridade Semântica, Embeddings Vetoriais |
+| **Software Development**     | Node.js, TypeScript, `tsx`, npm Workspaces, ESM (`"type": "module"`), `markdown-to-jsx`, `react-syntax-highlighter`, `dotenv`                                                                                                                                                           |
+| **Architecture**             | Arquitetura Full-Stack, Monorepo, Microservices (Frontend/Backend desacoplados), RAG (Retrieval-Augmented Generation), Single Page Application (SPA)                                                                                                                                    |
+| **Cloud Computing**          | Vercel, Render.com, Supabase, Supabase Storage, Hugging Face API                                                                                                                                                                                                                        |
+| **API RESTFul development**  | Express.js, Node.js, Health Check Endpoint (`/api/health`)                                                                                                                                                                                                                              |
+| **Frontend Development**     | Next.js (App Router), React, React Hooks (`useState`, `useEffect`), Tailwind CSS, Shadcn/ui, Lucide React, Design Responsivo                                                                                                                                                            |
+| **Mobile Development**       | N/A                                                                                                                                                                                                                                                                                     |
+| **Database**                 | FAISS                                                                                                                                                                                                                                                                                   |
+| **Data Management**          | Chunking (Fragmentação de Texto), Indexação Vetorial, Supabase Storage, Row Level Security (RLS)                                                                                                                                                                                        |
+| **Content Management - CMS** | N/A                                                                                                                                                                                                                                                                                     |
+| **System Administration**    | N/A                                                                                                                                                                                                                                                                                     |
+| **DevOps**                   | Turborepo, Docker, CI/CD, Vercel, Render.com, GitHub, Infrastructure as Code (`render.yaml`), Variáveis de Ambiente                                                                                                                                                                     |
+| **Leadership**               | N/A                                                                                                                                                                                                                                                                                     |
+| **Coaching**                 | N/A                                                                                                                                                                                                                                                                                     |
+| **Agile Project Management** | N/A                                                                                                                                                                                                                                                                                     |
+
+
+PROJETO: 🚀 Fábrica de Vídeos Automatizada para YouTube
+  - # CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS (Fonte: Projects All Consolidated.md)
+    #### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
+
+| Categoria                    | Tecnologias e Conceitos                                                                                                                                                            |
+| :--------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **AI & Machine Learning**    | 🧠 OpenAI API (GPT), Replicate (SDXL), Coqui TTS, OpenAI Whisper, `transformers`, NumPy                                                                                            |
+| **Software Development**     | 💻 Python, `subprocess`, Pydub, Pillow, OpenCV, `python-dotenv`, Pytest, SOLID, Clean Code                                                                                         |
+| **Architecture**             | 🏛️ Arquitetura Modular, Microserviços, Plug-and-Play (Provedores de IA), `ContentManager` (Repositório Central), Renderização em Duas Etapas, `MovementFilterGenerator` (Factory) |
+| **Cloud Computing**          | ☁️ ElevenLabs API, Replicate API, Pixabay API, Jamendo API, YouTube Data API v3, OpenAI API                                                                                        |
+| **API RESTFul development**  | 🌐 Flask, Integração de APIs REST                                                                                                                                                  |
+| **Frontend Development**     | N/A                                                                                                                                                                                |
+| **Mobile Development**       | N/A                                                                                                                                                                                |
+| **Database**                 | 🗄️ JSON (utilizado como banco de dados de arquivos)                                                                                                                               |
+| **Data Management**          | 📊 `ContentManager` (Abstração de Dados), Gerenciamento de JSON                                                                                                                    |
+| **Content Management - CMS** | N/A                                                                                                                                                                                |
+| **System Administration**    | ⚙️ `launchd` (Agendamento de tarefas no macOS)                                                                                                                                     |
+| **DevOps**                   | 🚀 Gerenciamento de Ambiente (venv), Gerenciamento de Dependências (`requirements.txt`), Testes Automatizados (Pytest), Agendamento de Publicação                                  |
+| **Leadership**               | 👨‍🏫 Arquiteto de Soluções, Desenvolvedor Principal, Documentação Técnica                                                                                                         |
+| **Coaching**                 | N/A                                                                                                                                                                                |
+| **Agile Project Management** | 🔄 Desenvolvimento Incremental, Refatoração Estratégica, Resolução de Débito Técnico                                                                                               |
+
+---
+=======================================================================
+[API] Roteando para o provedor: ollama
+[API] Resposta recebida do ollama com sucesso.
+[API] Pergunta recebida: "Qual projeto utilizou Testcontainers para testes de integração?"
+[API] Plano de consulta gerado: SIMPLE_SEARCH
+[SMART SEARCH] Executando plano de consulta: SIMPLE_SEARCH
+[SMART SEARCH] Intenção classificada como: GENERAL
+[SMART SEARCH] Executando busca geral...
+================ CONTEXTO ESTRUTURADO PARA A IA (TOP 3) ================
+PROJETO: 🚀 SmartShorts: SaaS de Geração de Vídeos Automatizados
+  - # ✨ Pontos Fortes e Desafios Superados (Fonte: Projects All Consolidated.md)
+    #### ✨ Pontos Fortes e Desafios Superados
+
+A robustez da solução é seu maior ponto forte, fundamentada em uma arquitetura limpa e uma estratégia de testes completa. A utilização do padrão **Adapter** permitiu que o core do sistema se mantivesse isolado das instabilidades de APIs externas, enquanto o uso do padrão **State** no agregado `RenderJob` garantiu a consistência do ciclo de vida da geração de vídeos.
+
+No entanto, a jornada teve seus desafios, que se transformaram em grandes aprendizados:
+
+  * **O desafio era a complexidade da segurança:** Ao implementar a autenticação, enfrentamos erros de `403 Forbidden` em endpoints públicos e uma paralização da aplicação por uma **Referência Circular** na configuração do Spring Security. Superamos isso centralizando toda a configuração de segurança em uma única classe (`SecurityConfig`), ajustando a ordem das regras e quebrando o ciclo de dependência ao instanciar o filtro de JWT manualmente dentro do método de configuração. Isso resultou em uma configuração de segurança mais clara, robusta e manutenível.
+
+  * **O desafio era a "gestão do inferno de dependências":** O build falhava repetidamente devido a conflitos de versão entre Spring Boot e Spring Cloud. A vitória veio ao adotar uma abordagem metódica: pesquisamos a matriz de compatibilidade oficial do Spring, definimos as versões corretas no `pom.xml` e utilizamos o **BOM (Bill of Materials)** do Spring Cloud para que ele gerenciasse as versões transitivas. Essa lição foi formalizada no guia de contribuição do projeto.
+
+  - # 👨‍💻 Meu Papel no Projeto (Fonte: Projects All Consolidated.md)
+    #### 👨‍💻 Meu Papel no Projeto
+
+Atuei em múltiplas frentes, combinando liderança técnica com desenvolvimento prático, principalmente como **Arquiteto de Soluções e Desenvolvedor Back-End Sênior**. Minhas principais responsabilidades incluíram:
+
+  * **Definição da Arquitetura:** Idealizei e documentei a estrutura do sistema usando Clean Architecture e DDD-Lite, garantindo a separação de responsabilidades e a testabilidade.
+  * **Liderança Técnica e Mentoria:** Estabeleci as diretrizes de desenvolvimento, como a estratégia de testes em camadas (TDD, Integração e E2E) e o guia de contribuição para o projeto.
+  * **Desenvolvimento do Core:** Implementei os principais casos de uso do sistema em Java e Spring Boot, incluindo o ciclo de vida dos `RenderJobs`, a integração com APIs externas e a configuração de segurança com Spring Security e JWT.
+  * **Resolução de Desafios Complexos:** Liderei a investigação e solução de problemas críticos, desde a configuração do ambiente Docker até a resolução de referências circulares e conflitos de dependência no ecossistema Spring.
+  * **Cultura de Qualidade:** Fomentei a prática de TDD para o domínio e a utilização de Testcontainers para testes de integração, assegurando que o software fosse robusto e confiável desde o início.
+
+  - # RESUMO TÉCNICO PARA EMBEDDING (Fonte: Projects All Consolidated.md)
+    #### RESUMO TÉCNICO PARA EMBEDDING
+
+Este projeto é um SaaS para geração automatizada de vídeos, construído sobre uma **Clean Architecture** e princípios de **DDD-Lite**, com uma abordagem de **Monolito Modular** projetada para evoluir para **Microservices**. O backend, desenvolvido em **Java 17+** e **Spring Boot 3+**, orquestra um fluxo assíncrono de criação de vídeo (`RenderJob`). O processo utiliza **RabbitMQ** para enfileirar tarefas que interagem com APIs externas de IA como **OpenAI** (roteiros), **ElevenLabs** (narração) e **Replicate** (imagens), com o **FFmpeg** realizando a montagem final. A persistência é gerenciada por **PostgreSQL** com **JPA/Hibernate** e o armazenamento de objetos por **MinIO/S3**. A segurança é garantida por **Spring Security** com **JWT** e RBAC. O ambiente de desenvolvimento é padronizado com **Docker** e **Docker Compose**, e a qualidade do código é assegurada por uma estratégia de testes em camadas com **TDD**, **JUnit 5**, **Mockito** e **Testcontainers** para testes de integração. Desafios técnicos críticos foram superados, incluindo a resolução de referências circulares no Spring Security, gerenciamento de dependências complexas no Maven com **BOM (Bill of Materials)**, e o mapeamento de `Value Objects` embutidos no Hibernate com `@AttributeOverrides`.
+=======================================================================
+[API] Roteando para o provedor: ollama
+[API] Resposta recebida do ollama com sucesso.

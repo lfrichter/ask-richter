@@ -13,8 +13,16 @@ import { DirectoryLoader } from 'langchain/document_loaders/fs/directory';
 import { TextLoader } from 'langchain/document_loaders/fs/text';
 import { Document } from '@langchain/core/documents';
 
+interface QueryPlan {
+  type: 'SIMPLE_SEARCH' | 'PROJECT_TECHNOLOGY_SEARCH' | 'MULTI_PROJECT_SEARCH' | 'LIST_PROJECTS'; // Add more types as needed
+  payload: any; // Specific data for the plan type
+}
+
 // --- Validação de Variáveis de Ambiente ---
-const { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, SUPABASE_BUCKET_NAME, OPENAI_API_KEY } = process.env;
+const SUPABASE_URL = process.env.SUPABASE_URL as string;
+const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY as string;
+const SUPABASE_BUCKET_NAME = process.env.SUPABASE_BUCKET_NAME as string;
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY as string;
 if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY || !SUPABASE_BUCKET_NAME || !OPENAI_API_KEY) {
   throw new Error('Uma ou mais variáveis de ambiente essenciais não estão definidas.');
 }
@@ -25,7 +33,7 @@ let vectorStore: FaissStore;
 let hybridRetriever: HybridRetriever;
 
 const embeddings = new OpenAIEmbeddings({
-    openAIApiKey: OPENAI_API_KEY,
+    openAIApiKey: OPENAI_API_KEY as string,
     modelName: 'text-embedding-3-small',
     configuration: { baseURL: "https://api.openai.com/v1" }
 });
@@ -87,7 +95,7 @@ function expandQuery(query: string): string {
   let expandedQuery = query;
   for (const keyword in expansions) {
     if (lowerCaseQuery.includes(keyword)) {
-      expandedQuery += ' ' + expansions[keyword].join(' ');
+      expandedQuery += ' ' + expansions[keyword as keyof typeof expansions].join(' ');
     }
   }
   return expandedQuery;
@@ -112,19 +120,42 @@ function classifyIntent(query: string): string {
   return 'GENERAL';
 }
 
+/**
+ * Decompõe a consulta do usuário em um plano de ação estruturado.
+ * @param query A pergunta do usuário.
+ * @returns Um objeto QueryPlan que descreve a intenção e os parâmetros da consulta.
+ */
+function decomposeQuery(query: string): QueryPlan {
+  const lowerCaseQuery = query.toLowerCase();
+
+  // Pattern for "projetos [tecnologia]"
+  const projectTechMatch = lowerCaseQuery.match(/(?:projetos|quais projetos)\s+utilizam?\s+(.+)/);
+  if (projectTechMatch && projectTechMatch[1]) {
+    const technology = projectTechMatch[1].trim();
+    return {
+      type: 'PROJECT_TECHNOLOGY_SEARCH',
+      payload: { technology: technology }
+    };
+  }
+
+  // Default to simple search if no specific pattern is matched
+  return {
+    type: 'SIMPLE_SEARCH',
+    payload: { originalQuery: query }
+  };
+}
 
 /**
  * Realiza uma busca inteligente, decidindo entre a busca normal e a busca pelo documento sintético.
  * @param query A pergunta do usuário.
  * @returns Uma lista de resultados da busca com seus scores.
  */
-async function smartSearch(query: string): Promise<[Document, number][]> {
-  const intent = classifyIntent(query);
-  console.log(`[SMART SEARCH] Intenção classificada como: ${intent}`);
+async function smartSearch(queryPlan: QueryPlan): Promise<[Document, number][]> {
+  console.log(`[SMART SEARCH] Executando plano de consulta: ${queryPlan.type}`);
 
-  switch (intent) {
+  switch (queryPlan.type) {
     case 'LIST_PROJECTS':
-      console.log('[SMART SEARCH] Executando busca por lista de projetos...');
+      console.log('[SMART SEARCH] Buscando lista de projetos...');
       const results = await vectorStore.similaritySearch(
         'Lista de todos os projetos',
         1,
@@ -132,20 +163,35 @@ async function smartSearch(query: string): Promise<[Document, number][]> {
       );
       return results.map(doc => [doc, 1.0]);
 
-    case 'PROJECT_DETAILS':
-      console.log('[SMART SEARCH] Executando busca por detalhes de projeto...');
-      return await hybridRetriever.search(query, 5);
+    case 'PROJECT_TECHNOLOGY_SEARCH':
+      const technology = queryPlan.payload.technology;
+      console.log(`[SMART SEARCH] Buscando projetos que utilizam a tecnologia: ${technology}`);
+      // For now, we'll do a general search with the technology.
+      // In a more advanced version, we might filter by metadata.
+      return await hybridRetriever.search(`projetos que usam ${technology}`, 5);
 
-    case 'TECH_QUESTION':
-      console.log('[SMART SEARCH] Executando busca por tecnologia...');
-      const expandedQuery = expandQuery(query);
-      console.log(`[SMART SEARCH] Query expandida: "${expandedQuery}"`);
-      return await hybridRetriever.search(expandedQuery, 5);
-
-    case 'GENERAL':
+    case 'SIMPLE_SEARCH':
     default:
-      console.log('[SMART SEARCH] Executando busca geral...');
-      return await hybridRetriever.search(query, 5);
+      const originalQuery = queryPlan.payload.originalQuery;
+      const intent = classifyIntent(originalQuery); // Still use intent for general searches
+      console.log(`[SMART SEARCH] Intenção classificada como: ${intent}`);
+
+      switch (intent) {
+        case 'PROJECT_DETAILS':
+          console.log('[SMART SEARCH] Executando busca por detalhes de projeto...');
+          return await hybridRetriever.search(originalQuery, 5);
+
+        case 'TECH_QUESTION':
+          console.log('[SMART SEARCH] Executando busca por tecnologia (via intent)...');
+          const expandedQuery = expandQuery(originalQuery);
+          console.log(`[SMART SEARCH] Query expandida: "${expandedQuery}"`);
+          return await hybridRetriever.search(expandedQuery, 5);
+
+        case 'GENERAL':
+        default:
+          console.log('[SMART SEARCH] Executando busca geral...');
+          return await hybridRetriever.search(originalQuery, 5);
+      }
   }
 }
 
@@ -169,6 +215,46 @@ async function main() {
 
   app.get('/api/health', (req: Request, res: Response) => { res.status(200).json({ status: 'ok' }); });
 
+  /**
+ * Agrupa e formata os chunks recuperados em um contexto estruturado por projeto.
+ * @param retrievedChunks Um array de tuplas [Document, score] recuperados da busca.
+ * @returns Uma string formatada e legível para o LLM.
+ */
+function assembleStructuredContext(retrievedChunks: [Document, number][]): string {
+  const projectsMap = new Map<string, Document[]>();
+
+  // Group chunks by project_name
+  for (const [doc] of retrievedChunks) {
+    const projectName = doc.metadata.project_name || 'Outros'; // Default to 'Outros' if no project_name
+    if (!projectsMap.has(projectName)) {
+      projectsMap.set(projectName, []);
+    }
+    projectsMap.get(projectName)?.push(doc);
+  }
+
+  let structuredOutput = '';
+  for (const [projectName, docs] of projectsMap.entries()) {
+    if (projectName !== 'Outros') { // Don't add "PROJETO: Outros" header
+      structuredOutput += `PROJETO: ${projectName}\n`;
+    }
+
+    // Sort documents within each project by section_header for consistent output
+    docs.sort((a, b) => (a.metadata.section_header || '').localeCompare(b.metadata.section_header || ''));
+
+    for (const doc of docs) {
+      const sectionHeader = doc.metadata.section_header || 'Seção Desconhecida';
+      const source = doc.metadata.source?.split('/').pop() || 'Fonte desconhecida';
+
+      // Add section header and content
+      structuredOutput += `  - ${sectionHeader} (Fonte: ${source})\n`;
+      structuredOutput += `    ${doc.pageContent.trim()}\n\n`;
+    }
+    structuredOutput += '\n'; // Add an extra newline between projects for readability
+  }
+
+  return structuredOutput.trim(); // Remove trailing newlines
+}
+
   app.post('/api/chat', async (req: Request, res: Response) => {
     try {
       const { messages } = req.body;
@@ -180,23 +266,19 @@ async function main() {
 
       console.log(`[API] Pergunta recebida: "${question}"`);
 
-      // --- PASSO 1: ROTEAMENTO INTELIGENTE DA BUSCA ---
-      const searchResults = await smartSearch(question);
+      // --- PASSO 1: DECOMPOSIÇÃO DA CONSULTA ---
+      const queryPlan = decomposeQuery(question);
+      console.log(`[API] Plano de consulta gerado: ${queryPlan.type}`);
+
+      // --- PASSO 2: ROTEAMENTO INTELIGENTE DA BUSCA ---
+      const searchResults = await smartSearch(queryPlan);
 
       // --- PASSO 2: LIMITAR E ESTRUTURAR O CONTEXTO ---
       // Re-ranking simples por score e limitação aos 3 melhores resultados
       const topResults = searchResults.sort((a, b) => b[1] - a[1]).slice(0, 3);
 
       // 3. Construção do contexto estruturado, agora com o cabeçalho da seção
-      const structuredContext = topResults
-        .map((result, idx) => {
-          const doc = result[0];
-          const source = doc.metadata.source?.split('/').pop() || 'Fonte desconhecida';
-          const section = doc.metadata.section_header || 'Seção';
-          // Incluímos o cabeçalho para dar mais contexto ao LLM
-          return `[Fonte ${idx + 1}: ${source} | Seção: ${section}]\n${doc.pageContent}`;
-        })
-        .join('\n\n---\n\n');
+      const structuredContext = assembleStructuredContext(topResults);
 
 
       console.log("================ CONTEXTO ESTRUTURADO PARA A IA (TOP 3) ================");
@@ -224,7 +306,7 @@ PROCESSO DE RESPOSTA:
       console.log(`[API] Roteando para o provedor: ${provider}`);
 
       if (provider === 'ollama') {
-        const model = process.env.OLLAMA_MODEL || 'mistral:7b';
+        const model = (process.env.OLLAMA_MODEL as string) || 'mistral:7b'; // Explicit cast
         responseText = await callOllamaAPI(model, finalPrompt);
       } else if (provider === 'huggingface') {
         const model = process.env.HUGGINGFACE_MODEL || 'meta-llama/Llama-3.1-8B-Instruct:novita';

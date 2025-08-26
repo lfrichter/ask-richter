@@ -22,18 +22,28 @@ const FAISS_INDEX_PATH = path.join('/tmp', 'faiss_index');
  * @returns Um array de Documentos (chunks).
  */
 function customMarkdownSplitter(markdownContent: string, source: string): Document[] {
-  // A Regex divide o texto em cada linha que começa com '### ' ou '#### '
-  // O `(?=...)` (positive lookahead) garante que os cabeçalhos sejam mantidos no início de cada chunk.
-  const chunks = markdownContent.split(/(?=^###\s|^####\s)/m).filter(chunk => chunk.trim() !== '');
+  const rawChunks = markdownContent.split(/(?=^###\s|^####\s)/m).filter(chunk => chunk.trim() !== '');
+  const documents: Document[] = [];
+  let currentProjectName: string | null = null;
 
-  return chunks.map(chunk => {
+  for (const chunk of rawChunks) {
     const content = chunk.trim();
-    // Extrai a primeira linha para usar como título da seção
-    const header = content.split('\n')[0].replace(/###|####/g, '').trim();
+    const firstLine = content.split('\n')[0]!;
+    let sectionHeader = firstLine.replace(/###|####/g, '').trim();
 
-    const metadata = { source, section_header: header };
-    return new Document({ pageContent: content, metadata });
-  });
+    if (firstLine.startsWith('### 🚀')) {
+      currentProjectName = sectionHeader; // The project name is the header itself
+    }
+
+    const metadata: Record<string, any> = { source, section_header: sectionHeader };
+    if (currentProjectName) {
+      metadata.project_name = currentProjectName;
+    }
+
+    documents.push(new Document({ pageContent: content, metadata }));
+  }
+
+  return documents;
 }
 
 /**
