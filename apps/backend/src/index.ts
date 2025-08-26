@@ -8,6 +8,10 @@ import fs from 'fs';
 import path from 'path';
 import { callHuggingFaceAPI } from './core/huggingface.js';
 import { callOllamaAPI } from './core/ollama.js';
+import { HybridRetriever } from './core/hybrid-retriever.js';
+import { DirectoryLoader } from 'langchain/document_loaders/fs/directory';
+import { TextLoader } from 'langchain/document_loaders/fs/text';
+import { Document } from '@langchain/core/documents';
 
 // --- Validação de Variáveis de Ambiente ---
 const { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, SUPABASE_BUCKET_NAME, OPENAI_API_KEY } = process.env;
@@ -18,6 +22,7 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
 // --- Variáveis Globais ---
 let vectorStore: FaissStore;
+let hybridRetriever: HybridRetriever;
 
 const embeddings = new OpenAIEmbeddings({
     openAIApiKey: OPENAI_API_KEY,
@@ -53,12 +58,109 @@ async function downloadIndexFromSupabase() {
   }
 }
 
+/**
+ * Detecta se a consulta do usuário é um pedido de listagem de projetos.
+ * @param query A pergunta do usuário.
+ * @returns `true` se for uma consulta de listagem, `false` caso contrário.
+ */
+function detectListQuery(query: string): boolean {
+  const lowerCaseQuery = query.toLowerCase();
+  const keywords = ['listar', 'liste', 'quais', 'todos', 'projetos', 'disponíveis'];
+  // Se a consulta contiver pelo menos 2 das palavras-chave, consideramos uma listagem.
+  const matches = keywords.filter(kw => lowerCaseQuery.includes(kw)).length;
+  return matches >= 2;
+}
+
+/**
+ * Expande a consulta do usuário com sinônimos para melhorar a busca.
+ * @param query A pergunta original do usuário.
+ * @returns A pergunta expandida.
+ */
+function expandQuery(query: string): string {
+  const lowerCaseQuery = query.toLowerCase();
+  const expansions = {
+    tecnologias: ['stack', 'framework', 'biblioteca', 'linguagem', 'ferramenta'],
+    experiência: ['trabalho', 'cargo', 'função', 'empresa'],
+    projetos: ['realizações', 'trabalhos', 'exemplos'],
+  };
+
+  let expandedQuery = query;
+  for (const keyword in expansions) {
+    if (lowerCaseQuery.includes(keyword)) {
+      expandedQuery += ' ' + expansions[keyword].join(' ');
+    }
+  }
+  return expandedQuery;
+}
+
+/**
+ * Classifica a intenção da consulta do usuário.
+ * @param query A pergunta do usuário.
+ * @returns A intenção classificada (e.g., 'LIST_PROJECTS', 'PROJECT_DETAILS', etc.).
+ */
+function classifyIntent(query: string): string {
+  const lowerCaseQuery = query.toLowerCase();
+  if (detectListQuery(query)) {
+    return 'LIST_PROJECTS';
+  }
+  if (lowerCaseQuery.includes('detalhes sobre') || lowerCaseQuery.includes('me fale sobre')) {
+    return 'PROJECT_DETAILS';
+  }
+  if (lowerCaseQuery.includes('tecnologia') || lowerCaseQuery.includes('stack')) {
+    return 'TECH_QUESTION';
+  }
+  return 'GENERAL';
+}
+
+
+/**
+ * Realiza uma busca inteligente, decidindo entre a busca normal e a busca pelo documento sintético.
+ * @param query A pergunta do usuário.
+ * @returns Uma lista de resultados da busca com seus scores.
+ */
+async function smartSearch(query: string): Promise<[Document, number][]> {
+  const intent = classifyIntent(query);
+  console.log(`[SMART SEARCH] Intenção classificada como: ${intent}`);
+
+  switch (intent) {
+    case 'LIST_PROJECTS':
+      console.log('[SMART SEARCH] Executando busca por lista de projetos...');
+      const results = await vectorStore.similaritySearch(
+        'Lista de todos os projetos',
+        1,
+        { source: 'synthetic_project_list' }
+      );
+      return results.map(doc => [doc, 1.0]);
+
+    case 'PROJECT_DETAILS':
+      console.log('[SMART SEARCH] Executando busca por detalhes de projeto...');
+      return await hybridRetriever.search(query, 5);
+
+    case 'TECH_QUESTION':
+      console.log('[SMART SEARCH] Executando busca por tecnologia...');
+      const expandedQuery = expandQuery(query);
+      console.log(`[SMART SEARCH] Query expandida: "${expandedQuery}"`);
+      return await hybridRetriever.search(expandedQuery, 5);
+
+    case 'GENERAL':
+    default:
+      console.log('[SMART SEARCH] Executando busca geral...');
+      return await hybridRetriever.search(query, 5);
+  }
+}
+
 // --- Função Principal de Inicialização ---
 async function main() {
   await downloadIndexFromSupabase();
   console.log('[INIT] Carregando índice FAISS para a memória...');
   vectorStore = await FaissStore.load(FAISS_INDEX_PATH, embeddings);
   console.log('[INIT] Índice FAISS carregado com sucesso.');
+
+  console.log('[INIT] Carregando documentos para o retriever híbrido...');
+  const loader = new DirectoryLoader(path.join(process.cwd(), 'src/knowledge-base'), { '.md': (p: string) => new TextLoader(p) });
+  const docs = await loader.load();
+  hybridRetriever = new HybridRetriever(vectorStore, docs);
+  console.log('[INIT] Retriever híbrido inicializado com sucesso.');
 
   const app = express();
   const port = 3001;
@@ -78,11 +180,11 @@ async function main() {
 
       console.log(`[API] Pergunta recebida: "${question}"`);
 
-      // --- PASSO 1.2: LIMITAR E ESTRUTURAR O CONTEXTO ---
-      // 1. Busca inicial com score para permitir o sort
-      const searchResults = await vectorStore.similaritySearchWithScore(question, 5);
+      // --- PASSO 1: ROTEAMENTO INTELIGENTE DA BUSCA ---
+      const searchResults = await smartSearch(question);
 
-      // 2. Re-ranking simples por score e limitação aos 3 melhores resultados
+      // --- PASSO 2: LIMITAR E ESTRUTURAR O CONTEXTO ---
+      // Re-ranking simples por score e limitação aos 3 melhores resultados
       const topResults = searchResults.sort((a, b) => b[1] - a[1]).slice(0, 3);
 
       // 3. Construção do contexto estruturado, agora com o cabeçalho da seção

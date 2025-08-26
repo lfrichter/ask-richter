@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { AIChatInput } from "@/components/ui/ai-chat-input";
 import { BackgroundPaths } from "@/components/ui/background-paths";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

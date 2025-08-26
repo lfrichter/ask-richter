@@ -36,6 +36,36 @@ function customMarkdownSplitter(markdownContent: string, source: string): Docume
   });
 }
 
+/**
+ * Cria um documento sintético contendo uma lista de todos os nomes de projetos.
+ * @param allDocs Um array de todos os documentos chunked.
+ * @returns Um único Documento com a lista de projetos, ou null se nenhum projeto for encontrado.
+ */
+function createProjectListDocument(allDocs: Document[]): Document | null {
+  console.log('[SINTÉTICO] Procurando por nomes de projetos para criar documento de lista...');
+  const projectHeaders = allDocs
+    .map(doc => doc.metadata.section_header)
+    .filter(header => header && header.startsWith('🚀'));
+
+  if (projectHeaders.length === 0) {
+    console.log('[SINTÉTICO] Nenhum projeto encontrado. Pulando a criação do documento.');
+    return null;
+  }
+
+  // Remove o emoji e limpa o nome do projeto
+  const projectNames = projectHeaders.map(header => header.replace('🚀', '').trim());
+
+  const pageContent = `A seguir, a lista completa de projetos disponíveis para consulta:\n\n- ${projectNames.join('\n- ')}\n\nVocê pode pedir detalhes sobre qualquer um deles.`;
+  
+  const metadata = { 
+    source: 'synthetic_project_list', 
+    section_header: 'Lista de Projetos' 
+  };
+
+  console.log(`[SINTÉTICO] Documento criado com ${projectNames.length} projetos.`);
+  return new Document({ pageContent, metadata });
+}
+
 
 async function run() {
   try {
@@ -59,6 +89,12 @@ async function run() {
 
     console.log(`[CHUNKING] Total de ${docs.length} documentos divididos em ${splitDocs.length} chunks semânticos.`);
     console.log('Exemplo de metadados do primeiro chunk:', splitDocs[0]?.metadata);
+
+    const projectListDoc = createProjectListDocument(splitDocs);
+    if (projectListDoc) {
+      splitDocs.push(projectListDoc);
+      console.log(`[SINTÉTICO] Documento de lista de projetos criado e adicionado. Total de chunks agora: ${splitDocs.length}`);
+    }
 
     const embeddings = new OpenAIEmbeddings({ openAIApiKey: process.env.OPENAI_API_KEY, modelName: 'text-embedding-3-small' });
     const vectorStore = await FaissStore.fromDocuments(splitDocs, embeddings);
