@@ -464,3 +464,297 @@ backend:dev: Você pode pedir detalhes sobre qualquer um deles.
 backend:dev: =======================================================================
 backend:dev: [API] Roteando para o provedor: ollama
 backend:dev: [API] Resposta recebida do ollama com sucesso.
+backend:dev: [API] Pergunta recebida: "Me de a lista de tacnologias que ele já usou "
+backend:dev: [SMART SEARCH] Intenção classificada como: GENERAL
+backend:dev: [SMART SEARCH] Executando busca geral...
+backend:dev: ================ CONTEXTO ESTRUTURADO PARA A IA (TOP 3) ================
+backend:dev: [Fonte 1: Projects All Consolidated.md | Seção: # CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS]
+backend:dev: #### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
+backend:dev: 
+backend:dev: | Categoria                    | Tecnologias e Conceitos                                                                      |
+backend:dev: | :--------------------------- | :------------------------------------------------------------------------------------------- |
+backend:dev: | **AI & Machine Learning**    | 🧠 Processamento de Linguagem Natural (PLN)                                                  |
+backend:dev: | **Software Development**     | 👨‍💻 Laravel, Pest, Motor de Comandos Customizado                                           |
+backend:dev: | **Architecture**             | 🏗️ Arquitetura Orientada a Eventos, Inbound Webhook, Sistema Desacoplado, Sistema Escalável |
+backend:dev: | **Cloud Computing**          | ☁️ Postmark API (SaaS)                                                                       |
+backend:dev: | **API RESTFul development**  | 🔄 Postmark API, Webhooks                                                                    |
+backend:dev: | **Frontend Development**     | 🖥️ Livewire, Tailwind CSS, Interface Reativa                                                |
+backend:dev: | **Mobile Development**       | 📱 N/A                                                                                       |
+backend:dev: | **Database**                 | 🗃️ MySQL                                                                                    |
+backend:dev: | **Data Management**          | 💾 Persistência de Dados                                                                     |
+backend:dev: | **Content Management - CMS** | 📄 N/A                                                                                       |
+backend:dev: | **System Administration**    | ⚙️ N/A                                                                                       |
+backend:dev: | **DevOps**                   | 🔁 Testes Automatizados                                                                      |
+backend:dev: | **Leadership**               | 🚀 Idealizador, Desenvolvedor da Solução                                                     |
+backend:dev: | **Coaching**                 | 🤝 N/A                                                                                       |
+backend:dev: | **Agile Project Management** | scrum N/A                                                                                    |
+backend:dev: 
+backend:dev: ---
+backend:dev: 
+backend:dev: [Fonte 2: Projects All Consolidated.md | Seção: # 🛠️ Pilha de Tecnologias (Tech Stack)]
+backend:dev: #### 🛠️ Pilha de Tecnologias (Tech Stack)
+backend:dev: 
+backend:dev: | Componente                   | Tecnologia Utilizada                          | Papel na Arquitetura                                                                                                                                                                                                    |
+backend:dev: | :--------------------------- | :-------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+backend:dev: | **Backend e Orquestração**   | **Python**, **Flask**                         | Linguagem principal do projeto e framework para a API de microserviço.                                                                                                                                                  |
+backend:dev: | **Geração de Conteúdo e IA** | **OpenAI API (GPT)**, **Replicate (SDXL)**    | Geração de roteiros e imagens de fundo a partir de prompts.                                                                                                                                                             |
+backend:dev: | **Síntese de Voz (TTS)**     | **ElevenLabs API**, **Coqui TTS**             | Converte texto em narração de áudio, oferecendo opções de nuvem ou local.                                                                                                                                               |
+backend:dev: | **Transcrição e Legendas**   | **OpenAI Whisper (Local)**                    | Gera legendas com timestamps precisos a partir do áudio da narração.                                                                                                                                                    |
+backend:dev: | **Mídia e Recursos**         | **Pixabay API**, **Jamendo API**              | Fontes alternativas e gratuitas para imagens de fundo e trilhas sonoras.                                                                                                                                                |
+backend:dev: | **Manipulação de Mídia**     | **FFmpeg**, **Pydub**, **Pillow**, **OpenCV** | Ferramentas essenciais para montagem de vídeo, manipulação de áudio e processamento de imagem.                                                                                                                          |
+backend:dev: | **Automação Web**            | **Playwright**, **Selenium**                  | Utilizados para automação de navegador em scripts de coleta de dados ou imagens.                                                                                                                                        |
+backend:dev: | **Testes e Ambiente**        | **Pytest**, **python-dotenv**                 | Framework de testes para garantir a qualidade do código e gerenciamento de variáveis de ambiente.                                                                                                                       |
+backend:dev: | **Publicação**               | **YouTube Data API v3**                       | Conclui o fluxo fazendo o upload do vídeo finalizado para um canal específico, incluindo metadados (título, descrição, tags) gerenciados programaticamente.                                                             |
+backend:dev: 
+backend:dev: 
+backend:dev: -----
+backend:dev: 
+backend:dev: ---
+backend:dev: 
+backend:dev: [Fonte 3: Projects All Consolidated.md | Seção: # CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS]
+backend:dev: #### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
+backend:dev: 
+backend:dev: | Categoria                       | Tecnologias e Conceitos                                                                                                                            |
+backend:dev: | :------------------------------ | :------------------------------------------------------------------------------------------------------------------------------------------------- |
+backend:dev: | 🤖 **AI & Machine Learning**    | OpenAI GPT-4o-mini, Deepgram (STT), ElevenLabs (TTS), Silero VAD (Voice Activity Detection), Pytesseract (OCR), Pillow (Image Processing), LLM     |
+backend:dev: | 💻 **Software Development**     | Python 3.12, Flask, Makefile, Ruff (linter/formatter), MyPy (type checking), Pytest, virtual environment (venv)                                    |
+backend:dev: | 🏗️ **Architecture**            | Arquitetura Multi-tenant, Voice Agents, WebRTC, SIP, Worker (Agent Pattern)                                                                        |
+backend:dev: | ☁️ **Cloud Computing**          | LiveKit (Real-time voice/video infrastructure)                                                                                                     |
+backend:dev: | 🌐 **API RESTFul development**  | Flask, multipart/form-data, POST /create-voice-support, GET /api/agent-status/, POST /api/stop-agent                                               |
+backend:dev: | 🎨 **Frontend Development**     | Interação via formulário de navegador (HTML)                                                                                                       |
+backend:dev: | 📱 **Mobile Development**       | N/A                                                                                                                                                |
+backend:dev: | 🗃️ **Database**                | N/A                                                                                                                                                |
+backend:dev: | 📊 **Data Management**          | OCR de imagem, Processamento de áudio em tempo real                                                                                                |
+backend:dev: | 📰 **Content Management - CMS** | N/A                                                                                                                                                |
+backend:dev: | ⚙️ **System Administration**    | Tesseract OCR (instalação), sngrep (monitoramento de rede SIP)                                                                                     |
+backend:dev: | 🚀 **DevOps**                   | Makefile (run, fix, lint, type, test, quality, ci), CI/CD pipeline, Gerenciamento de dependências (requirements.txt), Variáveis de Ambiente (.env) |
+backend:dev: | 👨‍💼 **Leadership**            | N/A                                                                                                                                                |
+backend:dev: | 👨‍🏫 **Coaching**              | N/A                                                                                                                                                |
+backend:dev: | 📈 **Agile Project Management** | N/A                                                                                                                                                |
+backend:dev: =======================================================================
+backend:dev: [API] Roteando para o provedor: ollama
+backend:dev: [API] Resposta recebida do ollama com sucesso.
+backend:dev: [API] Pergunta recebida: "Quais as linguagens de backend que ele usa"
+backend:dev: [SMART SEARCH] Intenção classificada como: GENERAL
+backend:dev: [SMART SEARCH] Executando busca geral...
+backend:dev: ================ CONTEXTO ESTRUTURADO PARA A IA (TOP 3) ================
+backend:dev: [Fonte 1: Projects All Consolidated.md | Seção: # 🛠️ Pilha de Tecnologias (Tech Stack)]
+backend:dev: #### 🛠️ Pilha de Tecnologias (Tech Stack)
+backend:dev: 
+backend:dev:   * **Linguagens:** Python, PHP
+backend:dev:   * **Framework:** Laravel
+backend:dev:   * **Bancos de Dados:** SQL Server, MySQL
+backend:dev:   * **Filas e Jobs:** Laravel Horizon
+backend:dev:   * **DevOps:** Bitbucket Pipelines
+backend:dev: 
+backend:dev: -----
+backend:dev: 
+backend:dev: ---
+backend:dev: 
+backend:dev: [Fonte 2: Projects All Consolidated.md | Seção: # 🛠️ Pilha de Tecnologias (Tech Stack)]
+backend:dev: #### 🛠️ Pilha de Tecnologias (Tech Stack)
+backend:dev: 
+backend:dev: | Componente | Tecnologia Utilizada | Papel na Arquitetura |
+backend:dev: | :--- | :--- | :--- |
+backend:dev: | **Backend (API Core)** | **Laravel (PHP)** | Orquestra todas as regras de negócio, dados e integrações como o núcleo da plataforma. |
+backend:dev: | **Frontend (Dashboard)** | **Vue.js** | Constrói a interface reativa e interativa para os provedores de serviço gerenciarem seus negócios. |
+backend:dev: | **Visualização de Dados** | **Chart.js** | Renderiza gráficos dinâmicos no dashboard para análise de faturamento, reservas e clientes. |
+backend:dev: | **Banco de Dados** | **MySQL** | Armazena de forma persistente todos os dados relacionais da aplicação (agendamentos, usuários, etc.). |
+backend:dev: | **Autenticação de Usuários**| **Firebase Authentication** | Gerencia o onboarding, login e segurança dos usuários (provedores) com suporte a SSO. |
+backend:dev: | **Comunicação por SMS** | **Twilio API** | Automatiza o envio de lembretes, alertas transacionais e coleta de feedback dos clientes finais. |
+backend:dev: | **Documentação da API** | **Swagger (OpenAPI)** | Padroniza e documenta os endpoints da API para facilitar a integração entre equipes. |
+backend:dev: | **Ambiente de Dev** | **Docker** | Garante a consistência e portabilidade do ambiente de desenvolvimento e produção. |
+backend:dev: 
+backend:dev: -----
+backend:dev: 
+backend:dev: ---
+backend:dev: 
+backend:dev: [Fonte 3: Projects All Consolidated.md | Seção: # 🛠️ Pilha de Tecnologias (Tech Stack)]
+backend:dev: #### 🛠️ Pilha de Tecnologias (Tech Stack)
+backend:dev: 
+backend:dev: | Componente | Tecnologia Utilizada | Papel na Arquitetura |
+backend:dev: | :--- | :--- | :--- |
+backend:dev: | **Backend & Core da Aplicação** | **Laravel** | Responsável por toda a lógica de negócio, arquitetura multi-tenant, roteamento por subdomínios, autenticação dupla (master e tenants) e APIs. |
+backend:dev: | **Banco de Dados** | **MySQL** | Persistência dos dados de todos os tenants, incluindo usuários, redes de indicação e configurações, com isolamento garantido por tenant. |
+backend:dev: | **Frontend & Dinamismo** | **JavaScript / jQuery** | Utilizado para criar os diagramas de hierarquia dinâmicos no dashboard do usuário, proporcionando uma visualização interativa e em tempo real da rede. |
+backend:dev: | **Ambiente de Deploy** | **Host Umbler** | Ambiente de nuvem onde a aplicação foi implantada. O entendimento de suas limitações foi crucial para a resolução de desafios de infraestrutura. |
+backend:dev: 
+backend:dev: -----
+backend:dev: =======================================================================
+backend:dev: [API] Roteando para o provedor: ollama
+backend:dev: [API] Resposta recebida do ollama com sucesso.
+backend:dev: [API] Pergunta recebida: "Quais stacks para API ele usa"
+backend:dev: [SMART SEARCH] Intenção classificada como: TECH_QUESTION
+backend:dev: [SMART SEARCH] Executando busca por tecnologia...
+backend:dev: [SMART SEARCH] Query expandida: "Quais stacks para API ele usa"
+backend:dev: ================ CONTEXTO ESTRUTURADO PARA A IA (TOP 3) ================
+backend:dev: [Fonte 1: Projects All Consolidated.md | Seção: # 🛠️ Pilha de Tecnologias (Tech Stack)]
+backend:dev: #### 🛠️ Pilha de Tecnologias (Tech Stack)
+backend:dev: 
+backend:dev: | Componente | Tecnologia Utilizada | Papel na Arquitetura |
+backend:dev: | :--- | :--- | :--- |
+backend:dev: | **Backend & Lógica** | **PHP / Laravel** | Framework principal para toda a aplicação, incluindo Artisan Commands para tarefas agendadas e Jobs para processamento em segundo plano. |
+backend:dev: | **Banco de Dados Principal** | **MongoDB** | Banco de dados NoSQL central para armazenar produtos, pedidos, clientes e logs, oferecendo flexibilidade para modelos de dados complexos. |
+backend:dev: | **Filas Assíncronas** | **Redis** | Utilizado como o motor do sistema de filas (Queues), garantindo o processamento assíncrono e resiliente de tarefas como atualizações de estoque e importações. |
+backend:dev: | **Integrações (APIs)** | **REST & Webhooks** | Protocolos usados para comunicação com sistemas externos, tanto para buscar dados (REST) quanto para receber notificações em tempo real (Webhooks). |
+backend:dev: | **Plataformas Conectadas** | **Plugg.to, Skyhub, Bling** | Principais sistemas de e-commerce (marketplaces e ERP) com os quais o Spider se integrava para orquestrar as operações. |
+backend:dev: | **Infraestrutura & DevOps** | **Docker, AWS S3, SSH** | Docker para conteinerização do ambiente, S3 para armazenamento de arquivos (ex: planilhas de importação) e SSH para gerenciamento do servidor. |
+backend:dev: | **Bancos de Dados Legados** | **MySQL** | Utilizado para integração direta com o sistema ERP de clientes específicos que não possuíam uma API moderna, como o Novo Século. |
+backend:dev: 
+backend:dev: -----
+backend:dev: 
+backend:dev: ---
+backend:dev: 
+backend:dev: [Fonte 2: Projects All Consolidated.md | Seção: # RESUMO TÉCNICO PARA EMBEDDING]
+backend:dev: #### RESUMO TÉCNICO PARA EMBEDDING
+backend:dev: 
+backend:dev: Desenvolvimento de uma API backend em Laravel e MySQL para uma plataforma de Market Intelligence, focada na otimização de performance para visualização de mais de 200.000 pontos de geodata. A solução resolveu um gargalo crítico, aumentando a velocidade de interação em 30x (de ~15s para ~0.5s) em um frontend React com Google Maps API, utilizando a biblioteca Superfetch para carregamento progressivo. A API foi documentada com Swagger, testada com PHPUnit, e replicava a complexa lógica de filtragem de relatórios do PowerBI, sendo entregue via um pipeline de CI/CD. A arquitetura foi desenhada para ser responsiva e escalável, com futuras evoluções considerando a implementação de cache com Redis e análises preditivas.
+backend:dev: 
+backend:dev: ---
+backend:dev: 
+backend:dev: [Fonte 3: Projects All Consolidated.md | Seção: # 🛠️ Pilha de Tecnologias (Tech Stack)]
+backend:dev: #### 🛠️ Pilha de Tecnologias (Tech Stack)
+backend:dev: 
+backend:dev: | Componente | Tecnologia Utilizada | Papel na Arquitetura |
+backend:dev: | :--- | :--- | :--- |
+backend:dev: | **Backend (API Core)** | **Laravel (PHP)** | Orquestra todas as regras de negócio, dados e integrações como o núcleo da plataforma. |
+backend:dev: | **Frontend (Dashboard)** | **Vue.js** | Constrói a interface reativa e interativa para os provedores de serviço gerenciarem seus negócios. |
+backend:dev: | **Visualização de Dados** | **Chart.js** | Renderiza gráficos dinâmicos no dashboard para análise de faturamento, reservas e clientes. |
+backend:dev: | **Banco de Dados** | **MySQL** | Armazena de forma persistente todos os dados relacionais da aplicação (agendamentos, usuários, etc.). |
+backend:dev: | **Autenticação de Usuários**| **Firebase Authentication** | Gerencia o onboarding, login e segurança dos usuários (provedores) com suporte a SSO. |
+backend:dev: | **Comunicação por SMS** | **Twilio API** | Automatiza o envio de lembretes, alertas transacionais e coleta de feedback dos clientes finais. |
+backend:dev: | **Documentação da API** | **Swagger (OpenAPI)** | Padroniza e documenta os endpoints da API para facilitar a integração entre equipes. |
+backend:dev: | **Ambiente de Dev** | **Docker** | Garante a consistência e portabilidade do ambiente de desenvolvimento e produção. |
+backend:dev: 
+backend:dev: -----
+backend:dev: =======================================================================
+backend:dev: [API] Roteando para o provedor: ollama
+backend:dev: [API] Resposta recebida do ollama com sucesso.
+backend:dev: [API] Pergunta recebida: "Qual tecnologia ele usa no frontend"
+backend:dev: [SMART SEARCH] Intenção classificada como: TECH_QUESTION
+backend:dev: [SMART SEARCH] Executando busca por tecnologia...
+backend:dev: [SMART SEARCH] Query expandida: "Qual tecnologia ele usa no frontend"
+backend:dev: ================ CONTEXTO ESTRUTURADO PARA A IA (TOP 3) ================
+backend:dev: [Fonte 1: Projects All Consolidated.md | Seção: # 🛠️ Pilha de Tecnologias (Tech Stack)]
+backend:dev: #### 🛠️ Pilha de Tecnologias (Tech Stack)
+backend:dev: 
+backend:dev: | Componente | Tecnologia Utilizada | Papel na Arquitetura |
+backend:dev: | :--- | :--- | :--- |
+backend:dev: | **Renderização e Interação 3D** | **Three.js** | Criação do ambiente 3D, renderização dos aviões e gerenciamento da câmera e controles do jogador no navegador. |
+backend:dev: | **Servidor de Aplicação** | **Node.js com Express** | Orquestra a lógica de negócio, gerencia o matchmaking e serve como a base para a comunicação em tempo real. |
+backend:dev: | **Comunicação em Tempo Real** | **WebSockets** | Estabelece um canal de comunicação bidirecional e de baixa latência entre o cliente e o servidor para sincronizar as ações. |
+backend:dev: | **Conteinerização** | **Docker** | Empacota a aplicação e suas dependências em um contêiner, garantindo consistência entre os ambientes de desenvolvimento e produção. |
+backend:dev: | **Hospedagem e Deploy** | **Render.com** | Plataforma de nuvem utilizada para hospedar a aplicação conteinerizada e disponibilizá-la publicamente online. |
+backend:dev: | **Aceleração de Código** | **IA Generativa (Cursor, Trae)** | Ferramentas integradas à IDE para acelerar a escrita de código, prototipagem de funcionalidades e resolução de problemas. |
+backend:dev: 
+backend:dev: -----
+backend:dev: 
+backend:dev: ---
+backend:dev: 
+backend:dev: [Fonte 2: Projects All Consolidated.md | Seção: # 🛠️ Pilha de Tecnologias (Tech Stack)]
+backend:dev: #### 🛠️ Pilha de Tecnologias (Tech Stack)
+backend:dev: 
+backend:dev: | Componente | Tecnologia Utilizada | Papel na Arquitetura |
+backend:dev: | :--- | :--- | :--- |
+backend:dev: | **Backend** | **Laravel** | Orquestra toda a lógica de negócio, rotas, processamento de webhooks e interação com o banco de dados. |
+backend:dev: | **Frontend Reativo** | **Livewire & Tailwind CSS** | Constrói uma interface de usuário dinâmica e moderna para a visualização das tarefas, com atualizações em tempo real. |
+backend:dev: | **Testes Automatizados**| **Pest** | Garante a confiabilidade e a robustez das regras de negócio e do motor de comandos com uma suíte de testes limpa. |
+backend:dev: | **Gateway de E-mail** | **Postmark API & Webhooks** | Recebe os e-mails, dispara os eventos via webhook para a aplicação e gerencia o envio de respostas. |
+backend:dev: | **Modelo Arquitetural** | **Arquitetura Orientada a Eventos** | Permite que a aplicação reaja de forma assíncrona aos e-mails recebidos, garantindo um fluxo desacoplado e escalável. |
+backend:dev: 
+backend:dev: -----
+backend:dev: 
+backend:dev: ---
+backend:dev: 
+backend:dev: [Fonte 3: Projects All Consolidated.md | Seção: # 🛠️ Pilha de Tecnologias (Tech Stack)]
+backend:dev: #### 🛠️ Pilha de Tecnologias (Tech Stack)
+backend:dev: 
+backend:dev: | Componente                  | Tecnologia Utilizada        | Papel na Arquitetura                                                                                                |
+backend:dev: | :-------------------------- | :-------------------------- | :------------------------------------------------------------------------------------------------------------------ |
+backend:dev: | **Backend (API)**           | **Laravel**                 | Orquestra a lógica de negócio, gerencia as rotas da API e se comunica com o serviço de IA Generativa.               |
+backend:dev: | **Frontend (UI)**           | **Vue 3 (Composition API)** | Constrói a interface de usuário reativa e dinâmica, permitindo uma interação fluida com o usuário.                  |
+backend:dev: | **Tipagem de Código**       | **TypeScript**              | Garante a segurança de tipos em todo o projeto, tanto no frontend quanto no backend (se aplicável), reduzindo bugs. |
+backend:dev: | **Gerenciamento de Estado** | **Pinia**                   | Centraliza e gerencia o estado da aplicação no frontend de forma simples, reativa e eficiente.                      |
+backend:dev: | **Testes Automatizados**    | **Pest**                    | Garante a confiabilidade e a qualidade da API do Laravel através de uma suíte de testes elegante e poderosa (TDD).  |
+backend:dev: 
+backend:dev: 
+backend:dev: -----
+backend:dev: =======================================================================
+backend:dev: [API] Roteando para o provedor: ollama
+backend:dev: [API] Resposta recebida do ollama com sucesso.
+backend:dev: [API] Pergunta recebida: "Me de a lista de projetos e me fale alguma tecnologia utilizada em cada um"
+backend:dev: [SMART SEARCH] Intenção classificada como: TECH_QUESTION
+backend:dev: [SMART SEARCH] Executando busca por tecnologia...
+backend:dev: [SMART SEARCH] Query expandida: "Me de a lista de projetos e me fale alguma tecnologia utilizada em cada um realizações trabalhos exemplos"
+backend:dev: ================ CONTEXTO ESTRUTURADO PARA A IA (TOP 3) ================
+backend:dev: [Fonte 1: Projects All Consolidated.md | Seção: # CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS]
+backend:dev: #### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
+backend:dev: 
+backend:dev: | Categoria                    | Tecnologias e Conceitos                                                                                                                                              |
+backend:dev: | :--------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+backend:dev: | **AI & Machine Learning**    | Cache Semântico, LLMs (Grandes Modelos de Linguagem), Vetor de Embedding, Busca por Similaridade, FAISS (Facebook AI Similarity Search), Ollama, Limiar de Confiança |
+backend:dev: | **Software Development**     | Python, NumPy                                                                                                                                                        |
+backend:dev: | **Architecture**             | Prova de Conceito (PoC), Sistema de Cache, Cache Hit/Miss, Arquitetura Local, Otimização de Performance, Redução de Latência, Índice em Memória                      |
+backend:dev: | **Cloud Computing**          | N/A                                                                                                                                                                  |
+backend:dev: | **API RESTFul development**  | N/A                                                                                                                                                                  |
+backend:dev: | **Frontend Development**     | N/A                                                                                                                                                                  |
+backend:dev: | **Mobile Development**       | N/A                                                                                                                                                                  |
+backend:dev: | **Database**                 | N/A                                                                                                                                                                  |
+backend:dev: | **Data Management**          | Índice Vetorial                                                                                                                                                      |
+backend:dev: | **Content Management - CMS** | N/A                                                                                                                                                                  |
+backend:dev: | **System Administration**    | N/A                                                                                                                                                                  |
+backend:dev: | **DevOps**                   | N/A                                                                                                                                                                  |
+backend:dev: | **Leadership**               | Idealizador, Desenvolvedor Principal                                                                                                                                 |
+backend:dev: | **Coaching**                 | N/A                                                                                                                                                                  |
+backend:dev: | **Agile Project Management** | Prova de Conceito (PoC)                                                                                                                                              |
+backend:dev: 
+backend:dev: ---
+backend:dev: 
+backend:dev: [Fonte 2: Projects All Consolidated.md | Seção: # CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS]
+backend:dev: #### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
+backend:dev: 
+backend:dev: | Categoria                    | Tecnologias e Conceitos                                                                                                                                                                                                                                                                 |
+backend:dev: | :--------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+backend:dev: | **AI & Machine Learning**    | Retrieval-Augmented Generation (RAG), FAISS, `faiss-node`, LangChain.js, OpenAI Embeddings (`text-embedding-3-small`), LLMs, Ollama, Llama 3, Mistral 7B, Hugging Face API, `DirectoryLoader`, `RecursiveCharacterTextSplitter`, Busca por Similaridade Semântica, Embeddings Vetoriais |
+backend:dev: | **Software Development**     | Node.js, TypeScript, `tsx`, npm Workspaces, ESM (`"type": "module"`), `markdown-to-jsx`, `react-syntax-highlighter`, `dotenv`                                                                                                                                                           |
+backend:dev: | **Architecture**             | Arquitetura Full-Stack, Monorepo, Microservices (Frontend/Backend desacoplados), RAG (Retrieval-Augmented Generation), Single Page Application (SPA)                                                                                                                                    |
+backend:dev: | **Cloud Computing**          | Vercel, Render.com, Supabase, Supabase Storage, Hugging Face API                                                                                                                                                                                                                        |
+backend:dev: | **API RESTFul development**  | Express.js, Node.js, Health Check Endpoint (`/api/health`)                                                                                                                                                                                                                              |
+backend:dev: | **Frontend Development**     | Next.js (App Router), React, React Hooks (`useState`, `useEffect`), Tailwind CSS, Shadcn/ui, Lucide React, Design Responsivo                                                                                                                                                            |
+backend:dev: | **Mobile Development**       | N/A                                                                                                                                                                                                                                                                                     |
+backend:dev: | **Database**                 | FAISS                                                                                                                                                                                                                                                                                   |
+backend:dev: | **Data Management**          | Chunking (Fragmentação de Texto), Indexação Vetorial, Supabase Storage, Row Level Security (RLS)                                                                                                                                                                                        |
+backend:dev: | **Content Management - CMS** | N/A                                                                                                                                                                                                                                                                                     |
+backend:dev: | **System Administration**    | N/A                                                                                                                                                                                                                                                                                     |
+backend:dev: | **DevOps**                   | Turborepo, Docker, CI/CD, Vercel, Render.com, GitHub, Infrastructure as Code (`render.yaml`), Variáveis de Ambiente                                                                                                                                                                     |
+backend:dev: | **Leadership**               | N/A                                                                                                                                                                                                                                                                                     |
+backend:dev: | **Coaching**                 | N/A                                                                                                                                                                                                                                                                                     |
+backend:dev: | **Agile Project Management** | N/A                                                                                                                                                                                                                                                                                     |
+backend:dev: 
+backend:dev: ---
+backend:dev: 
+backend:dev: [Fonte 3: Projects All Consolidated.md | Seção: # CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS]
+backend:dev: #### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
+backend:dev: 
+backend:dev: | Categoria                    | Tecnologias e Conceitos                                                                                                                                                            |
+backend:dev: | :--------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+backend:dev: | **AI & Machine Learning**    | 🧠 OpenAI API (GPT), Replicate (SDXL), Coqui TTS, OpenAI Whisper, `transformers`, NumPy                                                                                            |
+backend:dev: | **Software Development**     | 💻 Python, `subprocess`, Pydub, Pillow, OpenCV, `python-dotenv`, Pytest, SOLID, Clean Code                                                                                         |
+backend:dev: | **Architecture**             | 🏛️ Arquitetura Modular, Microserviços, Plug-and-Play (Provedores de IA), `ContentManager` (Repositório Central), Renderização em Duas Etapas, `MovementFilterGenerator` (Factory) |
+backend:dev: | **Cloud Computing**          | ☁️ ElevenLabs API, Replicate API, Pixabay API, Jamendo API, YouTube Data API v3, OpenAI API                                                                                        |
+backend:dev: | **API RESTFul development**  | 🌐 Flask, Integração de APIs REST                                                                                                                                                  |
+backend:dev: | **Frontend Development**     | N/A                                                                                                                                                                                |
+backend:dev: | **Mobile Development**       | N/A                                                                                                                                                                                |
+backend:dev: | **Database**                 | 🗄️ JSON (utilizado como banco de dados de arquivos)                                                                                                                               |
+backend:dev: | **Data Management**          | 📊 `ContentManager` (Abstração de Dados), Gerenciamento de JSON                                                                                                                    |
+backend:dev: | **Content Management - CMS** | N/A                                                                                                                                                                                |
+backend:dev: | **System Administration**    | ⚙️ `launchd` (Agendamento de tarefas no macOS)                                                                                                                                     |
+backend:dev: | **DevOps**                   | 🚀 Gerenciamento de Ambiente (venv), Gerenciamento de Dependências (`requirements.txt`), Testes Automatizados (Pytest), Agendamento de Publicação                                  |
+backend:dev: | **Leadership**               | 👨‍🏫 Arquiteto de Soluções, Desenvolvedor Principal, Documentação Técnica                                                                                                         |
+backend:dev: | **Coaching**                 | N/A                                                                                                                                                                                |
+backend:dev: | **Agile Project Management** | 🔄 Desenvolvimento Incremental, Refatoração Estratégica, Resolução de Débito Técnico                                                                                               |
+backend:dev: 
+backend:dev: ---
+backend:dev: =======================================================================
+backend:dev: [API] Roteando para o provedor: ollama
+backend:dev: [API] Resposta recebida do ollama com sucesso.
