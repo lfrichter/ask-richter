@@ -144,7 +144,7 @@
     *   **Ação:** Configurar o projeto Vercel para usar Node.js versão 20 ou superior. Isso é tipicamente feito via uma variável de ambiente `NODE_VERSION` nas configurações do Vercel ou especificando no `package.json` (embora o Vercel frequentemente sobrescreva isso com suas próprias configurações).
     *   **Lógica:** O aviso `EBADENGINE` indica uma incompatibilidade de versão do Node.js. Resolver isso pode corrigir problemas de dependência subjacentes que levam ao erro `useContext`.
 
-*   [ ] **Tarefa 1.2: Revisar o uso de Contextos Customizados**
+*   [x] **Tarefa 1.2: Revisar o uso de Contextos Customizados**
     *   **Ação:** Inspecionar todos os contextos React customizados (`React.createContext`) em `apps/frontend` para garantir que seus provedores (`.Provider`) estejam corretamente aninhados e disponíveis para os componentes que consomem o contexto, especialmente durante a fase de build.
     *   **Lógica:** Um `useContext` retornando `null` geralmente significa que o componente está tentando consumir um contexto sem um provedor acima na árvore de componentes.
 

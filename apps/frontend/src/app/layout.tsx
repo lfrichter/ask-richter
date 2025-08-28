@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { TranslationsProvider } from "@/lib/i18n"; // Importa nosso provedor
+// import { TranslationsProvider } from "@/lib/i18n"; // Importa nosso provedor - TEMPORARILY REMOVED FOR DEBUGGING
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,9 +18,9 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" suppressHydrationWarning={true}>
       <body className={inter.className}>
-        <TranslationsProvider locale="pt"> {/* Locale fixo para 'pt' */}
+        {/* <TranslationsProvider locale="pt"> {/* Locale fixo para 'pt' */}
           {children}
-        </TranslationsProvider>
+        </TranslationsProvider> */}
       </body>
     </html>
   );
