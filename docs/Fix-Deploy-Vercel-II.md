@@ -19,30 +19,30 @@ Vamos criar um plano de ação sistemático para a Gemini CLI diagnosticar e res
 
 Aqui está um plano com checkboxes para a Gemini CLI executar. A abordagem é ir do mais simples ao mais complexo, verificando cada ponto da configuração que pode influenciar a compilação do JSX.
 
-  * [ ] **Tarefa 1: Verificação de Consistência do Nome do Arquivo**
+  * [x] **Tarefa 1: Verificação de Consistência do Nome do Arquivo**
 
       * **Ação:** Verifique se o arquivo `layout.tsx` não foi acidentalmente renomeado para `layout.ts`. A extensão `.tsx` é crucial para que o TypeScript processe o JSX corretamente.
       * **Comando:** `ls -l apps/frontend/src/app/layout.tsx`
 
-  * [ ] **Tarefa 2: Revisão do `tsconfig.json`**
+  * [x] **Tarefa 2: Revisão do `tsconfig.json`**
 
       * **Ação:** Inspecione o arquivo `apps/frontend/tsconfig.json` para garantir que a opção `jsx` está configurada corretamente. A Vercel espera um valor específico para projetos Next.js.
       * **Verificar:** A opção `"jsx"` deve estar definida como `"preserve"`. Se estiver diferente ou ausente, isso pode ser a causa do problema.
       * **Comando:** `cat apps/frontend/tsconfig.json`
 
-  * [ ] **Tarefa 3: Next.js構成の調査 (Investigação da Configuração do Next.js)**
+  * [x] **Tarefa 3: Next.js構成の調査 (Investigação da Configuração do Next.js)**
 
       * **Ação:** Analise o arquivo `apps/frontend/next.config.mjs` em busca de qualquer configuração experimental ou customização do Webpack que possa estar interferindo no processo de build padrão.
       * **Verificar:** Procure por chaves como `webpack`, `experimental`, ou outras configurações que se desviem do padrão.
       * **Comando:** `cat apps/frontend/next.config.mjs`
 
-  * [ ] **Tarefa 4: 依存関係の監査 (Auditoria de Dependências)**
+  * [x] **Tarefa 4: 依存関係の監査 (Auditoria de Dependências)**
 
       * **Ação:** Verifique os arquivos `package.json` (na raiz e em `apps/frontend`) para garantir que as versões do `react`, `react-dom` e `typescript` são compatíveis e não há conflitos.
       * **Verificar:** Procure por múltiplas versões ou dependências que possam estar desatualizadas. O histórico do projeto menciona que a troca de versões de bibliotecas foi uma das tentativas de solução para o problema anterior.
       * **Comando:** `cat package.json && cat apps/frontend/package.json`
 
-  * [ ] **Tarefa 5: Verificação de Variáveis de Ambiente**
+  * [x] **Tarefa 5: Verificação de Variáveis de Ambiente**
 
       * **Ação:** O log da Vercel emitiu um aviso sobre a variável `NPM_CONFIG_PRODUCTION` não estar em `turbo.json`. Embora improvável que cause um erro de JSX, vamos adicioná-la para eliminar todas as variáveis.
       * **Verificar:** Adicione `NPM_CONFIG_PRODUCTION` à lista de `inputs` na task `build` do arquivo `turbo.json` na raiz do projeto, para garantir que o Turborepo esteja ciente dela.
