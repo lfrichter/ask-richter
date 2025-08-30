@@ -6,6 +6,9 @@ const nextConfig = {
     // mesmo que o projeto tenha erros de tipo.
     ignoreBuildErrors: true,
   },
+  compiler: {
+    styledJsx: false,
+  },
 
   // Manteremos estas configurações por robustez
   // transpilePackages: ['react-markdown', 'remark-gfm'],

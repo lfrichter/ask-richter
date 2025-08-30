@@ -3,8 +3,8 @@ status: permanent
 tags:
   - AI/Gemini25Pro
 date: 2025-08-29
-project: 
-related: 
+project:
+related:
 prompt:
 ---
 Analisando este novo log, vejo uma pista crucial. O erro mudou novamente, e isso é uma ótima notícia, pois nos dá uma nova direção.
@@ -52,16 +52,26 @@ Vamos criar um plano de ação para a Gemini CLI encontrar e resolver este confl
       * **Comando:** `npm install next@latest --workspace=frontend`
       * **Ação Pós-Modificação:** Fazer o commit da alteração e tentar o deploy na Vercel novamente.
 
-  * [ ] **Tarefa 5: ❌ Desabilitar `styled-jsx` (como último recurso)**
 
-      * **Ação:** Se você não está usando `styled-jsx` diretamente (o que é provável, já que você usa Tailwind CSS), e o conflito persistir, podemos instruir o Next.js a não usá-lo.
-      * **Código (a ser adicionado em `apps/frontend/next.config.mjs`):**
-        ```js
+  * [ ] **Tarefa 5: ❌ Desabilitar `styled-jsx` no Next.js**
+      * **Ação:** Modificar a configuração do Next.js para desativar completamente o compilador do `styled-jsx`.
+      * **Arquivo a ser modificado:** `apps/frontend/next.config.mjs`
+      * **Código a ser aplicado:**
+        ```javascript
+        /** @type {import('next').NextConfig} */
         const nextConfig = {
           compiler: {
+            // Desativa completamente o compilador styled-jsx
             styledJsx: false,
           },
+          // Sua configuração anterior de 'typescript.ignoreBuildErrors'
+          // pode ou não ser necessária após esta correção.
+          // Recomendo mantê-la por enquanto para garantir o deploy.
+          typescript: {
+            ignoreBuildErrors: true,
+          },
         };
+
         export default nextConfig;
         ```
-      * **Lógica:** Esta é a opção "nuclear", que desativa completamente a funcionalidade, eliminando a fonte do erro.
+      * **Lógica:** Ao adicionar `compiler: { styledJsx: false, }`, estamos dizendo explicitamente ao processo de build do Next.js: "Ignore e não tente processar qualquer código relacionado a `styled-jsx`". Isso deve eliminar o erro `useContext` na raiz, pois o código problemático nunca será executado durante a pré-renderização.
