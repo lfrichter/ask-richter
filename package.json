@@ -15,7 +15,9 @@
   },
   "overrides": {
     "langchain": "^0.3.31",
-    "better-sqlite3": "^11.1.2"
+    "better-sqlite3": "^11.1.2",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
   },
   "engines": {
     "node": ">=18"

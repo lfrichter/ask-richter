@@ -48,7 +48,7 @@ Aqui está um plano com checkboxes para a Gemini CLI executar. A abordagem é ir
       * **Verificar:** Adicione `NPM_CONFIG_PRODUCTION` à lista de `inputs` na task `build` do arquivo `turbo.json` na raiz do projeto, para garantir que o Turborepo esteja ciente dela.
       * **Comando:** `cat turbo.json` (para ver o estado atual)
 
-  * [ ] **Tarefa 6: Criação de Componente Mínimo para Reprodução**
+  * [x] **Tarefa 6: Criação de Componente Mínimo para Reprodução**
 
       * **Ação:** Se os passos anteriores não revelarem a causa, a estratégia final é o isolamento. Crie um `layout.tsx` mínimo para ver se o erro persiste.
       * **Código Mínimo:**
