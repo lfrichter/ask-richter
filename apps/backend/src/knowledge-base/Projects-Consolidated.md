@@ -1,30 +1,49 @@
 
-### 🚀 Robo de Atendimento por Voz - BRNow
+
+### 🚀 Canaoaves: Plataforma Colaborativa para a Comunidade de Observadores de Aves
 
 #### 🎯 Visão Geral e Arquitetura da Solução
 
-Em um cenário onde a agilidade e a eficiência são cruciais para restaurantes e pizzarias, o "Robo de Atendimento por Voz - BRNow" surge como uma solução inovadora para automatizar o recebimento de pedidos. O objetivo é claro: reduzir custos operacionais e otimizar o tempo, enquanto se oferece uma experiência fluida e acolhedora ao cliente, simulando um atendente humano simpático e eficiente.
+O Canaoaves nasceu de uma necessidade clara: a comunidade de observadores de aves no Brasil, embora vasta e apaixonada, era fragmentada. Faltava um ecossistema digital centralizado que conectasse entusiastas a guias, hospedagens e serviços validados pela própria comunidade. A solução foi construir o **Canaoaves**, uma plataforma colaborativa que funciona como o Cadastro Nacional de Observadores de Aves, transformando-se no ponto de encontro definitivo para este nicho. **O projeto está publicado e pode ser acessado em [www.canaoaves.com.br](http://www.canaoaves.com.br)**.
 
-A arquitetura foi concebida para ser robusta, escalável e, principalmente, **multi-tenant**. A cada nova chamada, o sistema inicia uma sessão de atendimento personalizada. Através de uma API RESTful, o restaurante envia uma imagem do seu cardápio, que é processada em tempo real com tecnologia OCR (Pytesseract) para extrair os itens e preços. Essa informação é usada para construir um prompt dinâmico que contextualiza o agente de IA (GPT-4o-mini), permitindo que ele conduza o pedido de forma precisa. A comunicação de voz acontece em tempo real através do LiveKit, que gerencia o fluxo de áudio entre o cliente e o agente de IA, garantindo uma interação natural e de baixa latência.
+A arquitetura foi projetada para ser ágil, escalável e de baixo custo inicial, utilizando uma stack moderna com **Supabase** como backend completo e **Vercel** para a hospedagem do frontend. Essa escolha permitiu um desenvolvimento acelerado, concentrando a lógica de negócio no banco de dados PostgreSQL do Supabase através de funções (RPCs) e gatilhos.
+
+O coração da plataforma é um sistema de perfis para Pessoas, Serviços e Cidades, enriquecido por um ciclo de gamificação que incentiva a colaboração. Usuários ganham pontos ao indicar novos serviços (hotéis, guias, restaurantes) e suas indicações ganham credibilidade quando outros membros as confirmam, fortalecendo a confiança da rede. A solução é totalmente mobile-first, garantindo uma experiência de usuário fluida e acessível em campo.
 
 #### 👨‍💻 Meu Papel no Projeto
 
-Como arquiteto e desenvolvedor principal desta solução, minhas responsabilidades abrangeram todo o ciclo de vida do projeto:
+Como **Arquiteto de Soluções e Desenvolvedor Principal**, minhas responsabilidades foram cruciais em todas as fases do projeto, desde a concepção até a implementação:
 
-  * **Arquitetura da Solução:** Projetei a arquitetura end-to-end, focada em comunicação de voz em tempo real e processamento de IA de baixa latência.
-  * **Desenvolvimento Back-End:** Implementei a API RESTful com Flask para gerenciar o ciclo de vida dos agentes, incluindo a orquestração da inicialização e finalização das sessões.
-  * **Integração de IA e Serviços:** Fui responsável por integrar e orquestrar o pipeline de serviços de IA, conectando o reconhecimento de fala (Deepgram), a lógica de conversação (OpenAI) e a síntese de voz (ElevenLabs).
-  * **Implementação da Lógica Multi-Tenant:** Desenvolvi o sistema de personalização dinâmica que utiliza OCR para adaptar o agente a diferentes cardápios, garantindo que cada restaurante tivesse um atendente virtual exclusivo.
+  * **Definição da Arquitetura:** Estruturei a solução completa sobre a plataforma Supabase, integrando banco de dados, autenticação, storage e APIs em um único ecossistema coeso, com o frontend hospedado na Vercel para garantir performance e deploys contínuos.
+  * **Modelagem do Banco de Dados:** Desenhei o schema do banco de dados no PostgreSQL, tomando decisões estratégicas que garantiram a escalabilidade do sistema. Destaques incluem a implementação de uma **estrutura polimórfica** para interações (curtidas, comentários, fotos) e a criação de **categorias hierárquicas** para otimizar filtros e a agregação de dados estatísticos.
+  * **Desenvolvimento Backend:** Criei a lógica de negócio diretamente no banco de dados utilizando funções SQL (RPCs) e triggers para gerenciar o sistema de gamificação, validar dados em tempo real (como a verificação de e-mails duplicados) e garantir a integridade das contribuições dos usuários.
+  * **Liderança Técnica:** Traduzi os requisitos de negócio em decisões de arquitetura documentadas (ADRs), assegurando que a solução técnica estivesse sempre alinhada com os objetivos do produto e fosse robusta para o futuro.
 
 #### ✨ Pontos Fortes e Desafios Superados
 
-O maior ponto forte da solução é sua capacidade de oferecer uma interação de voz natural e quase instantânea. Um dos principais desafios técnicos foi **garantir a baixa latência no ciclo "fala-processamento-resposta"**. Superamos isso ao selecionar um conjunto de tecnologias de ponta e orquestrá-las de forma eficiente: LiveKit para o transporte de mídia via WebRTC, Deepgram para transcrição em tempo real, GPT-4o-mini para respostas rápidas e ElevenLabs para uma síntese de voz natural.
+A solução se destaca pela sua arquitetura inteligente e foco na experiência da comunidade.
 
-Outro desafio significativo foi **tornar o sistema facilmente adaptável a qualquer restaurante sem a necessidade de configuração manual complexa**. A solução foi a implementação de um fluxo de onboarding automatizado, onde o sistema utiliza OCR para "ler" uma imagem do cardápio e, a partir dela, gerar dinamicamente o roteiro e o contexto para a IA. Isso transformou um processo complexo em uma simples chamada de API, tornando a plataforma extremamente escalável.
+  * **Arquitetura Escalável com Associações Polimórficas:**
+
+      * **O Desafio:** O sistema precisava de funcionalidades sociais como "curtir", "comentar" e "adicionar fotos" em diversas entidades (perfis, serviços, cidades, etc.). A abordagem tradicional de criar tabelas separadas para cada (`service_likes`, `profile_likes`) seria insustentável e levaria à duplicação de código e lógica.
+      * **A Superação:** Implementei uma **estrutura polimórfica**, criando tabelas genéricas como `likes` e `comments`. Essas tabelas utilizam colunas `target_id` e `target_type` para se associar a qualquer entidade do sistema. Essa decisão tornou a arquitetura extremamente limpa e escalável, permitindo adicionar essas interações a novas funcionalidades futuras com esforço mínimo.
+
+  * **Gamificação Flexível e Centralizada:**
+
+      * **O Desafio:** As regras de pontuação do sistema estavam fixas ("hardcoded") no código, tornando qualquer ajuste uma tarefa complexa que exigia um novo deploy.
+      * **A Superação:** Centralizei todas as regras em uma única tabela `gamification_rules` no banco de dados. Agora, os valores de pontuação podem ser ajustados dinamicamente com um simples comando, dando ao time de produto total flexibilidade para refinar o engajamento sem depender de ciclos de desenvolvimento.
+
+  * **Segurança e Usabilidade no Cadastro:**
+
+      * **O Desafio:** O fluxo de cadastro permitia que um e-mail já existente fosse usado para um novo registro, o que causava uma sobrescrita parcial de dados e uma grave falha de segurança.
+      * **A Superação:** Criei uma função no PostgreSQL (`email_exists`) que é chamada em tempo real pelo frontend. A validação ocorre antes mesmo do envio do formulário, bloqueando o cadastro, exibindo uma mensagem clara e prevenindo a inconsistência de dados, melhorando drasticamente a segurança e a experiência do usuário.
 
 #### 🌱 Pontos para Evolução Futura
 
-Embora a solução atual seja robusta, existem caminhos claros para evolução, como a **integração direta com sistemas de PDV (Ponto de Venda)** para automatizar o envio do pedido à cozinha e a implementação de um **sistema de reconhecimento de clientes recorrentes** para oferecer um atendimento ainda mais personalizado.
+O projeto foi construído com uma base sólida, pronta para crescer. Os próximos passos naturais incluem:
+
+  * **Construção do Painel Administrativo:** Desenvolver a área de moderação para gerenciar o conteúdo colaborativo (descrições de cidades/estados) e as denúncias de usuários, garantindo a qualidade e segurança da plataforma.
+  * **Expansão das Funcionalidades de Comunidade:** Implementar recursos de engajamento previstos na visão de crescimento, como feed de atividades, sistema de seguidores e organização de eventos para fortalecer ainda mais os laços da comunidade.
 
 -----
 
@@ -32,127 +51,242 @@ Embora a solução atual seja robusta, existem caminhos claros para evolução, 
 
 | Componente | Tecnologia Utilizada | Papel na Arquitetura |
 | :--- | :--- | :--- |
-| **Orquestração e Backend** | **Python (Flask)** | Fornece a API RESTful para gerenciar o ciclo de vida do agente de voz. |
-| **Comunicação em Tempo Real** | **LiveKit Voice Agents** | Gerencia a conexão WebRTC/SIP e o transporte de mídia entre o cliente e o agente. |
-| **Inteligência Artificial (LLM)** | **OpenAI (GPT-4o-mini)** | Gera respostas inteligentes e contextuais para guiar o cliente durante o pedido. |
-| **Reconhecimento de Fala (STT)**| **Deepgram** | Transcreve a fala do cliente em texto com alta precisão e baixa latência. |
-| **Síntese de Voz (TTS)** | **ElevenLabs** | Converte as respostas de texto do LLM em áudio com voz natural e personalizada. |
-| **Detecção de Fala (VAD)** | **Silero VAD** | Detecta quando o usuário está falando, otimizando o fluxo da conversação. |
-| **Processamento de Imagem (OCR)**| **Pytesseract & Pillow** | Extrai o texto de imagens de cardápios para personalizar o prompt do agente. |
+| **Backend-as-a-Service** | **Supabase** | Orquestra toda a infraestrutura de backend, incluindo banco de dados, autenticação de usuários, APIs e armazenamento de arquivos. |
+| **Banco de Dados** | **PostgreSQL** | Persiste todos os dados da aplicação. A lógica de negócio, como gamificação e validações, é executada diretamente no banco através de RPCs e Triggers. |
+| **Hosting do Frontend** | **Vercel** | Responsável pela hospedagem e pelo deploy contínuo da aplicação frontend, garantindo alta performance e disponibilidade global. |
+| **Framework Frontend** | **Next.js / React** | Utilizado para construir a interface de usuário reativa e otimizada para SEO, com foco principal em uma experiência mobile-first. |
 
 -----
 
 #### 🗺️ Diagrama da Arquitetura
 
 ```mermaid
+---
+config:
+  theme: default
+  look: handDrawn
+---
 flowchart TD
-  %% =========================
-  %% LAYOUT & CLASSES
-  %% =========================
-  classDef svc fill:#eef7ff,stroke:#5a8fd1,stroke-width:1px,color:#123
-  classDef core fill:#f4f6f8,stroke:#9aa4ad,stroke-width:1px,color:#111
-  classDef ext fill:#fff7e6,stroke:#d2a35b,stroke-width:1px,color:#4a3b1f
-  classDef cfg fill:#eefbea,stroke:#7ab97a,stroke-width:1px,color:#183d18
-  classDef obs fill:#fde9ef,stroke:#d16a8a,stroke-width:1px,color:#521b2a
 
-  %% =========================
-  %% CLIENTE / ENTRADA DE ÁUDIO
-  %% =========================
-  U["Cliente / Endpoint de Voz<br/>🎧 WebRTC / ☎️ SIP"]:::svc;
+    %% === Usuário ===
+    subgraph U["👤 Usuário"]
+        U1["🦉 Observador / Guia / Serviço"]
+    end
+    style U fill:#fff3cd,stroke:#f0ad4e,stroke-width:2px
 
+    %% === Frontend ===
+    subgraph F["🎨 Frontend Layer"]
+        F1["🌐 Aplicação Web <br>(Next.js + React + TypeScript)<br><b>Hospedada na Vercel</b>"]
+        F2["🎯 TanStack Query / React Hook Form<br>Validação com Zod"]
+        F3["💅 Tailwind CSS + shadcn/ui"]
+    end
+    style F fill:#cce5ff,stroke:#004085,stroke-width:2px
 
-  %% =========================
-  %% LIVEKIT (SALA/TRANSPORTE)
-  %% =========================
-  LK[(LiveKit Server<br/>Room: ws://localhost:7880)]:::svc
+    %% === Backend / Supabase ===
+    subgraph B["⚙️ Backend Layer (Supabase)"]
+        A["🔑 Auth <br>(Gerencia Login e Cadastro via Magic Links)"]
+        API["⚡ API Gateway (PostgREST) <br>Permissões via RLS"]
+        DB["🐘 Banco de Dados (PostgreSQL)<br>• Perfis<br>• Serviços<br>• Tabelas Polimórficas<br>• Regras de Gamificação<br>• Funções RPC"]
+        S["🗂️ Storage <br>(Armazena Fotos e Avatares)"]
+        FN["🧩 Functions (PL/pgSQL)<br>• handle_new_confirmation()<br>• update_location_stats()"]
+    end
+    style B fill:#d4edda,stroke:#155724,stroke-width:2px
 
-  %% =========================
-  %% WORKER / AGENT
-  %% =========================
-  subgraph W["Worker Python (Agente de Voz)"]
-    direction LR
-    AG[AgentSession<br/>livekit.agents.voice]:::core
-    VAD[Silero VAD]:::core
-    STT[Deepgram STT<br/>model: nova-2-general]:::ext
-    LLM[OpenAI LLM<br/>gpt-4o-mini]:::ext
-    TTS[ElevenLabs TTS<br/>eleven_multilingual_v2]:::ext
+    %% === Integrações ===
+    subgraph I["🔗 Integrações Externas"]
+        IBGE["🏛️ API do IBGE<br>Estados e Cidades"]
+        VERCEL["☁️ Vercel Hosting<br>Frontend Deploy"]
+        MAPS["🗺️ Google Maps / Links de Localização"]
+    end
+    style I fill:#f8d7da,stroke:#721c24,stroke-width:2px
 
-    AG --> VAD --> STT --> LLM --> TTS --> AG
-  end
-
-  %% =========================
-  %% ENCAPSULAMENTO DO ATENDIMENTO
-  %% =========================
-  FLOW[["Atendimento (encapsulado)<br/>roteiro, prompts, validações"]]:::core
-
-  %% =========================
-  %% CONFIG & SEGREDOS
-  %% =========================
-  ENV["(.env / Variáveis de Ambiente)<br/>API_KEYs (OpenAI, Deepgram, ElevenLabs)"]:::cfg
-  CFG["(Config multi-tenant / cardápio)<br/>por pizzaria/cliente"]:::cfg
-
-  %% =========================
-  %% OBSERVABILIDADE
-  %% =========================
-  LOG["(Logging / Métricas)<br/>logging.INFO, traces"]:::obs
-  ERR{{"Tratamento de erros<br/>retries, fallback, logs"}}:::obs
-
-  %% =========================
-  %% FLUXO PRINCIPAL
-  %% =========================
-  U -->|"Áudio (WebRTC/SIP)"| LK -->|Media/Events| AG
-  AG -->|Pipeline Áudio→Texto→Resposta→Áudio| FLOW
-  AG -->|Áudio sintetizado| LK -->|Retorno de áudio| U
-
-  %% =========================
-  %% DEPENDÊNCIAS / INTEGRAÇÕES
-  %% =========================
-  ENV -. credenciais .-> STT
-  ENV -. credenciais .-> LLM
-  ENV -. credenciais .-> TTS
-  ENV -. LIVEKIT_* .-> LK
-
-  CFG -. "parâmetros (preços, itens)" .-> FLOW
-
-  %% =========================
-  %% OBSERVABILIDADE / ERROS
-  %% =========================
-  AG -. logs .-> LOG
-  LK -. logs .-> LOG
-  STT -. latência/erros .-> LOG
-  LLM -. latência/erros .-> LOG
-  TTS -. latência/erros .-> LOG
-
-  STT ==> ERR
-  LLM ==> ERR
-  TTS ==> ERR
-  ERR ==> LOG
+    %% === Conexões ===
+    U1 -->|"Navega e interage"| F1
+    F1 -->|"Autenticação e Ações"| A
+    F1 -->|"Requisições API"| API
+    API -->|"Lê e escreve dados"| DB
+    API -->|"Gerencia usuários"| A
+    API -->|"Acessa arquivos"| S
+    DB -->|"Executa funções lógicas"| FN
+    F1 -->|"Consulta dados geográficos"| IBGE
+    F1 -->|"Redireciona e exibe mapas"| MAPS
+    F1 -.->|"Implantação contínua"| VERCEL
 ```
 
 
 #### RESUMO TÉCNICO PARA EMBEDDING
 
-Este projeto implementa um robô de atendimento por voz multi-tenant para restaurantes, desenvolvido em Python 3.12 com um backend Flask que expõe uma API RESTful para gerenciamento de sessões. A arquitetura centraliza-se no LiveKit Voice Agents para comunicação em tempo real via WebRTC/SIP. O pipeline de processamento de voz integra Silero VAD para detecção de atividade de fala, Deepgram (modelo nova-2-general) para Speech-to-Text (STT), OpenAI GPT-4o-mini como Large Language Model (LLM) para geração de respostas inteligentes, e ElevenLabs (modelo eleven_multilingual_v2) para Text-to-Speech (TTS) customizável. A solução é multi-tenant, permitindo a personalização de cardápios através de um sistema de OCR com Pytesseract e Pillow, que extrai texto de imagens para construir prompts dinâmicos. A qualidade do código é garantida por uma suíte de DevOps utilizando Makefile para automação de tarefas como linting com `ruff`, verificação de tipos com `mypy` e testes com `pytest`. O sistema é projetado para ser observável, com logging e monitoramento de tráfego SIP via `sngrep` e CLI do LiveKit.
+A arquitetura do projeto Canaoaves, uma Single-Page Application (SPA) colaborativa, foi definida pela Architectural Decision Record (ADR) 011, adotando uma stack end-to-end baseada em Supabase e Vercel para otimizar a agilidade de desenvolvimento, escalabilidade e custo-efetividade. A decisão centraliza a camada de dados no Supabase, utilizando-o como um Backend-as-a-Service (BaaS) que provê um banco de dados PostgreSQL, autenticação, storage de arquivos e APIs REST auto-geradas via PostgREST. A segurança de acesso a dados é granularmente controlada com políticas de Row Level Security (RLS). Para lógicas de negócio complexas, a solução utiliza VIEWS e funções PostgreSQL. O frontend, desenvolvido em React/Vite, é hospedado na Vercel, que gerencia o build, deploy e a entrega via CDN global. A integração contínua e a entrega contínua (CI/CD) são automatizadas através da integração com Git, e a Vercel também provê capacidade de computação via Serverless Functions. Esta combinação mitiga a necessidade de um backend customizado (e.g., Node.js + Express), embora introduza uma dependência de fornecedores (vendor lock-in), parcialmente atenuada pelo uso de PostgreSQL open-source.
 
 #### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
 
-| Categoria                       | Tecnologias e Conceitos                                                                                                                            |
-| :------------------------------ | :------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 🤖 **AI & Machine Learning**    | OpenAI GPT-4o-mini, Deepgram (STT), ElevenLabs (TTS), Silero VAD (Voice Activity Detection), Pytesseract (OCR), Pillow (Image Processing), LLM     |
-| 💻 **Software Development**     | Python 3.12, Flask, Makefile, Ruff (linter/formatter), MyPy (type checking), Pytest, virtual environment (venv)                                    |
-| 🏗️ **Architecture**            | Arquitetura Multi-tenant, Voice Agents, WebRTC, SIP, Worker (Agent Pattern)                                                                        |
-| ☁️ **Cloud Computing**          | LiveKit (Real-time voice/video infrastructure)                                                                                                     |
-| 🌐 **API RESTFul development**  | Flask, multipart/form-data, POST /create-voice-support, GET /api/agent-status/, POST /api/stop-agent                                               |
-| 🎨 **Frontend Development**     | Interação via formulário de navegador (HTML)                                                                                                       |
-| 📱 **Mobile Development**       | N/A                                                                                                                                                |
-| 🗃️ **Database**                | N/A                                                                                                                                                |
-| 📊 **Data Management**          | OCR de imagem, Processamento de áudio em tempo real                                                                                                |
-| 📰 **Content Management - CMS** | N/A                                                                                                                                                |
-| ⚙️ **System Administration**    | Tesseract OCR (instalação), sngrep (monitoramento de rede SIP)                                                                                     |
-| 🚀 **DevOps**                   | Makefile (run, fix, lint, type, test, quality, ci), CI/CD pipeline, Gerenciamento de dependências (requirements.txt), Variáveis de Ambiente (.env) |
-| 👨‍💼 **Leadership**            | N/A                                                                                                                                                |
-| 👨‍🏫 **Coaching**              | N/A                                                                                                                                                |
-| 📈 **Agile Project Management** | N/A                                                                                                                                                |
+| Categoria                    | Tecnologias e Conceitos                                                                                                                                       |
+| :--------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **AI & Machine Learning**    | N/A                                                                                                                                                           |
+| **Software Development**     | Autenticação, CRUD, Git, Serverless Functions, Open-source, Funções PostgreSQL, Row Level Security (RLS), Node.js, Express, Experiência do Desenvolvedor (DX) |
+| **Architecture**             | Backend-as-a-Service (BaaS), SPA (Single-Page Application), Escalabilidade, Serverless Functions, Vendor Lock-in, Custo-Efetividade                           |
+| **Cloud Computing**          | Supabase, Vercel, Hosting com CDN Global, Serverless Functions, Storage                                                                                       |
+| **API RESTFul development**  | PostgREST                                                                                                                                                     |
+| **Frontend Development**     | Vercel, SPA (Single-Page Application), React/Vite                                                                                                             |
+| **Mobile Development**       | N/A                                                                                                                                                           |
+| **Database**                 | PostgreSQL, Supabase, PostgREST, Row Level Security (RLS), VIEWS, Funções PostgreSQL                                                                          |
+| **Data Management**          | PostgreSQL, Storage, Row Level Security (RLS)                                                                                                                 |
+| **Content Management - CMS** | N/A                                                                                                                                                           |
+| **System Administration**    | CDN Global                                                                                                                                                    |
+| **DevOps**                   | Vercel, Integração com Git (CI/CD)                                                                                                                            |
+| **Leadership**               | N/A                                                                                                                                                           |
+| **Coaching**                 | N/A                                                                                                                                                           |
+| **Agile Project Management** | Agilidade no desenvolvimento                                                                                                                                  |
+
+
+### 🚀 EuPizza: Plataforma SaaS de Atendimento por Voz - BRNow
+
+#### 🎯 Visão Geral e Arquitetura da Solução
+
+No cenário competitivo dos restaurantes, a agilidade e a qualidade do atendimento são cruciais. O projeto EuPizza nasceu para revolucionar essa interação, transformando o atendimento telefônico tradicional em uma experiência inteligente e automatizada. O desafio era criar uma plataforma **SaaS (Software as a Service)** robusta e escalável, capaz de oferecer agentes de voz autônomos para qualquer restaurante, começando pelo nicho de pizzarias.
+
+A solução foi concebida como uma arquitetura de **microsserviços orientada a eventos e integrações**, orquestrada com Docker. O coração do sistema é o **Agente de Voz**, desenvolvido em Python com FastAPI, responsável por toda a lógica conversacional. O fluxo se inicia quando um cliente liga para o restaurante. A chamada, via **tronco SIP**, é recebida pelo **LiveKit**, um media server WebRTC de alta performance, que cria uma sala de conferência e notifica nosso Agente via webhook.
+
+Uma vez na sala, o Agente gerencia um pipeline de IA de ponta a ponta:
+
+1.  **Speech-to-Text (STT):** O áudio do cliente é transcrito em tempo real pelo Deepgram.
+2.  **Inteligência Conversacional (LLM):** A transcrição é enviada para um modelo de linguagem da OpenAI, que processa o pedido, consulta o cardápio e gera a resposta textual apropriada.
+3.  **Text-to-Speech (TTS):** A resposta do LLM é convertida em áudio com voz natural via ElevenLabs ou OpenAI, e reproduzida para o cliente na chamada.
+
+Toda a interação, desde o histórico da conversa até os detalhes do pedido, é persistida no **Supabase (PostgreSQL)**, que foi modelado para suportar multi-tenancy com **Row Level Security (RLS)**, garantindo o total isolamento e segurança dos dados de cada cliente da plataforma. A conectividade em redes restritivas é assegurada por um servidor **coturn (TURN/STUN)**.
+
+#### 👨‍💻 Meu Papel no Projeto
+
+Assumi um papel multifacetado para transformar a visão em realidade, atuando como:
+
+  * **🚀 Arquiteto de Soluções Cloud/SaaS:** Fui responsável por desenhar a arquitetura de microsserviços, selecionar as tecnologias de orquestração (Docker Swarm) e projetar o modelo de dados multi-tenant no Supabase, garantindo escalabilidade e segurança desde a fundação.
+  * **💻 Desenvolvedor Backend Sênior (Python/FastAPI):** Implementei o núcleo da plataforma, desenvolvendo as APIs do Agente e do Controller, integrando os serviços de WebRTC (LiveKit) e o pipeline de IA (Deepgram, OpenAI, ElevenLabs), além de toda a lógica de negócio e o sistema de billing.
+  * **⚙️ Engenheiro de DevOps/Infraestrutura:** Configurei e gerenciei todo o ambiente em contêineres com Docker Compose, criei pipelines de CI/CD no GitHub Actions para garantir a qualidade e agilidade nas entregas, e desenvolvi scripts de provisionamento idempotentes para a infraestrutura de telefonia.
+  * **🔍 Especialista em Debug & Troubleshooting:** Liderei a investigação e resolução de desafios complexos, desde a autenticação de tokens JWT com o LiveKit e o tratamento de `flood protection` em chamadas SIP até a resolução de conflitos de dependências e a otimização das integrações com as APIs de IA.
+
+#### ✨ Pontos Fortes e Desafios Superados
+
+O maior triunfo deste projeto foi a criação de uma plataforma funcional e resiliente a partir de tecnologias complexas e interconectadas.
+
+Um dos principais desafios foi a **orquestração da infraestrutura de comunicação em tempo real**. A integração do gateway SIP com o LiveKit apresentava problemas de `flood protection` que derrubavam as chamadas. Superei isso através de um debug minucioso da configuração SIP e da implementação de scripts de provisionamento idempotentes, garantindo um ambiente estável e previsível.
+
+Outro obstáculo crítico foi a **autenticação do agente de voz**. O sistema retornava erros `401 Unauthorized` devido a inconsistências na geração do token JWT. A solução envolveu uma análise profunda do payload do token, ajustando os `grants` de permissão (`roomJoin=True`) para alinhar perfeitamente com as exigências da API do LiveKit, o que estabilizou a conexão do agente.
+
+Finalmente, a integração com os provedores de IA trouxe seus próprios desafios, como a indisponibilidade de modelos TTS específicos. Implementei uma **lógica de fallback robusta**, permitindo que o sistema trocasse dinamicamente do modelo `gpt-4o-mini-tts` para o `tts-1/alloy` da OpenAI, garantindo que o agente nunca ficasse sem voz e mantendo a continuidade do serviço.
+
+#### 🌱 Pontos para Evolução Futura
+
+Embora o MVP seja robusto, a plataforma tem um vasto potencial de crescimento. Duas áreas principais para evolução seriam:
+
+1.  **Observabilidade Avançada:** Integrar ferramentas como Prometheus e Sentry para coletar métricas detalhadas de performance das APIs, latência do pipeline de IA e saúde dos serviços, permitindo uma operação proativa.
+2.  **Wizard de Onboarding Aprimorado:** Expandir o portal de autoatendimento para que os clientes possam não apenas configurar seus cardápios, mas também escolher a "personalidade" do agente de voz (selecionando vozes TTS) e customizar fluxos de diálogo básicos, aumentando o engajamento e reduzindo a necessidade de suporte.
+
+-----
+
+#### 🛠️ Pilha de Tecnologias (Tech Stack)
+
+| Componente               | Tecnologia Utilizada               | Papel na Arquitetura                                                                                                                    |
+| :----------------------- | :--------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------- |
+| **Linguagem Backend**    | **Python 3.12**                    | Linguagem principal para o desenvolvimento de toda a lógica de negócio dos microsserviços do Agente e Controller.                       |
+| **Framework Backend**    | **FastAPI**                        | Construção das APIs RESTful de alta performance, com validação de dados via Pydantic e documentação OpenAPI automática.                 |
+| **Containerização**      | **Docker & Docker Compose**        | Empacotamento de todos os serviços (Agente, LiveKit, SIP, Redis, coturn) para garantir consistência entre ambientes.                    |
+| **Orquestração**         | **Docker Swarm**                   | Orquestração simplificada dos contêineres em produção, focada em simplicidade e "time-to-value".                                        |
+| **Banco de Dados**       | **Supabase (PostgreSQL)**          | Persistência de dados relacionais, gerenciamento de sessões, histórico de chamadas e billing. Utiliza RLS para isolamento multi-tenant. |
+| **Mídia & Telefonia**    | **LiveKit & LiveKit SIP**          | Media server WebRTC para gerenciar as sessões de áudio em tempo real e gateway para receber e originar chamadas SIP.                    |
+| **NAT Traversal**        | **coturn**                         | Servidor TURN/STUN para garantir a conectividade de áudio entre participantes em redes restritivas.                                     |
+| **Speech-to-Text (STT)** | **Deepgram**                       | Transcrição de áudio do cliente para texto em tempo real, com alta precisão e baixa latência.                                           |
+| **Text-to-Speech (TTS)** | **ElevenLabs / OpenAI**            | Síntese de voz natural para converter as respostas do agente de texto para áudio.                                                       |
+| **Inteligência (LLM)**   | **OpenAI**                         | "Cérebro" do agente, responsável por entender a intenção do usuário e gerar as respostas contextuais.                                   |
+| **CI/CD**                | **GitHub Actions**                 | Automação de builds, testes e linting, garantindo a qualidade do código e a entrega contínua.                                           |
+| **Qualidade de Código**  | **pre-commit (Ruff, Black, Mypy)** | Ferramentas para garantir a formatação, linting e checagem de tipos estática do código antes de cada commit.                            |
+
+-----
+
+#### 🗺️ Diagrama da Arquitetura
+
+```mermaid
+---
+config:
+  theme: default
+  look: handDrawn
+  layout: dagre
+---
+flowchart LR
+ subgraph U["🎧 'Cliente Final'"]
+        User@{ label: "👤 'Usuário (Cliente de Pizzaria)'" }
+  end
+ subgraph C["🛰️ 'Infraestrutura de Comunicação'"]
+        SIP@{ label: "📞 'Provedor SIP'" }
+        LKSIP@{ label: "🌐 'LiveKit SIP Gateway'" }
+        LK@{ label: "🎥 'LiveKit Media Server'" }
+        TURN@{ label: "🌀 'Coturn (TURN\\/STUN Server)'" }
+  end
+ subgraph IA["🧠 'Pipeline de IA'"]
+        STT@{ label: "🗣️ 'Speech-to-Text (Deepgram)'" }
+        LLM@{ label: "💬 'LLM (OpenAI)'" }
+        TTS@{ label: "🎤 'Text-to-Speech (ElevenLabs\\/OpenAI)'" }
+  end
+ subgraph P["☁️ 'Plataforma SaaS EuPizza'"]
+        Agent@{ label: "🤖 'Agente de Voz (FastAPI)'" }
+        Supabase@{ label: "🗃️ 'Supabase (Postgres \\+ RLS)'" }
+        IA
+  end
+    SIP -- SIP\/TLS --> LKSIP
+    LKSIP -- WebRTC --> LK
+    LK --- TURN
+    User -- 📞 'Chamada Telefônica' --> SIP
+    SIP --> LKSIP
+    LKSIP --> LK
+    LK -- 🔔 'Webhook: Nova Chamada' --> Agent
+    Agent -- "🔗 'Junta-se à Sala'" --> LK
+    Agent -- 🎧 'Envia Áudio para Transcrição' --> STT
+    STT -- 📝 'Retorna Texto' --> Agent
+    Agent -- 🧠 'Envia Texto e Contexto' --> LLM
+    LLM -- 💬 'Retorna Resposta Textual' --> Agent
+    Agent -- 🔊 'Envia Texto para Síntese' --> TTS
+    TTS -- 🎶 'Retorna Áudio' --> Agent
+    Agent -- 📢 'Reproduz Áudio' --> LK
+    Agent -- 🗄️ 'Persiste Dados da Sessão' --> Supabase
+    User@{ shape: rect}
+    SIP@{ shape: rect}
+    LKSIP@{ shape: rect}
+    LK@{ shape: rect}
+    TURN@{ shape: rect}
+    STT@{ shape: rect}
+    LLM@{ shape: rect}
+    TTS@{ shape: rect}
+    Agent@{ shape: rect}
+    Supabase@{ shape: rect}
+    style IA fill:#FFF3E0,stroke:#FF9800,stroke-width:2px
+    style P fill:#E9FBE9,stroke:#339933,stroke-width:2px
+    style C fill:#DCEBFF,stroke:#3366CC,stroke-width:2px
+
+```
+
+#### RESUMO TÉCNICO PARA EMBEDDING
+
+Desenvolvimento de uma plataforma SaaS de atendimento por voz, denominada EuPizza, com arquitetura de microsserviços orientada a eventos, orquestrada via Docker Swarm e Docker Compose. O núcleo da solução é um Agente de Voz implementado em Python com o framework FastAPI, que gerencia um pipeline de IA para interação em tempo real. A comunicação é estabelecida por um tronco SIP integrado a um media server WebRTC (LiveKit), com conectividade em redes restritivas garantida por um servidor coturn (TURN/STUN). O fluxo de IA processa o áudio do cliente com Speech-to-Text via Deepgram, a lógica conversacional é executada por um LLM da OpenAI, e a resposta é sintetizada em áudio (Text-to-Speech) com ElevenLabs ou OpenAI. Os dados da plataforma são persistidos em um banco de dados PostgreSQL gerenciado pelo Supabase, utilizando um modelo de dados multi-tenant com Row Level Security (RLS) para isolamento de dados. Desafios técnicos superados incluem a resolução de `flood protection` no gateway SIP, depuração de autenticação JWT (`401 Unauthorized`) com LiveKit ajustando `grants` de permissão, e a implementação de uma lógica de fallback para os modelos de TTS. A infraestrutura é provisionada com scripts idempotentes e o ciclo de vida do desenvolvimento é automatizado com CI/CD via GitHub Actions e ferramentas de qualidade de código como Ruff, Black e Mypy.
+
+#### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
+
+| Categoria                    | Tecnologias e Conceitos                                                                                                                         |
+| :--------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------- |
+| **AI & Machine Learning**    | LLM, Speech-to-Text (STT), Text-to-Speech (TTS), Pipeline de IA, OpenAI, Deepgram, ElevenLabs                                                   |
+| **Software Development**     | Python 3.12, FastAPI, Pydantic, pre-commit, Ruff, Black, Mypy, Lógica de Fallback                                                               |
+| **Architecture**             | Microsserviços, Arquitetura Orientada a Eventos, SaaS, Multi-tenancy, Row Level Security (RLS), WebRTC, Gateway SIP, Media Server, Idempotência |
+| **Cloud Computing**          | SaaS, Supabase                                                                                                                                  |
+| **API RESTFul development**  | FastAPI, API RESTful, Webhook, JWT, Autenticação, OpenAPI, `401 Unauthorized`                                                                   |
+| **Frontend Development**     | N/A                                                                                                                                             |
+| **Mobile Development**       | N/A                                                                                                                                             |
+| **Database**                 | PostgreSQL, Supabase, Modelo de Dados Relacional                                                                                                |
+| **Data Management**          | Row Level Security (RLS), Multi-tenancy                                                                                                         |
+| **Content Management - CMS** | N/A                                                                                                                                             |
+| **System Administration**    | coturn (TURN/STUN Server)                                                                                                                       |
+| **DevOps**                   | Docker, Docker Compose, Docker Swarm, Containerização, CI/CD, GitHub Actions, Provisionamento de Infraestrutura, Observabilidade                |
+| **Leadership**               | Arquiteto de Soluções, Debug & Troubleshooting, Desenvolvedor Sênior                                                                            |
+| **Coaching**                 | N/A                                                                                                                                             |
+| **Agile Project Management** | N/A                                                                                                                                             |
+
 ### 🚀 Ask Richter: Meu CV Interativo com IA
 
 #### 🎯 Visão Geral e Arquitetura da Solução
@@ -724,10 +858,10 @@ Este projeto é uma fábrica de automação de vídeo end-to-end desenvolvida em
 | **Agile Project Management** | 🔄 Desenvolvimento Incremental, Refatoração Estratégica, Resolução de Débito Técnico                                                                                               |
 
 ---
-### Documentos
+#### Documentos
 Aqui está uma descrição de cada arquivo:
 
-#### 📄 `README.md`
+##### 📄 `README.md`
 Este é o documento principal do projeto, a "Fábrica de vídeos automatizada". Ele descreve de forma completa o sistema, que automatiza a criação e publicação de vídeos curtos e longos para o YouTube. O `README` detalha:
 * **Tecnologias Usadas**: Python, ElevenLabs, Coqui TTS, Replicate, Pixabay, Jamendo, Whisper, FFmpeg e a API do YouTube.
 * **Fluxo de Trabalho**: Desde a geração do roteiro até o upload do vídeo finalizado.
@@ -737,7 +871,7 @@ Este é o documento principal do projeto, a "Fábrica de vídeos automatizada". 
 * **Instruções de Uso**: Como configurar o ambiente, instalar dependências, usar as chaves de API e executar o projeto com diferentes argumentos de linha de comando.
 * **Diagramas**: Inclui um fluxograma e um diagrama de sequência para ilustrar o processo.
 
-#### 🧠 `CONTRIBUTING.md`
+##### 🧠 `CONTRIBUTING.md`
 Este é o guia de contribuição e padrões de código. É um documento essencial para garantir a qualidade e a manutenibilidade do projeto. Ele estabelece regras rígidas sobre:
 * **Ambiente de Desenvolvimento**: Exige Python 3.11/3.12 e um ambiente virtual (`venv`).
 * **Segurança**: Proíbe o uso de chaves de API diretamente no código, exigindo o uso de arquivos `.env`.
@@ -746,173 +880,46 @@ Este é o guia de contribuição e padrões de código. É um documento essencia
 * **Testes e Debugging**: Enfatiza a importância de testes incrementais e sistemáticos.
 * **Proibições**: Lista práticas estritamente proibidas para manter a consistência.
 
-#### 📝 `plano-de-migracao-content-json.md`
+##### 📝 `plano-de-migracao-content-json.md`
 Este arquivo detalha um plano de refatoração para centralizar a gestão de conteúdo. O objetivo é substituir dois arquivos (`frases.json` e `reflexao.json`) por um único `content.json` com uma estrutura de dados padronizada. O plano é dividido em etapas claras:
 1.  Criação de um novo módulo `ContentManager`.
 2.  Refatoração do script principal (`main.py`) para usar o novo gerenciador.
 3.  Atualização de todos os scripts dependentes.
 4.  Limpeza de arquivos antigos e atualização da documentação.
 
-#### 🎶 `plano-de-implementacao-bg-musical.md`
+##### 🎶 `plano-de-implementacao-bg-musical.md`
 Este documento descreve o plano para adicionar trilhas sonoras aos vídeos. A estratégia é integrar a API do **Jamendo** para buscar e baixar músicas livres de direitos autorais. O plano inclui:
 * **Configuração Inicial**: Adicionar chaves de API ao `.env` e criar um módulo `music_manager.py`.
 * **Integração com a API**: Funções para buscar e baixar as faixas.
 * **Lógica de Mesclagem**: Como usar a biblioteca `pydub` para combinar a narração com a música de fundo.
 * **Testes e Documentação**: Etapas para validar a funcionalidade e atualizar o `README.md`.
 
-#### 🖼️ `plano-de-integracao-pixabay-imagens.md`
+##### 🖼️ `plano-de-integracao-pixabay-imagens.md`
 Este é um plano para integrar o **Pixabay** como uma fonte alternativa e gratuita para as imagens de fundo dos vídeos, complementando o gerador de IA (Replicate/SDXL). O plano cobre:
 * Implementação da função de busca e download de imagens via API do Pixabay.
 * Adição de controle via arquivo `.env` e argumentos de linha de comando.
 * Criação de testes automatizados.
 * Atualização da documentação para refletir a nova opção.
 
-#### 🔧 `video_ajuste.md`
+##### 🔧 `video_ajuste.md`
 Este é um plano de ação técnico para corrigir um problema de "tremor" (judder) nas animações dos vídeos. É um exemplo excelente de debugging sistemático, detalhando:
 * **Estratégia de Teste**: Isolar cada tentativa de solução e reverter o código antes de tentar a próxima.
 * **Fases de Implementação**: Desde o diagnóstico até a validação, testando múltiplas soluções com FFmpeg, como renderização em duas etapas, uso do filtro `setpts`, e a troca do instável `zoompan` pela combinação estável de `scale`/`crop`.
 
-#### 🎯 `video_centralizar.md`
+##### 🎯 `video_centralizar.md`
 Similar ao plano de ajuste, este documento foca em resolver um problema específico: o movimento de zoom e panorâmica não estava centralizado na imagem. O plano segue uma estrutura de fases:
 * **Diagnóstico**: Adicionar logs para inspecionar variáveis e dimensões.
 * **Correção Rápida**: Forçar um movimento central para uma solução imediata.
 * **Solução Robusta**: Refatorar o código para uma classe `MovementFilterGenerator`, tornando-o mais limpo e centralizado.
 * **Testes e Validação**: Inclui a criação de um script de teste visual com uma imagem de referência para validar a centralização de forma precisa.
 
-#### 🔊 `Audio Gen - Fix Plan.md` e `Fix-Plan-TTS.md`
+##### 🔊 `Audio Gen - Fix Plan.md` e `Fix-Plan-TTS.md`
 Estes dois documentos abordam problemas de instabilidade com a biblioteca de geração de áudio **Coqui TTS**.
 * **`Fix-Plan-TTS.md`**: Diagnostica um erro de validação que impedia o uso da língua portuguesa (`pt`). A solução proposta é aplicar um "patch" no código da biblioteca em tempo de execução para permitir o idioma.
 * **`Audio Gen - Fix Plan.md`**: Resolve um problema mais profundo de compatibilidade entre as bibliotecas `TTS` e `transformers`. A solução definitiva encontrada foi travar as versões das bibliotecas no arquivo `requirements.txt`. Além disso, o documento diagnostica e corrige um "deadlock" (travamento) que ocorria ao manipular o áudio, otimizando o processo para ser executado totalmente em memória, o que é mais rápido e seguro.
 
 Em resumo, os arquivos mostram um projeto de automação maduro, com documentação robusta, planejamento cuidadoso de novas funcionalidades e uma abordagem metódica e profissional para a resolução de problemas técnicos.
 
-### 🚀 Cache Semântico de Alta Performance para Otimização de LLMs (PoC)
-
-#### 🎯 Visão Geral e Arquitetura da Solução
-
-Em um cenário onde a eficiência e a velocidade das interações com Grandes Modelos de Linguagem (LLMs) são cruciais, este projeto nasceu como uma Prova de Conceito (PoC) para um desafio claro: como reduzir a latência e os custos operacionais sem sacrificar a qualidade das respostas? A solução foi arquitetar um sistema de cache semântico de alta performance, projetado para operar de forma 100% local, garantindo privacidade total dos dados e eliminando dependências de APIs externas.
-
-A arquitetura funciona de maneira elegante: ao receber uma pergunta, o sistema utiliza o **Ollama** para gerar localmente um vetor de embedding, que é uma representação numérica do significado daquela pergunta. Em seguida, esse vetor é usado para consultar um índice **FAISS** em memória, que realiza uma busca por similaridade em velocidade quasi-instantânea. Se uma pergunta semanticamente equivalente é encontrada acima de um limiar de confiança (um "Cache Hit"), a resposta armazenada é devolvida imediatamente. Caso contrário (um "Cache Miss"), a requisição prossegue para o LLM, e a nova resposta é então adicionada ao cache, enriquecendo o sistema para futuras interações.
-
-#### 👨‍💻 Meu Papel no Projeto
-
-Como idealizador e desenvolvedor principal desta Prova de Conceito, minhas responsabilidades foram:
-
-  * **Arquitetura da Solução:** Desenhar o fluxo completo do sistema, desde a entrada do prompt até a decisão de hit/miss do cache.
-  * **Implementação do Core:** Desenvolver a lógica central em Python, integrando as bibliotecas para busca vetorial e geração de embeddings.
-  * **Integração de Tecnologias:** Orquestrar a comunicação entre o **Ollama** para a vetorização local e o **FAISS** para a busca por similaridade, garantindo uma operação coesa e performática.
-  * **Validação e Performance:** Executar testes para validar a eficácia da PoC, comprovando a redução drástica na latência para perguntas recorrentes e o impacto positivo na otimização de recursos.
-
-#### ✨ Pontos Fortes e Desafios Superados
-
-O maior ponto forte desta solução é sua **autonomia e eficiência**. O principal desafio era construir um sistema de cache inteligente que não dependesse de serviços de terceiros para a geração de embeddings, que geralmente representam um gargalo de custo e privacidade.
-
-A superação veio através da combinação estratégica de tecnologias de ponta:
-
-  * **FAISS (Facebook AI Similarity Search):** Garantiu que a busca por similaridade, o coração do cache, fosse realizada em milissegundos, diretamente na memória.
-  * **Ollama:** Permitiu a geração de embeddings de alta qualidade de forma totalmente local e gratuita, eliminando chamadas de API externas e assegurando que os dados nunca saíssem do ambiente de execução.
-
-O resultado foi uma PoC que não apenas validou uma tese, mas demonstrou um caminho viável para otimizar sistemas de IA de forma significativa, melhorando a experiência do usuário e a sustentabilidade financeira da operação.
-
-#### 🌱 Pontos para Evolução Futura
-
-Para evoluir esta PoC para um sistema em produção, os próximos passos poderiam incluir a implementação de uma camada de persistência para o índice vetorial (ex: usando um banco de dados vetorial como Milvus ou Weaviate) e a criação de uma API robusta para servir o cache a múltiplas aplicações.
-
------
-
-#### 🛠️ Pilha de Tecnologias (Tech Stack)
-
-| Componente | Tecnologia Utilizada | Papel na Arquitetura |
-| :--- | :--- | :--- |
-| **Linguagem Principal** | **Python** | Orquestra todo o fluxo de dados e a lógica de cache (Hit/Miss). |
-| **Busca por Similaridade** | **FAISS** | Cria e gerencia um índice vetorial em memória para buscas semânticas de altíssima velocidade. |
-| **Geração de Embeddings** | **Ollama** | Gera os vetores (embeddings) das perguntas de forma 100% local, garantindo privacidade e custo zero. |
-| **Computação Numérica** | **NumPy** | Fornece a base para manipulação eficiente de vetores e matrizes, essencial para o FAISS. |
-
------
-
-#### 🗺️ Diagrama da Arquitetura
-
-```mermaid
----
-config:
-  theme: default
-  look: handDrawn
----
-flowchart LR
-    %% Usuário
-    A[👤 Usuário]:::actor
-
-    %% Lógica de cache
-    B{{🧠 Lógica de Cache}}:::logic
-
-    %% Embedding
-    C["🪄 Ollama<br>(Geração de Embeddings)"]:::process
-
-    %% Vetor
-    D[(📦 Índice Vetorial - FAISS)]:::storage
-
-    %% Decisão
-    E["🤖 LLM<br>(Modelo de Linguagem)"]:::process
-    G[💾 Resposta em Cache]:::cache
-    H[📤 Resposta ao Usuário]:::output
-    F{{🗄️ Armazenar no Cache}}:::process
-
-    %% Fluxos principais
-    A -- "1️⃣ Pergunta" --> B
-    B -- "2️⃣ Gera embedding" --> C
-    C -- "3️⃣ Retorna embedding" --> B
-    B -- "4️⃣ Busca similaridade" --> D
-    D -- "5️⃣ Resultado da busca" --> B
-
-    %% Decisão
-    B -- "6a️⃣ Cache Miss<br>(Similaridade < limiar)" --> E
-    B -- "6b️⃣ Cache Hit<br>(Similaridade ≥ limiar)" --> G
-
-    %% Cache Miss
-    E -- "7️⃣ Gera nova resposta" --> F
-    F -- "8️⃣ Atualiza índice" --> D
-    F -- "9️⃣ Retorna nova resposta" --> H
-
-    %% Cache Hit
-    G -- "9️⃣ Retorna resposta cacheada" --> H
-
-    %% Final
-    H -- "🔟 Resposta otimizada" --> A
-
-    %% Estilos
-    classDef actor fill:#D6EAF8,stroke:#3498DB,stroke-width:2px
-    classDef logic fill:#FDEDEC,stroke:#E74C3C,stroke-width:2px
-    classDef process fill:#FDF2E9,stroke:#E67E22,stroke-width:2px
-    classDef storage fill:#EBF5FB,stroke:#2980B9,stroke-width:2px
-    classDef cache fill:#E8F8F5,stroke:#1ABC9C,stroke-width:2px
-    classDef output fill:#E8F8F5,stroke:#27AE60,stroke-width:2px
-```
-
----
-#### RESUMO TÉCNICO PARA EMBEDDING
-
-Este projeto é uma Prova de Conceito (PoC) de um cache semântico de alta performance para otimização de Grandes Modelos de Linguagem (LLMs), focado em redução de latência e custos. A arquitetura, implementada em Python, opera de forma 100% local para garantir privacidade. O fluxo consiste em receber uma query, gerar um vetor de embedding localmente com Ollama e realizar uma busca por similaridade em um índice vetorial em memória gerenciado por FAISS. A lógica de "Cache Hit" retorna uma resposta pré-existente se a similaridade ultrapassa um limiar, enquanto um "Cache Miss" encaminha a requisição ao LLM, e a nova resposta é vetorizada e adicionada ao índice FAISS. A solução utiliza NumPy para computação numérica e valida a eficácia na otimização de recursos e na melhoria da experiência do usuário, superando o desafio de criar um sistema autônomo sem dependência de APIs externas de embedding.
-
-#### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
-
-| Categoria                    | Tecnologias e Conceitos                                                                                                                                              |
-| :--------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **AI & Machine Learning**    | Cache Semântico, LLMs (Grandes Modelos de Linguagem), Vetor de Embedding, Busca por Similaridade, FAISS (Facebook AI Similarity Search), Ollama, Limiar de Confiança |
-| **Software Development**     | Python, NumPy                                                                                                                                                        |
-| **Architecture**             | Prova de Conceito (PoC), Sistema de Cache, Cache Hit/Miss, Arquitetura Local, Otimização de Performance, Redução de Latência, Índice em Memória                      |
-| **Cloud Computing**          | N/A                                                                                                                                                                  |
-| **API RESTFul development**  | N/A                                                                                                                                                                  |
-| **Frontend Development**     | N/A                                                                                                                                                                  |
-| **Mobile Development**       | N/A                                                                                                                                                                  |
-| **Database**                 | N/A                                                                                                                                                                  |
-| **Data Management**          | Índice Vetorial                                                                                                                                                      |
-| **Content Management - CMS** | N/A                                                                                                                                                                  |
-| **System Administration**    | N/A                                                                                                                                                                  |
-| **DevOps**                   | N/A                                                                                                                                                                  |
-| **Leadership**               | Idealizador, Desenvolvedor Principal                                                                                                                                 |
-| **Coaching**                 | N/A                                                                                                                                                                  |
-| **Agile Project Management** | Prova de Conceito (PoC)                                                                                                                                              |
 
 ### 🚀 Telegram Course Tools
 
@@ -1045,220 +1052,8 @@ Este projeto implementa uma suíte de automação em Python para organizar conte
 | **Leadership**               | Arquitetura de Solução, Product Ownership, Tomada de Decisão Técnica                                                                                                           |
 | **Coaching**                 | N/A                                                                                                                                                                            |
 | **Agile Project Management** | Definição de Requisitos, Validação de Solução, Product Owner                                                                                                                   |
-### 🚀 Gerenciador de Tarefas Conversacional via E-mail 📥 Postmark Challenge
-
-##### 🎯 Visão Geral e Arquitetura da Solução
-
-Este projeto nasceu para solucionar uma dor comum no dia a dia de qualquer profissional: a fricção de transformar e-mails em tarefas acionáveis. Em vez de alternar entre a caixa de entrada e um aplicativo de To-Do, a solução transforma o próprio e-mail em uma poderosa interface de gerenciamento. O usuário pode criar, atualizar, comentar e concluir tarefas simplesmente enviando um e-mail para um endereço dedicado ou respondendo a uma conversa existente, utilizando comandos simples e intuitivos como `#prioridade` ou `#concluir`.
-
-A arquitetura foi desenhada para ser ágil e orientada a eventos. O fluxo se inicia quando o **Postmark API** recebe um e-mail e, através de um **Inbound Webhook**, notifica a aplicação **Laravel** em tempo real. Um motor de comandos customizado entra em ação, analisando o corpo do e-mail em busca de "hashtags" de ação. Cada comando aciona a lógica de negócio correspondente, atualizando o estado da tarefa no banco de dados. Para a visualização, uma interface web reativa, construída com **Livewire** e **Tailwind CSS**, exibe a lista de tarefas, que se atualiza dinamicamente sem a necessidade de recarregar a página, proporcionando uma experiência de usuário fluida e moderna.
-
-#### 👨‍💻 Meu Papel no Projeto
-
-Como idealizador e desenvolvedor da solução, minhas principais responsabilidades foram:
-
-  * **Arquitetura do Processamento de E-mails:** Implementar a lógica de recebimento e interpretação de e-mails em tempo real utilizando Postmark Inbound Webhooks, que servem como gatilho para todo o fluxo da aplicação.
-  * **Desenvolvimento do Motor de Comandos:** Criar um processador de comandos em Laravel para analisar o corpo do e-mail, identificar hashtags de ação (ex: `#comentario`, `#concluir`) e executar as operações de negócio correspondentes.
-  * **Construção do Frontend Reativo:** Desenvolver a interface de usuário para visualização das tarefas com Livewire e Tailwind CSS, garantindo atualizações dinâmicas e uma experiência moderna sem a complexidade de uma Single Page Application (SPA).
-  * **Garantia de Qualidade:** Assegurar a robustez e a confiabilidade do sistema, especialmente do motor de comandos, através de uma suíte de testes completa escrita com Pest.
-
-#### ✨ Pontos Fortes e Desafios Superados
-
-O grande trunfo do projeto é sua simplicidade e elegância: ele se integra a um fluxo de trabalho que o usuário já domina — o e-mail. A solução elimina a necessidade de um novo software, transformando uma ferramenta de comunicação em uma plataforma de produtividade.
-
-O principal desafio técnico foi criar um sistema robusto para "traduzir" o texto não estruturado de um e-mail em comandos de sistema precisos e confiáveis. Superamos isso com o **desenvolvimento de um motor de comandos customizado**, capaz de analisar o conteúdo de forma inteligente. Outra vitória foi a escolha do **Livewire**, que permitiu construir uma interface reativa e performática com a produtividade do ecossistema Laravel, evitando a complexidade de gerenciar um frontend desacoplado.
-
-#### 🌱 Pontos para Evolução Futura
-
-Para o futuro, a solução poderia evoluir com a implementação de um processamento de linguagem natural (PLN) mais avançado, permitindo que os usuários escrevam comandos de forma mais livre, sem a rigidez das hashtags. Outra evolução seria a integração com calendários (Google Calendar, Outlook) para agendar tarefas com datas de vencimento.
-
------
-
-#### 🛠️ Pilha de Tecnologias (Tech Stack)
-
-| Componente | Tecnologia Utilizada | Papel na Arquitetura |
-| :--- | :--- | :--- |
-| **Backend** | **Laravel** | Orquestra toda a lógica de negócio, rotas, processamento de webhooks e interação com o banco de dados. |
-| **Frontend Reativo** | **Livewire & Tailwind CSS** | Constrói uma interface de usuário dinâmica e moderna para a visualização das tarefas, com atualizações em tempo real. |
-| **Testes Automatizados**| **Pest** | Garante a confiabilidade e a robustez das regras de negócio e do motor de comandos com uma suíte de testes limpa. |
-| **Gateway de E-mail** | **Postmark API & Webhooks** | Recebe os e-mails, dispara os eventos via webhook para a aplicação e gerencia o envio de respostas. |
-| **Modelo Arquitetural** | **Arquitetura Orientada a Eventos** | Permite que a aplicação reaja de forma assíncrona aos e-mails recebidos, garantindo um fluxo desacoplado e escalável. |
-
------
-
-#### 🔗 Links e Recursos
-* **🎬 Apresentação em Vídeo:** [Assista no YouTube](https://www.youtube.com/watch?v=NDFgcH2X1ZI)
-* **📂 Repositório Open Source:** [Veja o código no GitHub](https://github.com/lfrichter/Interactive-email-management)
-
----
-
-#### 🗺️ Diagrama da Arquitetura
-
-```mermaid
----
-config:
-  theme: default
-  look: handDrawn
----
-flowchart TD
-    %% --- Atores e Fluxo Inicial ---
-    subgraph US["Fluxo do Usuário"]
-        style US fill:#D6EAF8,stroke:#2980B9,stroke-width:2px
-        U[👨‍💻 Usuário<br>Origina a ação enviando ou respondendo um e-mail]
-        U -- "1️⃣ Envia ou responde e-mail" --> PS[📨 Postmark API<br>Serviço de e-mail transacional]
-    end
-
-    %% --- Backend e Infraestrutura ---
-    subgraph BE["Infraestrutura e Backend"]
-        style BE fill:#D5F5E3,stroke:#27AE60,stroke-width:2px
-        PS -- "2️⃣ Envia Inbound Webhook (POST)" --> LV[🚀 Aplicação Laravel<br>Ponto central de processamento]
-        LV -- "3️⃣ Recebe o webhook" --> CMD{⚙️ Motor de Comandos<br>Orquestra execução de ações}
-        CMD -- "4️⃣ Analisa conteúdo do e-mail<br>Identifica hashtags e contexto" --> LOGIC[📈 Lógica de Negócio<br>Define regras e fluxos]
-        LOGIC -- "5️⃣ Cria ou atualiza tarefa<br>Persistência de dados" --> DB[(🗃️ Banco de Dados MySQL)]
-    end
-
-    %% --- Interface Web Reativa ---
-    subgraph UIX["Interface Web Reativa"]
-        style UIX fill:#E8DAEF,stroke:#8E44AD,stroke-width:2px
-        BROWSER[🌐 Navegador do Usuário<br>Acessa interface de gestão] -- "7️⃣ Visualiza lista de tarefas" --> UI[🖥️ UI Livewire + Tailwind<br>Renderização e interações dinâmicas]
-        UI -- "6️⃣ Lê e exibe dados" --> DB
-        UI -- "8️⃣ Solicita atualização dinâmica (AJAX)" --> LV
-    end
-```
-
----
-#### RESUMO TÉCNICO PARA EMBEDDING
-
-A solução é um gerenciador de tarefas conversacional implementado em uma arquitetura orientada a eventos, acionada por e-mails. O fluxo é iniciado por um Inbound Webhook da Postmark API, que notifica uma aplicação backend em Laravel. Um motor de comandos customizado, com lógica de negócio robusta validada por testes automatizados em Pest, processa o corpo do e-mail para identificar e executar ações baseadas em hashtags, como `#prioridade` ou `#concluir`. O estado das tarefas é persistido em um banco de dados MySQL. A interface de usuário para visualização é um frontend reativo construído com Livewire e Tailwind CSS, garantindo atualizações dinâmicas da lista de tarefas sem a necessidade de recarregar a página. O principal desafio superado foi a tradução de texto não estruturado de e-mails em comandos de sistema precisos através do motor de comandos, evitando a complexidade de uma SPA desacoplada ao utilizar a stack TALL (Tailwind, Alpine, Livewire, Laravel). Futuras evoluções contemplam o uso de processamento de linguagem natural (PLN).
-
-#### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
-
-| Categoria                    | Tecnologias e Conceitos                                                                      |
-| :--------------------------- | :------------------------------------------------------------------------------------------- |
-| **AI & Machine Learning**    | 🧠 Processamento de Linguagem Natural (PLN)                                                  |
-| **Software Development**     | 👨‍💻 Laravel, Pest, Motor de Comandos Customizado                                           |
-| **Architecture**             | 🏗️ Arquitetura Orientada a Eventos, Inbound Webhook, Sistema Desacoplado, Sistema Escalável |
-| **Cloud Computing**          | ☁️ Postmark API (SaaS)                                                                       |
-| **API RESTFul development**  | 🔄 Postmark API, Webhooks                                                                    |
-| **Frontend Development**     | 🖥️ Livewire, Tailwind CSS, Interface Reativa                                                |
-| **Mobile Development**       | 📱 N/A                                                                                       |
-| **Database**                 | 🗃️ MySQL                                                                                    |
-| **Data Management**          | 💾 Persistência de Dados                                                                     |
-| **Content Management - CMS** | 📄 N/A                                                                                       |
-| **System Administration**    | ⚙️ N/A                                                                                       |
-| **DevOps**                   | 🔁 Testes Automatizados                                                                      |
-| **Leadership**               | 🚀 Idealizador, Desenvolvedor da Solução                                                     |
-| **Coaching**                 | 🤝 N/A                                                                                       |
-| **Agile Project Management** | scrum N/A                                                                                    |
 
 
-
-### 🚀 Twin Quest: Desafio Full-Stack 
-
-#### 🎯 Visão Geral e Arquitetura da Solução
-
-O "Twin Quest" nasceu como uma resposta criativa a um desafio, a arquitetura foi desenhada para ser moderna, robusta e reativa. O coração da aplicação é um **backend em Laravel** que serve uma API RESTful segura e eficiente. Ele é o maestro que orquestra a comunicação com a API. No frontend, uma interface limpa e fluida, construída com **Vue 3 (Composition API) e TypeScript**, oferece uma experiência de usuário impecável. O estado da aplicação é gerenciado de forma centralizada pelo **Pinia**, garantindo que os dados fluam de maneira reativa e instantânea da API para a tela do usuário.
-
-#### 👨‍💻 Meu Papel no Projeto
-
-Como idealizador e único desenvolvedor deste projeto, atuei em todas as frentes como **Desenvolvedor Full-Stack**, com as seguintes responsabilidades:
-
-  * **Arquitetura e Desenvolvimento Back-End:** Construí toda a API RESTful com Laravel, definindo os endpoints, a lógica de negócio e a orquestração da comunicação com o serviço de IA.
-  * **Desenvolvimento Front-End:** Criei a interface de usuário reativa utilizando Vue 3, TypeScript e a Composition API, focando em uma experiência limpa e intuitiva.
-  * **Gestão de Estado:** Implementei o Pinia para um gerenciamento de estado global eficiente e previsível no lado do cliente.
-  * **Qualidade de Código e Testes:** Garanti a estabilidade e a confiabilidade da API escrevendo uma suíte de testes completa com Pest, adotando uma abordagem TDD.
-
-#### ✨ Pontos Fortes e Desafios Superados
-
-O maior trunfo do projeto é a sua **execução técnica coesa e moderna**, integrando perfeitamente o frontend e o backend. A utilização de TypeScript de ponta a ponta trouxe uma camada extra de segurança e manutenibilidade ao código.
-
-Um desafio significativo foi implementação de uma **suíte de testes robusta com Pest** foi crucial para garantir que a lógica de negócio da API fosse à prova de falhas, um pilar para a qualidade do projeto.
-
-#### 🌱 Pontos para Evolução Futura
-
-Para o futuro, a aplicação poderia evoluir com a implementação de um **sistema de cache (como Redis)** para temas populares, otimizando custos de API e a velocidade de resposta. Outra melhoria seria adicionar **autenticação de usuários** para que eles possam salvar e revisitar seu histórico de "quests".
-
------
-
-#### 🛠️ Pilha de Tecnologias (Tech Stack)
-
-| Componente                  | Tecnologia Utilizada        | Papel na Arquitetura                                                                                                |
-| :-------------------------- | :-------------------------- | :------------------------------------------------------------------------------------------------------------------ |
-| **Backend (API)**           | **Laravel**                 | Orquestra a lógica de negócio, gerencia as rotas da API e se comunica com o serviço de IA Generativa.               |
-| **Frontend (UI)**           | **Vue 3 (Composition API)** | Constrói a interface de usuário reativa e dinâmica, permitindo uma interação fluida com o usuário.                  |
-| **Tipagem de Código**       | **TypeScript**              | Garante a segurança de tipos em todo o projeto, tanto no frontend quanto no backend (se aplicável), reduzindo bugs. |
-| **Gerenciamento de Estado** | **Pinia**                   | Centraliza e gerencia o estado da aplicação no frontend de forma simples, reativa e eficiente.                      |
-| **Testes Automatizados**    | **Pest**                    | Garante a confiabilidade e a qualidade da API do Laravel através de uma suíte de testes elegante e poderosa (TDD).  |
-
-
------
-
-#### 🗺️ Diagrama da Arquitetura
-
-```mermaid
----
-config:
-  theme: default
-  look: handDrawn
----
-graph TD
-    %% Cliente
-    subgraph "💻 Cliente (Browser)"
-        style U fill:#D6EAF8,stroke:#3498DB,stroke-width:2px
-        style FE fill:#AED6F1,stroke:#1F618D,stroke-width:2px
-        U[👨‍💻 Usuário]
-        FE["🌐 Frontend <br> Vue.js, TypeScript, Pinia"]
-        U --> FE
-    end
-
-    %% Servidor
-    subgraph "🖥️ Servidor (Backend)"
-        style BE fill:#D5F5E3,stroke:#27AE60,stroke-width:2px
-        style Testes fill:#ABEBC6,stroke:#1E8449,stroke-width:2px
-        BE[⚙️ Backend API <br> Laravel, Pest]
-        Testes(🧪 Suíte de Testes <br> Pest)
-        BE <--> Testes
-    end
-
-    %% Banco de Dados em Docker
-    subgraph "📦 Infraestrutura"
-        style DB fill:#FADBD8,stroke:#C0392B,stroke-width:2px
-        style Docker fill:#F5B7B1,stroke:#922B21,stroke-width:2px
-        subgraph Docker["🐳 Docker"]
-            DB[(🗄️ PostgreSQL)]
-        end
-    end
-
-    %% Fluxos
-    FE -- "Requisição HTTP (Tema)" --> BE
-    BE -- "Resposta JSON (Gêmeos)" --> FE
-    BE <--> DB
-
-```
-
----
-#### RESUMO TÉCNICO PARA EMBEDDING
-
-Desenvolvimento de uma aplicação web full-stack, "Twin Quest", a arquitetura da solução é baseada em um backend com Laravel que serve uma API RESTful. O frontend é uma interface de usuário reativa construída com Vue 3, Composition API e TypeScript para garantir tipagem segura. O gerenciamento de estado global no lado do cliente é realizado de forma centralizada pelo Pinia. A qualidade e estabilidade da API foram asseguradas através de uma suíte de testes automatizados com Pest, adotando uma abordagem TDD (Test-Driven Development). A infraestrutura inclui PostgreSQL, com planos de evolução para implementar um sistema de cache com Redis e autenticação de usuários.
-
-#### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
-
-| Categoria                    | Tecnologias e Conceitos                                                                                               |
-| :--------------------------- | :-------------------------------------------------------------------------------------------------------------------- |
-| **Software Development**     | Desenvolvedor Full-Stack, Laravel, Vue 3, TypeScript, Pinia, Pest, Test-Driven Development (TDD), Qualidade de Código |
-| **Architecture**             | Arquitetura Full-Stack, API RESTful, Gestão de Estado (Pinia), Sistema de Cache (Redis), Autenticação de Usuários     |
-| **Cloud Computing**          | N/A                                                                                                                   |
-| **API RESTFul development**  | API RESTful, Laravel, Endpoints, Requisição HTTP, Resposta JSON                                                       |
-| **Frontend Development**     | Vue 3 (Composition API), TypeScript, Pinia, Interface de Usuário Reativa                                              |
-| **Mobile Development**       | N/A                                                                                                                   |
-| **Database**                 | PostgreSQL, Redis                                                                                                     |
-| **Data Management**          | N/A                                                                                                                   |
-| **Content Management - CMS** | N/A                                                                                                                   |
-| **System Administration**    | N/A                                                                                                                   |
-| **DevOps**                   | Testes Automatizados, Pest, Docker                                                                                    |
-| **Leadership**               | Liderança Técnica (Idealizador e único desenvolvedor)                                                                 |
-| **Coaching**                 | N/A                                                                                                                   |
-| **Agile Project Management** | N/A                                                                                                                   |
 
 ### 🚀 Air Combat 3D: Um Estudo de Caso sobre Produtividade com IAs
 
@@ -2334,5 +2129,147 @@ A plataforma Índicos é um SaaS de marketing de indicação com uma arquitetura
 | **Coaching**                 | N/A                                                                                                                                          |
 | **Agile Project Management** | Gestão do ciclo de vida do projeto (concepção à entrega)                                                                                     |
 
+### 🚀 OnePush: Plataforma SaaS para Notificações Web Push
 
+#### 🎯 Visão Geral e Arquitetura da Solução
+
+Em um cenário digital onde a comunicação direta e instantânea com o usuário é um diferencial competitivo, nasceu o OnePush. Trata-se de uma plataforma SaaS (Software as a Service) completa, projetada para empoderar empresas com a capacidade de enviar notificações web push, criando um canal de engajamento poderoso para aumentar o retorno e a fidelização de visitantes em seus websites.
+
+A espinha dorsal da solução é uma **arquitetura modular e orientada a eventos**, construída sobre o robusto framework Laravel. Essa escolha estratégica garantiu não apenas a separação clara de responsabilidades entre os diferentes domínios do sistema — como notificações, pagamentos e gestão de clientes —, mas também proporcionou alta coesão e baixo acoplamento. Na prática, quando um cliente cadastra um novo website ou agenda uma notificação, a plataforma dispara eventos que são processados de forma assíncrona por filas (queues). Isso garante que a interface do usuário permaneça ágil e responsiva, enquanto tarefas mais pesadas, como a comunicação com APIs externas, acontecem em segundo plano.
+
+O fluxo é elegante e eficiente: o cliente da plataforma instala um simples script JavaScript em seu site, que se comunica com a API da OneSignal para registrar os assinantes. Pelo painel administrativo do OnePush, o cliente pode então segmentar seu público e disparar notificações, que são orquestradas pelo nosso backend e entregues pela infraestrutura global da OneSignal, garantindo performance e escalabilidade.
+
+#### 👨‍💻 Meu Papel no Projeto
+
+Atuei como o principal arquiteto e desenvolvedor da solução, sendo responsável pelo ciclo de vida completo do produto, desde a concepção até a implementação. Minhas principais responsabilidades incluíram:
+
+  * **Desenho da Arquitetura:** Idealizei e implementei a arquitetura modular e orientada a eventos, garantindo a escalabilidade e manutenibilidade do sistema.
+  * **Desenvolvimento Back-End:** Construí todo o core da aplicação utilizando Laravel (PHP), incluindo a lógica de negócio, o sistema de filas, e a modularização dos componentes.
+  * **Integração de APIs:** Realizei a integração completa com serviços de terceiros essenciais: a **OneSignal API** como motor de envio das notificações e a **Pagar.me API** para a gestão de planos e assinaturas.
+  * **Construção do Painel Administrativo:** Desenvolvi um painel de controle completo, utilizando o Homer Dashboard, que abrange desde a gestão de notificações e websites até o monitoramento de logs, estatísticas de engajamento e um sistema de suporte com funcionalidade de "impersonation" para resolução ágil de problemas.
+  * **Sistema de Pagamentos:** Implementei todo o ciclo de vida de assinaturas, integrando o gateway de pagamentos para processar transações de cartão de crédito e boleto de forma segura com JWT.
+
+#### ✨ Pontos Fortes e Desafios Superados
+
+O grande trunfo do OnePush reside na sua arquitetura resiliente e desacoplada, que foi a resposta direta a um desafio central: como construir uma plataforma SaaS multitenant que fosse ao mesmo tempo robusta, performática e fácil de manter?
+
+A resposta foi a adoção de uma **arquitetura orientada a eventos**. Ao invés de acoplar a criação de uma notificação diretamente ao seu envio, o sistema dispara um evento `NotificationCreated`. Um listener, operando de forma independente, captura esse evento e enfileira uma tarefa para se comunicar com a API da OneSignal. Essa abordagem trouxe vitórias significativas:
+
+1.  **Resiliência:** Se a API da OneSignal estivesse temporariamente indisponível, a tarefa poderia ser reprocessada automaticamente pela fila, sem perda de dados ou impacto na experiência do usuário.
+2.  **Performance:** A interface do usuário respondia instantaneamente, pois a lógica de envio era delegada para um processo em segundo plano.
+3.  **Escalabilidade:** Aumentar a capacidade de envio de notificações se tornou uma questão de adicionar mais workers para processar a fila, uma solução horizontalmente escalável.
+
+Outro ponto de destaque foi a criação de um **painel administrativo centrado na experiência de suporte**. A funcionalidade de "impersonation" permitiu que nossa equipe técnica acessasse a conta de um cliente de forma segura para diagnosticar e resolver problemas, o que reduziu drasticamente o tempo de suporte e aumentou a satisfação do cliente.
+
+#### 🌱 Pontos para Evolução Futura
+
+Embora a plataforma seja robusta, existem caminhos claros para sua evolução. Duas melhorias de alto impacto seriam:
+
+1.  **Testes A/B para Notificações:** Implementar uma funcionalidade que permita aos clientes testar diferentes textos e imagens em suas notificações para otimizar as taxas de clique.
+2.  **Automação e Jornadas de Usuário:** Criar um sistema de automação onde os clientes possam configurar "jornadas" de notificações baseadas no comportamento do usuário (ex: notificação de carrinho abandonado).
+
+-----
+
+#### 🛠️ Pilha de Tecnologias (Tech Stack)
+
+| Componente | Tecnologia Utilizada | Papel na Arquitetura |
+| :--- | :--- | :--- |
+| **Framework Back-End** | **Laravel 5.4 (PHP)** | Core da aplicação, gerenciando toda a lógica de negócio, APIs, modularização e orquestração de eventos. |
+| **Banco de Dados** | **MySQL** | Armazenamento principal para dados de usuários, websites, notificações, assinaturas e transações. |
+| **Filas e Eventos** | **Laravel Queues** | Gerencia o processamento assíncrono de tarefas, como o envio de notificações, garantindo performance e resiliência. |
+| **Motor de Notificações** | **OneSignal API** | Serviço externo utilizado como a infraestrutura principal para registro de assinantes e entrega de notificações web push. |
+| **Gateway de Pagamento**| **Pagar.me API** | Responsável por processar pagamentos de assinaturas (cartão de crédito e boleto) de forma segura. |
+| **Frontend (Admin)** | **Homer Dashboard** | Template utilizado para a construção da interface do painel administrativo, oferecendo uma UI rica e responsiva. |
+| **Autenticação API** | **tymondesigns/jwt-auth**| Biblioteca para proteger rotas de API (como as de pagamento) utilizando JSON Web Tokens (JWT). |
+| **Logs de Atividade** | **spatie/activitylog** | Pacote utilizado para rastrear e registrar todas as ações importantes realizadas pelos usuários na plataforma. |
+
+-----
+
+#### 🗺️ Diagrama da Arquitetura
+
+```mermaid
+---
+config:
+  theme: default
+  look: handDrawn
+---
+flowchart TD
+    %% === LEGENDA DE CORES ===
+    classDef cliente fill:#d8b4fe,stroke:#a855f7,color:#1e1e1e
+    classDef plataforma fill:#bfdbfe,stroke:#3b82f6,color:#1e1e1e
+    classDef servicos fill:#fed7aa,stroke:#f97316,color:#1e1e1e
+    classDef usuario fill:#bbf7d0,stroke:#22c55e,color:#1e1e1e
+
+    %% === CLIENTE DONO DO WEBSITE ===
+    subgraph "Cliente Dono do Website"
+        Admin["Cliente SaaS - Admin"]
+    end
+    class Admin cliente
+
+    %% === PLATAFORMA ONEPUSH ===
+    subgraph "Plataforma OnePush - SaaS"
+        Painel["💻 Painel Administrativo - Laravel + Homer UI"]
+        Core["⚙️ Core da Aplicação - Módulos e Lógica de Negócio"]
+        Fila["🔄 Fila de Processamento - Laravel Queues"]
+        DB["🗄️ Banco de Dados - MySQL"]
+    end
+    class Painel,Core,Fila,DB plataforma
+
+    %% === SERVIÇOS EXTERNOS ===
+    subgraph "Serviços Externos"
+        OneSignal["📡 OneSignal API"]
+        PagarMe["💳 Pagar-me API"]
+    end
+    class OneSignal,PagarMe servicos
+
+    %% === USUÁRIO FINAL ===
+    subgraph "Usuário Final"
+        WebsiteCliente["🌐 Website do Cliente - com SDK OneSignal"]
+        Navegador["🖥️ Navegador do Usuário Final"]
+    end
+    class WebsiteCliente,Navegador usuario
+
+    %% === FLUXO DE ADMINISTRAÇÃO E ENVIO ===
+    Admin -->|"Cria Notificação"| Painel
+    Painel -->|"1\. Salva no DB"| DB
+    Painel -->|"2\. Dispara Evento"| Core
+    Core -->|"3\. Enfileira Job"| Fila
+    Fila -->|"4\. Processa Job e Chama API"| OneSignal
+
+    %% === FLUXO DE PAGAMENTO ===
+    Admin -->|"Gerencia Assinatura"| Painel
+    Painel -->|"Requisição de Pagamento"| Core
+    Core -->|"Processa via API"| PagarMe
+    PagarMe -->|"Retorna Status"| Core
+    Core -->|"Salva Transação"| DB
+
+    %% === FLUXO DO USUÁRIO FINAL ===
+    Navegador -->|"Acessa o site"| WebsiteCliente
+    WebsiteCliente -->|"Registra para Push"| OneSignal
+    OneSignal -->|"5\. Entrega Notificação"| Navegador
+```
+
+#### RESUMO TÉCNICO PARA EMBEDDING
+
+Desenvolvimento de uma plataforma SaaS multitenant, OnePush, para envio de notificações web push, utilizando uma arquitetura modular e orientada a eventos. O core da aplicação foi construído com Laravel (PHP) e MySQL, implementando o padrão de filas (Laravel Queues) para processamento assíncrono de tarefas, garantindo resiliência, performance e escalabilidade horizontal. A solução integra-se com a API da OneSignal para o registro de assinantes e entrega de notificações e com a API da Pagar.me para a gestão de assinaturas e processamento de pagamentos (cartão de crédito, boleto), com rotas de API protegidas por JSON Web Tokens (JWT). O painel administrativo, desenvolvido com Homer Dashboard, inclui funcionalidades de gestão, monitoramento de logs (`spatie/activitylog`), estatísticas e um sistema de "impersonation" para suporte técnico. A arquitetura desacoplada resolveu o desafio de comunicação com APIs externas, permitindo o reprocessamento de tarefas em caso de falha e mantendo a UI responsiva.
+
+#### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
+
+| Categoria                    | Tecnologias e Conceitos                                                                                                                                                      |
+| :--------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **AI & Machine Learning**    | Testes A/B (evolução futura), Automação de Jornadas (evolução futura)                                                                                                        |
+| **Software Development**     | Laravel 5.4, PHP, Modularização, Baixo Acoplamento, Alta Coesão, `tymondesigns/jwt-auth`, `spatie/activitylog`                                                               |
+| **Architecture**             | Arquitetura Modular, Arquitetura Orientada a Eventos, SaaS (Software as a Service), Arquitetura Multitenant, Arquitetura Desacoplada, Escalabilidade Horizontal, Resiliência |
+| **Cloud Computing**          | SaaS (Software as a Service)                                                                                                                                                 |
+| **API RESTFul development**  | Integração de APIs, OneSignal API, Pagar.me API, JSON Web Tokens (JWT), Gateway de Pagamento                                                                                 |
+| **Frontend Development**     | Homer Dashboard, JavaScript                                                                                                                                                  |
+| **Mobile Development**       | Notificações Web Push                                                                                                                                                        |
+| **Database**                 | MySQL                                                                                                                                                                        |
+| **Data Management**          | Logs de Atividade, Estatísticas de Engajamento, Monitoramento de Logs                                                                                                        |
+| **Content Management - CMS** | N/A                                                                                                                                                                          |
+| **System Administration**    | Impersonation, Suporte Técnico, Monitoramento de Logs                                                                                                                        |
+| **DevOps**                   | Filas (Queues), Processamento Assíncrono, Workers                                                                                                                            |
+| **Leadership**               | Arquiteto da solução, Ciclo de vida completo do produto, Concepção de produto                                                                                                |
+| **Coaching**                 | N/A                                                                                                                                                                          |
+| **Agile Project Management** | N/A                                                                                                                                                                          |
 

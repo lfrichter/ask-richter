@@ -29,61 +29,123 @@ Self-taught full-stack developer with over 15 years of experience in software de
 
 **Work Experience**
 
-**Lead Software Engineer**
-**Turno (formerly TurnoverBnB)** | Honolulu, HI | Nov 2022 – Mar 2025
-*   Led a team of 6 developers in the technical leadership of critical system domains (Accounts, Properties, Checklists), ensuring scalability and reliability.
-*   Executed the architecture and implementation of the Mid-Stay Projects, a strategic initiative that increased user retention rates by 30%, enhanced customer experience, and added value to the product.
-*   Fixed critical vulnerabilities identified in third-party penetration testing, strengthening authentication security and concurrent session management.
-*   Reduced automated test execution time and increased the reliability of the CI/CD pipeline (Jenkins) by correcting and refactoring more than 100 failed tests.
-*   Achieved a 40% reduction in endpoint response times by strategically refactoring code and enhancing database queries, minimizing technical debt.
-*   Leveraged New Relic to resolve performance bottlenecks and Bugsnag for real-time error monitoring.
-*   Integrated AI tools (GitHub Copilot) into the team's workflow, resulting in greater efficiency in coding, testing, and documentation.
-
-**Head of Full-stack Development**
-**Full Comms / Keaze** | Apr 2021 – Nov 2022
-*   Developed CMS applications with Laravel, enhancing management processes.
-*   Built a Vue.js-based widget management application, improving user experience.
-*   Developed and maintained a scalable API system with Lumen.
-*   Implemented, with a small team, the new After Sales module for Kpro.
-*   Utilized DeployHQ, Vercel, and Laravel Forge for seamless deployment.
-*   Managed PHP and Laravel updates, ensuring security and compatibility.
-*   Implemented automated tests with Dusk (Headless browsers using Selenium).
-*   **Key Projects:**
-    *   **Kpro AfterSales:** Developed a backend API to streamline real estate post-sales processes, integrating checklists, articles, documents, and appliance management.
-    *   **Shosales Website Revamp:** Improved page performance by 10x, parallelized automated tests across browsers, and optimized queries for better response time.
-
-**Head of Software Development**
-**Evoke Mobile** | Mar 2019 – Apr 2021
-*   Collaborated on the full-stack development of CMS and backend APIs for mobile apps (iOS/Android).
-*   Led a small team to deliver internal administrative dashboards using React, solving a critical performance issue in map rendering (200k+ geospatial records) and improving load times by up to 30x.
-*   Enhanced system performance, achieving up to 500x faster queue processing in ride-sharing services.
-*   Integrated third-party services: Firebase, Google Geocoding, Overpass API, OPTA.
-*   **Key Projects:**
-    *   **Toot:** Developed ride-tracking analytics, implemented Laravel Horizon for queue monitoring, and wrote API tests running via GitHub Actions.
-    *   **Toot Market Intelligence Platform:** Built API integrations for Power BI dashboards.
-    *   **Fanoty:** Migrated an outdated iOS football app to Laravel 5.1, refactored OPTA API data imports, and implemented CI/CD pipelines.
-
-**Software Development Engineer**
-**Alfasoft** | Apr 2018 – Nov 2018
-*   Analyzed, estimated, and developed software using PHP, Laravel, WordPress, and Python.
-*   Created high-performance data import solutions using queue systems.
-*   **Key Projects:**
-    *   **Sisporta:** Integrated legacy systems using Python and Laravel, improved server workload with Horizon, and implemented CI/CD via Bitbucket Pipelines.
-    *   **MyLabel:** Developed a corporate cosmetics website with WordPress customization.
-
-**Senior Software Developer**
-**Plugae** | Nov 2017 – Feb 2018
-*   Integrated multiple marketplaces (MercadoLivre, B2W, Via Varejo) into a single platform.
-*   Built a Laravel-based order management system with MongoDB & Redis.
-*   Developed ERP Bling integration using webhooks and queue processing.
+Claro! Abaixo está a versão consolidada da sua experiência profissional em **português do Brasil (pt-BR)**, combinando as duas fontes de forma clara, coesa e sem perda de informações relevantes:
 
 ---
 
-**Personal Projects**
+### **Experiência Profissional**
 
-*   **Startup Center** 🚀: [Laravel, Vue.js, TokBox (WebRTC), Pusher] A platform to support startup growth, featuring collaborative tools like a gamified opinion polling system (StarIdea) and a videoconferencing module (StarCoffee).
-*   **Índicos** 💸: [Laravel, MySQL] A multi-tenant platform for managing referral-based purchases, featuring a custom multi-level commission algorithm and an interactive visual dashboard.
-*   **Air Combat 3D Game** 🎮: [Three.js, Node.js (Express), WebSocket, AI (Cursor & Trae)] A 3D multiplayer air combat game focused on high visual performance and real-time event synchronization. Demonstrates integration of AI tools for development optimization. Available at: `air-combat-3d-game.onrender.com`
+#### **Engenheiro de Software Líder**  
+**Turno (anteriormente TurnoverBnB)** — Remoto (Honolulu, Havaí, EUA)  
+**Nov 2022 – Mar 2025**  
+*   Liderou uma equipe de 6 desenvolvedores, assumindo a liderança técnica em domínios críticos do sistema (Contas, Propriedades, Checklists), garantindo escalabilidade, confiabilidade e elevando o desempenho do sistema e a satisfação do usuário.  
+*   Arquitetou e implementou a iniciativa estratégica **“Mid-Stay Projects”**, que **aumentou em 30% a retenção de usuários**, aprimorou significativamente a experiência do cliente e agregou valor ao produto.  
+*   Corrigiu vulnerabilidades críticas identificadas em testes de penetração de terceiros, reforçando a segurança de autenticação e o gerenciamento de sessões simultâneas contra ameaças cibernéticas.  
+*   **Reduziu em 40% o tempo de resposta de endpoints** por meio de refatoração estratégica de código e otimização de consultas ao banco de dados, minimizando dívida técnica e melhorando a eficiência geral do sistema.  
+*   Refatorou e corrigiu mais de **100 testes automatizados falhos**, aumentando a confiabilidade do pipeline de CI/CD (Jenkins) e reduzindo significativamente o tempo de execução dos testes.  
+*   Utilizou **New Relic** para identificar e resolver gargalos de desempenho e **Bugsnag** para monitoramento de erros em tempo real.  
+*   Integrou ferramentas de IA (como **GitHub Copilot**) ao fluxo de trabalho da equipe, aumentando a eficiência no desenvolvimento, testes e documentação.
+
+---
+
+#### **Head de Desenvolvimento Full-Stack**  
+**Full Comms / Keaze** — Remoto (Manchester, Reino Unido)  
+**Abr 2021 – Nov 2022**  
+*   Desenvolveu aplicações CMS com **Laravel**, otimizando processos internos de gestão de conteúdo.  
+*   Criou um aplicativo baseado em **Vue.js** para gerenciamento de widgets, melhorando a experiência do usuário final.  
+*   Construiu e manteve um sistema de **API escalável com Lumen**, garantindo alto desempenho e estabilidade.  
+*   Colaborou com uma pequena equipe na implementação do novo **módulo de Pós-Venda para o Kpro**.  
+*   Gerenciou atualizações de versões de **PHP e Laravel**, assegurando compatibilidade, segurança e longevidade do sistema.  
+*   Implementou testes automatizados com **Laravel Dusk** (navegadores headless via Selenium), aumentando a confiabilidade das entregas.  
+*   Utilizou **DeployHQ, Vercel e Laravel Forge** para implantação contínua e pipelines de entrega ágeis.  
+
+**Principais Projetos:**  
+*   **Kpro AfterSales:** Desenvolveu uma API backend para otimizar processos imobiliários de pós-venda, integrando checklists, artigos, documentos e gestão de eletrodomésticos.  
+*   **Shosales Website Revamp:** Melhorou o desempenho das páginas em **10x**, paralelizou testes automatizados entre navegadores e otimizou consultas para reduzir tempos de resposta.
+
+---
+
+#### **Head de Desenvolvimento de Software**  
+**Evoke Mobile** — Remoto (Liverpool, Reino Unido)  
+**Mar 2019 – Abr 2021**  
+*   Liderou uma pequena equipe no desenvolvimento de **dashboards administrativos internos com React**, resolvendo um gargalo crítico de renderização de mapas com mais de **200 mil registros geoespaciais** — **melhoria de até 30x no tempo de carregamento** com uso de Superfetch.  
+*   Atuou no desenvolvimento full-stack de **CMS e APIs backend** para aplicativos móveis (iOS/Android).  
+*   Aprimorou drasticamente o desempenho do sistema com uso de filas (**Laravel Horizon**), alcançando **processamento até 500x mais rápido** em serviços de compartilhamento de viagens.  
+*   Projetou e manteve **APIs escaláveis** consumidas por plataformas web e móveis.  
+*   Integrou diversos serviços de terceiros, incluindo **Firebase, Google Geocoding, Overpass API, OPTA e Mailgun**.  
+
+**Principais Projetos:**  
+*   **Toot:** Desenvolveu funcionalidades de análise de rastreamento de viagens, implementou monitoramento de filas com Laravel Horizon e criou testes de API executados via **GitHub Actions**.  
+*   **Toot Market Intelligence Platform:** Construiu integrações de API para alimentar dashboards no **Power BI**.  
+*   **Fanoty:** Migrou um aplicativo iOS legado de futebol para **Laravel 5.1**, refatorou importações de dados da API OPTA e implementou pipelines de CI/CD.
+
+---
+
+#### **Engenheiro de Desenvolvimento de Software**  
+**Alfasoft** — Híbrido (Lisboa, Portugal)  
+**Abr 2018 – Nov 2018**  
+*   Realizou análise, estimativa e desenvolvimento de software com **PHP, Laravel, WordPress e Python**.  
+*   Idealizou e implementou soluções performáticas para **importação diária de grandes volumes de dados**, utilizando sistemas de filas para otimizar a carga do servidor.  
+*   Desenvolveu múltiplas aplicações web com Laravel e criou temas/plugins personalizados para WordPress.  
+*   Implementou atualizações de gráficos no **NinjaTrader** utilizando C#.  
+
+**Principais Projetos:**  
+*   **Sisporta:** Integrou sistemas legados usando **Python e Laravel**, melhorou a carga do servidor com **Laravel Horizon** e implementou CI/CD via **Bitbucket Pipelines**.  
+*   **MyLabel:** Desenvolveu um site corporativo para cosméticos com customizações avançadas em WordPress.
+
+---
+
+#### **Desenvolvedor Sênior de Software**  
+**Plugae** — Presencial (Barueri, Brasil)  
+**Nov 2017 – Fev 2018**  
+*   Liderou uma integração complexa de **múltiplos marketplaces** (Mercado Livre, B2W, Via Varejo) em uma única plataforma unificada.  
+*   Desenvolveu um sistema para **importação de pedidos** de plataformas Magento para um sistema proprietário (Spider), armazenando os dados em **MongoDB**.  
+*   Implementou atualizações de pedidos integradas ao **ERP Bling** por meio de **webhooks e jobs em fila (Redis/Laravel Horizon)**.  
+
+**Projeto Principal:**  
+*   **Spider – Hub de Integração de E-commerce:** Arquitetou e implementou um hub centralizado em **PHP/Laravel** para orquestrar o fluxo de pedidos, estoque e preços entre marketplaces (Plugg.to, Skyhub, B2W) e ERPs (Bling, sistemas customizados). Utilizou **filas em Redis** para processamento assíncrono, **webhooks reativos** para sincronização em tempo real e **MongoDB** como fonte única da verdade. Superou desafios críticos de **overselling** e **inconsistência de dados** com lógica de enriquecimento de pedidos baseada em SKUs e rotinas de normalização automatizadas. A solução permitiu onboarding ágil de novos clientes e processamento resiliente de alto volume, com infraestrutura em **Docker** e armazenamento em **AWS S3**.
+
+---
+#### **Software Developer 👩‍💻**
+**Pilha Digital · Contract**
+Feb 2017 - Sep 2017 · 8 mos
+Sorocaba e Região, Brasil · On-site
+**Skills:** Integration · Notification · Laravel · Event Driven Programming
+
+* **Criou uma plataforma para registro de websites e envio de notificações web push**, desenvolvida em Laravel com abordagem orientada a eventos e estrutura modular.
+* **Integrou a plataforma com OnSignal e o sistema de pagamentos Pagar.me**.
+
+---
+#### **Full Stack Developer 👩‍💻**
+**ASO · Full-time**
+Jan 2016 - Jan 2017 · 1 yr 1 mo
+Sorocaba Area, Brazil
+
+* **Construiu uma ampla aplicação PHP OOP** para gerenciamento de hospitais, profissionais de saúde e pacientes.
+
+---
+
+#### **Coach 👨‍🏫**
+**Promoedu.com**
+Sep 2015 - Mar 2016 · 7 mos
+Sorocaba Area, Brazil · On-site
+
+* **Desenvolveu e ministrou cursos de Liderança e Coaching de 14 horas** para pequenos grupos, combinando experiência de liderança com técnicas de coaching para desenvolvimento integral.
+* **Capacitou líderes em diversas competências**, incluindo compreensão de subordinados, contratação e delegação eficaz, promoção de desenvolvimento contínuo (com foco em neuroplasticidade e segurança psicológica), feedback construtivo e análise de desempenho.
+* **Agregou valor ao aprimorar habilidades de liderança**, construir confiança, motivar equipes, otimizar delegação e avaliar resultados com ferramentas aplicáveis em diversas áreas.
+
+---
+
+#### **Web Designer 👨‍🎨**
+**EDITORA FTD S/A · Full-time**
+Jan 1998 - Nov 2011 · 13 yrs 11 mos
+São Paulo Area, Brazil
+
+* **Participou de múltiplos projetos** e **desenvolveu diversas aplicações web**, incluindo um portal corporativo principal, website de e-commerce e plataforma de intranet.
+* **Utilizou tecnologias como Coldfusion (Servlet Java) CBD, ASP, SQL Server, Atlassian Jira, Windows Server e IIS**.
+
+
+
 
 ---
 
