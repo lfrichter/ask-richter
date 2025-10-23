@@ -4,11 +4,16 @@ import type { Message } from 'ai/react';
 import Markdown from "markdown-to-jsx";
 import { useTranslations } from '@/lib/i18n';
 import { FormEvent, useEffect, useRef, useState } from 'react';
+import dynamic from 'next/dynamic';
 
 import { AIChatInput } from "@/components/ui/ai-chat-input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
-import { CodeBlock } from './CodeBlock';
+
+const CodeBlock = dynamic(
+  () => import('./CodeBlock').then(mod => mod.CodeBlock),
+  { ssr: false }
+);
 
 export function Chat() {
   const [messages, setMessages] = useState<Message[]>([]);

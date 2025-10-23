@@ -7,20 +7,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Markdown from 'markdown-to-jsx';
 import Image from 'next/image'; // Adicionado import da imagem
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import dynamic from 'next/dynamic';
 import myAdjustedOk from '../../public/images/AvatarCircle.png';
 
-const CodeBlock = ({ className, children }: { className?: string; children: React.ReactNode }) => {
-  const language = className?.replace('lang-', '') || 'text';
-  return (
-    <div className="relative">
-      <SyntaxHighlighter style={vscDarkPlus as any} language={language} PreTag="div">
-        {String(children).replace(/\n$/, '')}
-      </SyntaxHighlighter>
-    </div>
-  );
-};
+const CodeBlock = dynamic(
+  () => import('../components/CodeBlock').then(mod => mod.CodeBlock),
+  { ssr: false }
+);
 
 interface Message {
   id: string;
