@@ -65,15 +65,26 @@ function createProjectListDocument(allDocs: Document[]): Document | null {
   // Remove o emoji e limpa o nome do projeto
   const projectNames = projectHeaders.map(header => header.replace('🚀', '').trim());
 
-  const pageContent = `A seguir, a lista completa de projetos disponíveis para consulta:\n\n- ${projectNames.join('\n- ')}\n\nVocê pode pedir detalhes sobre qualquer um deles.`;
-  
-  const metadata = { 
-    source: 'synthetic_project_list', 
-    section_header: 'Lista de Projetos' 
-  };
+  const projectListString = projectNames.join(', ');
+
+  // NOVO CONTEÚDO APRIMORADO
+  const enhancedContent = `
+Título: Lista Completa de Todos os ${projectNames.length} Projetos.
+Resumo: Este documento é o índice sintético oficial que lista o nome de todos os ${projectNames.length} projetos documentados na base de conhecimento.
+Palavras-chave: todos os projetos, lista completa, índice de projetos, quantos projetos, listagem total.
+Projetos: ${projectListString}
+    `;
+
+  // Crie o Document usando o conteúdo aprimorado
+  const doc = new Document({
+    pageContent: enhancedContent,
+    metadata: {
+      source: 'synthetic:project_list',
+    },
+  });
 
   console.log(`[SINTÉTICO] Documento criado com ${projectNames.length} projetos.`);
-  return new Document({ pageContent, metadata });
+  return doc;
 }
 
 
@@ -112,7 +123,13 @@ async function run() {
     await vectorStore.save(FAISS_INDEX_PATH);
     console.log(`Índice FAISS salvo localmente em: ${FAISS_INDEX_PATH}`);
 
-    // uploadIndexToSupabase(FAISS_INDEX_PATH); // Descomente para fazer o upload
+    const shouldUpload = process.argv.includes('--upload');
+
+    if (shouldUpload) {
+      await uploadIndexToSupabase(FAISS_INDEX_PATH);
+    } else {
+      console.log('\n[AVISO] Upload para o Supabase não solicitado. Use a flag --upload para fazer o upload.');
+    }
 
   } catch (error) {
     console.error('Ocorreu um erro durante o processo de indexação e upload:', error);

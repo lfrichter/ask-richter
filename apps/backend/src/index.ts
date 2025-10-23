@@ -1,17 +1,17 @@
 import { FaissStore } from '@langchain/community/vectorstores/faiss';
+import { Document } from '@langchain/core/documents';
 import { OpenAIEmbeddings } from '@langchain/openai';
 import { createClient } from '@supabase/supabase-js';
 import cors from 'cors';
 import 'dotenv/config';
 import express, { Request, Response } from 'express';
 import fs from 'fs';
-import path from 'path';
-import { callHuggingFaceAPI } from './core/huggingface.js';
-import { callOllamaAPI } from './core/ollama.js';
-import { HybridRetriever } from './core/hybrid-retriever.js';
 import { DirectoryLoader } from 'langchain/document_loaders/fs/directory';
 import { TextLoader } from 'langchain/document_loaders/fs/text';
-import { Document } from '@langchain/core/documents';
+import path from 'path';
+import { callHuggingFaceAPI } from './core/huggingface.js';
+import { HybridRetriever } from './core/hybrid-retriever.js';
+import { callOllamaAPI } from './core/ollama.js';
 
 interface QueryPlan {
   type: 'SIMPLE_SEARCH' | 'PROJECT_TECHNOLOGY_SEARCH' | 'MULTI_PROJECT_SEARCH' | 'LIST_PROJECTS'; // Add more types as needed
@@ -128,17 +128,41 @@ function classifyIntent(query: string): string {
 function decomposeQuery(query: string): QueryPlan {
   const lowerCaseQuery = query.toLowerCase();
 
-  // Pattern for "projetos [tecnologia]"
+  // ---
+  // REGRA 1: (NOVA) Checar por intenção de "Lista Completa"
+  // ---
+  const listTriggers = [
+    'todos os projetos',
+    'lista completa',
+    'quantos projetos',
+    'liste os projetos'
+  ];
+
+  if (listTriggers.some(trigger => lowerCaseQuery.includes(trigger))) {
+    console.log("[QueryPlan] Intenção 'LIST_PROJECTS' detectada.");
+    return {
+      type: 'LIST_PROJECTS',
+      payload: { originalQuery: query }
+    };
+  }
+
+  // ---
+  // REGRA 2: Checar por busca de Tecnologia (Sua lógica original)
+  // ---
   const projectTechMatch = lowerCaseQuery.match(/(?:projetos|quais projetos)\s+utilizam?\s+(.+)/);
   if (projectTechMatch && projectTechMatch[1]) {
     const technology = projectTechMatch[1].trim();
+    console.log(`[QueryPlan] Intenção 'PROJECT_TECHNOLOGY_SEARCH' detectada para: ${technology}`);
     return {
       type: 'PROJECT_TECHNOLOGY_SEARCH',
       payload: { technology: technology }
     };
   }
 
-  // Default to simple search if no specific pattern is matched
+  // ---
+  // REGRA 3: (Fallback) Busca Simples
+  // ---
+  console.log("[QueryPlan] Nenhuma intenção específica. Usando 'SIMPLE_SEARCH'.");
   return {
     type: 'SIMPLE_SEARCH',
     payload: { originalQuery: query }
@@ -152,12 +176,14 @@ function decomposeQuery(query: string): QueryPlan {
  */
 async function smartSearch(queryPlan: QueryPlan): Promise<[Document, number][]> {
   console.log(`[SMART SEARCH] Executando plano de consulta: ${queryPlan.type}`);
+  const originalQuery = queryPlan.payload.originalQuery;
 
   switch (queryPlan.type) {
     case 'LIST_PROJECTS':
       console.log('[SMART SEARCH] Buscando lista de projetos...');
+
       const results = await vectorStore.similaritySearch(
-        'Lista de todos os projetos',
+        originalQuery,
         1,
         { source: 'synthetic_project_list' }
       );
@@ -172,7 +198,7 @@ async function smartSearch(queryPlan: QueryPlan): Promise<[Document, number][]> 
 
     case 'SIMPLE_SEARCH':
     default:
-      const originalQuery = queryPlan.payload.originalQuery;
+      // const originalQuery = queryPlan.payload.originalQuery;
       const intent = classifyIntent(originalQuery); // Still use intent for general searches
       console.log(`[SMART SEARCH] Intenção classificada como: ${intent}`);
 
@@ -273,9 +299,22 @@ function assembleStructuredContext(retrievedChunks: [Document, number][]): strin
       // --- PASSO 2: ROTEAMENTO INTELIGENTE DA BUSCA ---
       const searchResults = await smartSearch(queryPlan);
 
-      // --- PASSO 2: LIMITAR E ESTRUTURAR O CONTEXTO ---
+      // --- PASSO 2.1: LIMITAR E ESTRUTURAR O CONTEXTO ---
       // Re-ranking simples por score e limitação aos 3 melhores resultados
-      const topResults = searchResults.sort((a, b) => b[1] - a[1]).slice(0, 3);
+      // const topResults = searchResults.sort((a, b) => b[1] - a[1]).slice(0, 3);
+      // --- PASSO 2.1: LIMITAÇÃO DE CONTEXTO CONDICIONAL (CORREÇÃO APLICADA) ---
+      let topResults;
+
+      if (queryPlan.type === 'LIST_PROJECTS') {
+        // Se o plano é a lista, NÃO limitamos a 3.
+        // Usamos todos os resultados (que deve ser apenas 1: o chunk sintético)
+        console.log('[API] Plano LIST_PROJECTS: Usando todos os resultados da busca (sem slice).');
+        topResults = searchResults;
+      } else {
+        // Para qualquer outro plano, aplicamos o Top-K (K=3)
+        console.log(`[API] Plano ${queryPlan.type}: Aplicando re-ranking e limitando a Top-K=3.`);
+        topResults = searchResults.sort((a, b) => b[1] - a[1]).slice(0, 3);
+      }
 
       // 3. Construção do contexto estruturado, agora com o cabeçalho da seção
       const structuredContext = assembleStructuredContext(topResults);

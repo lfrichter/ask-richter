@@ -250,33 +250,25 @@ NEXT_PUBLIC_API_BASE_URL=http://localhost:3001
 
 #### 4. Geração do Banco Vetorial
 
-Antes de iniciar a aplicação pela primeira vez, você precisa gerar o índice FAISS e fazer o upload dele para o Supabase. A partir da **raiz do projeto**, execute:
+Antes de iniciar a aplicação, você precisa gerar o índice vetorial FAISS que alimenta a busca semântica. O processo pode ser feito de duas maneiras:
+
+**Modo 1: Geração Apenas Local (Padrão)**
+
+Este comando gera o índice e o salva localmente no diretório `/tmp/faiss_index`. É o modo ideal para desenvolvimento e testes rápidos.
 
 ```bash
 npm run build-index --workspace=backend
 ```
 
-O processo de indexação será executado de duas formas, dependendo do seu ambiente.
+**Modo 2: Geração com Upload para o Supabase (Produção)**
 
-**Modo 1: Geração Apenas Local (para Desenvolvimento)**
+Este comando gera o índice localmente e, em seguida, faz o upload dos arquivos para o seu bucket no Supabase Storage. Use este modo para preparar o índice para um ambiente de produção.
 
-Neste modo, o índice é criado na sua máquina e usado diretamente pelo backend. É ideal para rodar o projeto localmente sem dependências externas.
+**Pré-requisito:** Certifique-se de que as variáveis `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, e `SUPABASE_BUCKET_NAME` estão corretamente configuradas no seu arquivo `apps/backend/.env`.
 
-!["Store Faiss.index"](https://i.imgur.com/KRuhmbs.png)
-
-Certifique-se de que as variáveis de ambiente do Supabase (`SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`) **não** estejam definidas no seu arquivo `apps/backend/.env`.
-
-O script criará o índice no diretório `/tmp/faiss_index` e exibirá um erro ao tentar fazer o upload para o Supabase, o que é esperado. O servidor local usará esse índice automaticamente.
-
-**Modo 2: Geração Local com Upload para o Supabase (para Produção/Deploy)**
-
-Este modo é usado para gerar o índice e enviá-lo para um armazenamento persistente (Supabase Storage), de onde ele pode ser baixado por um ambiente de produção (ex: Render, Vercel).
-
-!["Faiss.index in the Supabase"](https://i.imgur.com/h7KmEJY.png)
-
-Adicione as variáveis `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` e `SUPABASE_BUCKET_NAME` ao seu arquivo `apps/backend/.env`.
-
-O script criará o índice localmente e, em seguida, fará o upload dos arquivos para o seu bucket no Supabase, tornando-os disponíveis para download em ambientes de produção.
+```bash
+npm run build-index --workspace=backend -- --upload
+```
 
 #### 5\. Execução
 

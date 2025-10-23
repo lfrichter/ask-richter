@@ -1,6 +1,4 @@
-
-
-### 🚀 Canaoaves: Plataforma Colaborativa para a Comunidade de Observadores de Aves
+### 🚀 Projeto: Canaoaves: Plataforma Colaborativa para a Comunidade de Observadores de Aves
 
 #### 🎯 Visão Geral e Arquitetura da Solução
 
@@ -49,12 +47,12 @@ O projeto foi construído com uma base sólida, pronta para crescer. Os próximo
 
 #### 🛠️ Pilha de Tecnologias (Tech Stack)
 
-| Componente | Tecnologia Utilizada | Papel na Arquitetura |
-| :--- | :--- | :--- |
-| **Backend-as-a-Service** | **Supabase** | Orquestra toda a infraestrutura de backend, incluindo banco de dados, autenticação de usuários, APIs e armazenamento de arquivos. |
-| **Banco de Dados** | **PostgreSQL** | Persiste todos os dados da aplicação. A lógica de negócio, como gamificação e validações, é executada diretamente no banco através de RPCs e Triggers. |
-| **Hosting do Frontend** | **Vercel** | Responsável pela hospedagem e pelo deploy contínuo da aplicação frontend, garantindo alta performance e disponibilidade global. |
-| **Framework Frontend** | **Next.js / React** | Utilizado para construir a interface de usuário reativa e otimizada para SEO, com foco principal em uma experiência mobile-first. |
+| Componente               | Tecnologia Utilizada | Papel na Arquitetura                                                                                                                                   |
+| :----------------------- | :------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Backend-as-a-Service** | **Supabase**         | Orquestra toda a infraestrutura de backend, incluindo banco de dados, autenticação de usuários, APIs e armazenamento de arquivos.                      |
+| **Banco de Dados**       | **PostgreSQL**       | Persiste todos os dados da aplicação. A lógica de negócio, como gamificação e validações, é executada diretamente no banco através de RPCs e Triggers. |
+| **Hosting do Frontend**  | **Vercel**           | Responsável pela hospedagem e pelo deploy contínuo da aplicação frontend, garantindo alta performance e disponibilidade global.                        |
+| **Framework Frontend**   | **Next.js / React**  | Utilizado para construir a interface de usuário reativa e otimizada para SEO, com foco principal em uma experiência mobile-first.                      |
 
 -----
 
@@ -139,7 +137,7 @@ A arquitetura do projeto Canaoaves, uma Single-Page Application (SPA) colaborati
 | **Agile Project Management** | Agilidade no desenvolvimento                                                                                                                                  |
 
 
-### 🚀 EuPizza: Plataforma SaaS de Atendimento por Voz - BRNow
+### 🚀 Projeto: EuPizza: Plataforma SaaS de Atendimento por Voz - BRNow
 
 #### 🎯 Visão Geral e Arquitetura da Solução
 
@@ -287,7 +285,7 @@ Desenvolvimento de uma plataforma SaaS de atendimento por voz, denominada EuPizz
 | **Coaching**                 | N/A                                                                                                                                             |
 | **Agile Project Management** | N/A                                                                                                                                             |
 
-### 🚀 Ask Richter: Meu CV Interativo com IA
+### 🚀 Projeto: Ask Richter: Meu CV Interativo com IA
 
 #### 🎯 Visão Geral e Arquitetura da Solução
 
@@ -333,13 +331,13 @@ Embora a solução atual seja robusta, existem pontos para evolução:
 
 #### 🛠️ Pilha de Tecnologias (Tech Stack)
 
-| Camada | Tecnologia |
-| :--- | :--- |
-| **Arquitetura** | Turborepo, npm Workspaces |
-| **Backend** | Node.js, Express.js, TypeScript, tsx |
-| **Frontend** | Next.js (App Router), React (`useState`), Tailwind CSS, Shadcn/ui, markdown-to-jsx |
-| **IA & Dados** | FAISS (`faiss-node`), OpenAI Embeddings, LangChain.js, Ollama, Hugging Face API |
-| **Nuvem & DevOps** | Vercel, Render.com, Supabase Storage, GitHub |
+| Camada             | Tecnologia                                                                         |
+| :----------------- | :--------------------------------------------------------------------------------- |
+| **Arquitetura**    | Turborepo, npm Workspaces                                                          |
+| **Backend**        | Node.js, Express.js, TypeScript, tsx                                               |
+| **Frontend**       | Next.js (App Router), React (`useState`), Tailwind CSS, Shadcn/ui, markdown-to-jsx |
+| **IA & Dados**     | FAISS (`faiss-node`), OpenAI Embeddings, LangChain.js, Ollama, Hugging Face API    |
+| **Nuvem & DevOps** | Vercel, Render.com, Supabase Storage, GitHub                                       |
 
 -----
 
@@ -362,7 +360,7 @@ graph TD
     subgraph "Nuvem Supabase"
         SupabaseDB["📦 Supabase Storage<br>(Índice FAISS)"]
     end
-    
+
     subgraph "Serviços de IA"
         OpenAI_API["🛰️ OpenAI API<br>(Embeddings)"]
         HF_API["🤗 Hugging Face API<br>(LLM em Produção)"]
@@ -405,7 +403,7 @@ Este projeto, "Ask Richter", implementa um chatbot de CV interativo utilizando u
 | **Leadership**               | N/A                                                                                                                                                                                                                                                                                     |
 | **Coaching**                 | N/A                                                                                                                                                                                                                                                                                     |
 | **Agile Project Management** | N/A                                                                                                                                                                                                                                                                                     |
-### 🚀 SmartShorts: SaaS de Geração de Vídeos Automatizados
+### 🚀 Projeto: SmartShorts: SaaS de Geração de Vídeos Automatizados
 
 #### 🎯 Visão Geral e Arquitetura da Solução
 
@@ -525,22 +523,22 @@ Este projeto é um SaaS para geração automatizada de vídeos, construído sobr
 
 | Categoria                    | Tecnologias e Conceitos                                                                                                                                                |
 | :--------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **AI & Machine Learning**    | 🤖 OpenAI, ElevenLabs, Replicate, Whisper, Text-to-Speech (TTS), SDXL                                                                                                  |
+| **AI & Machine Learning**    | 🤖 OpenAI, ElevenLabs, Replicate, Whisper, Text-to-Speech (TTS), SDXL                                                                                                   |
 | **Software Development**     | ☕ Java 17+, Lombok, Maven, TDD (Test-Driven Development), Design Patterns (Adapter, Strategy, Factory, Singleton, Facade, Repository, State), FFmpeg, JUnit 5, Mockito |
-| **Architecture**             | 🏛️ Clean Architecture, Hexagonal (Ports & Adapters), DDD-Lite, Modular Monolith, Microservices, Bounded Contexts, State Machine, Circuit Breaker, Resilience4j        |
-| **Cloud Computing**          | ☁️ AWS (RDS, S3), MinIO, Object Storage                                                                                                                                |
-| **API RESTFul development**  | 🔌 Spring Web, Spring WebClient, API Contract-First, OpenAPI, Swagger, REST, JWT, RBAC, CSRF                                                                           |
-| **Frontend Development**     | 💻 Electron, React, Vue                                                                                                                                                |
-| **Mobile Development**       | 📱 N/A                                                                                                                                                                 |
-| **Database**                 | 🗄️ PostgreSQL, Redis, JPA, Hibernate, `@AttributeOverrides`, `@Embedded`                                                                                              |
-| **Data Management**          | 📨 RabbitMQ, AMQP                                                                                                                                                      |
-| **Content Management - CMS** | 📝 N/A                                                                                                                                                                 |
-| **System Administration**    | ⚙️ N/A                                                                                                                                                                 |
-| **DevOps**                   | 🚀 Docker, Docker Compose, CI/CD, GitHub Actions, Spring Boot Actuator, Micrometer, Prometheus, Grafana, ELK Stack, Testcontainers, WireMock                           |
-| **Leadership**               | 👨‍🏫 Liderança Técnica, Definição de Arquitetura                                                                                                                      |
-| **Coaching**                 | 🤝 Mentoria, Criação de Guia de Contribuição                                                                                                                           |
-| **Agile Project Management** | 🔄 Agile, TDD, Planejamento em Fases                                                                                                                                   |
-### 🚀 SmartShorts UI: Migração Estratégica para Next.js e TypeScript
+| **Architecture**             | 🏛️ Clean Architecture, Hexagonal (Ports & Adapters), DDD-Lite, Modular Monolith, Microservices, Bounded Contexts, State Machine, Circuit Breaker, Resilience4j          |
+| **Cloud Computing**          | ☁️ AWS (RDS, S3), MinIO, Object Storage                                                                                                                                 |
+| **API RESTFul development**  | 🔌 Spring Web, Spring WebClient, API Contract-First, OpenAPI, Swagger, REST, JWT, RBAC, CSRF                                                                            |
+| **Frontend Development**     | 💻 Electron, React, Vue                                                                                                                                                 |
+| **Mobile Development**       | 📱 N/A                                                                                                                                                                  |
+| **Database**                 | 🗄️ PostgreSQL, Redis, JPA, Hibernate, `@AttributeOverrides`, `@Embedded`                                                                                                |
+| **Data Management**          | 📨 RabbitMQ, AMQP                                                                                                                                                       |
+| **Content Management - CMS** | 📝 N/A                                                                                                                                                                  |
+| **System Administration**    | ⚙️ N/A                                                                                                                                                                  |
+| **DevOps**                   | 🚀 Docker, Docker Compose, CI/CD, GitHub Actions, Spring Boot Actuator, Micrometer, Prometheus, Grafana, ELK Stack, Testcontainers, WireMock                            |
+| **Leadership**               | 👨‍🏫 Liderança Técnica, Definição de Arquitetura                                                                                                                          |
+| **Coaching**                 | 🤝 Mentoria, Criação de Guia de Contribuição                                                                                                                            |
+| **Agile Project Management** | 🔄 Agile, TDD, Planejamento em Fases                                                                                                                                    |
+### 🚀 Projeto: SmartShorts UI: Migração Estratégica para Next.js e TypeScript
 
 #### 🎯 Visão Geral e Arquitetura da Solução
 
@@ -597,7 +595,7 @@ graph TD
         Middleware[🚦 Middleware\.ts]
         RouteHandlers["🔧 Route Handlers (/api/auth/...)"]
     end
-    
+
     subgraph "Infraestrutura Backend (Java API)"
         JavaAPI["⚙️ SmartShorts API (Spring Boot)"]
         Postgres[🐘 PostgreSQL]
@@ -607,13 +605,13 @@ graph TD
 
     User --> Browser
     Browser --> |Carrega a página| NextApp
-    
+
     NextApp --> |Verificação de Rota Protegida| Middleware
     Middleware --> |Cookie 'httpOnly' Válido?| NextApp
-    
+
     NextApp --> |"Requisições de Login/Registro"| RouteHandlers
     RouteHandlers --> |Proxy para API| JavaAPI
-    
+
     NextApp --> |"Chamadas de API (Axios)"| JavaAPI
 
     JavaAPI --> |Persistência Principal| Postgres
@@ -646,7 +644,7 @@ O projeto consiste na migração e desenvolvimento de uma interface de usuário 
 | **Leadership**               | N/A                                                                                                                                                                                                                                                        |
 | **Coaching**                 | N/A                                                                                                                                                                                                                                                        |
 | **Agile Project Management** | Post-mortem, Migration Plan (Fases 0-4)                                                                                                                                                                                                                    |
-### 🚀 Fábrica de Vídeos Automatizada para YouTube
+### 🚀 Projeto: Fábrica de Vídeos Automatizada para YouTube
 
 #### 🎯 Visão Geral e Arquitetura da Solução
 
@@ -721,17 +719,17 @@ Apesar de sua automação completa, o projeto tem potencial para crescer ainda m
 
 #### 🛠️ Pilha de Tecnologias (Tech Stack)
 
-| Componente                   | Tecnologia Utilizada                          | Papel na Arquitetura                                                                                                                                                                                                    |
-| :--------------------------- | :-------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Backend e Orquestração**   | **Python**, **Flask**                         | Linguagem principal do projeto e framework para a API de microserviço.                                                                                                                                                  |
-| **Geração de Conteúdo e IA** | **OpenAI API (GPT)**, **Replicate (SDXL)**    | Geração de roteiros e imagens de fundo a partir de prompts.                                                                                                                                                             |
-| **Síntese de Voz (TTS)**     | **ElevenLabs API**, **Coqui TTS**             | Converte texto em narração de áudio, oferecendo opções de nuvem ou local.                                                                                                                                               |
-| **Transcrição e Legendas**   | **OpenAI Whisper (Local)**                    | Gera legendas com timestamps precisos a partir do áudio da narração.                                                                                                                                                    |
-| **Mídia e Recursos**         | **Pixabay API**, **Jamendo API**              | Fontes alternativas e gratuitas para imagens de fundo e trilhas sonoras.                                                                                                                                                |
-| **Manipulação de Mídia**     | **FFmpeg**, **Pydub**, **Pillow**, **OpenCV** | Ferramentas essenciais para montagem de vídeo, manipulação de áudio e processamento de imagem.                                                                                                                          |
-| **Automação Web**            | **Playwright**, **Selenium**                  | Utilizados para automação de navegador em scripts de coleta de dados ou imagens.                                                                                                                                        |
-| **Testes e Ambiente**        | **Pytest**, **python-dotenv**                 | Framework de testes para garantir a qualidade do código e gerenciamento de variáveis de ambiente.                                                                                                                       |
-| **Publicação**               | **YouTube Data API v3**                       | Conclui o fluxo fazendo o upload do vídeo finalizado para um canal específico, incluindo metadados (título, descrição, tags) gerenciados programaticamente.                                                             |
+| Componente                   | Tecnologia Utilizada                          | Papel na Arquitetura                                                                                                                                        |
+| :--------------------------- | :-------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Backend e Orquestração**   | **Python**, **Flask**                         | Linguagem principal do projeto e framework para a API de microserviço.                                                                                      |
+| **Geração de Conteúdo e IA** | **OpenAI API (GPT)**, **Replicate (SDXL)**    | Geração de roteiros e imagens de fundo a partir de prompts.                                                                                                 |
+| **Síntese de Voz (TTS)**     | **ElevenLabs API**, **Coqui TTS**             | Converte texto em narração de áudio, oferecendo opções de nuvem ou local.                                                                                   |
+| **Transcrição e Legendas**   | **OpenAI Whisper (Local)**                    | Gera legendas com timestamps precisos a partir do áudio da narração.                                                                                        |
+| **Mídia e Recursos**         | **Pixabay API**, **Jamendo API**              | Fontes alternativas e gratuitas para imagens de fundo e trilhas sonoras.                                                                                    |
+| **Manipulação de Mídia**     | **FFmpeg**, **Pydub**, **Pillow**, **OpenCV** | Ferramentas essenciais para montagem de vídeo, manipulação de áudio e processamento de imagem.                                                              |
+| **Automação Web**            | **Playwright**, **Selenium**                  | Utilizados para automação de navegador em scripts de coleta de dados ou imagens.                                                                            |
+| **Testes e Ambiente**        | **Pytest**, **python-dotenv**                 | Framework de testes para garantir a qualidade do código e gerenciamento de variáveis de ambiente.                                                           |
+| **Publicação**               | **YouTube Data API v3**                       | Conclui o fluxo fazendo o upload do vídeo finalizado para um canal específico, incluindo metadados (título, descrição, tags) gerenciados programaticamente. |
 
 
 -----
@@ -839,23 +837,23 @@ Este projeto é uma fábrica de automação de vídeo end-to-end desenvolvida em
 
 #### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
 
-| Categoria                    | Tecnologias e Conceitos                                                                                                                                                            |
-| :--------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **AI & Machine Learning**    | 🧠 OpenAI API (GPT), Replicate (SDXL), Coqui TTS, OpenAI Whisper, `transformers`, NumPy                                                                                            |
-| **Software Development**     | 💻 Python, `subprocess`, Pydub, Pillow, OpenCV, `python-dotenv`, Pytest, SOLID, Clean Code                                                                                         |
+| Categoria                    | Tecnologias e Conceitos                                                                                                                                                          |
+| :--------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **AI & Machine Learning**    | 🧠 OpenAI API (GPT), Replicate (SDXL), Coqui TTS, OpenAI Whisper, `transformers`, NumPy                                                                                           |
+| **Software Development**     | 💻 Python, `subprocess`, Pydub, Pillow, OpenCV, `python-dotenv`, Pytest, SOLID, Clean Code                                                                                        |
 | **Architecture**             | 🏛️ Arquitetura Modular, Microserviços, Plug-and-Play (Provedores de IA), `ContentManager` (Repositório Central), Renderização em Duas Etapas, `MovementFilterGenerator` (Factory) |
-| **Cloud Computing**          | ☁️ ElevenLabs API, Replicate API, Pixabay API, Jamendo API, YouTube Data API v3, OpenAI API                                                                                        |
-| **API RESTFul development**  | 🌐 Flask, Integração de APIs REST                                                                                                                                                  |
-| **Frontend Development**     | N/A                                                                                                                                                                                |
-| **Mobile Development**       | N/A                                                                                                                                                                                |
+| **Cloud Computing**          | ☁️ ElevenLabs API, Replicate API, Pixabay API, Jamendo API, YouTube Data API v3, OpenAI API                                                                                       |
+| **API RESTFul development**  | 🌐 Flask, Integração de APIs REST                                                                                                                                                 |
+| **Frontend Development**     | N/A                                                                                                                                                                              |
+| **Mobile Development**       | N/A                                                                                                                                                                              |
 | **Database**                 | 🗄️ JSON (utilizado como banco de dados de arquivos)                                                                                                                               |
-| **Data Management**          | 📊 `ContentManager` (Abstração de Dados), Gerenciamento de JSON                                                                                                                    |
-| **Content Management - CMS** | N/A                                                                                                                                                                                |
-| **System Administration**    | ⚙️ `launchd` (Agendamento de tarefas no macOS)                                                                                                                                     |
-| **DevOps**                   | 🚀 Gerenciamento de Ambiente (venv), Gerenciamento de Dependências (`requirements.txt`), Testes Automatizados (Pytest), Agendamento de Publicação                                  |
-| **Leadership**               | 👨‍🏫 Arquiteto de Soluções, Desenvolvedor Principal, Documentação Técnica                                                                                                         |
-| **Coaching**                 | N/A                                                                                                                                                                                |
-| **Agile Project Management** | 🔄 Desenvolvimento Incremental, Refatoração Estratégica, Resolução de Débito Técnico                                                                                               |
+| **Data Management**          | 📊 `ContentManager` (Abstração de Dados), Gerenciamento de JSON                                                                                                                   |
+| **Content Management - CMS** | N/A                                                                                                                                                                              |
+| **System Administration**    | ⚙️ `launchd` (Agendamento de tarefas no macOS)                                                                                                                                    |
+| **DevOps**                   | 🚀 Gerenciamento de Ambiente (venv), Gerenciamento de Dependências (`requirements.txt`), Testes Automatizados (Pytest), Agendamento de Publicação                                 |
+| **Leadership**               | 👨‍🏫 Arquiteto de Soluções, Desenvolvedor Principal, Documentação Técnica                                                                                                           |
+| **Coaching**                 | N/A                                                                                                                                                                              |
+| **Agile Project Management** | 🔄 Desenvolvimento Incremental, Refatoração Estratégica, Resolução de Débito Técnico                                                                                              |
 
 ---
 #### Documentos
@@ -921,7 +919,7 @@ Estes dois documentos abordam problemas de instabilidade com a biblioteca de ger
 Em resumo, os arquivos mostram um projeto de automação maduro, com documentação robusta, planejamento cuidadoso de novas funcionalidades e uma abordagem metódica e profissional para a resolução de problemas técnicos.
 
 
-### 🚀 Telegram Course Tools
+### 🚀 Projeto: Telegram Course Tools
 
 ##### 🎯 Visão Geral e Arquitetura da Solução
 
@@ -963,15 +961,15 @@ Embora a solução seja totalmente funcional para seu propósito inicial, existe
 
 #### 🛠️ Pilha de Tecnologias (Tech Stack)
 
-| Componente | Tecnologia Utilizada | Papel na Arquitetura |
-| :--- | :--- | :--- |
-| **Linguagem Principal** | **Python 3.8+** | A base para toda a automação, orquestrando a lógica, a interação com APIs e a manipulação de arquivos. |
-| **Comunicação com API** | **Telethon** | Cliente assíncrono para interagir com a API do Telegram, permitindo buscar históricos e baixar mídias de forma robusta. |
-| **Interface de Usuário (CLI)** | **tqdm** | Fornece feedback visual com barras de progresso durante os downloads, melhorando significativamente a experiência do usuário. |
-| **Estruturação de Conteúdo** | **`re` (Expressões Regulares)** | O motor de inteligência para identificar padrões em texto não-estruturado e organizar as aulas em módulos nos sumários. |
-| **Manipulação de Dados** | **`json`** | Utilizado como o formato de intercâmbio de dados entre a etapa de mapeamento e a de indexação, garantindo um "contrato" claro. |
-| **Gestão do Sistema** | **`os`** | Essencial para interações com o sistema de arquivos, como criar diretórios para os cursos e verificar a existência de vídeos. |
-| **Programação Assíncrona** | **`asyncio`** | Usado implicitamente pelo Telethon para otimizar a comunicação de rede com a API do Telegram, tornando as operações mais rápidas. |
+| Componente                     | Tecnologia Utilizada            | Papel na Arquitetura                                                                                                              |
+| :----------------------------- | :------------------------------ | :-------------------------------------------------------------------------------------------------------------------------------- |
+| **Linguagem Principal**        | **Python 3.8+**                 | A base para toda a automação, orquestrando a lógica, a interação com APIs e a manipulação de arquivos.                            |
+| **Comunicação com API**        | **Telethon**                    | Cliente assíncrono para interagir com a API do Telegram, permitindo buscar históricos e baixar mídias de forma robusta.           |
+| **Interface de Usuário (CLI)** | **tqdm**                        | Fornece feedback visual com barras de progresso durante os downloads, melhorando significativamente a experiência do usuário.     |
+| **Estruturação de Conteúdo**   | **`re` (Expressões Regulares)** | O motor de inteligência para identificar padrões em texto não-estruturado e organizar as aulas em módulos nos sumários.           |
+| **Manipulação de Dados**       | **`json`**                      | Utilizado como o formato de intercâmbio de dados entre a etapa de mapeamento e a de indexação, garantindo um "contrato" claro.    |
+| **Gestão do Sistema**          | **`os`**                        | Essencial para interações com o sistema de arquivos, como criar diretórios para os cursos e verificar a existência de vídeos.     |
+| **Programação Assíncrona**     | **`asyncio`**                   | Usado implicitamente pelo Telethon para otimizar a comunicação de rede com a API do Telegram, tornando as operações mais rápidas. |
 
 -----
 
@@ -1055,7 +1053,7 @@ Este projeto implementa uma suíte de automação em Python para organizar conte
 
 
 
-### 🚀 Air Combat 3D: Um Estudo de Caso sobre Produtividade com IAs
+### 🚀 Projeto: Air Combat 3D: Um Estudo de Caso sobre Produtividade com IAs
 
 #### 🎯 Visão Geral e Arquitetura da Solução
 
@@ -1088,14 +1086,14 @@ Embora o projeto tenha cumprido seu objetivo principal, ele possui um grande pot
 
 #### 🛠️ Pilha de Tecnologias (Tech Stack)
 
-| Componente | Tecnologia Utilizada | Papel na Arquitetura |
-| :--- | :--- | :--- |
-| **Renderização e Interação 3D** | **Three.js** | Criação do ambiente 3D, renderização dos aviões e gerenciamento da câmera e controles do jogador no navegador. |
-| **Servidor de Aplicação** | **Node.js com Express** | Orquestra a lógica de negócio, gerencia o matchmaking e serve como a base para a comunicação em tempo real. |
-| **Comunicação em Tempo Real** | **WebSockets** | Estabelece um canal de comunicação bidirecional e de baixa latência entre o cliente e o servidor para sincronizar as ações. |
-| **Conteinerização** | **Docker** | Empacota a aplicação e suas dependências em um contêiner, garantindo consistência entre os ambientes de desenvolvimento e produção. |
-| **Hospedagem e Deploy** | **Render.com** | Plataforma de nuvem utilizada para hospedar a aplicação conteinerizada e disponibilizá-la publicamente online. |
-| **Aceleração de Código** | **IA Generativa (Cursor, Trae)** | Ferramentas integradas à IDE para acelerar a escrita de código, prototipagem de funcionalidades e resolução de problemas. |
+| Componente                      | Tecnologia Utilizada             | Papel na Arquitetura                                                                                                                |
+| :------------------------------ | :------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------- |
+| **Renderização e Interação 3D** | **Three.js**                     | Criação do ambiente 3D, renderização dos aviões e gerenciamento da câmera e controles do jogador no navegador.                      |
+| **Servidor de Aplicação**       | **Node.js com Express**          | Orquestra a lógica de negócio, gerencia o matchmaking e serve como a base para a comunicação em tempo real.                         |
+| **Comunicação em Tempo Real**   | **WebSockets**                   | Estabelece um canal de comunicação bidirecional e de baixa latência entre o cliente e o servidor para sincronizar as ações.         |
+| **Conteinerização**             | **Docker**                       | Empacota a aplicação e suas dependências em um contêiner, garantindo consistência entre os ambientes de desenvolvimento e produção. |
+| **Hospedagem e Deploy**         | **Render.com**                   | Plataforma de nuvem utilizada para hospedar a aplicação conteinerizada e disponibilizá-la publicamente online.                      |
+| **Aceleração de Código**        | **IA Generativa (Cursor, Trae)** | Ferramentas integradas à IDE para acelerar a escrita de código, prototipagem de funcionalidades e resolução de problemas.           |
 
 -----
 
@@ -1161,7 +1159,7 @@ Estudo de caso prático sobre o impacto de IA generativa na produtividade, mater
 | **Leadership**               | N/A                                                                                           |
 | **Coaching**                 | N/A                                                                                           |
 | **Agile Project Management** | N/A                                                                                           |
-### 🚀 Kpro After Sales: API para Otimização de Processos de Pós-Venda
+### 🚀 Projeto: Kpro After Sales: API para Otimização de Processos de Pós-Venda
 
 #### 🎯 Visão Geral e Arquitetura da Solução
 
@@ -1197,12 +1195,12 @@ Como próximos passos para evoluir a maturidade da solução, poderíamos consid
 
 #### 🛠️ Pilha de Tecnologias (Tech Stack)
 
-| Componente | Tecnologia Utilizada | Papel na Arquitetura |
-| :--- | :--- | :--- |
-| **Backend API** | **Laravel Lumen (PHP)** | Núcleo da aplicação, responsável por toda a lógica de negócio, regras e exposição dos dados via endpoints RESTful. |
-| **Banco de Dados** | **MySQL** | Sistema de gerenciamento de banco de dados relacional para a persistência de todas as informações da plataforma. |
-| **Testes Automatizados**| **PHPUnit** | Ferramenta utilizada para criar a suíte de testes unitários e de integração, garantindo a qualidade e estabilidade do código. |
-| **Documentação da API**| **Swagger (OpenAPI)** | Padrão utilizado para desenhar, construir e documentar a API, servindo como um contrato claro para os consumidores (frontend). |
+| Componente               | Tecnologia Utilizada    | Papel na Arquitetura                                                                                                           |
+| :----------------------- | :---------------------- | :----------------------------------------------------------------------------------------------------------------------------- |
+| **Backend API**          | **Laravel Lumen (PHP)** | Núcleo da aplicação, responsável por toda a lógica de negócio, regras e exposição dos dados via endpoints RESTful.             |
+| **Banco de Dados**       | **MySQL**               | Sistema de gerenciamento de banco de dados relacional para a persistência de todas as informações da plataforma.               |
+| **Testes Automatizados** | **PHPUnit**             | Ferramenta utilizada para criar a suíte de testes unitários e de integração, garantindo a qualidade e estabilidade do código.  |
+| **Documentação da API**  | **Swagger (OpenAPI)**   | Padrão utilizado para desenhar, construir e documentar a API, servindo como um contrato claro para os consumidores (frontend). |
 
 -----
 
@@ -1248,25 +1246,25 @@ Desenvolvimento de uma API RESTful em Laravel Lumen como núcleo de uma arquitet
 
 #### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
 
-| Categoria                    | Tecnologias e Conceitos                                                                                        |
-| :--------------------------- | :------------------------------------------------------------------------------------------------------------- |
-| **AI & Machine Learning**    | N/A                                                                                                            |
+| Categoria                    | Tecnologias e Conceitos                                                                                    |
+| :--------------------------- | :--------------------------------------------------------------------------------------------------------- |
+| **AI & Machine Learning**    | N/A                                                                                                        |
 | **Software Development**     | 👨‍💻 Laravel Lumen (PHP), PHPUnit, Testes Automatizados, Cobertura de Código, Regras de Negócio, Query Tuning |
-| **Architecture**             | 🏗️ Arquitetura Desacoplada, API RESTful, Cache, Baixa Latência                                                |
-| **Cloud Computing**          | N/A                                                                                                            |
-| **API RESTFul development**  | 🔌 API RESTful, Endpoints, Swagger (OpenAPI), Documentação da API                                              |
-| **Frontend Development**     | 🖥️ Vue.js                                                                                                     |
-| **Mobile Development**       | N/A                                                                                                            |
-| **Database**                 | 🗃️ MySQL, Query Tuning                                                                                        |
-| **Data Management**          | N/A                                                                                                            |
-| **Content Management - CMS** | N/A                                                                                                            |
-| **System Administration**    | ⚙️ Monitoramento e Observabilidade (Proposto), Prometheus/Grafana (Proposto)                                   |
-| **DevOps**                   | 🚀 CI/CD (Proposto), Monitoramento e Observabilidade (Proposto)                                                |
+| **Architecture**             | 🏗️ Arquitetura Desacoplada, API RESTful, Cache, Baixa Latência                                              |
+| **Cloud Computing**          | N/A                                                                                                        |
+| **API RESTFul development**  | 🔌 API RESTful, Endpoints, Swagger (OpenAPI), Documentação da API                                           |
+| **Frontend Development**     | 🖥️ Vue.js                                                                                                   |
+| **Mobile Development**       | N/A                                                                                                        |
+| **Database**                 | 🗃️ MySQL, Query Tuning                                                                                      |
+| **Data Management**          | N/A                                                                                                        |
+| **Content Management - CMS** | N/A                                                                                                        |
+| **System Administration**    | ⚙️ Monitoramento e Observabilidade (Proposto), Prometheus/Grafana (Proposto)                                |
+| **DevOps**                   | 🚀 CI/CD (Proposto), Monitoramento e Observabilidade (Proposto)                                             |
 | **Leadership**               | 👨‍🏫 Arquiteto de Soluções                                                                                    |
-| **Coaching**                 | N/A                                                                                                            |
-| **Agile Project Management** | N/A                                                                                                            |
+| **Coaching**                 | N/A                                                                                                        |
+| **Agile Project Management** | N/A                                                                                                        |
 
-### 🚀 Shosales Review: Otimização de Performance (10x) e Implantação de Testes E2E
+### 🚀 Projeto: Shosales Review: Otimização de Performance (10x) e Implantação de Testes E2E
 
 #### 🎯 Visão Geral e Arquitetura da Solução
 
@@ -1305,14 +1303,14 @@ Com a base sólida de performance e qualidade estabelecida, os próximos passos 
 
 #### 🛠️ Pilha de Tecnologias (Tech Stack)
 
-| Componente | Tecnologia Utilizada | Papel na Arquitetura |
-| :--- | :--- | :--- |
-| **Backend** | **Laravel (PHP)** | Framework principal da aplicação, orquestrando as regras de negócio e a lógica de apresentação. |
-| **Banco de Dados** | **MySQL** | Armazenamento persistente de todos os dados relacionados a imóveis e avaliações. |
-| **Cache** | **Redis** | Utilizado para cache de sessão e otimizações pontuais de performance. |
-| **Testes E2E** | **Laravel Dusk** | Ferramenta para automação de testes de ponta-a-ponta, simulando a interação do usuário no navegador. |
-| **Testes Cross-Browser** | **CrossBrowserTesting** | Plataforma em nuvem para executar os testes do Dusk em múltiplos navegadores e sistemas operacionais. |
-| **CI/CD** | **GitHub Actions / Jenkins** | Orquestradores do pipeline de integração e entrega contínua, automatizando build, testes e deploy. |
+| Componente               | Tecnologia Utilizada         | Papel na Arquitetura                                                                                  |
+| :----------------------- | :--------------------------- | :---------------------------------------------------------------------------------------------------- |
+| **Backend**              | **Laravel (PHP)**            | Framework principal da aplicação, orquestrando as regras de negócio e a lógica de apresentação.       |
+| **Banco de Dados**       | **MySQL**                    | Armazenamento persistente de todos os dados relacionados a imóveis e avaliações.                      |
+| **Cache**                | **Redis**                    | Utilizado para cache de sessão e otimizações pontuais de performance.                                 |
+| **Testes E2E**           | **Laravel Dusk**             | Ferramenta para automação de testes de ponta-a-ponta, simulando a interação do usuário no navegador.  |
+| **Testes Cross-Browser** | **CrossBrowserTesting**      | Plataforma em nuvem para executar os testes do Dusk em múltiplos navegadores e sistemas operacionais. |
+| **CI/CD**                | **GitHub Actions / Jenkins** | Orquestradores do pipeline de integração e entrega contínua, automatizando build, testes e deploy.    |
 
 -----
 
@@ -1374,23 +1372,23 @@ O projeto consistiu na otimização de performance e implementação de um escud
 
 | Categoria                          | Tecnologias e Conceitos                                                    |
 | :--------------------------------- | :------------------------------------------------------------------------- |
-| 🤖 **AI & Machine Learning**       | N/A                                                                        |
-| 💻 **Software Development**        | Laravel, PHP, Eloquent ORM, Legacy Code Refactoring, Performance Profiling |
-| 🏛️ **Architecture**               | Legacy System Modernization, Data Access Layer Optimization                |
-| ☁️ **Cloud Computing**             | CrossBrowserTesting                                                        |
-| 🌐 **API RESTFul development**     | N/A                                                                        |
-| 🎨 **Frontend Development**        | User Experience (UX) Optimization, Visual Regression Testing (future work) |
-| 📱 **Mobile Development**          | N/A                                                                        |
-| 🗃️ **Database**                   | MySQL, Query Optimization, Database Indexing                               |
-| 📊 **Data Management**             | N/A                                                                        |
-| 📝 **Content Management - CMS**    | N/A                                                                        |
-| 🖥️ **System Administration**      | N/A                                                                        |
-| 🚀 **DevOps**                      | CI/CD, GitHub Actions, Jenkins, QA Automation, E2E Testing, Laravel Dusk   |
-| 👨‍💼 **Leadership**               | Technical Leadership, Project Modernization                                |
-| 🤝 **Coaching**                    | Team Confidence Building, Cultural Change Management                       |
+| 🤖 **AI & Machine Learning**        | N/A                                                                        |
+| 💻 **Software Development**         | Laravel, PHP, Eloquent ORM, Legacy Code Refactoring, Performance Profiling |
+| 🏛️ **Architecture**                 | Legacy System Modernization, Data Access Layer Optimization                |
+| ☁️ **Cloud Computing**              | CrossBrowserTesting                                                        |
+| 🌐 **API RESTFul development**      | N/A                                                                        |
+| 🎨 **Frontend Development**         | User Experience (UX) Optimization, Visual Regression Testing (future work) |
+| 📱 **Mobile Development**           | N/A                                                                        |
+| 🗃️ **Database**                     | MySQL, Query Optimization, Database Indexing                               |
+| 📊 **Data Management**              | N/A                                                                        |
+| 📝 **Content Management - CMS**     | N/A                                                                        |
+| 🖥️ **System Administration**        | N/A                                                                        |
+| 🚀 **DevOps**                       | CI/CD, GitHub Actions, Jenkins, QA Automation, E2E Testing, Laravel Dusk   |
+| 👨‍💼 **Leadership**                   | Technical Leadership, Project Modernization                                |
+| 🤝 **Coaching**                     | Team Confidence Building, Cultural Change Management                       |
 | agile **Agile Project Management** | Continuous Improvement, Regression Prevention                              |
 
-### 🚀 Toot 🚘 Otimização de Geodata (30x) e API para Market Intelligence
+### 🚀 Projeto: Toot 🚘 Otimização de Geodata (30x) e API para Market Intelligence
 
 #### 🎯 Visão Geral e Arquitetura da Solução
 
@@ -1417,17 +1415,17 @@ Para evoluir o projeto, poderíamos explorar a implementação de um sistema de 
 
 #### 🛠️ Pilha de Tecnologias (Tech Stack)
 
-| Componente | Tecnologia Utilizada | Papel na Arquitetura |
-| :--- | :--- | :--- |
-| **Backend** | **Laravel (PHP)** | Desenvolvimento da API para servir os dados geoespaciais e de BI. |
-| **Banco de Dados** | **MySQL** | Armazenamento e consulta dos dados da plataforma. |
-| **Frontend** | **React** | Construção da interface de usuário, incluindo os mapas interativos. |
-| **Mapas** | **Google Maps API** | Renderização dos mapas e visualização dos dados geoespaciais. |
-| **Otimização de Performance**| **Superfetch** | Carregamento progressivo e renderização inteligente dos dados nos mapas. |
-| **Business Intelligence** | **PowerBI (integração)** | Análise e visualização de dados, com lógica de filtragem replicada na API. |
-| **Testes** | **PHPUnit** | Testes unitários para garantir a qualidade e a estabilidade da API. |
-| **Documentação da API**| **Swagger** | Documentação dos endpoints da API para facilitar a integração. |
-| **DevOps** | **CI/CD** | Entrega contínua de novas features e correções de bugs. |
+| Componente                    | Tecnologia Utilizada     | Papel na Arquitetura                                                       |
+| :---------------------------- | :----------------------- | :------------------------------------------------------------------------- |
+| **Backend**                   | **Laravel (PHP)**        | Desenvolvimento da API para servir os dados geoespaciais e de BI.          |
+| **Banco de Dados**            | **MySQL**                | Armazenamento e consulta dos dados da plataforma.                          |
+| **Frontend**                  | **React**                | Construção da interface de usuário, incluindo os mapas interativos.        |
+| **Mapas**                     | **Google Maps API**      | Renderização dos mapas e visualização dos dados geoespaciais.              |
+| **Otimização de Performance** | **Superfetch**           | Carregamento progressivo e renderização inteligente dos dados nos mapas.   |
+| **Business Intelligence**     | **PowerBI (integração)** | Análise e visualização de dados, com lógica de filtragem replicada na API. |
+| **Testes**                    | **PHPUnit**              | Testes unitários para garantir a qualidade e a estabilidade da API.        |
+| **Documentação da API**       | **Swagger**              | Documentação dos endpoints da API para facilitar a integração.             |
+| **DevOps**                    | **CI/CD**                | Entrega contínua de novas features e correções de bugs.                    |
 
 -----
 
@@ -1508,7 +1506,7 @@ Desenvolvimento de uma API backend em Laravel e MySQL para uma plataforma de Mar
 | **Agile Project Management** | Colaboração com QA, Entrega Contínua                                                       |
 
 
-### 🚀 Toot: Resiliência no Processamento de Jornadas Longas
+### 🚀 Projeto: Toot: Resiliência no Processamento de Jornadas Longas
 
 #### 🎯 Visão Geral e Arquitetura da Solução
 
@@ -1652,7 +1650,7 @@ O projeto implementou uma arquitetura resiliente para processamento de jornadas 
 
 
 
-### 🚀 Huktup: Plataforma de Agendamento e Gestão para Provedores de Serviço
+### 🚀 Projeto: Huktup: Plataforma de Agendamento e Gestão para Provedores de Serviço
 
 #### 🎯 Visão Geral e Arquitetura da Solução
 
@@ -1686,16 +1684,16 @@ Para o futuro, a plataforma poderia evoluir com a implementação de duas funcio
 
 #### 🛠️ Pilha de Tecnologias (Tech Stack)
 
-| Componente | Tecnologia Utilizada | Papel na Arquitetura |
-| :--- | :--- | :--- |
-| **Backend (API Core)** | **Laravel (PHP)** | Orquestra todas as regras de negócio, dados e integrações como o núcleo da plataforma. |
-| **Frontend (Dashboard)** | **Vue.js** | Constrói a interface reativa e interativa para os provedores de serviço gerenciarem seus negócios. |
-| **Visualização de Dados** | **Chart.js** | Renderiza gráficos dinâmicos no dashboard para análise de faturamento, reservas e clientes. |
-| **Banco de Dados** | **MySQL** | Armazena de forma persistente todos os dados relacionais da aplicação (agendamentos, usuários, etc.). |
-| **Autenticação de Usuários**| **Firebase Authentication** | Gerencia o onboarding, login e segurança dos usuários (provedores) com suporte a SSO. |
-| **Comunicação por SMS** | **Twilio API** | Automatiza o envio de lembretes, alertas transacionais e coleta de feedback dos clientes finais. |
-| **Documentação da API** | **Swagger (OpenAPI)** | Padroniza e documenta os endpoints da API para facilitar a integração entre equipes. |
-| **Ambiente de Dev** | **Docker** | Garante a consistência e portabilidade do ambiente de desenvolvimento e produção. |
+| Componente                   | Tecnologia Utilizada        | Papel na Arquitetura                                                                                  |
+| :--------------------------- | :-------------------------- | :---------------------------------------------------------------------------------------------------- |
+| **Backend (API Core)**       | **Laravel (PHP)**           | Orquestra todas as regras de negócio, dados e integrações como o núcleo da plataforma.                |
+| **Frontend (Dashboard)**     | **Vue.js**                  | Constrói a interface reativa e interativa para os provedores de serviço gerenciarem seus negócios.    |
+| **Visualização de Dados**    | **Chart.js**                | Renderiza gráficos dinâmicos no dashboard para análise de faturamento, reservas e clientes.           |
+| **Banco de Dados**           | **MySQL**                   | Armazena de forma persistente todos os dados relacionais da aplicação (agendamentos, usuários, etc.). |
+| **Autenticação de Usuários** | **Firebase Authentication** | Gerencia o onboarding, login e segurança dos usuários (provedores) com suporte a SSO.                 |
+| **Comunicação por SMS**      | **Twilio API**              | Automatiza o envio de lembretes, alertas transacionais e coleta de feedback dos clientes finais.      |
+| **Documentação da API**      | **Swagger (OpenAPI)**       | Padroniza e documenta os endpoints da API para facilitar a integração entre equipes.                  |
+| **Ambiente de Dev**          | **Docker**                  | Garante a consistência e portabilidade do ambiente de desenvolvimento e produção.                     |
 
 -----
 
@@ -1761,7 +1759,7 @@ Desenvolvimento de uma plataforma de agendamento, Huktup, com arquitetura centra
 | **Agile Project Management** | Desenvolvimento paralelo (Backend/Frontend), Colaboração entre equipes |
 
 
-### 🚀 Sisporta: Sincronização Inteligente de Dados
+### 🚀 Projeto: Sisporta: Sincronização Inteligente de Dados
 
 #### 🎯 Visão Geral e Arquitetura da Solução
 
@@ -1826,7 +1824,7 @@ graph TD
     subgraph "Nova Aplicação Cloud"
         DB["☁️ App de Orçamentos (Laravel / MySQL)"]
     end
-    
+
     subgraph "Automação e DevOps"
         CICD["🔧 Bitbucket Pipelines (CI/CD)"]
     end
@@ -1837,7 +1835,7 @@ graph TD
     Horizon -- "4\. Despacha jobs para workers" --> Workers
     Workers -- "5\. Processa em lotes e persiste" --> DB
     Workers -- "6\. Executa rotina de limpeza" --> DB
-    
+
     Script -- "Testes e Deploy" --> CICD
     DB -- "Testes e Deploy" --> CICD
 ```
@@ -1849,25 +1847,25 @@ O projeto implementa um pipeline de dados desacoplado para integração entre um
 
 #### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
 
-| Categoria                    | Tecnologias e Conceitos                                                                                                                                                                |
-| :--------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **AI & Machine Learning**    | N/A                                                                                                                                                                                    |
-| **Software Development**     | 🐍 Python, 🐘 PHP, ✨ Laravel, 📄 JSON, 🧪 Testes Unitários, 🧪 Testes de Integração                                                                                                    |
-| **Architecture**             | 🔗 Arquitetura Desacoplada, 🔄 Processamento Assíncrono, 📦 Processamento em Lotes, 🛡️ Resiliência, 📈 Escalabilidade, ⚙️ Pipeline de Dados, 🎯 Sincronização Unidirecional           |
-| **Cloud Computing**          | ☁️ Aplicação Cloud, ☁️ Banco de dados hospedado na nuvem                                                                                                                               |
-| **API RESTFul development**  | 🔌 Endpoint de API, 📩 Ingestão de Dados via API                                                                                                                                       |
-| **Frontend Development**     | N/A                                                                                                                                                                                    |
-| **Mobile Development**       | N/A                                                                                                                                                                                    |
-| **Database**                 | 💾 SQL Server, 💾 MySQL                                                                                                                                                                |
-| **Data Management**          | 🚚 ETL (Extração, Transformação e Carga), 🔄 Sincronização de Dados, ✅ Integridade de Dados, ✅ Consistência de Dados, ✨ Limpeza de Dados (Data Cleansing)                              |
-| **Content Management - CMS** | N/A                                                                                                                                                                                    |
-| **System Administration**    | N/A                                                                                                                                                                                    |
+| Categoria                    | Tecnologias e Conceitos                                                                                                                                                         |
+| :--------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **AI & Machine Learning**    | N/A                                                                                                                                                                             |
+| **Software Development**     | 🐍 Python, 🐘 PHP, ✨ Laravel, 📄 JSON, 🧪 Testes Unitários, 🧪 Testes de Integração                                                                                                  |
+| **Architecture**             | 🔗 Arquitetura Desacoplada, 🔄 Processamento Assíncrono, 📦 Processamento em Lotes, 🛡️ Resiliência, 📈 Escalabilidade, ⚙️ Pipeline de Dados, 🎯 Sincronização Unidirecional            |
+| **Cloud Computing**          | ☁️ Aplicação Cloud, ☁️ Banco de dados hospedado na nuvem                                                                                                                          |
+| **API RESTFul development**  | 🔌 Endpoint de API, 📩 Ingestão de Dados via API                                                                                                                                  |
+| **Frontend Development**     | N/A                                                                                                                                                                             |
+| **Mobile Development**       | N/A                                                                                                                                                                             |
+| **Database**                 | 💾 SQL Server, 💾 MySQL                                                                                                                                                           |
+| **Data Management**          | 🚚 ETL (Extração, Transformação e Carga), 🔄 Sincronização de Dados, ✅ Integridade de Dados, ✅ Consistência de Dados, ✨ Limpeza de Dados (Data Cleansing)                         |
+| **Content Management - CMS** | N/A                                                                                                                                                                             |
+| **System Administration**    | N/A                                                                                                                                                                             |
 | **DevOps**                   | 🛠️ Bitbucket Pipelines, 🔄 CI/CD (Integração Contínua, Implantação Contínua), 🚦 Laravel Horizon, ⚙️ Background Workers, 📜 Gerenciamento de Filas (Queueing), 🚀 Automação de Deploy |
-| **Leadership**               | N/A                                                                                                                                                                                    |
-| **Coaching**                 | N/A                                                                                                                                                                                    |
-| **Agile Project Management** | N/A                                                                                                                                                                                    |
+| **Leadership**               | N/A                                                                                                                                                                             |
+| **Coaching**                 | N/A                                                                                                                                                                             |
+| **Agile Project Management** | N/A                                                                                                                                                                             |
 
-### 🚀 Projeto Spider - Hub de Integração E-commerce
+### 🚀 Projeto: Projeto Spider - Hub de Integração E-commerce
 
 #### 🎯 Visão Geral e Arquitetura da Solução
 
@@ -1910,15 +1908,15 @@ Apesar da robustez da solução, sempre há espaço para melhorias. Duas evoluç
 
 #### 🛠️ Pilha de Tecnologias (Tech Stack)
 
-| Componente | Tecnologia Utilizada | Papel na Arquitetura |
-| :--- | :--- | :--- |
-| **Backend & Lógica** | **PHP / Laravel** | Framework principal para toda a aplicação, incluindo Artisan Commands para tarefas agendadas e Jobs para processamento em segundo plano. |
-| **Banco de Dados Principal** | **MongoDB** | Banco de dados NoSQL central para armazenar produtos, pedidos, clientes e logs, oferecendo flexibilidade para modelos de dados complexos. |
-| **Filas Assíncronas** | **Redis** | Utilizado como o motor do sistema de filas (Queues), garantindo o processamento assíncrono e resiliente de tarefas como atualizações de estoque e importações. |
-| **Integrações (APIs)** | **REST & Webhooks** | Protocolos usados para comunicação com sistemas externos, tanto para buscar dados (REST) quanto para receber notificações em tempo real (Webhooks). |
-| **Plataformas Conectadas** | **Plugg.to, Skyhub, Bling** | Principais sistemas de e-commerce (marketplaces e ERP) com os quais o Spider se integrava para orquestrar as operações. |
-| **Infraestrutura & DevOps** | **Docker, AWS S3, SSH** | Docker para conteinerização do ambiente, S3 para armazenamento de arquivos (ex: planilhas de importação) e SSH para gerenciamento do servidor. |
-| **Bancos de Dados Legados** | **MySQL** | Utilizado para integração direta com o sistema ERP de clientes específicos que não possuíam uma API moderna, como o Novo Século. |
+| Componente                   | Tecnologia Utilizada        | Papel na Arquitetura                                                                                                                                           |
+| :--------------------------- | :-------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Backend & Lógica**         | **PHP / Laravel**           | Framework principal para toda a aplicação, incluindo Artisan Commands para tarefas agendadas e Jobs para processamento em segundo plano.                       |
+| **Banco de Dados Principal** | **MongoDB**                 | Banco de dados NoSQL central para armazenar produtos, pedidos, clientes e logs, oferecendo flexibilidade para modelos de dados complexos.                      |
+| **Filas Assíncronas**        | **Redis**                   | Utilizado como o motor do sistema de filas (Queues), garantindo o processamento assíncrono e resiliente de tarefas como atualizações de estoque e importações. |
+| **Integrações (APIs)**       | **REST & Webhooks**         | Protocolos usados para comunicação com sistemas externos, tanto para buscar dados (REST) quanto para receber notificações em tempo real (Webhooks).            |
+| **Plataformas Conectadas**   | **Plugg.to, Skyhub, Bling** | Principais sistemas de e-commerce (marketplaces e ERP) com os quais o Spider se integrava para orquestrar as operações.                                        |
+| **Infraestrutura & DevOps**  | **Docker, AWS S3, SSH**     | Docker para conteinerização do ambiente, S3 para armazenamento de arquivos (ex: planilhas de importação) e SSH para gerenciamento do servidor.                 |
+| **Bancos de Dados Legados**  | **MySQL**                   | Utilizado para integração direta com o sistema ERP de clientes específicos que não possuíam uma API moderna, como o Novo Século.                               |
 
 -----
 
@@ -1987,28 +1985,28 @@ Desenvolvimento e arquitetura do "Spider", um hub de integração de e-commerce 
 
 #### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
 
-| Categoria | Tecnologias e Conceitos |
-| :--- | :--- |
-| **AI & Machine Learning** | N/A |
-| **Software Development** | PHP, Laravel, Artisan Commands, Jobs, Traits (`LogTrait`), Controllers, Backend Development |
-| **Architecture**| Arquitetura Orientada a Serviços, Arquitetura Orientada a Eventos, Arquitetura Assíncrona, Arquitetura Reativa, Hub de Integração, Modelagem de Entidades, Fluxos de Dados |
-| **Cloud Computing** | AWS S3 |
-| **API RESTFul development** | API REST, Webhooks, Consumo de API (Bling, Plugg.to, Skyhub) |
-| **Frontend Development** | N/A |
-| **Mobile Development** | N/A |
-| **Database** | MongoDB, Redis, MySQL, SQLite, NoSQL |
-| **Data Management** | ETL (Extração, Transformação, Carga), Migração de Dados (Magento, Plugg.to), Sincronização de Dados (Estoque, Preço), Qualidade de Dados, Normalização de Dados, Logs (`LogTrait`) |
-| **Content Management - CMS** | N/A |
-| **System Administration** | Gerenciamento de Servidor (SSH), Cron Jobs |
-| **DevOps** | Docker, Docker Compose, Monitoramento, Logging, Automação de Tarefas |
-| **Leadership** | Liderança Técnica, Documentação Técnica, Mentoria (Coaching) |
-| **Coaching** | N/A |
-| **Agile Project Management** | Jira, Gestão de Tarefas, Acompanhamento de Status |
+| Categoria                    | Tecnologias e Conceitos                                                                                                                                                            |
+| :--------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **AI & Machine Learning**    | N/A                                                                                                                                                                                |
+| **Software Development**     | PHP, Laravel, Artisan Commands, Jobs, Traits (`LogTrait`), Controllers, Backend Development                                                                                        |
+| **Architecture**             | Arquitetura Orientada a Serviços, Arquitetura Orientada a Eventos, Arquitetura Assíncrona, Arquitetura Reativa, Hub de Integração, Modelagem de Entidades, Fluxos de Dados         |
+| **Cloud Computing**          | AWS S3                                                                                                                                                                             |
+| **API RESTFul development**  | API REST, Webhooks, Consumo de API (Bling, Plugg.to, Skyhub)                                                                                                                       |
+| **Frontend Development**     | N/A                                                                                                                                                                                |
+| **Mobile Development**       | N/A                                                                                                                                                                                |
+| **Database**                 | MongoDB, Redis, MySQL, SQLite, NoSQL                                                                                                                                               |
+| **Data Management**          | ETL (Extração, Transformação, Carga), Migração de Dados (Magento, Plugg.to), Sincronização de Dados (Estoque, Preço), Qualidade de Dados, Normalização de Dados, Logs (`LogTrait`) |
+| **Content Management - CMS** | N/A                                                                                                                                                                                |
+| **System Administration**    | Gerenciamento de Servidor (SSH), Cron Jobs                                                                                                                                         |
+| **DevOps**                   | Docker, Docker Compose, Monitoramento, Logging, Automação de Tarefas                                                                                                               |
+| **Leadership**               | Liderança Técnica, Documentação Técnica, Mentoria (Coaching)                                                                                                                       |
+| **Coaching**                 | N/A                                                                                                                                                                                |
+| **Agile Project Management** | Jira, Gestão de Tarefas, Acompanhamento de Status                                                                                                                                  |
 
 
 ---
 
-### 🚀 Índicos: Plataforma SaaS de Marketing de Indicação
+### 🚀 Projeto: Índicos: Plataforma SaaS de Marketing de Indicação
 
 #### 🎯 Visão Geral e Arquitetura da Solução
 
@@ -2044,12 +2042,12 @@ Para o futuro, o projeto Índicos poderia evoluir com a implementação de duas 
 
 #### 🛠️ Pilha de Tecnologias (Tech Stack)
 
-| Componente | Tecnologia Utilizada | Papel na Arquitetura |
-| :--- | :--- | :--- |
-| **Backend & Core da Aplicação** | **Laravel** | Responsável por toda a lógica de negócio, arquitetura multi-tenant, roteamento por subdomínios, autenticação dupla (master e tenants) e APIs. |
-| **Banco de Dados** | **MySQL** | Persistência dos dados de todos os tenants, incluindo usuários, redes de indicação e configurações, com isolamento garantido por tenant. |
-| **Frontend & Dinamismo** | **JavaScript / jQuery** | Utilizado para criar os diagramas de hierarquia dinâmicos no dashboard do usuário, proporcionando uma visualização interativa e em tempo real da rede. |
-| **Ambiente de Deploy** | **Host Umbler** | Ambiente de nuvem onde a aplicação foi implantada. O entendimento de suas limitações foi crucial para a resolução de desafios de infraestrutura. |
+| Componente                      | Tecnologia Utilizada    | Papel na Arquitetura                                                                                                                                   |
+| :------------------------------ | :---------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Backend & Core da Aplicação** | **Laravel**             | Responsável por toda a lógica de negócio, arquitetura multi-tenant, roteamento por subdomínios, autenticação dupla (master e tenants) e APIs.          |
+| **Banco de Dados**              | **MySQL**               | Persistência dos dados de todos os tenants, incluindo usuários, redes de indicação e configurações, com isolamento garantido por tenant.               |
+| **Frontend & Dinamismo**        | **JavaScript / jQuery** | Utilizado para criar os diagramas de hierarquia dinâmicos no dashboard do usuário, proporcionando uma visualização interativa e em tempo real da rede. |
+| **Ambiente de Deploy**          | **Host Umbler**         | Ambiente de nuvem onde a aplicação foi implantada. O entendimento de suas limitações foi crucial para a resolução de desafios de infraestrutura.       |
 
 -----
 
@@ -2074,7 +2072,7 @@ flowchart LR
         style P fill:#E3F2FD,stroke:#64B5F6,stroke-width:2px
         SubdomainRouter{🔄 Middleware de Roteamento}
         LaravelApp[⚙️ Aplicação Laravel]
-        
+
         %% Módulos
         subgraph M["Módulos da Aplicação"]
             style M fill:#F3E5F5,stroke:#BA68C8,stroke-width:2px
@@ -2129,7 +2127,7 @@ A plataforma Índicos é um SaaS de marketing de indicação com uma arquitetura
 | **Coaching**                 | N/A                                                                                                                                          |
 | **Agile Project Management** | Gestão do ciclo de vida do projeto (concepção à entrega)                                                                                     |
 
-### 🚀 OnePush: Plataforma SaaS para Notificações Web Push
+### 🚀 Projeto: OnePush: Plataforma SaaS para Notificações Web Push
 
 #### 🎯 Visão Geral e Arquitetura da Solução
 
@@ -2172,16 +2170,16 @@ Embora a plataforma seja robusta, existem caminhos claros para sua evolução. D
 
 #### 🛠️ Pilha de Tecnologias (Tech Stack)
 
-| Componente | Tecnologia Utilizada | Papel na Arquitetura |
-| :--- | :--- | :--- |
-| **Framework Back-End** | **Laravel 5.4 (PHP)** | Core da aplicação, gerenciando toda a lógica de negócio, APIs, modularização e orquestração de eventos. |
-| **Banco de Dados** | **MySQL** | Armazenamento principal para dados de usuários, websites, notificações, assinaturas e transações. |
-| **Filas e Eventos** | **Laravel Queues** | Gerencia o processamento assíncrono de tarefas, como o envio de notificações, garantindo performance e resiliência. |
-| **Motor de Notificações** | **OneSignal API** | Serviço externo utilizado como a infraestrutura principal para registro de assinantes e entrega de notificações web push. |
-| **Gateway de Pagamento**| **Pagar.me API** | Responsável por processar pagamentos de assinaturas (cartão de crédito e boleto) de forma segura. |
-| **Frontend (Admin)** | **Homer Dashboard** | Template utilizado para a construção da interface do painel administrativo, oferecendo uma UI rica e responsiva. |
-| **Autenticação API** | **tymondesigns/jwt-auth**| Biblioteca para proteger rotas de API (como as de pagamento) utilizando JSON Web Tokens (JWT). |
-| **Logs de Atividade** | **spatie/activitylog** | Pacote utilizado para rastrear e registrar todas as ações importantes realizadas pelos usuários na plataforma. |
+| Componente                | Tecnologia Utilizada      | Papel na Arquitetura                                                                                                      |
+| :------------------------ | :------------------------ | :------------------------------------------------------------------------------------------------------------------------ |
+| **Framework Back-End**    | **Laravel 5.4 (PHP)**     | Core da aplicação, gerenciando toda a lógica de negócio, APIs, modularização e orquestração de eventos.                   |
+| **Banco de Dados**        | **MySQL**                 | Armazenamento principal para dados de usuários, websites, notificações, assinaturas e transações.                         |
+| **Filas e Eventos**       | **Laravel Queues**        | Gerencia o processamento assíncrono de tarefas, como o envio de notificações, garantindo performance e resiliência.       |
+| **Motor de Notificações** | **OneSignal API**         | Serviço externo utilizado como a infraestrutura principal para registro de assinantes e entrega de notificações web push. |
+| **Gateway de Pagamento**  | **Pagar.me API**          | Responsável por processar pagamentos de assinaturas (cartão de crédito e boleto) de forma segura.                         |
+| **Frontend (Admin)**      | **Homer Dashboard**       | Template utilizado para a construção da interface do painel administrativo, oferecendo uma UI rica e responsiva.          |
+| **Autenticação API**      | **tymondesigns/jwt-auth** | Biblioteca para proteger rotas de API (como as de pagamento) utilizando JSON Web Tokens (JWT).                            |
+| **Logs de Atividade**     | **spatie/activitylog**    | Pacote utilizado para rastrear e registrar todas as ações importantes realizadas pelos usuários na plataforma.            |
 
 -----
 

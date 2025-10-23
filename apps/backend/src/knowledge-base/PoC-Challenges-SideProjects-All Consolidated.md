@@ -1,7 +1,6 @@
-
 ## Side Projects
 
-### 🚀 Favorite Products API
+### 🚀 Projeto: Favorite Products API
 
 #### 🎯 Visão Geral e Arquitetura da Solução
 
@@ -165,7 +164,7 @@ Este documento detalha a arquitetura de uma **API RESTful**, a **Favorite Produc
 |  scrum **Agile Project Management** | N/A |
 
 
-### 🚀 Twin Quest: Desafio Full-Stack 
+### 🚀 Projeto: Twin Quest: Desafio Full-Stack 
 
 #### 🎯 Visão Geral e Arquitetura da Solução
 
@@ -276,7 +275,7 @@ Desenvolvimento de uma aplicação web full-stack, "Twin Quest", a arquitetura d
 
 
 ## PoC
-### 🚀 PoC: Análise de Jobs de Renderização com PySpark
+### 🚀 Projeto: PoC: Análise de Jobs de Renderização com PySpark
 
 #### 🎯 Visão Geral e Arquitetura da Solução
 
@@ -341,7 +340,7 @@ graph TD
 ```
 
 
-### 🚀 PoC Robo de Atendimento por Voz - BRNow
+### 🚀 Projeto: PoC Robo de Atendimento por Voz - BRNow
 
 #### 🎯 Visão Geral e Arquitetura da Solução
 
@@ -496,7 +495,7 @@ Este projeto implementa um robô de atendimento por voz multi-tenant para restau
 | 📈 **Agile Project Management** | N/A |
 
 
-### 🚀 PoC Cache Semântico de Alta Performance para Otimização de LLMs
+### 🚀 Projeto: PoC Cache Semântico de Alta Performance para Otimização de LLMs
 
 #### 🎯 Visão Geral e Arquitetura da Solução
 
@@ -628,7 +627,7 @@ Este projeto é uma Prova de Conceito (PoC) de um cache semântico de alta perfo
 
 
 ## Challenge
-### 🚀 Gerenciador de Tarefas Conversacional via E-mail 📥 Postmark Challenge
+### 🚀 Projeto: Gerenciador de Tarefas Conversacional via E-mail 📥 Postmark Challenge
 
 ##### 🎯 Visão Geral e Arquitetura da Solução
 
@@ -733,7 +732,3 @@ A solução é um gerenciador de tarefas conversacional implementado em uma arqu
 | **Leadership**               | 🚀 Idealizador, Desenvolvedor da Solução                                                     |
 | **Coaching**                 | 🤝 N/A                                                                                       |
 | **Agile Project Management** | scrum N/A                                                                                    |
-
-
-
-

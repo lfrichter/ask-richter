@@ -14,7 +14,7 @@ export async function callHuggingFaceAPI(model: string, prompt: string): Promise
   try {
     // Parâmetros para reduzir a criatividade e alucinações
     const conservativeParams = {
-      max_new_tokens: 256, // Limita o tamanho da resposta
+      max_new_tokens: 2048, // Limita o tamanho da resposta
       temperature: 0.1,    // Reduz drasticamente a criatividade
       top_p: 0.3,          // Limita a diversidade de tokens
       return_full_text: false,

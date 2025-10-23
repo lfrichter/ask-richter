@@ -2,9 +2,15 @@
   "cSpell.words": [
     "distilbert",
     "esnext",
+    "Faiss",
     "finetuned",
     "huggingface",
-    "mistralai"
+    "mistralai",
+    "ollama",
+    "Ollama",
+    "OPENAI",
+    "supabase",
+    "Supabase"
   ],
   "search.exclude": {
   "**/node_modules": true,
