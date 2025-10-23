@@ -120,53 +120,58 @@ function classifyIntent(query: string): string {
   return 'GENERAL';
 }
 
-/**
- * Decompõe a consulta do usuário em um plano de ação estruturado.
- * @param query A pergunta do usuário.
- * @returns Um objeto QueryPlan que descreve a intenção e os parâmetros da consulta.
- */
+// Lista de tecnologias conhecidas (Idealmente, isso seria gerado dinamicamente a partir dos seus arquivos .md)
+// Adicione outras tecnologias importantes que você usa aqui.
+const knownTechnologies = [
+  'Laravel', 'Lumen', 'PHP', 'Vue', 'Vue.js', 'React', 'React.js', 'JavaScript', 'TypeScript', 'Python',
+  'MySQL', 'PostgreSQL', 'SQLite', 'SQL Server', 'MongoDB', 'Redis',
+  'Docker', 'Kubernetes', 'AWS', 'GCP', 'Vercel', 'Render.com', 'Supabase',
+  'Git', 'GitHub Actions', 'Jenkins', 'Bitbucket Pipelines',
+  'LiveKit', 'WebRTC', 'Ollama', 'LangChain.js', 'FAISS', 'OpenAI', 'Hugging Face',
+  'Next.js', 'FastAPI', 'Node.js', 'Express', // Adicionadas com base nos projetos
+  // Adicione mais conforme necessário
+].map(tech => tech.toLowerCase()); // Converte para minúsculas para comparação
+
 function decomposeQuery(query: string): QueryPlan {
   const lowerCaseQuery = query.toLowerCase();
 
-  // ---
-  // REGRA 1: (NOVA) Checar por intenção de "Lista Completa"
-  // ---
-  const listTriggers = [
-    'todos os projetos',
-    'lista completa',
-    'quantos projetos',
-    'liste os projetos'
-  ];
-
+  // --- REGRA 1: Lista Completa (Mantida) ---
+  const listTriggers = ['todos os projetos', 'lista completa', 'quantos projetos', 'liste os projetos'];
   if (listTriggers.some(trigger => lowerCaseQuery.includes(trigger))) {
     console.log("[QueryPlan] Intenção 'LIST_PROJECTS' detectada.");
-    return {
-      type: 'LIST_PROJECTS',
-      payload: { originalQuery: query }
-    };
+    return { type: 'LIST_PROJECTS', payload: { originalQuery: query } };
   }
 
-  // ---
-  // REGRA 2: Checar por busca de Tecnologia (Sua lógica original)
-  // ---
-  const projectTechMatch = lowerCaseQuery.match(/(?:projetos|quais projetos)\s+utilizam?\s+(.+)/);
-  if (projectTechMatch && projectTechMatch[1]) {
-    const technology = projectTechMatch[1].trim();
-    console.log(`[QueryPlan] Intenção 'PROJECT_TECHNOLOGY_SEARCH' detectada para: ${technology}`);
+  // --- REGRA 2: (NOVA LÓGICA) Busca por Tecnologia Conhecida ---
+  // Verifica se a query contém "projetos" E uma tecnologia da nossa lista
+  const containsProjectsKeyword = /\b(projetos?|project[s]?)\b/.test(lowerCaseQuery);
+  let foundTechnology: string | null = null;
+
+  if (containsProjectsKeyword) {
+    for (const tech of knownTechnologies) {
+      // Usamos regex com \b para garantir que é a palavra inteira (evita achar 'react' em 'reactive')
+      const techRegex = new RegExp(`\\b${tech.replace('.', '\\.')}\\b`, 'i'); // Escapa pontos para regex
+      if (techRegex.test(lowerCaseQuery)) {
+        foundTechnology = tech; // Pega a primeira tecnologia encontrada
+        break;
+      }
+    }
+  }
+
+  if (foundTechnology) {
+    // Recupera a capitalização original da lista para o payload
+    const originalCaseTech = knownTechnologies.find(t => t.toLowerCase() === foundTechnology);
+    console.log(`[QueryPlan] Intenção 'PROJECT_TECHNOLOGY_SEARCH' detectada para: ${originalCaseTech || foundTechnology}`);
     return {
       type: 'PROJECT_TECHNOLOGY_SEARCH',
-      payload: { technology: technology }
+      // Passa a tecnologia encontrada (com capitalização original se possível)
+      payload: { technology: originalCaseTech || foundTechnology }
     };
   }
 
-  // ---
-  // REGRA 3: (Fallback) Busca Simples
-  // ---
+  // --- REGRA 3: (Fallback) Busca Simples ---
   console.log("[QueryPlan] Nenhuma intenção específica. Usando 'SIMPLE_SEARCH'.");
-  return {
-    type: 'SIMPLE_SEARCH',
-    payload: { originalQuery: query }
-  };
+  return { type: 'SIMPLE_SEARCH', payload: { originalQuery: query } };
 }
 
 /**
@@ -177,12 +182,13 @@ function decomposeQuery(query: string): QueryPlan {
 async function smartSearch(queryPlan: QueryPlan): Promise<[Document, number][]> {
   console.log(`[SMART SEARCH] Executando plano de consulta: ${queryPlan.type}`);
   const originalQuery = queryPlan.payload.originalQuery;
+  let results: any;
 
   switch (queryPlan.type) {
     case 'LIST_PROJECTS':
       console.log('[SMART SEARCH] Buscando lista de projetos...');
 
-      const results = await vectorStore.similaritySearch(
+      results = await vectorStore.similaritySearch(
         originalQuery,
         1,
         { source: 'synthetic_project_list' }
@@ -191,10 +197,44 @@ async function smartSearch(queryPlan: QueryPlan): Promise<[Document, number][]> 
 
     case 'PROJECT_TECHNOLOGY_SEARCH':
       const technology = queryPlan.payload.technology;
-      console.log(`[SMART SEARCH] Buscando projetos que utilizam a tecnologia: ${technology}`);
-      // For now, we'll do a general search with the technology.
-      // In a more advanced version, we might filter by metadata.
-      return await hybridRetriever.search(`projetos que usam ${technology}`, 5);
+      console.log(`[SMART SEARCH] Executando busca por METADATOS para tecnologia: ${technology}`);
+
+      // Criamos um filtro de função que o FaissStore suporta.
+      // Isso é muito mais preciso do que a busca semântica.
+      const filterFunction = (doc: Document) => {
+        if (!doc.metadata.technologies || !Array.isArray(doc.metadata.technologies)) {
+          return false;
+        }
+
+        // Compara a tecnologia pedida (ex: "laravel")
+        // com a lista de tecnologias nos metadados do chunk (ex: ['Laravel', 'PHP', 'Vue.js'])
+        // de forma case-insensitive.
+        return doc.metadata.technologies.some((t: string) =>
+          t.toLowerCase() === technology.toLowerCase()
+        );
+      };
+
+      // Trocamos o `hybridRetriever` (semântico) pelo `vectorStore` (com filtro)
+      results = await vectorStore.similaritySearch(
+        `projetos com ${technology}`, // A query ainda ajuda a ranquear semanticamente *dentro* dos resultados filtrados
+        15, // Aumentamos o K para 15 (Solução 1 que você já aplicou)
+        filterFunction // Aplicamos o filtro de metadados
+      );
+
+      // Como o filtro pode trazer vários chunks do *mesmo* projeto (header, descrição, etc.)
+      // Nós agrupamos por nome de projeto para evitar duplicatas.
+      const uniqueProjects = new Map<string, Document>();
+      for (const doc of results) {
+        const projectName = doc.metadata.project_name;
+        if (projectName && !uniqueProjects.has(projectName)) {
+          uniqueProjects.set(projectName, doc);
+        }
+      }
+
+      console.log(`[SMART SEARCH] Encontrados ${results.length} chunks, ${uniqueProjects.size} projetos únicos.`);
+
+      // Retornamos apenas os chunks únicos
+      return Array.from(uniqueProjects.values()).map(doc => [doc, 1.0]); // Retorna com score 1.0
 
     case 'SIMPLE_SEARCH':
     default:
@@ -272,7 +312,7 @@ function assembleStructuredContext(retrievedChunks: [Document, number][]): strin
       const source = doc.metadata.source?.split('/').pop() || 'Fonte desconhecida';
 
       // Add section header and content
-      structuredOutput += `  - ${sectionHeader} (Fonte: ${source})\n`;
+      structuredOutput += `  - ${sectionHeader} \n`;
       structuredOutput += `    ${doc.pageContent.trim()}\n\n`;
     }
     structuredOutput += '\n'; // Add an extra newline between projects for readability
@@ -312,15 +352,15 @@ function assembleStructuredContext(retrievedChunks: [Document, number][]): strin
         topResults = searchResults;
       } else {
         // Para qualquer outro plano, aplicamos o Top-K (K=3)
-        console.log(`[API] Plano ${queryPlan.type}: Aplicando re-ranking e limitando a Top-K=3.`);
-        topResults = searchResults.sort((a, b) => b[1] - a[1]).slice(0, 3);
+        console.log(`[API] Plano ${queryPlan.type}: Aplicando re-ranking e limitando a Top-K=15.`);
+        topResults = searchResults.sort((a, b) => b[1] - a[1]).slice(0, 15);
       }
 
       // 3. Construção do contexto estruturado, agora com o cabeçalho da seção
       const structuredContext = assembleStructuredContext(topResults);
 
 
-      console.log("================ CONTEXTO ESTRUTURADO PARA A IA (TOP 3) ================");
+      console.log(`================ CONTEXTO ESTRUTURADO PARA A IA (TOP ${topResults.length}) ================`);
       console.log(structuredContext);
       console.log("=======================================================================");
 
