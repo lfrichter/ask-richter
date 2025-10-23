@@ -142,30 +142,27 @@ function decomposeQuery(query: string): QueryPlan {
     return { type: 'LIST_PROJECTS', payload: { originalQuery: query } };
   }
 
-  // --- REGRA 2: (NOVA LÓGICA) Busca por Tecnologia Conhecida ---
-  // Verifica se a query contém "projetos" E uma tecnologia da nossa lista
-  const containsProjectsKeyword = /\b(projetos?|project[s]?)\b/.test(lowerCaseQuery);
+  // --- REGRA 2: Busca por Tecnologia (Lógica Reforçada) ---
+  const techSearchTriggers = ['projetos?', 'project[s]?', 'usam?', 'utilizam?', 'feitos? com', 'desenvolvidos? com', 'em'];
+  const techSearchRegex = new RegExp(`\\b(${techSearchTriggers.join('|')})\\b`, 'i');
+  const containsTechSearchKeyword = techSearchRegex.test(lowerCaseQuery);
+
   let foundTechnology: string | null = null;
 
-  if (containsProjectsKeyword) {
-    for (const tech of knownTechnologies) {
-      // Usamos regex com \b para garantir que é a palavra inteira (evita achar 'react' em 'reactive')
-      const techRegex = new RegExp(`\\b${tech.replace('.', '\\.')}\\b`, 'i'); // Escapa pontos para regex
-      if (techRegex.test(lowerCaseQuery)) {
-        foundTechnology = tech; // Pega a primeira tecnologia encontrada
-        break;
-      }
+  for (const tech of knownTechnologies) {
+    const techRegex = new RegExp(`\\b${tech.replace('.', '\\.')}\\b`, 'i');
+    if (techRegex.test(lowerCaseQuery)) {
+      foundTechnology = tech;
+      break;
     }
   }
 
-  if (foundTechnology) {
-    // Recupera a capitalização original da lista para o payload
-    const originalCaseTech = knownTechnologies.find(t => t.toLowerCase() === foundTechnology);
-    console.log(`[QueryPlan] Intenção 'PROJECT_TECHNOLOGY_SEARCH' detectada para: ${originalCaseTech || foundTechnology}`);
+  // A intenção só é acionada se UMA tecnologia e UMA palavra-chave de busca forem encontradas.
+  if (foundTechnology && containsTechSearchKeyword) {
+    console.log(`[QueryPlan] Intenção 'PROJECT_TECHNOLOGY_SEARCH' detectada. Tecnologia: ${foundTechnology}, Trigger: ${lowerCaseQuery.match(techSearchRegex)?.[0]}`);
     return {
       type: 'PROJECT_TECHNOLOGY_SEARCH',
-      // Passa a tecnologia encontrada (com capitalização original se possível)
-      payload: { technology: originalCaseTech || foundTechnology }
+      payload: { technology: foundTechnology }
     };
   }
 
@@ -214,12 +211,13 @@ async function smartSearch(queryPlan: QueryPlan): Promise<[Document, number][]> 
         );
       };
 
-      // Trocamos o `hybridRetriever` (semântico) pelo `vectorStore` (com filtro)
+      // Aplica o filtro de metadados e loga os resultados
       results = await vectorStore.similaritySearch(
-        `projetos com ${technology}`, // A query ainda ajuda a ranquear semanticamente *dentro* dos resultados filtrados
-        15, // Aumentamos o K para 15 (Solução 1 que você já aplicou)
-        filterFunction // Aplicamos o filtro de metadados
+        `projetos com ${technology}`,
+        30, // Aumentado para 30 para garantir que todos os chunks relevantes sejam considerados
+        filterFunction
       );
+      console.log(`[SMART SEARCH] Filtro por metadados para '${technology}' encontrou ${results.length} chunks.`);
 
       // Como o filtro pode trazer vários chunks do *mesmo* projeto (header, descrição, etc.)
       // Nós agrupamos por nome de projeto para evitar duplicatas.

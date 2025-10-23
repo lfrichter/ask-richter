@@ -22,10 +22,10 @@ const FAISS_INDEX_PATH = path.join('/tmp', 'faiss_index');
  * @returns Um array de Documentos (chunks).
  */
 function customMarkdownSplitter(markdownContent: string, source: string): Document[] {
-  // 1. Divide o conteúdo em chunks brutos por cabeçalhos ### e ####
-  const rawChunks = markdownContent.split(/(?=^###\s|^####\s)/m).filter(chunk => chunk.trim() !== '');
+  // 1. Divide o conteúdo em chunks brutos (regex atualizado para mais headers)
+  const rawChunks = markdownContent.split(/(?=^###\s|^####\s|^\*\*.*\*\*$\n|^\##\s)/m).filter(chunk => chunk.trim() !== '');
 
-  // 2. Primeira passagem: Agrupa chunks por projeto E identifica conteúdo das seções de tecnologia
+  // 2. Primeira passagem: Agrupa chunks por projeto E identifica conteúdo APENAS das seções de Pilha/Skills
   const projectsMap = new Map<string, {
     projectName: string | null;
     techRelevantContent: string; // Acumula conteúdo APENAS das seções RELEVANTES para tecnologia
@@ -37,42 +37,50 @@ function customMarkdownSplitter(markdownContent: string, source: string): Docume
   for (const chunk of rawChunks) {
     const content = chunk.trim();
     const firstLine = content.split('\n')[0]!;
-    let sectionHeader = firstLine.replace(/###|####/g, '').trim();
+    let sectionHeader = firstLine.replace(/###|####|##|\*\*/g, '').trim(); // Limpa todos marcadores
 
     // Identifica o início de um novo projeto (ou seção não-projeto)
     if (firstLine.startsWith('### 🚀')) {
-      currentProjectName = sectionHeader;
-      currentProjectKey = currentProjectName;
+
+      // --- CORREÇÃO DO REGEX PARA INCLUIR TODOS OS PREFIXOS ---
+      currentProjectName = sectionHeader.replace(/^(Projeto: |Project: |SideProject: |PoC: |Challenge: )/i, '').trim();
+      currentProjectKey = currentProjectName; // Usa o nome limpo como chave
+      // ----------------------------------------------------
+
       if (!projectsMap.has(currentProjectKey)) {
         projectsMap.set(currentProjectKey, { projectName: currentProjectName, techRelevantContent: '', chunks: [] });
       }
     } else if (!currentProjectKey || (!firstLine.startsWith('####') && projectsMap.has(currentProjectKey))) {
-        // Se não for sub-header E já existe um projeto, OU se não há projeto atual,
-        // cria/usa uma chave genérica para chunks fora de projetos nomeados
+        // Chunks fora de um projeto (ex: CV, Experience)
         currentProjectKey = `_non_project_${source}_${projectsMap.size}`;
-        currentProjectName = null; // Garante que não é um projeto nomeado
+        currentProjectName = null;
         if (!projectsMap.has(currentProjectKey)) {
              projectsMap.set(currentProjectKey, { projectName: null, techRelevantContent: '', chunks: [] });
         }
     }
 
-
     const projectData = projectsMap.get(currentProjectKey!)!;
     projectData.chunks.push({ originalContent: content, sectionHeader: sectionHeader });
 
-    // Acumula conteúdo APENAS se o chunk for de uma seção relevante para tecnologias
-    if (sectionHeader.includes('Pilha de Tecnologias') ||
-        sectionHeader.includes('CLASSIFICAÇÃO DE TECNOLOGIAS') ||
-        sectionHeader.includes('Skills & Technologies') || // Para CV
-        sectionHeader.startsWith('Skills:')) {             // Para Experience
+    // --- ACUMULA CONTEÚDO SELETIVAMENTE (IGNORANDO 'CLASSIFICAÇÃO') ---
+    const lowerContent = content.toLowerCase();
+
+    // 1. Apenas da tabela "Pilha de Tecnologias" (Tech Stack)
+    if (lowerContent.includes('#### 🛠️ pilha de tecnologias (tech stack)')) {
       projectData.techRelevantContent += content + '\n\n';
+    }
+    // 2. Apenas das listas de Skills do CV e Experience
+    else if (source.includes('CV-Consolidated.md') && (lowerContent.includes('**skills & technologies**') || lowerContent.includes('experiência details'))) {
+       projectData.techRelevantContent += content + '\n\n';
+    } else if (source.includes('Experience-Consolidated.md') && lowerContent.includes('🛠️ 5. tabela de tecnologias utilizadas')) {
+       projectData.techRelevantContent += content + '\n\n';
     }
   }
 
   // 3. Segunda passagem: Processa cada projeto, extrai tecnologias e cria Documents
   const finalDocuments: Document[] = [];
   for (const [projectKey, projectData] of projectsMap.entries()) {
-    // Extrai tecnologias APENAS do conteúdo acumulado das seções relevantes
+
     const projectTechnologies = parseTechnologiesFromChunk(projectData.techRelevantContent);
 
     for (const chunkData of projectData.chunks) {
@@ -83,7 +91,6 @@ function customMarkdownSplitter(markdownContent: string, source: string): Docume
       if (projectData.projectName) {
         metadata.project_name = projectData.projectName;
       }
-      // Aplica a lista (agora mais precisa) a TODOS os chunks do projeto
       if (projectTechnologies.length > 0) {
         metadata.technologies = projectTechnologies;
       }
@@ -94,16 +101,19 @@ function customMarkdownSplitter(markdownContent: string, source: string): Docume
     }
   }
 
-  // LOG DE DEPURAÇÃO (Manter)
-  console.log("--- METADADOS GERADOS (AMOSTRA) ---");
-  finalDocuments.slice(0, 25).forEach(doc => {
-      console.log(`Chunk Source: ${doc.metadata.source.split('/').pop()}`);
-      console.log(`  Header: ${doc.metadata.section_header}`);
-      console.log(`  Projeto: ${doc.metadata.project_name || 'N/A'}`);
-      console.log(`  Tecnologias: ${doc.metadata.technologies ? doc.metadata.technologies.join(', ') : 'Nenhuma'}`);
-      console.log('---');
-  });
-  console.log("---------------------------------");
+  // LOG DE DEPURAÇÃO (Mantido para verificação final)
+  console.log("--- VERIFICAÇÃO FINAL DE TECNOLOGIAS POR PROJETO ---");
+  for (const [projectKey, projectData] of projectsMap.entries()) {
+    const technologies = parseTechnologiesFromChunk(projectData.techRelevantContent);
+    const sourceName = projectKey.includes('_non_project_') ? projectKey.split('_')[3] : projectKey;
+
+    if (technologies.length > 0) {
+        console.log(`Projeto/Arquivo: ${projectData.projectName || sourceName}, Tecnologias Extraídas: [${technologies.join(', ')}]`);
+    } else {
+        // console.log(`Projeto/Arquivo: ${projectData.projectName || sourceName}, Tecnologias Extraídas: [NENHUMA]`);
+    }
+  }
+  console.log("-----------------------------------------------------");
 
   return finalDocuments;
 }
@@ -149,16 +159,6 @@ Projetos: ${projectListString}
   return doc;
 }
 
-const ignoreList = new Set([
-     'categoria', 'tecnologias e conceitos', 'componente', 'tecnologia utilizada',
-     'papel na arquitetura', 'descrição', 'software development', 'architecture',
-     'cloud computing', 'api restful development', 'frontend development',
-     'mobile development', 'database', 'data management', 'content management - cms',
-     'system administration', 'devops', 'leadership', 'coaching', 'agile project management',
-     'ai & machine learning' // Adicione outros termos genéricos que aparecem
-  ].map(term => term.toLowerCase()));
-
-
 /**
  * Analisa o conteúdo ACUMULADO das seções de tecnologia (tabelas, listas de skills)
  * e extrai tecnologias de forma RÍGIDA. Ignora texto livre.
@@ -168,68 +168,87 @@ const ignoreList = new Set([
 function parseTechnologiesFromChunk(relevantContent: string): string[] {
   const techSet = new Set<string>();
 
-  // Lista de termos a serem IGNORADOS (mantida)
-  const ignoreList = new Set([ /* ... sua lista ignoreList ... */ ].map(term => term.toLowerCase()));
+  // Lista de termos a serem IGNORADOS (Exemplo, ajuste conforme necessidade)
+  const ignoreList = new Set([
+     'tecnologia utilizada', 'tecnologias e conceitos', 'tecnologia',
+     'categoria', 'componente', 'papel na arquitetura', 'descrição', 'software development',
+     'architecture', 'cloud computing', 'api restful development', 'frontend development',
+     'mobile development', 'database', 'data management', 'content management - cms',
+     'system administration', 'devops', 'leadership', 'coaching', 'agile project management',
+     'ai & machine learning'
+  ].map(term => term.toLowerCase()));
 
-  // Função auxiliar de limpeza (mantida)
+
+  // Função auxiliar de limpeza
   const addCleanedTech = (techString: string | undefined) => {
-    console.log(`[addCleanedTech Debug] Input: "${techString}"`);
+    if (!techString || techString.toLowerCase() === 'n/a' || techString.includes('---')) return;
 
-    // ... (sua função addCleanedTech completa, incluindo ignoreList e normalizações) ...
-     if (!techString || techString.toLowerCase() === 'n/a' || techString.includes('---')) return;
-     // ... resto da lógica ...
-     techString.split(',')
+    // console.log(`[addCleanedTech PRE-NORMALIZATION] Input: "${techString}"`);
+
+    techString.split(',')
       .flatMap(part => part.split('·'))
       .flatMap(part => part.split('/'))
-      .map(t => t.replace(/[[\]{}()#*`]/g, ''))
+      .map(t => t.replace(/[[\]{}()#*`]/g, '')) // Limpa caracteres Markdown
+      // --- CORREÇÃO DO EMOJI: Remove símbolos e emojis ---
+      .map(t => t.replace(/[^\p{L}\p{N}\s.\-+#/]/gu, ''))
+      // --------------------------------------------------
       .map(t => t.split(':')[0])
       .map(t => t.split('<')[0])
       .map(t => t.replace(/^[-\* ]+|[.$]$/g, ''))
       .map(t => t.trim())
-      .filter(t => /^[a-zA-Z0-9.\-+#/ ]+$/.test(t))
+      .filter(t => /^[a-zA-Z0-9.\-+#/ ]+$/.test(t)) // Validação
       .filter(t => t.length > 1 && t.length < 30)
       .filter(t => !t.match(/^\d+$/))
       .forEach(cleanedTech => {
         const lowerTech = cleanedTech.toLowerCase();
-        if (ignoreList.has(lowerTech)) { return; } // Pula termos ignorados
+
+        if (ignoreList.has(lowerTech)) {
+           // console.log(`[addCleanedTech] Ignorando "${cleanedTech}" da ignoreList.`);
+           return;
+        }
+
+        // Normalização específica para Vue.js
         let normalizedTech = cleanedTech;
-        if (lowerTech.includes('laravel')) normalizedTech = 'Laravel';
-        else if (lowerTech.includes('vue')) normalizedTech = 'Vue.js';
-        // ... resto das normalizações ...
+        if (lowerTech === 'vue' || lowerTech === 'vue.js' || lowerTech.startsWith('vue 3')) {
+           normalizedTech = 'Vue.js';
+        }
+        // Outras normalizações
+        else if (lowerTech.includes('laravel')) normalizedTech = 'Laravel';
         else if (lowerTech.includes('mongo')) normalizedTech = 'MongoDB';
-        if (normalizedTech) { techSet.add(normalizedTech); }
+        else if (lowerTech.includes('react')) normalizedTech = 'React';
+        else if (lowerTech.includes('next')) normalizedTech = 'Next.js';
+
+        // console.log(`[addCleanedTech POST-NORMALIZATION] Original: "${cleanedTech}", Normalizado: "${normalizedTech}"`);
+        if (normalizedTech) {
+           techSet.add(normalizedTech);
+        }
       });
   };
 
+  // --- LÓGICA RÍGIDA DE PARSING (sem alterações) ---
 
-  // --- 1. Extração RÍGIDA de Tabelas Markdown ---
-  // Procura por QUALQUER tabela, mas só processa se tiver cabeçalhos esperados
+  // 1. Extração de Tabelas
   const tableSections = relevantContent.match(/(\|.*\| *\n)((?:\| *[-:]+ *\|.*\n)+)((?:\|.*\| *\n)+)/g) || [];
   for (const tableSection of tableSections) {
       const tableLines = tableSection.split('\n').filter(line => line.trim().startsWith('|'));
-      // Verifica se é uma tabela de tecnologia conhecida pelos cabeçalhos
       const headerLine = tableLines[0]?.toLowerCase() || '';
-      const isTechTable = headerLine.includes('tecnologia') || headerLine.includes('componente') || headerLine.includes('categoria') || headerLine.includes('stack');
+      const isTechTable = headerLine.includes('tecnologia') || headerLine.includes('componente') || headerLine.includes('stack');
 
       if (isTechTable) {
           for (const line of tableLines) {
               const columns = line.split('|').map(col => col.trim());
               if (columns.length < 3 || columns[1].includes('---')) continue;
-              // Extrai da segunda coluna (índice 2) - Ajuste se necessário
-              const potentialTechString = columns[2];
-              console.log(`[Parser Debug Table] Linha: "${line}", Coluna[2]: "${potentialTechString}"`);
-              addCleanedTech(potentialTechString);
+              // console.log(`[Parser Debug Table] Processando Coluna[2]: "${columns[2]}"`);
+              addCleanedTech(columns[2]); // Extrai da segunda coluna (índice 2)
           }
       }
   }
 
-  // --- 2. Extração RÍGIDA de Listas de Habilidades (CV/Experience) ---
-  // Procura apenas linhas que COMEÇAM com marcadores ou palavras-chave de skill
+  // 2. Extração de Listas de Habilidades (CV/Experience)
   const skillLines = relevantContent.match(/^(?:\* |\- |Skills:|Languages & Frameworks:|Databases:|Deployment & DevOps:|Other Competencies:).*/gmi) || [];
   for (const line of skillLines) {
-      // Remove o prefixo ANTES de passar para addCleanedTech
       const contentOnly = line.replace(/^(\* |\- |Skills:|Languages & Frameworks:|Databases:|Deployment & DevOps:|Other Competencies:)/i, '').trim();
-      console.log(`[Parser Debug List] Linha: "${line}", Conteúdo: "${contentOnly}"`);
+      // console.log(`[Parser Debug List] Processando Conteúdo: "${contentOnly}"`);
       addCleanedTech(contentOnly);
   }
 
