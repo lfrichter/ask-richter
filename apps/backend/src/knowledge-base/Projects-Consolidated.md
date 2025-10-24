@@ -1,4 +1,234 @@
-### 🚀 Projeto: Canaoaves: Plataforma Colaborativa para a Comunidade de Observadores de Aves
+### 🚀 Project:  Air Combat 3D - Um Estudo de Caso sobre Produtividade com IAs
+
+#### 🎯 Visão Geral e Arquitetura da Solução
+
+Este projeto nasceu de uma questão estratégica: qual o impacto real de ferramentas de IA generativa na produtividade de um desenvolvedor full-stack? Para responder a isso, conduzi um estudo de caso prático, desenvolvendo do zero um jogo 3D de combate aéreo multiplayer. O objetivo não era apenas criar um jogo, mas sim mensurar a aceleração no ciclo de vida do desenvolvimento.
+
+A solução é uma aplicação web onde jogadores podem entrar em uma arena e pilotar aviões de combate em tempo real. O frontend, construído com **Three.js**, é responsável por toda a renderização 3D, desde os modelos das aeronaves até o ambiente de batalha e os controles interativos. A comunicação em tempo real, coração da experiência multiplayer, é garantida por um backend robusto em **Node.js** e **Express**, utilizando **WebSockets** para sincronizar as ações dos jogadores com latência mínima. Toda a aplicação foi conteinerizada com **Docker**, garantindo a portabilidade e a consistência do ambiente, e implantada na nuvem através do **Render.com**.
+
+O resultado mais expressivo foi a validação da hipótese inicial: o uso de IDEs assistidas por IA (Cursor, Trae) resultou em uma **redução de aproximadamente 40% no tempo total de desenvolvimento**, desde a concepção até a entrega final.
+
+#### 👨‍💻 Meu Papel no Projeto
+
+Como único desenvolvedor e pesquisador neste estudo de caso, atuei de ponta a ponta, assumindo os seguintes papéis:
+
+  * **Arquiteto e Desenvolvedor Full-Stack:** Idealizei a arquitetura, desenvolvi o frontend interativo com Three.js, construí o servidor de backend em Node.js para a lógica de jogo e comunicação em tempo real via WebSockets.
+  * **Engenheiro DevOps:** Fui responsável por todo o ciclo de vida da infraestrutura, incluindo a conteinerização da aplicação com Docker e a automação do processo de deploy contínuo na plataforma Render.com.
+  * **Pesquisador de Fluxo de Trabalho:** Defini a metodologia para o estudo, integrei as ferramentas de IA generativa no meu fluxo de trabalho diário e mensurei ativamente o ganho de produtividade em comparação com métodos tradicionais.
+
+#### ✨ Pontos Fortes e Desafios Superados
+
+O principal ponto forte do projeto é a demonstração clara e quantificável do poder da IA como uma ferramenta de alavancagem para desenvolvedores. O jogo funcional é a prova de conceito que materializa essa conclusão.
+
+  * **Desafio Superado:** O maior desafio técnico foi garantir a **sincronização de estado em tempo real** entre múltiplos jogadores. Manter a posição e as ações de cada avião consistentes para todos os clientes, com baixa latência, é complexo. Superei isso implementando um loop de jogo eficiente no servidor Node.js que processa as entradas dos jogadores e transmite o estado atualizado do jogo de volta aos clientes através de uma conexão WebSocket estável.
+  * **Vitória Estratégica:** A maior vitória, no entanto, foi a **validação bem-sucedida do fluxo de trabalho assistido por IA**. Provar uma redução de 40% no tempo de desenvolvimento transformou uma crença intuitiva em um dado concreto, oferecendo um forte argumento para a adoção moderna de ferramentas no ciclo de desenvolvimento de software.
+
+#### 🌱 Pontos para Evolução Futura
+
+Embora o projeto tenha cumprido seu objetivo principal, ele possui um grande potencial para evolução. Como próximos passos, poderíamos implementar um sistema de **persistência de pontuação e ranking de jogadores**, utilizando um banco de dados como PostgreSQL ou Redis. Outra melhoria seria a criação de **salas de jogo privadas e diferentes modos de batalha** (como "Team Deathmatch"), enriquecendo a experiência multiplayer.
+
+-----
+
+#### 🛠️ Pilha de Tecnologias (Tech Stack)
+
+| Componente | Tecnologia Utilizada | Papel na Arquitetura |
+| :--- | :--- | :--- |
+| **Renderização e Interação 3D** | **Three.js** | Criação do ambiente 3D, renderização dos aviões e gerenciamento da câmera e controles do jogador no navegador. |
+| **Servidor de Aplicação** | **Node.js com Express** | Orquestra a lógica de negócio, gerencia o matchmaking e serve como a base para a comunicação em tempo real. |
+| **Comunicação em Tempo Real** | **WebSockets** | Estabelece um canal de comunicação bidirecional e de baixa latência entre o cliente e o servidor para sincronizar as ações. |
+| **Conteinerização** | **Docker** | Empacota a aplicação e suas dependências em um contêiner, garantindo consistência entre os ambientes de desenvolvimento e produção. |
+| **Hospedagem e Deploy** | **Render.com** | Plataforma de nuvem utilizada para hospedar a aplicação conteinerizada e disponibilizá-la publicamente online. |
+| **Aceleração de Código** | **IA Generativa (Cursor, Trae)** | Ferramentas integradas à IDE para acelerar a escrita de código, prototipagem de funcionalidades e resolução de problemas. |
+
+-----
+
+#### 🗺️ Diagrama da Arquitetura
+
+```mermaid
+---
+config:
+  theme: default
+  look: handDrawn
+---
+flowchart LR
+    %% Plataforma Render.com
+    subgraph Render["🌐 Plataforma Render.com"]
+        style Render fill:#E0F7FA,stroke:#00ACC1,stroke-width:2px
+        subgraph Docker["🐳 Contêiner Docker"]
+            style Docker fill:#B2EBF2,stroke:#00838F,stroke-width:2px
+            B[🚀 Servidor Node.js/Express]
+        end
+    end
+
+    %% Cliente (Browser)
+    subgraph Client["💻 Cliente (Browser)"]
+        style Client fill:#FFF3E0,stroke:#FFB300,stroke-width:2px
+        A[🎮 Aplicação Three.js]
+    end
+
+    %% Jogadores
+    P1[👨‍✈️ Jogador 1]
+    P2[👨‍✈️ Jogador 2]
+
+    %% Fluxos de interação
+    P1 -- "Interage com" --> A
+    P2 -- "Interage com" --> A
+
+    A -- "Conexão WebSocket em Tempo Real 🔌" --> B
+    B -- "Sincroniza Estado do Jogo 🔄" --> A
+    B -- "Lógica de Jogo e Matchmaking 🎲" --> B
+
+```
+
+---
+#### RESUMO TÉCNICO PARA EMBEDDING
+
+Estudo de caso prático sobre o impacto de IA generativa na produtividade, materializado no desenvolvimento de um jogo 3D multiplayer de combate aéreo. A arquitetura da solução emprega um frontend em **Three.js** para renderização 3D e um backend em **Node.js** com **Express** para a lógica de jogo. O principal desafio técnico, a **sincronização de estado em tempo real** entre múltiplos jogadores, foi solucionado com **WebSockets** para comunicação de baixa latência. A aplicação foi conteinerizada com **Docker**, garantindo portabilidade e consistência, com o ciclo de **deploy contínuo** automatizado na plataforma de nuvem **Render.com**. O uso de IDEs assistidas por **IA generativa (Cursor, Trae)** validou uma redução de 40% no tempo de desenvolvimento. Evoluções futuras planejadas incluem a implementação de persistência de dados com **PostgreSQL** ou **Redis** para rankings e pontuações.
+
+#### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
+
+| Categoria | Tecnologias e Conceitos |
+| :--- | :--- |
+| **AI & Machine Learning** | IA Generativa, Cursor, Trae |
+| **Software Development** | Desenvolvedor Full-Stack, Loop de jogo, Prototipagem, Ciclo de vida do desenvolvimento |
+| **Architecture**| Arquitetura de aplicação web, Multiplayer em tempo real, Sincronização de estado, Matchmaking |
+| **Cloud Computing** | Render.com, Hospedagem em nuvem |
+| **API RESTFul development** | Node.js, Express |
+| **Frontend Development** | Three.js, Renderização 3D, Controles interativos |
+| **Mobile Development** | N/A |
+| **Database** | PostgreSQL, Redis |
+| **Data Management** | Persistência de pontuação |
+| **Content Management - CMS** | N/A |
+| **System Administration** | N/A |
+| **DevOps** | Docker, Conteinerização, Deploy Contínuo |
+| **Leadership** | N/A |
+| **Coaching** | N/A |
+| **Agile Project Management** | N/A |
+
+***
+
+### 🚀 Project:  Ask Richter - Meu CV Interativo com IA
+
+#### 🎯 Visão Geral e Arquitetura da Solução
+
+O projeto "Ask Richter" nasceu da ideia de transformar um currículo tradicional em uma experiência de diálogo interativa e inteligente. O objetivo principal é permitir que recrutadores e líderes técnicos explorem minha trajetória profissional de forma conversacional, fazendo perguntas em linguagem natural e recebendo respostas precisas, baseadas em meus dados profissionais consolidados. Mais do que um portfólio, é uma demonstração prática de competências em arquitetura de software moderna e integração com Inteligência Artificial.
+
+A solução foi construída sobre uma arquitetura full-stack robusta e desacoplada:
+
+  * **Frontend:** Uma interface de chat limpa e reativa, desenvolvida com **Next.js** e hospedada na **Vercel**, proporciona um diálogo fluido ao usuário.
+  * **Backend:** Uma API em **Node.js/Express**, hospedada no **Render.com**, orquestra a lógica de IA.
+  * **Inteligência (RAG):** A técnica de *Retrieval-Augmented Generation* (RAG) é o coração do sistema. Ao iniciar, o backend carrega um índice vetorial **FAISS**, previamente gerado e armazenado no **Supabase Storage**. Quando uma pergunta é recebida, o sistema a converte em um vetor, busca os trechos mais relevantes do meu currículo no índice FAISS e envia esse contexto para um Modelo de Linguagem Ampla (LLM) — como **Ollama** em ambiente local ou **Hugging Face** em produção — para gerar uma resposta precisa e contextual.
+
+Toda a estrutura é organizada em um **Monorepo com Turborepo**, garantindo um desenvolvimento integrado e eficiente entre os diferentes serviços.
+
+#### 👨‍💻 Meu Papel no Projeto
+
+Como idealizador e único desenvolvedor deste projeto, atuei em todas as frentes, assumindo os papéis de:
+
+  * **Arquiteto de Soluções:** Desenhei toda a arquitetura do sistema, desde a interação do usuário no frontend até o fluxo de dados no backend, incluindo a integração com serviços de nuvem como Vercel, Render e Supabase.
+  * **Desenvolvedor Full-Stack:** Implementei o frontend em Next.js/React, o backend em Node.js/Express e gerenciei a integração entre eles.
+  * **Engenheiro de IA/Dados:** Fui responsável por toda a pipeline de RAG, incluindo a criação e o gerenciamento do banco de dados vetorial FAISS, a integração com a API de embeddings da OpenAI e a orquestração dos LLMs.
+  * **Engenheiro de DevOps:** Configurei todo o processo de CI/CD para deploy automatizado na Vercel e no Render, além de gerenciar a infraestrutura de armazenamento no Supabase.
+
+#### ✨ Pontos Fortes e Desafios Superados
+
+A robustez do "Ask Richter" reside na sua arquitetura moderna e na resolução criativa de desafios complexos. O maior trunfo foi transformar uma série de obstáculos técnicos em vitórias que solidificaram a qualidade do projeto.
+
+Entre os **12 a 17 horas de debugging intensivo**, três desafios se destacaram:
+
+1.  **A Saga do Armazenamento no Supabase (RLS):** O desafio era persistir o índice FAISS na nuvem. A tentativa de upload para o Supabase Storage falhava com um enigmático erro de `new row violates row-level security policy`. Após tentativas frustradas com o SDK da AWS e diversas configurações de políticas de segurança (RLS), a solução veio ao criar, via script SQL, uma política de acesso mais abrangente para a `service_role`, permitindo todas as operações (`FOR ALL`) no bucket. Isso revelou que serviços gerenciados possuem limitações não óbvias, e às vezes, a configuração via painel ou uma API direta é mais confiável.
+
+2.  **O Loop Infinito do `useChat`:** No frontend, o hook `useChat` da Vercel AI SDK, que deveria simplificar a interface, causava um loop infinito de requisições. Ele realizava uma chamada automática para uma rota padrão (`/api/chat`) que entrava em conflito com a nossa implementação manual. A superação veio ao abandonar a abstração e retornar aos fundamentos: substituímos o hook por um controle de estado manual com `useState` puro, o que nos deu controle total e previsibilidade sobre as chamadas à API, ensinando a valiosa lição de que abstrações "mágicas" podem esconder comportamentos críticos.
+
+3.  **O Erro Fantasma de Build na Vercel:** O frontend, que funcionava perfeitamente em ambiente local, falhava sistematicamente no build de produção da Vercel com erros de tipo como `Cannot find namespace 'JSX'`. A jornada de depuração foi extensa: troca de versões de bibliotecas, configuração de `tsconfig.json`, `next/dynamic` e até a substituição da biblioteca `react-markdown`. Nenhuma solução convencional funcionou. A vitória pragmática foi instruir o TypeScript a ignorar erros de build (`ignoreBuildErrors: true`), um risco calculado que desbloqueou o deploy e provou que, em cenários complexos de monorepo, problemas podem residir na ferramenta de build, e não no código.
+
+#### 🌱 Pontos para Evolução Futura
+
+Embora a solução atual seja robusta, existem pontos para evolução:
+
+1.  **Cache Inteligente:** Implementar um cache (ex: Redis) para as perguntas mais frequentes, reduzindo a latência e o custo com chamadas às APIs de IA.
+2.  **Dashboard de Análise:** Criar um painel administrativo para visualizar as perguntas mais feitas pelos usuários, permitindo refinar a base de conhecimento e entender melhor as necessidades dos recrutadores.
+
+-----
+
+#### 🛠️ Pilha de Tecnologias (Tech Stack)
+
+| Camada | Tecnologia |
+| :--- | :--- |
+| **Arquitetura** | Turborepo, npm Workspaces |
+| **Backend** | Node.js, Express.js, TypeScript, tsx |
+| **Frontend** | Next.js (App Router), React (`useState`), Tailwind CSS, Shadcn/ui, markdown-to-jsx |
+| **IA & Dados** | FAISS (`faiss-node`), OpenAI Embeddings, LangChain.js, Ollama, Hugging Face API |
+| **Nuvem & DevOps** | Vercel, Render.com, Supabase Storage, GitHub |
+
+-----
+
+#### 🗺️ Diagrama da Arquitetura
+
+```mermaid
+graph TD
+    subgraph "Usuário"
+        User[👨‍💻 Usuário no Navegador]
+    end
+
+    subgraph "Nuvem Vercel"
+        Frontend["⚛️ Frontend (Next.js)<br>ask-richter.vercel.app"]
+    end
+
+    subgraph "Nuvem Render.com"
+        Backend["⚙️ Backend (Node.js/Express)<br>ask-richter.onrender.com"]
+    end
+
+    subgraph "Nuvem Supabase"
+        SupabaseDB["📦 Supabase Storage<br>(Índice FAISS)"]
+    end
+
+    subgraph "Serviços de IA"
+        OpenAI_API["🛰️ OpenAI API<br>(Embeddings)"]
+        HF_API["🤗 Hugging Face API<br>(LLM em Produção)"]
+    end
+
+    User -- "1\. Pergunta em linguagem natural" --> Frontend
+    Frontend -- "2\. Requisição para /api/chat" --> Backend
+    Backend -- "3\. Download do Índice na inicialização" --> SupabaseDB
+    Backend -- "4a\. Gera Embedding da Pergunta" --> OpenAI_API
+    Backend -- "4b\. Busca por Similaridade" --> faiss((FAISS em Memória))
+    faiss -- "5\. Retorna Contexto Relevante" --> Backend
+    Backend -- "6\. Monta Prompt e Envia para LLM" --> HF_API
+    HF_API -- "7\. Retorna Resposta Gerada" --> Backend
+    Backend -- "8\. Resposta para o Frontend" --> Frontend
+    Frontend -- "9\. Exibe Resposta ao Usuário" --> User
+```
+
+---
+
+#### RESUMO TÉCNICO PARA EMBEDDING
+
+Este projeto, "Ask Richter", implementa um chatbot de CV interativo utilizando uma arquitetura RAG (Retrieval-Augmented Generation) full-stack. O backend, construído com Node.js, Express.js e TypeScript, é responsável pela lógica de IA, incluindo um script para indexação de documentos de conhecimento (`.md`) em um banco de dados vetorial FAISS. Este script usa LangChain.js para carregamento (`DirectoryLoader`), fragmentação de texto (`RecursiveCharacterTextSplitter`) e geração de embeddings com o modelo `text-embedding-3-small` da OpenAI. O índice FAISS gerado é armazenado no Supabase Storage para persistência. Em tempo de execução, o backend carrega o índice em memória, realiza buscas por similaridade semântica nas perguntas do usuário e injeta o contexto relevante em prompts enviados a LLMs através da API da Hugging Face em produção ou Ollama (com modelos como Llama 3 e Mistral 7B) localmente. A API RESTful expõe endpoints para chat (`/api/chat`) e health check (`/api/health`). O frontend é uma SPA reativa construída com Next.js (App Router), React, e TypeScript, estilizada com Tailwind CSS e componentes Shadcn/ui. O gerenciamento de estado é feito com React Hooks (`useState`). A comunicação com o backend é realizada via requisições `fetch` para a API. A renderização de respostas em Markdown é tratada com `markdown-to-jsx` e `react-syntax-highlighter`. O projeto é estruturado como um monorepo gerenciado pelo Turborepo e npm Workspaces. O deploy é automatizado via CI/CD do GitHub, com o frontend na Vercel e o backend conteinerizado com Docker no Render.com, utilizando Infrastructure as Code (`render.yaml`). A segurança no Supabase é garantida por políticas de Row Level Security (RLS).
+
+#### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
+
+| Categoria | Tecnologias e Conceitos |
+| :--- | :--- |
+| **AI & Machine Learning** | Retrieval-Augmented Generation (RAG), FAISS, `faiss-node`, LangChain.js, OpenAI Embeddings (`text-embedding-3-small`), LLMs, Ollama, Llama 3, Mistral 7B, Hugging Face API, `DirectoryLoader`, `RecursiveCharacterTextSplitter`, Busca por Similaridade Semântica, Embeddings Vetoriais |
+| **Software Development** | Node.js, TypeScript, `tsx`, npm Workspaces, ESM (`"type": "module"`), `markdown-to-jsx`, `react-syntax-highlighter`, `dotenv` |
+| **Architecture**| Arquitetura Full-Stack, Monorepo, Microservices (Frontend/Backend desacoplados), RAG (Retrieval-Augmented Generation), Single Page Application (SPA) |
+| **Cloud Computing** | Vercel, Render.com, Supabase, Supabase Storage, Hugging Face API |
+| **API RESTFul development** | Express.js, Node.js, Health Check Endpoint (`/api/health`) |
+| **Frontend Development** | Next.js (App Router), React, React Hooks (`useState`, `useEffect`), Tailwind CSS, Shadcn/ui, Lucide React, Design Responsivo |
+| **Mobile Development** | N/A |
+| **Database** | FAISS |
+| **Data Management** | Chunking (Fragmentação de Texto), Indexação Vetorial, Supabase Storage, Row Level Security (RLS) |
+| **Content Management - CMS** | N/A |
+| **System Administration** | N/A |
+| **DevOps** | Turborepo, Docker, CI/CD, Vercel, Render.com, GitHub, Infrastructure as Code (`render.yaml`), Variáveis de Ambiente |
+| **Leadership** | N/A |
+| **Coaching** | N/A |
+| **Agile Project Management** | N/A |
+
+***
+
+### 🚀 Project:  Canaoaves - Plataforma Colaborativa para a Comunidade de Observadores de Aves
 
 #### 🎯 Visão Geral e Arquitetura da Solução
 
@@ -47,12 +277,12 @@ O projeto foi construído com uma base sólida, pronta para crescer. Os próximo
 
 #### 🛠️ Pilha de Tecnologias (Tech Stack)
 
-| Componente               | Tecnologia Utilizada | Papel na Arquitetura                                                                                                                                   |
-| :----------------------- | :------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Backend-as-a-Service** | **Supabase**         | Orquestra toda a infraestrutura de backend, incluindo banco de dados, autenticação de usuários, APIs e armazenamento de arquivos.                      |
-| **Banco de Dados**       | **PostgreSQL**       | Persiste todos os dados da aplicação. A lógica de negócio, como gamificação e validações, é executada diretamente no banco através de RPCs e Triggers. |
-| **Hosting do Frontend**  | **Vercel**           | Responsável pela hospedagem e pelo deploy contínuo da aplicação frontend, garantindo alta performance e disponibilidade global.                        |
-| **Framework Frontend**   | **Next.js / React**  | Utilizado para construir a interface de usuário reativa e otimizada para SEO, com foco principal em uma experiência mobile-first.                      |
+| Componente | Tecnologia Utilizada | Papel na Arquitetura |
+| :--- | :--- | :--- |
+| **Backend-as-a-Service** | **Supabase** | Orquestra toda a infraestrutura de backend, incluindo banco de dados, autenticação de usuários, APIs e armazenamento de arquivos. |
+| **Banco de Dados** | **PostgreSQL** | Persiste todos os dados da aplicação. A lógica de negócio, como gamificação e validações, é executada diretamente no banco através de RPCs e Triggers. |
+| **Hosting do Frontend** | **Vercel** | Responsável pela hospedagem e pelo deploy contínuo da aplicação frontend, garantindo alta performance e disponibilidade global. |
+| **Framework Frontend** | **Next.js / React** | Utilizado para construir a interface de usuário reativa e otimizada para SEO, com foco principal em uma experiência mobile-first. |
 
 -----
 
@@ -118,26 +348,27 @@ A arquitetura do projeto Canaoaves, uma Single-Page Application (SPA) colaborati
 
 #### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
 
-| Categoria                    | Tecnologias e Conceitos                                                                                                                                       |
-| :--------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **AI & Machine Learning**    | N/A                                                                                                                                                           |
-| **Software Development**     | Autenticação, CRUD, Git, Serverless Functions, Open-source, Funções PostgreSQL, Row Level Security (RLS), Node.js, Express, Experiência do Desenvolvedor (DX) |
-| **Architecture**             | Backend-as-a-Service (BaaS), SPA (Single-Page Application), Escalabilidade, Serverless Functions, Vendor Lock-in, Custo-Efetividade                           |
-| **Cloud Computing**          | Supabase, Vercel, Hosting com CDN Global, Serverless Functions, Storage                                                                                       |
-| **API RESTFul development**  | PostgREST                                                                                                                                                     |
-| **Frontend Development**     | Vercel, SPA (Single-Page Application), React/Vite                                                                                                             |
-| **Mobile Development**       | N/A                                                                                                                                                           |
-| **Database**                 | PostgreSQL, Supabase, PostgREST, Row Level Security (RLS), VIEWS, Funções PostgreSQL                                                                          |
-| **Data Management**          | PostgreSQL, Storage, Row Level Security (RLS)                                                                                                                 |
-| **Content Management - CMS** | N/A                                                                                                                                                           |
-| **System Administration**    | CDN Global                                                                                                                                                    |
-| **DevOps**                   | Vercel, Integração com Git (CI/CD)                                                                                                                            |
-| **Leadership**               | N/A                                                                                                                                                           |
-| **Coaching**                 | N/A                                                                                                                                                           |
-| **Agile Project Management** | Agilidade no desenvolvimento                                                                                                                                  |
+| Categoria | Tecnologias e Conceitos |
+| :--- | :--- |
+| **AI & Machine Learning** | N/A |
+| **Software Development** | Autenticação, CRUD, Git, Serverless Functions, Open-source, Funções PostgreSQL, Row Level Security (RLS), Node.js, Express, Experiência do Desenvolvedor (DX) |
+| **Architecture**| Backend-as-a-Service (BaaS), SPA (Single-Page Application), Escalabilidade, Serverless Functions, Vendor Lock-in, Custo-Efetividade |
+| **Cloud Computing** | Supabase, Vercel, Hosting com CDN Global, Serverless Functions, Storage |
+| **API RESTFul development** | PostgREST |
+| **Frontend Development** | Vercel, SPA (Single-Page Application), React/Vite |
+| **Mobile Development** | N/A |
+| **Database** | PostgreSQL, Supabase, PostgREST, Row Level Security (RLS), VIEWS, Funções PostgreSQL |
+| **Data Management** | PostgreSQL, Storage, Row Level Security (RLS) |
+| **Content Management - CMS** | N/A |
+| **System Administration** | CDN Global |
+| **DevOps** | Vercel, Integração com Git (CI/CD) |
+| **Leadership** | N/A |
+| **Coaching** | N/A |
+| **Agile Project Management** | Agilidade no desenvolvimento |
 
+***
 
-### 🚀 Projeto: EuPizza: Plataforma SaaS de Atendimento por Voz - BRNow
+### 🚀 Project:  EuPizza - Plataforma SaaS de Atendimento por Voz
 
 #### 🎯 Visão Geral e Arquitetura da Solução
 
@@ -267,143 +498,625 @@ Desenvolvimento de uma plataforma SaaS de atendimento por voz, denominada EuPizz
 
 #### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
 
-| Categoria                    | Tecnologias e Conceitos                                                                                                                         |
-| :--------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------- |
-| **AI & Machine Learning**    | LLM, Speech-to-Text (STT), Text-to-Speech (TTS), Pipeline de IA, OpenAI, Deepgram, ElevenLabs                                                   |
-| **Software Development**     | Python 3.12, FastAPI, Pydantic, pre-commit, Ruff, Black, Mypy, Lógica de Fallback                                                               |
-| **Architecture**             | Microsserviços, Arquitetura Orientada a Eventos, SaaS, Multi-tenancy, Row Level Security (RLS), WebRTC, Gateway SIP, Media Server, Idempotência |
-| **Cloud Computing**          | SaaS, Supabase                                                                                                                                  |
-| **API RESTFul development**  | FastAPI, API RESTful, Webhook, JWT, Autenticação, OpenAPI, `401 Unauthorized`                                                                   |
-| **Frontend Development**     | N/A                                                                                                                                             |
-| **Mobile Development**       | N/A                                                                                                                                             |
-| **Database**                 | PostgreSQL, Supabase, Modelo de Dados Relacional                                                                                                |
-| **Data Management**          | Row Level Security (RLS), Multi-tenancy                                                                                                         |
-| **Content Management - CMS** | N/A                                                                                                                                             |
-| **System Administration**    | coturn (TURN/STUN Server)                                                                                                                       |
-| **DevOps**                   | Docker, Docker Compose, Docker Swarm, Containerização, CI/CD, GitHub Actions, Provisionamento de Infraestrutura, Observabilidade                |
-| **Leadership**               | Arquiteto de Soluções, Debug & Troubleshooting, Desenvolvedor Sênior                                                                            |
-| **Coaching**                 | N/A                                                                                                                                             |
-| **Agile Project Management** | N/A                                                                                                                                             |
+| Categoria | Tecnologias e Conceitos |
+| :--- | :--- |
+| **AI & Machine Learning** | LLM, Speech-to-Text (STT), Text-to-Speech (TTS), Pipeline de IA, OpenAI, Deepgram, ElevenLabs |
+| **Software Development** | Python 3.12, FastAPI, Pydantic, pre-commit, Ruff, Black, Mypy, Lógica de Fallback |
+| **Architecture**| Microsserviços, Arquitetura Orientada a Eventos, SaaS, Multi-tenancy, Row Level Security (RLS), WebRTC, Gateway SIP, Media Server, Idempotência |
+| **Cloud Computing** | SaaS, Supabase |
+| **API RESTFul development** | FastAPI, API RESTful, Webhook, JWT, Autenticação, OpenAPI, `401 Unauthorized` |
+| **Frontend Development** | N/A |
+| **Mobile Development** | N/A |
+| **Database** | PostgreSQL, Supabase, Modelo de Dados Relacional |
+| **Data Management** | Row Level Security (RLS), Multi-tenancy |
+| **Content Management - CMS** | N/A |
+| **System Administration** | coturn (TURN/STUN Server) |
+| **DevOps** | Docker, Docker Compose, Docker Swarm, Containerização, CI/CD, GitHub Actions, Provisionamento de Infraestrutura, Observabilidade |
+| **Leadership** | Arquiteto de Soluções, Debug & Troubleshooting, Desenvolvedor Sênior |
+| **Coaching** | N/A |
+| **Agile Project Management** | N/A |
 
-### 🚀 Projeto: Ask Richter: Meu CV Interativo com IA
+***
+
+### 🚀 Project:  Huktup - Plataforma de Agendamento e Gestão para Provedores de Serviço
 
 #### 🎯 Visão Geral e Arquitetura da Solução
 
-O projeto "Ask Richter" nasceu da ideia de transformar um currículo tradicional em uma experiência de diálogo interativa e inteligente. O objetivo principal é permitir que recrutadores e líderes técnicos explorem minha trajetória profissional de forma conversacional, fazendo perguntas em linguagem natural e recebendo respostas precisas, baseadas em meus dados profissionais consolidados. Mais do que um portfólio, é uma demonstração prática de competências em arquitetura de software moderna e integração com Inteligência Artificial.
+No cenário de serviços, a gestão descentralizada de agendamentos, pagamentos e comunicação com clientes é um grande obstáculo para o crescimento. O Huktup nasceu para resolver exatamente essa dor, oferecendo um ecossistema completo onde provedores de serviço podem centralizar toda a sua operação.
 
-A solução foi construída sobre uma arquitetura full-stack robusta e desacoplada:
-
-  * **Frontend:** Uma interface de chat limpa e reativa, desenvolvida com **Next.js** e hospedada na **Vercel**, proporciona um diálogo fluido ao usuário.
-  * **Backend:** Uma API em **Node.js/Express**, hospedada no **Render.com**, orquestra a lógica de IA.
-  * **Inteligência (RAG):** A técnica de *Retrieval-Augmented Generation* (RAG) é o coração do sistema. Ao iniciar, o backend carrega um índice vetorial **FAISS**, previamente gerado e armazenado no **Supabase Storage**. Quando uma pergunta é recebida, o sistema a converte em um vetor, busca os trechos mais relevantes do meu currículo no índice FAISS e envia esse contexto para um Modelo de Linguagem Ampla (LLM) — como **Ollama** em ambiente local ou **Hugging Face** em produção — para gerar uma resposta precisa e contextual.
-
-Toda a estrutura é organizada em um **Monorepo com Turborepo**, garantindo um desenvolvimento integrado e eficiente entre os diferentes serviços.
+A solução foi arquitetada em torno de uma **API RESTful robusta, construída com Laravel (PHP)**, que serve como o cérebro de toda a plataforma. Esta API orquestra desde a criação de um agendamento até a análise de performance financeira. Para os provedores, desenvolvi um **dashboard analítico interativo com Vue.js e Chart.js**, que transforma dados brutos de faturamento e aquisição de clientes em insights visuais e acionáveis, permitindo filtros dinâmicos para uma análise aprofundada. A comunicação com o cliente final é automatizada e eficiente, graças à integração com a **Twilio API**, que gerencia o envio de lembretes, alertas e a coleta de feedbacks via SMS, reduzindo o não comparecimento e melhorando o engajamento.
 
 #### 👨‍💻 Meu Papel no Projeto
 
-Como idealizador e único desenvolvedor deste projeto, atuei em todas as frentes, assumindo os papéis de:
+Atuando como o principal desenvolvedor backend, minhas responsabilidades foram cruciais para a fundação e o sucesso da plataforma:
 
-  * **Arquiteto de Soluções:** Desenhei toda a arquitetura do sistema, desde a interação do usuário no frontend até o fluxo de dados no backend, incluindo a integração com serviços de nuvem como Vercel, Render e Supabase.
-  * **Desenvolvedor Full-Stack:** Implementei o frontend em Next.js/React, o backend em Node.js/Express e gerenciei a integração entre eles.
-  * **Engenheiro de IA/Dados:** Fui responsável por toda a pipeline de RAG, incluindo a criação e o gerenciamento do banco de dados vetorial FAISS, a integração com a API de embeddings da OpenAI e a orquestração dos LLMs.
-  * **Engenheiro de DevOps:** Configurei todo o processo de CI/CD para deploy automatizado na Vercel e no Render, além de gerenciar a infraestrutura de armazenamento no Supabase.
+  * **Desenvolvimento do Core:** Construí a API RESTful em Laravel, que centraliza todas as regras de negócio, desde o agendamento até a gestão de ofertas.
+  * **Criação do Dashboard Analítico:** Desenvolvi a interface de gestão para os provedores utilizando Vue.js, com foco na visualização de dados com Chart.js para apresentar métricas de negócio de forma clara e objetiva.
+  * **Integração de Serviços:** Implementei integrações essenciais com a **Twilio API** para automação da comunicação via SMS e com o **Firebase Authentication** para garantir um processo de onboarding e login seguro (incluindo SSO).
+  * **Garantia de Qualidade e Colaboração:** Colaborei ativamente com a equipe de QA para definir cenários de teste e validar a qualidade das entregas. Elaborei a documentação completa da API no padrão **Swagger**, o que foi fundamental para alinhar e acelerar o trabalho da equipe de frontend.
 
 #### ✨ Pontos Fortes e Desafios Superados
 
-A robustez do "Ask Richter" reside na sua arquitetura moderna e na resolução criativa de desafios complexos. O maior trunfo foi transformar uma série de obstáculos técnicos em vitórias que solidificaram a qualidade do projeto.
+O maior trunfo da plataforma é sua capacidade de **unificar a jornada do provedor em um único lugar**. A combinação de uma API sólida com um dashboard intuitivo oferece um controle sem precedentes sobre o negócio.
 
-Entre os **12 a 17 horas de debugging intensivo**, três desafios se destacaram:
-
-1.  **A Saga do Armazenamento no Supabase (RLS):** O desafio era persistir o índice FAISS na nuvem. A tentativa de upload para o Supabase Storage falhava com um enigmático erro de `new row violates row-level security policy`. Após tentativas frustradas com o SDK da AWS e diversas configurações de políticas de segurança (RLS), a solução veio ao criar, via script SQL, uma política de acesso mais abrangente para a `service_role`, permitindo todas as operações (`FOR ALL`) no bucket. Isso revelou que serviços gerenciados possuem limitações não óbvias, e às vezes, a configuração via painel ou uma API direta é mais confiável.
-
-2.  **O Loop Infinito do `useChat`:** No frontend, o hook `useChat` da Vercel AI SDK, que deveria simplificar a interface, causava um loop infinito de requisições. Ele realizava uma chamada automática para uma rota padrão (`/api/chat`) que entrava em conflito com a nossa implementação manual. A superação veio ao abandonar a abstração e retornar aos fundamentos: substituímos o hook por um controle de estado manual com `useState` puro, o que nos deu controle total e previsibilidade sobre as chamadas à API, ensinando a valiosa lição de que abstrações "mágicas" podem esconder comportamentos críticos.
-
-3.  **O Erro Fantasma de Build na Vercel:** O frontend, que funcionava perfeitamente em ambiente local, falhava sistematicamente no build de produção da Vercel com erros de tipo como `Cannot find namespace 'JSX'`. A jornada de depuração foi extensa: troca de versões de bibliotecas, configuração de `tsconfig.json`, `next/dynamic` e até a substituição da biblioteca `react-markdown`. Nenhuma solução convencional funcionou. A vitória pragmática foi instruir o TypeScript a ignorar erros de build (`ignoreBuildErrors: true`), um risco calculado que desbloqueou o deploy e provou que, em cenários complexos de monorepo, problemas podem residir na ferramenta de build, e não no código.
+Um dos principais desafios foi **garantir uma comunicação confiável e automatizada em escala**. Superamos isso ao desenhar fluxos de conversa inteligentes com a Twilio, não apenas enviando lembretes, mas criando um canal de mão dupla para feedback. Outro desafio significativo foi **criar um ambiente seguro e colaborativo para as equipes de desenvolvimento**. A padronização da documentação da API com Swagger foi uma vitória, pois eliminou ambiguidades e permitiu que as equipes de frontend e backend trabalhassem em paralelo com muito mais eficiência.
 
 #### 🌱 Pontos para Evolução Futura
 
-Embora a solução atual seja robusta, existem pontos para evolução:
+Para o futuro, a plataforma poderia evoluir com a implementação de duas funcionalidades de alto valor:
 
-1.  **Cache Inteligente:** Implementar um cache (ex: Redis) para as perguntas mais frequentes, reduzindo a latência e o custo com chamadas às APIs de IA.
-2.  **Dashboard de Análise:** Criar um painel administrativo para visualizar as perguntas mais feitas pelos usuários, permitindo refinar a base de conhecimento e entender melhor as necessidades dos recrutadores.
+1.  Um módulo de **notificações push** no aplicativo para complementar a comunicação via SMS.
+2.  A integração de um sistema de **Inteligência Artificial** para analisar padrões de agendamento e sugerir horários de maior rentabilidade para os provedores.
 
 -----
 
 #### 🛠️ Pilha de Tecnologias (Tech Stack)
 
-| Camada             | Tecnologia                                                                         |
-| :----------------- | :--------------------------------------------------------------------------------- |
-| **Arquitetura**    | Turborepo, npm Workspaces                                                          |
-| **Backend**        | Node.js, Express.js, TypeScript, tsx                                               |
-| **Frontend**       | Next.js (App Router), React (`useState`), Tailwind CSS, Shadcn/ui, markdown-to-jsx |
-| **IA & Dados**     | FAISS (`faiss-node`), OpenAI Embeddings, LangChain.js, Ollama, Hugging Face API    |
-| **Nuvem & DevOps** | Vercel, Render.com, Supabase Storage, GitHub                                       |
+| Componente | Tecnologia Utilizada | Papel na Arquitetura |
+| :--- | :--- | :--- |
+| **Backend (API Core)** | **Laravel (PHP)** | Orquestra todas as regras de negócio, dados e integrações como o núcleo da plataforma. |
+| **Frontend (Dashboard)** | **Vue.js** | Constrói a interface reativa e interativa para os provedores de serviço gerenciarem seus negócios. |
+| **Visualização de Dados** | **Chart.js** | Renderiza gráficos dinâmicos no dashboard para análise de faturamento, reservas e clientes. |
+| **Banco de Dados** | **MySQL** | Armazena de forma persistente todos os dados relacionais da aplicação (agendamentos, usuários, etc.). |
+| **Autenticação de Usuários**| **Firebase Authentication** | Gerencia o onboarding, login e segurança dos usuários (provedores) com suporte a SSO. |
+| **Comunicação por SMS** | **Twilio API** | Automatiza o envio de lembretes, alertas transacionais e coleta de feedback dos clientes finais. |
+| **Documentação da API** | **Swagger (OpenAPI)** | Padroniza e documenta os endpoints da API para facilitar a integração entre equipes. |
+| **Ambiente de Dev** | **Docker** | Garante a consistência e portabilidade do ambiente de desenvolvimento e produção. |
 
 -----
 
 #### 🗺️ Diagrama da Arquitetura
 
 ```mermaid
-graph TD
-    subgraph "Usuário"
-        User[👨‍💻 Usuário no Navegador]
-    end
-
-    subgraph "Nuvem Vercel"
-        Frontend["⚛️ Frontend (Next.js)<br>ask-richter.vercel.app"]
-    end
-
-    subgraph "Nuvem Render.com"
-        Backend["⚙️ Backend (Node.js/Express)<br>ask-richter.onrender.com"]
-    end
-
-    subgraph "Nuvem Supabase"
-        SupabaseDB["📦 Supabase Storage<br>(Índice FAISS)"]
-    end
-
-    subgraph "Serviços de IA"
-        OpenAI_API["🛰️ OpenAI API<br>(Embeddings)"]
-        HF_API["🤗 Hugging Face API<br>(LLM em Produção)"]
-    end
-
-    User -- "1\. Pergunta em linguagem natural" --> Frontend
-    Frontend -- "2\. Requisição para /api/chat" --> Backend
-    Backend -- "3\. Download do Índice na inicialização" --> SupabaseDB
-    Backend -- "4a\. Gera Embedding da Pergunta" --> OpenAI_API
-    Backend -- "4b\. Busca por Similaridade" --> faiss((FAISS em Memória))
-    faiss -- "5\. Retorna Contexto Relevante" --> Backend
-    Backend -- "6\. Monta Prompt e Envia para LLM" --> HF_API
-    HF_API -- "7\. Retorna Resposta Gerada" --> Backend
-    Backend -- "8\. Resposta para o Frontend" --> Frontend
-    Frontend -- "9\. Exibe Resposta ao Usuário" --> User
+---
+config:
+  theme: default
+  look: handDrawn
+---
+flowchart LR
+ subgraph Users["👥 Usuários"]
+        A["🛠️ Provedor de Serviço"]
+        B["👤 Cliente Final"]
+  end
+ subgraph Platform["☁️ Plataforma Huktup (Cloud)"]
+        C["📊 Dashboard Administrativo<br>(Vue.js + Chart.js)"]
+        D["⚙️ API RESTful<br>(Laravel)"]
+        E["🐬 Banco de Dados<br>(MySQL)"]
+        F["🔐 Firebase Authentication"]
+        G["📲 Twilio API"]
+  end
+    A -- 🔐 Login / Gestão --> C
+    A -- 🔐 Autenticação SSO --> F
+    C -- 🔄 Solicita / Envia Dados --> D
+    D -- 💾 Persiste / Lê Dados --> E
+    D -- 🔐 Valida Token --> F
+    D -- 📨 Dispara SMS --> G
+    G -- 💬 Envia Lembrete / Alerta --> B
+    E@{ shape: cyl}
+    F@{ shape: rounded}
+    style C fill:#FFD600
+    style G fill:#FFCDD2
+    style Users fill:#D6EAF8,stroke:#3498DB,stroke-width:2px
+    style Platform fill:#FFF9C4,stroke:#34495E,stroke-width:2px
 ```
 
----
 
+---
 #### RESUMO TÉCNICO PARA EMBEDDING
 
-Este projeto, "Ask Richter", implementa um chatbot de CV interativo utilizando uma arquitetura RAG (Retrieval-Augmented Generation) full-stack. O backend, construído com Node.js, Express.js e TypeScript, é responsável pela lógica de IA, incluindo um script para indexação de documentos de conhecimento (`.md`) em um banco de dados vetorial FAISS. Este script usa LangChain.js para carregamento (`DirectoryLoader`), fragmentação de texto (`RecursiveCharacterTextSplitter`) e geração de embeddings com o modelo `text-embedding-3-small` da OpenAI. O índice FAISS gerado é armazenado no Supabase Storage para persistência. Em tempo de execução, o backend carrega o índice em memória, realiza buscas por similaridade semântica nas perguntas do usuário e injeta o contexto relevante em prompts enviados a LLMs através da API da Hugging Face em produção ou Ollama (com modelos como Llama 3 e Mistral 7B) localmente. A API RESTful expõe endpoints para chat (`/api/chat`) e health check (`/api/health`). O frontend é uma SPA reativa construída com Next.js (App Router), React, e TypeScript, estilizada com Tailwind CSS e componentes Shadcn/ui. O gerenciamento de estado é feito com React Hooks (`useState`). A comunicação com o backend é realizada via requisições `fetch` para a API. A renderização de respostas em Markdown é tratada com `markdown-to-jsx` e `react-syntax-highlighter`. O projeto é estruturado como um monorepo gerenciado pelo Turborepo e npm Workspaces. O deploy é automatizado via CI/CD do GitHub, com o frontend na Vercel e o backend conteinerizado com Docker no Render.com, utilizando Infrastructure as Code (`render.yaml`). A segurança no Supabase é garantida por políticas de Row Level Security (RLS).
+Desenvolvimento de uma plataforma de agendamento, Huktup, com arquitetura centrada em uma API RESTful em Laravel (PHP) atuando como core para todas as regras de negócio. O frontend consiste em um dashboard analítico reativo para provedores de serviço, construído com Vue.js e utilizando Chart.js para visualização de dados e métricas de faturamento e aquisição de clientes. A solução integra serviços de terceiros para funcionalidades críticas: Firebase Authentication para onboarding, login e segurança com suporte a SSO, e a Twilio API para automação da comunicação via SMS, incluindo lembretes e coleta de feedback. A persistência de dados é garantida por um banco de dados MySQL. O ambiente de desenvolvimento é padronizado com Docker, garantindo portabilidade. A colaboração entre equipes de backend e frontend foi otimizada pela documentação da API no padrão Swagger (OpenAPI), permitindo o desenvolvimento paralelo e a validação de entregas com a equipe de QA. Desafios superados incluem a criação de fluxos de comunicação escaláveis e a eliminação de ambiguidades no desenvolvimento através de documentação padronizada.
 
 #### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
 
-| Categoria                    | Tecnologias e Conceitos                                                                                                                                                                                                                                                                 |
-| :--------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **AI & Machine Learning**    | Retrieval-Augmented Generation (RAG), FAISS, `faiss-node`, LangChain.js, OpenAI Embeddings (`text-embedding-3-small`), LLMs, Ollama, Llama 3, Mistral 7B, Hugging Face API, `DirectoryLoader`, `RecursiveCharacterTextSplitter`, Busca por Similaridade Semântica, Embeddings Vetoriais |
-| **Software Development**     | Node.js, TypeScript, `tsx`, npm Workspaces, ESM (`"type": "module"`), `markdown-to-jsx`, `react-syntax-highlighter`, `dotenv`                                                                                                                                                           |
-| **Architecture**             | Arquitetura Full-Stack, Monorepo, Microservices (Frontend/Backend desacoplados), RAG (Retrieval-Augmented Generation), Single Page Application (SPA)                                                                                                                                    |
-| **Cloud Computing**          | Vercel, Render.com, Supabase, Supabase Storage, Hugging Face API                                                                                                                                                                                                                        |
-| **API RESTFul development**  | Express.js, Node.js, Health Check Endpoint (`/api/health`)                                                                                                                                                                                                                              |
-| **Frontend Development**     | Next.js (App Router), React, React Hooks (`useState`, `useEffect`), Tailwind CSS, Shadcn/ui, Lucide React, Design Responsivo                                                                                                                                                            |
-| **Mobile Development**       | N/A                                                                                                                                                                                                                                                                                     |
-| **Database**                 | FAISS                                                                                                                                                                                                                                                                                   |
-| **Data Management**          | Chunking (Fragmentação de Texto), Indexação Vetorial, Supabase Storage, Row Level Security (RLS)                                                                                                                                                                                        |
-| **Content Management - CMS** | N/A                                                                                                                                                                                                                                                                                     |
-| **System Administration**    | N/A                                                                                                                                                                                                                                                                                     |
-| **DevOps**                   | Turborepo, Docker, CI/CD, Vercel, Render.com, GitHub, Infrastructure as Code (`render.yaml`), Variáveis de Ambiente                                                                                                                                                                     |
-| **Leadership**               | N/A                                                                                                                                                                                                                                                                                     |
-| **Coaching**                 | N/A                                                                                                                                                                                                                                                                                     |
-| **Agile Project Management** | N/A                                                                                                                                                                                                                                                                                     |
-### 🚀 Projeto: SmartShorts: SaaS de Geração de Vídeos Automatizados
+| Categoria                    | Tecnologias e Conceitos                                                |
+| :--------------------------- | :--------------------------------------------------------------------- |
+| **AI & Machine Learning**    | Sugestão de IA para otimização de agendamentos (evolução futura)       |
+| **Software Development**     | Laravel, PHP, Vue.js, Docker, Chart.js                                 |
+| **Architecture**             | Arquitetura baseada em API, Single Sign-On (SSO)                       |
+| **Cloud Computing**          | Firebase Authentication, Plataforma em Nuvem                           |
+| **API RESTFul development**  | API RESTful, Laravel, Twilio API, Swagger, OpenAPI                     |
+| **Frontend Development**     | Vue.js, Chart.js, Dashboard Analítico, Visualização de Dados           |
+| **Mobile Development**       | Notificações Push (evolução futura)                                    |
+| **Database**                 | MySQL                                                                  |
+| **Data Management**          | Análise de métricas financeiras, Visualização de dados                 |
+| **Content Management - CMS** | N/A                                                                    |
+| **System Administration**    | N/A                                                                    |
+| **DevOps**                   | Docker, Documentação de API (Swagger), Colaboração com QA              |
+| **Leadership**               | Desenvolvedor principal, Alinhamento de equipes                        |
+| **Coaching**                 | N/A                                                                    |
+| **Agile Project Management** | Desenvolvimento paralelo (Backend/Frontend), Colaboração entre equipes |
+
+***
+
+### 🚀 Project:  Kpro After Sales - API para Otimização de Processos de Pós-Venda
+
+#### 🎯 Visão Geral e Arquitetura da Solução
+
+Em um cenário onde os processos de pós-venda da Kpro — abrangendo aluguéis, vendas e compras compartilhadas — precisavam de coesão e eficiência, a solução foi arquitetar e construir um núcleo digital central: uma **API RESTful robusta e escalável**. Este projeto nasceu para ser o "cérebro" da operação, orquestrando todo o ciclo de vida dos equipamentos, desde a gestão de checklists e documentos até o controle de status e histórico.
+
+A API foi desenvolvida em **Laravel Lumen**, servindo como o backend desacoplado para uma moderna interface de usuário em Vue.js. Essa arquitetura garantiu não apenas uma separação clara de responsabilidades, mas também uma agilidade ímpar para as equipes de frontend e backend trabalharem em paralelo, conectadas por um contrato de API bem definido e documentado.
+
+#### 👨‍💻 Meu Papel no Projeto
+
+Atuando como **Desenvolvedor Back-End**, em estreita colaboração com o Arquiteto de Soluções, minhas principais responsabilidades foram:
+
+  * **Construção da API:** Desenvolver os endpoints, implementar as regras de negócio e realizar a integração com serviços externos utilizando o framework Laravel Lumen.
+  * **Otimização de Performance:** Realizar *query tuning* no banco de dados MySQL e implementar estratégias de cache para garantir a velocidade da aplicação.
+  * **Garantia de Qualidade:** Criar uma suíte sólida de testes automatizados com PHPUnit para assegurar a estabilidade e evitar regressões.
+  * **Facilitação da Integração:** Elaborar a documentação completa da API com Swagger/OpenAPI para acelerar o desenvolvimento e a integração com a equipe de frontend.
+
+#### ✨ Pontos Fortes e Desafios Superados
+
+O maior triunfo deste projeto foi transformar desafios técnicos complexos em vitórias mensuráveis para o negócio.
+
+  * **Performance como Prioridade:** Um dos principais desafios era garantir que a API respondesse com baixa latência, mesmo sob carga. Enfrentei isso com uma otimização criteriosa das consultas ao banco de dados e a implementação de uma camada de cache inteligente. O resultado? Uma **melhora de 30% no tempo de resposta** dos endpoints críticos, impactando diretamente a experiência do usuário final.
+  * **Qualidade e Estabilidade Inegociáveis:** Para construir uma base sólida e confiável, a estratégia foi investir pesado em automação de testes. O desafio era cobrir a complexidade das regras de negócio. Superamos isso ao desenvolver uma suíte de testes com **cobertura de código de aproximadamente 80%** usando PHPUnit, o que blindou a API contra bugs e regressões.
+  * **Colaboração Acelerada por Documentação:** A sinergia entre backend e frontend é crucial. Para eliminar qualquer atrito, produzi uma documentação interativa e detalhada com **Swagger/OpenAPI**. Isso não apenas serviu como um contrato claro, mas também **acelerou o onboarding e a produtividade da equipe de frontend** em Vue.js, permitindo que eles consumissem os endpoints com total autonomia e clareza.
+
+#### 🌱 Pontos para Evolução Futura
+
+Como próximos passos para evoluir a maturidade da solução, poderíamos considerar:
+
+1.  A implementação de um **pipeline de CI/CD** para automatizar os processos de build, teste e deploy.
+2.  Adoção de uma ferramenta de **monitoramento e observabilidade** (como Prometheus/Grafana) para acompanhar a saúde da API em tempo real.
+
+-----
+
+#### 🛠️ Pilha de Tecnologias (Tech Stack)
+
+| Componente               | Tecnologia Utilizada    | Papel na Arquitetura                                                                                                           |
+| :----------------------- | :---------------------- | :----------------------------------------------------------------------------------------------------------------------------- |
+| **Backend API**          | **Laravel Lumen (PHP)** | Núcleo da aplicação, responsável por toda a lógica de negócio, regras e exposição dos dados via endpoints RESTful.             |
+| **Banco de Dados**       | **MySQL**               | Sistema de gerenciamento de banco de dados relacional para a persistência de todas as informações da plataforma.               |
+| **Testes Automatizados** | **PHPUnit**             | Ferramenta utilizada para criar a suíte de testes unitários e de integração, garantindo a qualidade e estabilidade do código.  |
+| **Documentação da API**  | **Swagger (OpenAPI)**   | Padrão utilizado para desenhar, construir e documentar a API, servindo como um contrato claro para os consumidores (frontend). |
+
+
+-----
+
+#### 🗺️ Diagrama da Arquitetura
+
+```mermaid
+---
+config:
+  theme: default
+  look: handDrawn
+---
+flowchart LR
+ subgraph FE["👩‍💻 Time de Frontend"]
+        A["Equipe Vue.js"]
+  end
+ subgraph KPRO["🚀 Solução Kpro After Sales"]
+        B["Interface Vue.js"]
+        C["API RESTful<br>Laravel Lumen"]
+        D["Banco de Dados<br>MySQL"]
+        E["Testes Automatizados<br>PHPUnit"]
+        F["Documentação<br>Swagger / OpenAPI"]
+  end
+    A -- Desenvolve e consome --> B
+    B -- Requisições HTTP --> C
+    C -- Lê e escreve dados --> D
+    C -- Validada por --> E
+    C -- Documentada por --> F
+    F -- Guia a integração do --> B
+    D@{ shape: cyl}
+    E@{ shape: lean-r}
+    F@{ shape: rounded}
+    style FE fill:#D6EAF8,stroke:#2980B9,stroke-width:2px
+    style KPRO fill:#F9EBEA,stroke:#C0392B,stroke-width:2px
+
+```
+
+
+
+---
+#### RESUMO TÉCNICO PARA EMBEDDING
+
+Desenvolvimento de uma API RESTful em Laravel Lumen como núcleo de uma arquitetura desacoplada para otimização de processos de pós-venda (aluguéis, vendas, compras). A solução, com backend em PHP, orquestra o ciclo de vida de equipamentos, incluindo checklists e documentos, servindo uma interface em Vue.js. O foco foi em performance, com otimização via query tuning em MySQL e implementação de cache, resultando em 30% de melhora na latência. A qualidade foi assegurada por uma suíte de testes automatizados em PHPUnit com 80% de cobertura de código para evitar regressões. A integração com o frontend foi acelerada pela documentação da API com Swagger/OpenAPI, que serviu como contrato entre as equipes. Propostas de evolução incluem a implementação de um pipeline de CI/CD e a adoção de ferramentas de monitoramento e observabilidade como Prometheus/Grafana.
+
+#### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
+
+| Categoria                    | Tecnologias e Conceitos                                                                                        |
+| :--------------------------- | :------------------------------------------------------------------------------------------------------------- |
+| **AI & Machine Learning**    | N/A                                                                                                            |
+| **Software Development**     | Laravel Lumen (PHP), PHPUnit, Testes Automatizados, Cobertura de Código, Regras de Negócio, Query Tuning |
+| **Architecture**             | Arquitetura Desacoplada, API RESTful, Cache, Baixa Latência                                                |
+| **Cloud Computing**          | N/A                                                                                                            |
+| **API RESTFul development**  | API RESTful, Endpoints, Swagger (OpenAPI), Documentação da API                                              |
+| **Frontend Development**     | Vue.js                                                                                                     |
+| **Mobile Development**       | N/A                                                                                                            |
+| **Database**                 | MySQL, Query Tuning                                                                                        |
+| **Data Management**          | N/A                                                                                                            |
+| **Content Management - CMS** | N/A                                                                                                            |
+| **System Administration**    | Monitoramento e Observabilidade (Proposto), Prometheus/Grafana (Proposto)                                   |
+| **DevOps**                   | CI/CD (Proposto), Monitoramento e Observabilidade (Proposto)                                                |
+| **Leadership**               | Arquiteto de Soluções                                                                                    |
+| **Coaching**                 | N/A                                                                                                            |
+| **Agile Project Management** | N/A                                                                                                            |
+
+***
+
+### 🚀 Project:  OnePush - Plataforma SaaS para Notificações Web Push
+
+#### 🎯 Visão Geral e Arquitetura da Solução
+
+Em um cenário digital onde a comunicação direta e instantânea com o usuário é um diferencial competitivo, nasceu o OnePush. Trata-se de uma plataforma SaaS (Software as a Service) completa, projetada para empoderar empresas com a capacidade de enviar notificações web push, criando um canal de engajamento poderoso para aumentar o retorno e a fidelização de visitantes em seus websites.
+
+A espinha dorsal da solução é uma **arquitetura modular e orientada a eventos**, construída sobre o robusto framework Laravel. Essa escolha estratégica garantiu não apenas a separação clara de responsabilidades entre os diferentes domínios do sistema — como notificações, pagamentos e gestão de clientes —, mas também proporcionou alta coesão e baixo acoplamento. Na prática, quando um cliente cadastra um novo website ou agenda uma notificação, a plataforma dispara eventos que são processados de forma assíncrona por filas (queues). Isso garante que a interface do usuário permaneça ágil e responsiva, enquanto tarefas mais pesadas, como a comunicação com APIs externas, acontecem em segundo plano.
+
+O fluxo é elegante e eficiente: o cliente da plataforma instala um simples script JavaScript em seu site, que se comunica com a API da OneSignal para registrar os assinantes. Pelo painel administrativo do OnePush, o cliente pode então segmentar seu público e disparar notificações, que são orquestradas pelo nosso backend e entregues pela infraestrutura global da OneSignal, garantindo performance e escalabilidade.
+
+#### 👨‍💻 Meu Papel no Projeto
+
+Atuei como o principal arquiteto e desenvolvedor da solução, sendo responsável pelo ciclo de vida completo do produto, desde a concepção até a implementação. Minhas principais responsabilidades incluíram:
+
+  * **Desenho da Arquitetura:** Idealizei e implementei a arquitetura modular e orientada a eventos, garantindo a escalabilidade e manutenibilidade do sistema.
+  * **Desenvolvimento Back-End:** Construí todo o core da aplicação utilizando Laravel (PHP), incluindo a lógica de negócio, o sistema de filas, e a modularização dos componentes.
+  * **Integração de APIs:** Realizei a integração completa com serviços de terceiros essenciais: a **OneSignal API** como motor de envio das notificações e a **Pagar.me API** para a gestão de planos e assinaturas.
+  * **Construção do Painel Administrativo:** Desenvolvi um painel de controle completo, utilizando o Homer Dashboard, que abrange desde a gestão de notificações e websites até o monitoramento de logs, estatísticas de engajamento e um sistema de suporte com funcionalidade de "impersonation" para resolução ágil de problemas.
+  * **Sistema de Pagamentos:** Implementei todo o ciclo de vida de assinaturas, integrando o gateway de pagamentos para processar transações de cartão de crédito e boleto de forma segura com JWT.
+
+#### ✨ Pontos Fortes e Desafios Superados
+
+O grande trunfo do OnePush reside na sua arquitetura resiliente e desacoplada, que foi a resposta direta a um desafio central: como construir uma plataforma SaaS multitenant que fosse ao mesmo tempo robusta, performática e fácil de manter?
+
+A resposta foi a adoção de uma **arquitetura orientada a eventos**. Ao invés de acoplar a criação de uma notificação diretamente ao seu envio, o sistema dispara um evento `NotificationCreated`. Um listener, operando de forma independente, captura esse evento e enfileira uma tarefa para se comunicar com a API da OneSignal. Essa abordagem trouxe vitórias significativas:
+
+1.  **Resiliência:** Se a API da OneSignal estivesse temporariamente indisponível, a tarefa poderia ser reprocessada automaticamente pela fila, sem perda de dados ou impacto na experiência do usuário.
+2.  **Performance:** A interface do usuário respondia instantaneamente, pois a lógica de envio era delegada para um processo em segundo plano.
+3.  **Escalabilidade:** Aumentar a capacidade de envio de notificações se tornou uma questão de adicionar mais workers para processar a fila, uma solução horizontalmente escalável.
+
+Outro ponto de destaque foi a criação de um **painel administrativo centrado na experiência de suporte**. A funcionalidade de "impersonation" permitiu que nossa equipe técnica acessasse a conta de um cliente de forma segura para diagnosticar e resolver problemas, o que reduziu drasticamente o tempo de suporte e aumentou a satisfação do cliente.
+
+#### 🌱 Pontos para Evolução Futura
+
+Embora a plataforma seja robusta, existem caminhos claros para sua evolução. Duas melhorias de alto impacto seriam:
+
+1.  **Testes A/B para Notificações:** Implementar uma funcionalidade que permita aos clientes testar diferentes textos e imagens em suas notificações para otimizar as taxas de clique.
+2.  **Automação e Jornadas de Usuário:** Criar um sistema de automação onde os clientes possam configurar "jornadas" de notificações baseadas no comportamento do usuário (ex: notificação de carrinho abandonado).
+
+-----
+
+#### 🛠️ Pilha de Tecnologias (Tech Stack)
+
+| Componente | Tecnologia Utilizada | Papel na Arquitetura |
+| :--- | :--- | :--- |
+| **Framework Back-End** | **Laravel 5.4 (PHP)** | Core da aplicação, gerenciando toda a lógica de negócio, APIs, modularização e orquestração de eventos. |
+| **Banco de Dados** | **MySQL** | Armazenamento principal para dados de usuários, websites, notificações, assinaturas e transações. |
+| **Filas e Eventos** | **Laravel Queues** | Gerencia o processamento assíncrono de tarefas, como o envio de notificações, garantindo performance e resiliência. |
+| **Motor de Notificações** | **OneSignal API** | Serviço externo utilizado como a infraestrutura principal para registro de assinantes e entrega de notificações web push. |
+| **Gateway de Pagamento**| **Pagar.me API** | Responsável por processar pagamentos de assinaturas (cartão de crédito e boleto) de forma segura. |
+| **Frontend (Admin)** | **Homer Dashboard** | Template utilizado para a construção da interface do painel administrativo, oferecendo uma UI rica e responsiva. |
+| **Autenticação API** | **tymondesigns/jwt-auth**| Biblioteca para proteger rotas de API (como as de pagamento) utilizando JSON Web Tokens (JWT). |
+| **Logs de Atividade** | **spatie/activitylog** | Pacote utilizado para rastrear e registrar todas as ações importantes realizadas pelos usuários na plataforma. |
+
+-----
+
+#### 🗺️ Diagrama da Arquitetura
+
+```mermaid
+---
+config:
+  theme: default
+  look: handDrawn
+---
+flowchart TD
+    %% === LEGENDA DE CORES ===
+    classDef cliente fill:#d8b4fe,stroke:#a855f7,color:#1e1e1e
+    classDef plataforma fill:#bfdbfe,stroke:#3b82f6,color:#1e1e1e
+    classDef servicos fill:#fed7aa,stroke:#f97316,color:#1e1e1e
+    classDef usuario fill:#bbf7d0,stroke:#22c55e,color:#1e1e1e
+
+    %% === CLIENTE DONO DO WEBSITE ===
+    subgraph "Cliente Dono do Website"
+        Admin["Cliente SaaS - Admin"]
+    end
+    class Admin cliente
+
+    %% === PLATAFORMA ONEPUSH ===
+    subgraph "Plataforma OnePush - SaaS"
+        Painel["💻 Painel Administrativo - Laravel + Homer UI"]
+        Core["⚙️ Core da Aplicação - Módulos e Lógica de Negócio"]
+        Fila["🔄 Fila de Processamento - Laravel Queues"]
+        DB["🗄️ Banco de Dados - MySQL"]
+    end
+    class Painel,Core,Fila,DB plataforma
+
+    %% === SERVIÇOS EXTERNOS ===
+    subgraph "Serviços Externos"
+        OneSignal["📡 OneSignal API"]
+        PagarMe["💳 Pagar-me API"]
+    end
+    class OneSignal,PagarMe servicos
+
+    %% === USUÁRIO FINAL ===
+    subgraph "Usuário Final"
+        WebsiteCliente["🌐 Website do Cliente - com SDK OneSignal"]
+        Navegador["🖥️ Navegador do Usuário Final"]
+    end
+    class WebsiteCliente,Navegador usuario
+
+    %% === FLUXO DE ADMINISTRAÇÃO E ENVIO ===
+    Admin -->|"Cria Notificação"| Painel
+    Painel -->|"1\. Salva no DB"| DB
+    Painel -->|"2\. Dispara Evento"| Core
+    Core -->|"3\. Enfileira Job"| Fila
+    Fila -->|"4\. Processa Job e Chama API"| OneSignal
+
+    %% === FLUXO DE PAGAMENTO ===
+    Admin -->|"Gerencia Assinatura"| Painel
+    Painel -->|"Requisição de Pagamento"| Core
+    Core -->|"Processa via API"| PagarMe
+    PagarMe -->|"Retorna Status"| Core
+    Core -->|"Salva Transação"| DB
+
+    %% === FLUXO DO USUÁRIO FINAL ===
+    Navegador -->|"Acessa o site"| WebsiteCliente
+    WebsiteCliente -->|"Registra para Push"| OneSignal
+    OneSignal -->|"5\. Entrega Notificação"| Navegador
+```
+
+#### RESUMO TÉCNICO PARA EMBEDDING
+
+Desenvolvimento de uma plataforma SaaS multitenant, OnePush, para envio de notificações web push, utilizando uma arquitetura modular e orientada a eventos. O core da aplicação foi construído com Laravel (PHP) e MySQL, implementando o padrão de filas (Laravel Queues) para processamento assíncrono de tarefas, garantindo resiliência, performance e escalabilidade horizontal. A solução integra-se com a API da OneSignal para o registro de assinantes e entrega de notificações e com a API da Pagar.me para a gestão de assinaturas e processamento de pagamentos (cartão de crédito, boleto), com rotas de API protegidas por JSON Web Tokens (JWT). O painel administrativo, desenvolvido com Homer Dashboard, inclui funcionalidades de gestão, monitoramento de logs (`spatie/activitylog`), estatísticas e um sistema de "impersonation" para suporte técnico. A arquitetura desacoplada resolveu o desafio de comunicação com APIs externas, permitindo o reprocessamento de tarefas em caso de falha e mantendo a UI responsiva.
+
+#### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
+
+| Categoria | Tecnologias e Conceitos |
+| :--- | :--- |
+| **AI & Machine Learning** | Testes A/B (evolução futura), Automação de Jornadas (evolução futura) |
+| **Software Development** | Laravel 5.4, PHP, Modularização, Baixo Acoplamento, Alta Coesão, `tymondesigns/jwt-auth`, `spatie/activitylog` |
+| **Architecture**| Arquitetura Modular, Arquitetura Orientada a Eventos, SaaS (Software as a Service), Arquitetura Multitenant, Arquitetura Desacoplada, Escalabilidade Horizontal, Resiliência |
+| **Cloud Computing** | SaaS (Software as a Service) |
+| **API RESTFul development** | Integração de APIs, OneSignal API, Pagar.me API, JSON Web Tokens (JWT), Gateway de Pagamento |
+| **Frontend Development** | Homer Dashboard, JavaScript |
+| **Mobile Development** | Notificações Web Push |
+| **Database** | MySQL |
+| **Data Management** | Logs de Atividade, Estatísticas de Engajamento, Monitoramento de Logs |
+| **Content Management - CMS** | N/A |
+| **System Administration** | Impersonation, Suporte Técnico, Monitoramento de Logs |
+| **DevOps** | Filas (Queues), Processamento Assíncrono, Workers |
+| **Leadership** | Arquiteto da solução, Ciclo de vida completo do produto, Concepção de produto |
+| **Coaching** | N/A |
+| **Agile Project Management** | N/A |
+
+***
+
+### 🚀 Project:  Shosales Review - Otimização de Performance (10x) e Implantação de Testes E2E
+
+#### 🎯 Visão Geral e Arquitetura da Solução
+
+O projeto Shosales Review enfrentava um desafio clássico em sistemas legados: uma experiência de usuário lenta e uma base de código que a equipe hesitava em modificar por medo de introduzir bugs. A página de visualização de imóveis, um ponto crucial da jornada do usuário, levava longos 5 segundos para carregar, comprometendo a usabilidade e a satisfação do cliente.
+
+A solução foi arquitetada em duas frentes estratégicas e complementares:
+
+1.  **Otimização Cirúrgica de Performance:** Realizei um diagnóstico profundo na aplicação Laravel, identificando que a lentidão era causada por um excesso de 37 consultas ao banco de dados para renderizar uma única página. A estratégia foi refatorar a camada de acesso a dados, otimizando as queries com o Eloquent ORM, implementando índices estratégicos no MySQL e, como resultado, **reduzindo o número de consultas para apenas 4**. Essa intervenção resultou em uma **melhora de 10x na performance**, diminuindo o tempo de carregamento para aproximadamente 0.5 segundos.
+
+2.  **Escudo de Qualidade Automatizado:** Para dar segurança à equipe e viabilizar futuras evoluções, implementei uma suíte completa de testes de ponta-a-ponta (E2E) com Laravel Dusk. Esses testes simulam os fluxos de usuário mais críticos e foram integrados a um pipeline de CI/CD (GitHub Actions/Jenkins), rodando automaticamente a cada nova alteração no código. Com a integração do CrossBrowserTesting, garantimos que a aplicação funcionava de forma consistente em múltiplos navegadores e dispositivos, eliminando regressões em produção.
+
+#### 👨‍💻 Meu Papel no Projeto
+
+Como o principal responsável pela modernização e garantia de qualidade da plataforma, minhas responsabilidades foram:
+
+  * **Análise de Performance:** Liderar a investigação e o diagnóstico dos gargalos de performance da aplicação, utilizando ferramentas de profiling para identificar as queries ineficientes.
+  * **Engenharia de Backend:** Refatorar o código PHP/Laravel, otimizar as interações com o banco de dados (MySQL) e ajustar o uso do ORM para alcançar a máxima eficiência.
+  * **Automação de Testes (QA):** Desenhar, codificar e manter a suíte de testes E2E com Laravel Dusk, definindo os cenários críticos a serem cobertos.
+  * **Cultura DevOps:** Estruturar e integrar a execução dos testes automatizados ao pipeline de CI/CD, garantindo que nenhuma alteração que quebrasse a funcionalidade existente chegasse à produção.
+
+#### ✨ Pontos Fortes e Desafios Superados
+
+O maior triunfo deste projeto foi transformar um ponto de grande frustração em um case de sucesso. O desafio não era apenas técnico, mas também cultural. A equipe tinha receio de mexer no código legado.
+
+  * **Superação da Lentidão:** O ganho de performance de 10x não foi apenas uma métrica; foi uma mudança radical na experiência do usuário, visível e comprovável.
+  * **Construindo Confiança com Código:** A suíte de testes E2E funcionou como uma "rede de segurança". Ao automatizar a validação dos fluxos críticos, demos à equipe a confiança necessária para refatorar e melhorar o sistema continuamente, sabendo que qualquer regressão seria detectada de forma imediata pelo pipeline. Isso quebrou o ciclo de medo e estagnação.
+
+#### 🌱 Pontos para Evolução Futura
+
+Com a base sólida de performance e qualidade estabelecida, os próximos passos naturais para evoluir o projeto seriam:
+
+1.  **Cache Inteligente:** Expandir o uso do Redis para implementar cache em camadas mais altas da aplicação, como em fragmentos de views e resultados de API, para ganhos de performance ainda mais expressivos.
+2.  **Testes de Regressão Visual:** Adicionar testes de regressão visual ao pipeline para detectar automaticamente quebras de layout na interface, garantindo consistência visual a cada deploy.
+
+-----
+
+#### 🛠️ Pilha de Tecnologias (Tech Stack)
+
+| Componente | Tecnologia Utilizada | Papel na Arquitetura |
+| :--- | :--- | :--- |
+| **Backend** | **Laravel (PHP)** | Framework principal da aplicação, orquestrando as regras de negócio e a lógica de apresentação. |
+| **Banco de Dados** | **MySQL** | Armazenamento persistente de todos os dados relacionados a imóveis e avaliações. |
+| **Cache** | **Redis** | Utilizado para cache de sessão e otimizações pontuais de performance. |
+| **Testes E2E** | **Laravel Dusk** | Ferramenta para automação de testes de ponta-a-ponta, simulando a interação do usuário no navegador. |
+| **Testes Cross-Browser** | **CrossBrowserTesting** | Plataforma em nuvem para executar os testes do Dusk em múltiplos navegadores e sistemas operacionais. |
+| **CI/CD** | **GitHub Actions / Jenkins** | Orquestradores do pipeline de integração e entrega contínua, automatizando build, testes e deploy. |
+
+-----
+
+#### 🗺️ Diagrama da Arquitetura de Qualidade e CI/CD
+
+```mermaid
+---
+config:
+  theme: default
+  look: handDrawn
+---
+flowchart LR
+    %% Fluxo de Desenvolvimento e Qualidade
+    subgraph DEV["🚧 Fluxo de Desenvolvimento e Qualidade"]
+        style DEV fill:#E8F6F3,stroke:#1ABC9C,stroke-width:2px
+
+        Dev[👨‍💻 Desenvolvedor] -- "1\. git push" --> Repo[🐙 GitHub Repo]
+
+        Repo -- "2\. Aciona Pipeline" --> CI_CD{"CI/CD Pipeline <br>(GitHub Actions / Jenkins)"}
+
+        CI_CD -- "3\. Executa Testes Rápidos" --> UnitTests[🧪 Testes Unitários / Integração]
+
+        UnitTests -- "4\. Se passar, executa E2E" --> E2E_Dusk[🚗 Laravel Dusk]
+
+        E2E_Dusk -- "5\. Executa em" --> CBT[(🌐 CrossBrowserTesting)]
+
+        subgraph BROWSERS["🔍 Validação Multi-plataforma"]
+            style BROWSERS fill:#FEF9E7,stroke:#F1C40F,stroke-width:2px
+            CBT -- "Chrome" --> Chrome["<img src='https://raw.githubusercontent.com/alrra/browser-logos/main/src/chrome/chrome_48x48.png' width='24' />"]
+            CBT -- "Firefox" --> Firefox["<img src='https://raw.githubusercontent.com/alrra/browser-logos/main/src/firefox/firefox_48x48.png' width='24' />"]
+            CBT -- "Safari" --> Safari["<img src='https://raw.githubusercontent.com/alrra/browser-logos/main/src/safari/safari_48x48.png' width='24' />"]
+        end
+
+        CBT -- "6\. Reporta Resultado" --> CI_CD
+
+        CI_CD -- "✅ Sucesso" --> Deploy[🚀 Deploy para Produção]
+        CI_CD -- "❌ Falha" --> Notify[📨 Notifica Equipe]
+    end
+
+    %% Stack da Aplicação
+    subgraph STACK["🛠️ Stack da Aplicação"]
+        style STACK fill:#EBF5FB,stroke:#2980B9,stroke-width:2px
+        App["🖥️ Laravel App <br> (PHP)"] --- DBLayer[🐘 PHP Data Layer]
+        DBLayer -- "Consultas Otimizadas" --> DB[(🗄️ MySQL)]
+        App --- Cache[(⚡ Redis)]
+    end
+
+    Deploy --> App
+
+```
+
+
+---
+#### RESUMO TÉCNICO PARA EMBEDDING
+
+O projeto consistiu na otimização de performance e implementação de um escudo de qualidade para uma aplicação legada em Laravel (PHP), o Shosales Review. O principal desafio foi a lentidão na renderização de páginas, causada por 37 consultas ineficientes ao banco de dados MySQL via Eloquent ORM. A solução envolveu uma refatoração profunda da camada de acesso a dados, com a otimização de queries e a criação de índices estratégicos no MySQL, resultando em uma redução para apenas 4 consultas e um ganho de performance de 10x. Para garantir a estabilidade e dar confiança à equipe para futuras modificações, foi implementada uma suíte de testes de ponta-a-ponta (E2E) com Laravel Dusk. Esses testes foram integrados a um pipeline de CI/CD utilizando GitHub Actions e Jenkins, com validação em múltiplos navegadores através da plataforma em nuvem CrossBrowserTesting. A automação de QA funcionou como uma rede de segurança contra regressões, fomentando uma cultura de melhoria contínua e superando o receio de modificar o código legado. As evoluções futuras planejadas incluem a implementação de cache com Redis e testes de regressão visual.
+
+#### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
+
+| Categoria | Tecnologias e Conceitos |
+| :--- | :--- |
+| **AI & Machine Learning** | N/A |
+| **Software Development** | Laravel, PHP, Eloquent ORM, Legacy Code Refactoring, Performance Profiling |
+| **Architecture**| Legacy System Modernization, Data Access Layer Optimization |
+| **Cloud Computing** | CrossBrowserTesting |
+| **API RESTFul development** | N/A |
+| **Frontend Development** | User Experience (UX) Optimization, Visual Regression Testing (future work) |
+| **Mobile Development** | N/A |
+| **Database** | MySQL, Query Optimization, Database Indexing |
+| **Data Management** | N/A |
+| **Content Management - CMS** | N/A |
+| **System Administration** | N/A |
+| **DevOps** | CI/CD, GitHub Actions, Jenkins, QA Automation, E2E Testing, Laravel Dusk |
+| **Leadership** | Technical Leadership, Project Modernization |
+| **Coaching** | Team Confidence Building, Cultural Change Management |
+|  **Agile Project Management** | Continuous Improvement, Regression Prevention |
+
+***
+
+### 🚀 Project:  Sisporta - Sincronização Inteligente de Dados
+
+#### 🎯 Visão Geral e Arquitetura da Solução
+
+O projeto Sisporta nasceu de um desafio clássico no mundo do software: a necessidade de modernizar sem poder tocar no legado. Uma empresa especialista em portões de garagem precisava de um sistema ágil para gerar orçamentos personalizados, mas seus dados vitais (produtos, revendedores) residiam em um ERP com um banco de dados SQL Server intocável.
+
+A solução foi arquitetar um **pipeline de dados desacoplado e resiliente**. O coração da operação é um script Python que atua como um agente de extração, lendo os dados do SQL Server e os enviando em formato JSON para uma API na nova aplicação Laravel. Para não sobrecarregar nenhum dos sistemas, a API não processa os dados imediatamente; ela os enfileira usando o **Laravel Horizon**. Essa abordagem assíncrona permite que *workers* em segundo plano processem as informações em lotes, garantindo alto desempenho e escalabilidade. O resultado é um fluxo de dados contínuo e eficiente, que alimenta o novo sistema de orçamentos com informações sempre atualizadas, sem comprometer a performance do ERP legado.
+
+#### 👨‍💻 Meu Papel no Projeto
+
+Neste projeto, atuei como a principal força de engenharia, combinando as funções de **Arquiteto de Soluções e Desenvolvedor Full-Stack**. Minhas responsabilidades incluíram:
+
+  * **Idealizar e desenhar** a arquitetura de integração assíncrona para garantir performance e desacoplamento.
+  * **Desenvolver o script de extração** em Python, responsável por coletar e formatar os dados do sistema legado.
+  * **Implementar a aplicação Laravel**, incluindo o endpoint da API de ingestão e os jobs de processamento em background com Laravel Horizon.
+  * **Garantir a qualidade do código** através da criação de testes unitários e de integração.
+  * **Configurar o pipeline de CI/CD** no Bitbucket para automatizar testes e deploys.
+
+#### ✨ Pontos Fortes e Desafios Superados
+
+O maior desafio era a restrição de não poder modificar o sistema ERP. A superação veio com a **arquitetura de processamento assíncrono**, que transformou essa limitação em um ponto forte. A solução se destaca por:
+
+  * **Alto Desempenho e Resiliência:** A utilização de filas (Laravel Horizon) evita gargalos. Se a aplicação de destino ficasse offline, os dados simplesmente aguardariam na fila para serem processados, sem perdas.
+  * **Consistência de Dados Inteligente:** Um dos triunfos do projeto foi a criação de um job de "limpeza". Ele remove automaticamente registros que não existem mais no sistema de origem, garantindo que o sistema de orçamentos seja um espelho fiel do ERP, sem acumular dados obsoletos.
+  * **Automação e Qualidade:** Com testes automatizados e um pipeline de CI/CD no Bitbucket, o processo de manutenção e evolução tornou-se seguro e ágil.
+
+#### 🌱 Pontos para Evolução Futura
+
+Para evoluir ainda mais a solução, poderíamos implementar um **dashboard de monitoramento avançado** para observar a saúde das filas e o tempo de processamento dos jobs, além de configurar um mecanismo de ***Dead Letter Queue*** para tratar falhas de processamento de forma isolada, sem interromper o fluxo principal.
+
+-----
+
+#### 🛠️ Pilha de Tecnologias (Tech Stack)
+
+  * **Linguagens:** Python, PHP
+  * **Framework:** Laravel
+  * **Bancos de Dados:** SQL Server, MySQL
+  * **Filas e Jobs:** Laravel Horizon
+  * **DevOps:** Bitbucket Pipelines
+
+-----
+
+#### 🗺️ Diagrama da Arquitetura
+
+```mermaid
+---
+config:
+  theme: default
+  look: handDrawn
+---
+graph TD
+    subgraph "Sistema Legado"
+        ERP[("💾<br>SQL Server<br>ERP Legado")]
+    end
+
+    subgraph "Pipeline de Integração"
+        Script["🐍 Script de Extração (Python)"]
+        API["🔌 API de Ingestão (Laravel)"]
+        Horizon["🔄 Fila de Processamento (Laravel Horizon)"]
+        Workers["⚙️ Jobs Assíncronos (Workers)"]
+    end
+
+    subgraph "Nova Aplicação Cloud"
+        DB["☁️ App de Orçamentos (Laravel / MySQL)"]
+    end
+
+    subgraph "Automação e DevOps"
+        CICD["🔧 Bitbucket Pipelines (CI/CD)"]
+    end
+
+    ERP -- "1\. Extrai dados em modo leitura" --> Script
+    Script -- "2\. Envia dados formatados (JSON)" --> API
+    API -- "3\. Enfileira job com os dados" --> Horizon
+    Horizon -- "4\. Despacha jobs para workers" --> Workers
+    Workers -- "5\. Processa em lotes e persiste" --> DB
+    Workers -- "6\. Executa rotina de limpeza" --> DB
+
+    Script -- "Testes e Deploy" --> CICD
+    DB -- "Testes e Deploy" --> CICD
+```
+
+---
+#### RESUMO TÉCNICO PARA EMBEDDING
+
+O projeto implementa um pipeline de dados desacoplado para integração entre um sistema ERP legado com banco de dados SQL Server e uma aplicação moderna em Laravel (PHP) com MySQL, ambos hospedados em nuvem. A solução resolve o desafio da sincronização de dados sem acesso para modificação do ERP. Um script Python atua como agente de ETL, extraindo dados, formatando-os em JSON e enviando para um endpoint de API RESTful na aplicação Laravel. Para garantir alta performance e evitar gargalos, a ingestão é assíncrona, utilizando Laravel Horizon para enfileirar e gerenciar jobs de processamento. Esses jobs processam os dados em lotes (batches), otimizando a persistência no MySQL. A consistência de dados é mantida através de uma rotina de limpeza que remove registros obsoletos. Todo o ciclo de desenvolvimento é automatizado por um pipeline de CI/CD no Bitbucket Pipelines, que executa testes unitários e de integração para garantir a qualidade e a resiliência da arquitetura.
+
+#### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
+
+| Categoria | Tecnologias e Conceitos |
+| :--- | :--- |
+| **AI & Machine Learning** | N/A |
+| **Software Development** | Python, PHP, Laravel, JSON, Testes Unitários, Testes de Integração |
+| **Architecture**| Arquitetura Desacoplada, Processamento Assíncrono, Processamento em Lotes, Resiliência, Escalabilidade, Pipeline de Dados, Sincronização Unidirecional |
+| **Cloud Computing** | Aplicação Cloud, Banco de dados hospedado na nuvem |
+| **API RESTFul development** | Endpoint de API, Ingestão de Dados via API |
+| **Frontend Development** | N/A |
+| **Mobile Development** | N/A |
+| **Database** | SQL Server, MySQL |
+| **Data Management** | ETL (Extração, Transformação e Carga), Sincronização de Dados, Integridade de Dados, Consistência de Dados, Limpeza de Dados (Data Cleansing) |
+| **Content Management - CMS** | N/A |
+| **System Administration** | N/A |
+| **DevOps** | Bitbucket Pipelines, CI/CD (Integração Contínua, Implantação Contínua), Laravel Horizon, Background Workers, Gerenciamento de Filas (Queueing), Automação de Deploy |
+| **Leadership** | N/A |
+| **Coaching** | N/A |
+| **Agile Project Management** | N/A |
+
+***
+
+### 🚀 Project:  SmartShorts - SaaS de Geração de Vídeos Automatizados
 
 #### 🎯 Visão Geral e Arquitetura da Solução
 
@@ -523,22 +1236,25 @@ Este projeto é um SaaS para geração automatizada de vídeos, construído sobr
 
 | Categoria                    | Tecnologias e Conceitos                                                                                                                                                |
 | :--------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **AI & Machine Learning**    | 🤖 OpenAI, ElevenLabs, Replicate, Whisper, Text-to-Speech (TTS), SDXL                                                                                                   |
-| **Software Development**     | ☕ Java 17+, Lombok, Maven, TDD (Test-Driven Development), Design Patterns (Adapter, Strategy, Factory, Singleton, Facade, Repository, State), FFmpeg, JUnit 5, Mockito |
-| **Architecture**             | 🏛️ Clean Architecture, Hexagonal (Ports & Adapters), DDD-Lite, Modular Monolith, Microservices, Bounded Contexts, State Machine, Circuit Breaker, Resilience4j          |
-| **Cloud Computing**          | ☁️ AWS (RDS, S3), MinIO, Object Storage                                                                                                                                 |
-| **API RESTFul development**  | 🔌 Spring Web, Spring WebClient, API Contract-First, OpenAPI, Swagger, REST, JWT, RBAC, CSRF                                                                            |
-| **Frontend Development**     | 💻 Electron, React, Vue                                                                                                                                                 |
-| **Mobile Development**       | 📱 N/A                                                                                                                                                                  |
-| **Database**                 | 🗄️ PostgreSQL, Redis, JPA, Hibernate, `@AttributeOverrides`, `@Embedded`                                                                                                |
-| **Data Management**          | 📨 RabbitMQ, AMQP                                                                                                                                                       |
-| **Content Management - CMS** | 📝 N/A                                                                                                                                                                  |
-| **System Administration**    | ⚙️ N/A                                                                                                                                                                  |
-| **DevOps**                   | 🚀 Docker, Docker Compose, CI/CD, GitHub Actions, Spring Boot Actuator, Micrometer, Prometheus, Grafana, ELK Stack, Testcontainers, WireMock                            |
-| **Leadership**               | 👨‍🏫 Liderança Técnica, Definição de Arquitetura                                                                                                                          |
-| **Coaching**                 | 🤝 Mentoria, Criação de Guia de Contribuição                                                                                                                            |
-| **Agile Project Management** | 🔄 Agile, TDD, Planejamento em Fases                                                                                                                                    |
-### 🚀 Projeto: SmartShorts UI: Migração Estratégica para Next.js e TypeScript
+| **AI & Machine Learning**    | OpenAI, ElevenLabs, Replicate, Whisper, Text-to-Speech (TTS), SDXL                                                                                                  |
+| **Software Development**     | Java 17+, Lombok, Maven, TDD (Test-Driven Development), Design Patterns (Adapter, Strategy, Factory, Singleton, Facade, Repository, State), FFmpeg, JUnit 5, Mockito |
+| **Architecture**             | Clean Architecture, Hexagonal (Ports & Adapters), DDD-Lite, Modular Monolith, Microservices, Bounded Contexts, State Machine, Circuit Breaker, Resilience4j        |
+| **Cloud Computing**          | AWS (RDS, S3), MinIO, Object Storage                                                                                                                                |
+| **API RESTFul development**  | Spring Web, Spring WebClient, API Contract-First, OpenAPI, Swagger, REST, JWT, RBAC, CSRF                                                                           |
+| **Frontend Development**     | Electron, React                                                                                                                                                     |
+| **Mobile Development**       | N/A                                                                                                                                                                 |
+| **Database**                 | PostgreSQL, Redis, JPA, Hibernate, `@AttributeOverrides`, `@Embedded`                                                                                              |
+| **Data Management**          | RabbitMQ, AMQP                                                                                                                                                      |
+| **Content Management - CMS** | N/A                                                                                                                                                                 |
+| **System Administration**    | N/A                                                                                                                                                                 |
+| **DevOps**                   | Docker, Docker Compose, CI/CD, GitHub Actions, Spring Boot Actuator, Micrometer, Prometheus, Grafana, ELK Stack, Testcontainers, WireMock                           |
+| **Leadership**               | Liderança Técnica, Definição de Arquitetura                                                                                                                      |
+| **Coaching**                 | Mentoria, Criação de Guia de Contribuição                                                                                                                           |
+| **Agile Project Management** | Agile, TDD, Planejamento em Fases                                                                                                                                   |
+
+***
+
+### 🚀 Project:  SmartShorts UI - Gestão do SaaS de Geração de Vídeos 
 
 #### 🎯 Visão Geral e Arquitetura da Solução
 
@@ -644,284 +1360,155 @@ O projeto consiste na migração e desenvolvimento de uma interface de usuário 
 | **Leadership**               | N/A                                                                                                                                                                                                                                                        |
 | **Coaching**                 | N/A                                                                                                                                                                                                                                                        |
 | **Agile Project Management** | Post-mortem, Migration Plan (Fases 0-4)                                                                                                                                                                                                                    |
-### 🚀 Projeto: Fábrica de Vídeos Automatizada para YouTube
+
+***
+
+### 🚀 Project:  Spider - Hub de Integração E-commerce
 
 #### 🎯 Visão Geral e Arquitetura da Solução
 
-Em um cenário onde a criação de conteúdo em vídeo é um processo manual, demorado e caro, este projeto surge como uma solução de automação de ponta a ponta. O objetivo é uma "Fábrica de Vídeos" completa, capaz de gerar conteúdo para o YouTube, tanto em formato curto quanto longo, com intervenção humana mínima.
+No coração de um ecossistema de e-commerce complexo e multifacetado, o projeto Spider nasceu como a espinha dorsal de automação, um hub de integração projetado para orquestrar o fluxo de operações para múltiplos clientes. O objetivo era claro: conectar de forma transparente e confiável sistemas de ERP (como Bling e bancos de dados customizados), plataformas de marketplace (Plugg.to, Skyhub, B2W) e ferramentas de gestão, garantindo um fluxo de dados à prova de falhas para produtos, estoque, preços e pedidos.
 
-A arquitetura foi desenhada como um orquestrador em Python que segue um pipeline robusto e flexível:
+A solução foi arquitetada como um sistema centralizado, construído em **PHP/Laravel**, que adota uma abordagem orientada a serviços e eventos. Do ponto de vista funcional, o Spider opera como o cérebro da operação:
 
-1.  **Ingestão de Conteúdo**: O fluxo inicia com a leitura de um roteiro ou frase de um banco de dados central em formato `content.json`. Este arquivo gerencia o ciclo de vida de cada vídeo, desde "Pendente" até "Publicado".
-2.  **Geração de Mídia**: O sistema se conecta a um ecossistema de APIs e modelos locais para criar os componentes do vídeo. A narração é gerada com vozes de alta qualidade via **ElevenLabs API** ou uma instância local de **Coqui TTS** para personalização total. O visual é criado por modelos de IA como **SDXL (via Replicate)** ou buscado em bancos de imagem como **Pixabay** para maior flexibilidade de custo. Uma trilha sonora é automaticamente adicionada através da **API do Jamendo**.
-3.  **Montagem e Finalização**: Com todos os recursos prontos, as legendas são geradas com precisão por uma instância local do **OpenAI Whisper**. A montagem final é orquestrada pelo **FFmpeg**, que combina imagem, narração, música de fundo e legendas, aplicando animações dinâmicas.
-4.  **Publicação**: Opcionalmente, o vídeo finalizado é enviado diretamente para o YouTube através da API oficial, completando o ciclo de automação.
-
-Adicionalmente, o projeto expõe suas funcionalidades de geração de mídia através de uma **API REST com Flask**, permitindo que outros sistemas solicitem a criação de narrações ou legendas como um microserviço desacoplado.
+  * **Recebe Dados:** Ele ingere informações de diversas fontes, utilizando **webhooks** para notificações em tempo real (ex: uma nota fiscal emitida no Bling) e **Artisan Commands** agendados para importações em lote (ex: buscar novos pedidos da Plugg.to).
+  * **Processa de Forma Inteligente:** Ao receber os dados, o Spider não apenas os armazena. Ele os enriquece e processa. Um pedido, por exemplo, passa por um job que identifica o cliente correto com base nos SKUs dos produtos antes de ser enviado ao ERP adequado.
+  * **Garante a Consistência:** Para tarefas críticas como atualizações de estoque e preço, o sistema utiliza um robusto mecanismo de **filas em Redis**. Isso garante que as operações sejam processadas de forma assíncrona, resiliente e controlada, evitando sobrecarga nas APIs externas e garantindo que as informações fluam de maneira ordenada para todos os canais de venda.
+  * **Centraliza a Informação:** Todas as operações, dados e logs são persistidos em um banco de dados **MongoDB**, que serve como a única fonte da verdade para o estado de pedidos, produtos e transações financeiras.
 
 #### 👨‍💻 Meu Papel no Projeto
 
-Como **Arquiteto de Soluções e Desenvolvedor Principal**, minhas responsabilidades foram abrangentes, cobrindo todo o ciclo de vida do projeto:
+Como **Engenheiro de Integração**, minha atuação foi central na concepção, desenvolvimento e manutenção deste ecossistema. Minhas principais responsabilidades incluíram:
 
-  * **Desenvolvimento End-to-End**: Projetei e implementei o fluxo de automação completo, desde a concepção da ideia até a publicação final no YouTube.
-  * **Arquitetura de Software**: Defini a arquitetura modular baseada em "passos" e "utilitários", garantindo a manutenibilidade e escalabilidade do sistema. Criei um gerenciador de conteúdo central (`ContentManager`) para abstrair o acesso aos dados e estruturei o projeto para suportar múltiplos provedores de IA.
-  * **Resolução de Desafios Técnicos Complexos**: Investiguei e solucionei problemas críticos de baixo nível, como instabilidade em motores de TTS, e artefatos visuais (tremor e centralização) em vídeos renderizados com FFmpeg.
-  * **Integração de APIs**: Orquestrei a integração de diversas APIs externas e modelos locais, incluindo OpenAI, ElevenLabs, Coqui TTS, Replicate, Pixabay, Jamendo e YouTube.
-  * **Desenvolvimento de API**: Construí um microserviço com Flask para expor a lógica de geração de mídia, desacoplando as funcionalidades de IA para serem reutilizadas por outras aplicações.
-  * **Qualidade e Documentação**: Estabeleci padrões de código, criei testes automatizados com Pytest e documentei extensivamente o projeto, incluindo guias de contribuição e planos de implementação detalhados.
+  * **Arquitetura de Integração:** Desenhar os fluxos de dados, modelar entidades críticas no MongoDB (como a de `checking_account` para controle financeiro) e definir a arquitetura de webhooks para processamento de eventos em tempo real.
+  * **Desenvolvimento Back-End:** Construir e manter os pilares da plataforma, incluindo Artisan Commands para importação, Jobs para processamento assíncrono e a lógica de integração com APIs de terceiros como Bling, Plugg.to e Skyhub.
+  * **Orquestração do Ciclo de Pedidos:** Automatizar o fluxo completo de um pedido, desde sua criação no marketplace, passando pelo envio ao ERP, até a atualização de seu status após o faturamento, tratando inclusive cancelamentos.
+  * **Sincronização Multi-plataforma:** Implementar a complexa lógica de sincronização de estoque e preços, garantindo consistência entre o "dono" do estoque (ERP) e múltiplos canais de venda para evitar overselling.
+  * **Onboarding e Migração de Clientes:** Liderar os processos técnicos para integrar novos clientes à plataforma, incluindo a migração massiva de produtos e pedidos de sistemas como Magento e Plugg.to.
+  * **Manutenção e Qualidade:** Criar ferramentas internas, como o `LogTrait` para padronizar logs, e executar scripts de manutenção no MongoDB para garantir a qualidade e a integridade dos dados.
 
 #### ✨ Pontos Fortes e Desafios Superados
 
-A força deste projeto reside em sua **flexibilidade e robustez**. A capacidade de alternar entre provedores de IA (ex: Replicate vs. Pixabay, ElevenLabs vs. Coqui TTS) permite um controle fino sobre custos e qualidade. A arquitetura modular e a API de microserviço tornam o sistema não apenas uma ferramenta, mas uma plataforma de geração de mídia.
+O maior ponto forte da solução é sua **arquitetura assíncrona e resiliente**. O uso intensivo de filas (Queues) não apenas tornou a plataforma mais responsiva, mas também permitiu escalar o processamento de um volume massivo de dados sem comprometer a estabilidade.
 
-Durante o desenvolvimento, enfrentei desafios técnicos significativos que foram transformados em vitórias de engenharia:
+Um dos desafios mais significativos foi **garantir a sincronização de estoque em tempo real**. Vender um produto que não existe no estoque (overselling) é um dos maiores problemas do e-commerce. Superamos isso abandonando o polling ineficiente e implementando uma **arquitetura reativa a eventos**. Ao configurar webhooks no Bling, o Spider passou a ser notificado instantaneamente sobre qualquer mudança, disparando jobs para filas dedicadas (`pluggto`, `skyhub`) que atualizavam os marketplaces de forma quase imediata e controlada. Essa mudança transformou um ponto de fragilidade em uma fortaleza da plataforma.
 
-  * **Desafio 1: Tremor (Judder) na Animação de Vídeo:** O uso inicial do filtro `zoompan` do FFmpeg causava um tremor visual irritante nas animações.
-
-      * **Superação:** Após uma investigação metódica documentada no plano de ação, a solução foi refatorar a montagem de vídeo em um **processo de duas etapas**. Primeiro, um clipe de vídeo mudo e perfeitamente estável é renderizado usando a combinação dos filtros `scale` e `crop`. Somente depois, em uma segunda etapa, o áudio e as legendas são mesclados (mux). Isso isolou a complexidade da animação da sincronização de áudio, eliminando completamente o tremor.
-
-  * **Desafio 2: Falha na Centralização da Animação:** O efeito de zoom e panorâmica estava sempre se deslocando para o canto superior esquerdo da imagem, em vez de focar no centro.
-
-      * **Superação:** O problema foi diagnosticado como uma falha do FFmpeg em avaliar dinamicamente as coordenadas de corte. A solução foi implementar uma **fórmula de centralização robusta** (`x='(iw-out_w)/2'`) que utiliza variáveis explícitas de saída. Essa lógica foi encapsulada em uma classe `MovementFilterGenerator` para garantir que todas as animações fossem consistentes e fáceis de manter.
-
-  * **Desafio 3: Instabilidade do Motor TTS Local:** A integração com o Coqui TTS apresentava falhas de compatibilidade com suas dependências (especialmente a biblioteca `transformers`), resultando em travamentos.
-
-      * [cite\_start]**Superação:** A estabilidade foi alcançada ao **travar a versão da biblioteca `transformers`** para uma versão anterior e comprovadamente compatível (`4.36.2`). [cite: 1] Além disso, o processo foi otimizado para gerar o áudio em memória (com NumPy) e carregá-lo diretamente no `pydub`, evitando um deadlock de I/O no disco que causava o travamento do script.
-
-- **Desafio 4: Flexibilidade de Provedores (Plug-and-Play)**: Você não apenas integrou serviços, mas criou uma arquitetura que permite escolher entre diferentes provedores para a mesma função. Isso é um diferencial imenso.
-	  * **Síntese de Voz**: Mencione que o sistema suporta tanto a **API da ElevenLabs (nuvem)** quanto uma instância local de **Coqui TTS**, permitindo alternar entre uma solução gerenciada e uma solução offline com clonagem de voz personalizada.
-	  * **Geração Visual**: Destaque que, além da **Replicate API (SDXL)**, você integrou a **Pixabay API** como uma alternativa gratuita, oferecendo controle de custos e resiliência.
-	  * **Trilha Sonora**: Adicione a integração com a **Jamendo API** para buscar e adicionar música de fundo automaticamente, resolvendo a questão dos direitos autorais de forma programática.
-
-- **Desafio 5: API como Microserviço (Reutilização)**: Um dos pontos mais fortes do seu projeto é a API Flask. Isso transforma a solução de um simples script para uma plataforma reutilizável.
-
-    * Adicione um parágrafo mencionando que o projeto também expõe suas capacidades de IA (geração de áudio, legendas e montagem de vídeo) através de uma **API REST com Flask**. Isso demonstra sua habilidade de pensar em termos de serviços desacoplados e reutilizáveis, permitindo que qualquer outra aplicação consuma essas funcionalidades.
-
-- **Desafio 6: Evolução da Arquitetura (Refatoração Estratégica)**: O texto atual menciona os gerenciadores `frases_manager.py` e `reflexao_manager.py`. No entanto, os planos de migração mostram que você evoluiu o projeto.
-
-    * Mencione a refatoração que unificou múltiplos arquivos (`frases.json`, `reflexao.json`) em um único `content.json` gerenciado por um `ContentManager` centralizado. Isso demonstra sua capacidade de identificar débitos técnicos e melhorar a manutenibilidade e a coesão do sistema ao longo do tempo.
-
-
-#### **4. Resultados e Impacto Quantificável**
-
-  * **Redução Drástica do Tempo de Produção**: Automatizou um processo que levaria de **2 a 3 horas** de trabalho manual por vídeo para menos de **5 minutos** de processamento autônomo.
-  * **Escalabilidade de Conteúdo**: Capacitou a produção e agendamento de dezenas de vídeos em lote, permitindo uma frequência de publicação diária que seria insustentável manualmente. O projeto inclui scripts para agendamento automático no macOS (`launchd`).
-  * **Otimização de Custos**: A implementação de provedores alternativos e gratuitos (Coqui TTS, Pixabay) e a otimização de chamadas de API reduziram significativamente os custos operacionais de geração de conteúdo.
+Outro grande desafio foi lidar com a **inconsistência de dados** provenientes de múltiplas fontes. Enfrentamos SKUs inválidos, produtos duplicados e pedidos sem associação clara de cliente. A vitória aqui foi conquistada através da engenharia: desenvolvi scripts e rotinas de tratamento, como o job `ProcessCodeOrders`, que implementou uma lógica robusta para **identificar e associar corretamente os pedidos aos seus respectivos clientes**, utilizando os SKUs dos itens como chave primária. Essa automação eliminou um processo manual e propenso a erros, garantindo a fluidez da operação.
 
 #### 🌱 Pontos para Evolução Futura
 
-Apesar de sua automação completa, o projeto tem potencial para crescer ainda mais:
+Apesar da robustez da solução, sempre há espaço para melhorias. Duas evoluções naturais seriam:
 
-1.  **Interface de Gerenciamento Web**: Desenvolver uma interface de usuário simples (com Flask ou FastAPI) para gerenciar o `content.json`, permitindo adicionar, editar e agendar vídeos sem interagir diretamente com o arquivo JSON.
-2.  **Expansão para Outras Plataformas**: Adaptar o formato de saída do vídeo (ex: 1:1 para Instagram, 16:9 padrão) e criar módulos de upload para outras plataformas como Instagram Reels ou TikTok.
+1.  **Dashboard de Observabilidade:** Implementar um painel de controle visual para monitorar em tempo real a saúde das filas, o status dos jobs e as métricas de integração, oferecendo uma visão proativa sobre possíveis gargalos.
+2.  **Centralização de Logs Avançada:** Expandir o `LogTrait` para integrar-se a uma plataforma de observabilidade como Datadog ou ELK Stack, permitindo buscas complexas e criação de alertas inteligentes sobre o comportamento das integrações.
 
 -----
 
 #### 🛠️ Pilha de Tecnologias (Tech Stack)
 
-| Componente                   | Tecnologia Utilizada                          | Papel na Arquitetura                                                                                                                                        |
-| :--------------------------- | :-------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Backend e Orquestração**   | **Python**, **Flask**                         | Linguagem principal do projeto e framework para a API de microserviço.                                                                                      |
-| **Geração de Conteúdo e IA** | **OpenAI API (GPT)**, **Replicate (SDXL)**    | Geração de roteiros e imagens de fundo a partir de prompts.                                                                                                 |
-| **Síntese de Voz (TTS)**     | **ElevenLabs API**, **Coqui TTS**             | Converte texto em narração de áudio, oferecendo opções de nuvem ou local.                                                                                   |
-| **Transcrição e Legendas**   | **OpenAI Whisper (Local)**                    | Gera legendas com timestamps precisos a partir do áudio da narração.                                                                                        |
-| **Mídia e Recursos**         | **Pixabay API**, **Jamendo API**              | Fontes alternativas e gratuitas para imagens de fundo e trilhas sonoras.                                                                                    |
-| **Manipulação de Mídia**     | **FFmpeg**, **Pydub**, **Pillow**, **OpenCV** | Ferramentas essenciais para montagem de vídeo, manipulação de áudio e processamento de imagem.                                                              |
-| **Automação Web**            | **Playwright**, **Selenium**                  | Utilizados para automação de navegador em scripts de coleta de dados ou imagens.                                                                            |
-| **Testes e Ambiente**        | **Pytest**, **python-dotenv**                 | Framework de testes para garantir a qualidade do código e gerenciamento de variáveis de ambiente.                                                           |
-| **Publicação**               | **YouTube Data API v3**                       | Conclui o fluxo fazendo o upload do vídeo finalizado para um canal específico, incluindo metadados (título, descrição, tags) gerenciados programaticamente. |
-
+| Componente | Tecnologia Utilizada | Papel na Arquitetura |
+| :--- | :--- | :--- |
+| **Backend & Lógica** | **PHP / Laravel** | Framework principal para toda a aplicação, incluindo Artisan Commands para tarefas agendadas e Jobs para processamento em segundo plano. |
+| **Banco de Dados Principal** | **MongoDB** | Banco de dados NoSQL central para armazenar produtos, pedidos, clientes e logs, oferecendo flexibilidade para modelos de dados complexos. |
+| **Filas Assíncronas** | **Redis** | Utilizado como o motor do sistema de filas (Queues), garantindo o processamento assíncrono e resiliente de tarefas como atualizações de estoque e importações. |
+| **Integrações (APIs)** | **REST & Webhooks** | Protocolos usados para comunicação com sistemas externos, tanto para buscar dados (REST) quanto para receber notificações em tempo real (Webhooks). |
+| **Plataformas Conectadas** | **Plugg.to, Skyhub, Bling** | Principais sistemas de e-commerce (marketplaces e ERP) com os quais o Spider se integrava para orquestrar as operações. |
+| **Infraestrutura & DevOps** | **Docker, AWS S3, SSH** | Docker para conteinerização do ambiente, S3 para armazenamento de arquivos (ex: planilhas de importação) e SSH para gerenciamento do servidor. |
+| **Bancos de Dados Legados** | **MySQL** | Utilizado para integração direta com o sistema ERP de clientes específicos que não possuíam uma API moderna, como o Novo Século. |
 
 -----
 
 #### 🗺️ Diagrama da Arquitetura
 
 ```mermaid
-graph TD
-    subgraph "Orquestrador Principal (main.py)"
-        A["▶️ Início do Fluxo"] --> B{Ler próximo job de 'content.json'};
-        B --> C["🤖 Gerar Roteiro (OpenAI API)"];
-        C --> D["🗣️ Gerar Narração <br>(ElevenLabs ou Coqui TTS)"];
-        D --> E["🖼️ Gerar Imagem de Fundo <br>(Replicate ou Pixabay)"];
-        D --> F["🎵 Buscar Música de Fundo <br>(Jamendo API)"];
-        subgraph "Processamento de Áudio"
-            D -- Narração --> G["🎤 Mixar Áudio (Pydub)"];
-            F -- Música --> G;
-        end
-        G -- Áudio Final --> H["✍️ Gerar Legendas (Whisper)"];
-        subgraph "Montagem Final"
-            E -- Imagem --> I["🎬 Montar Vídeo (FFmpeg)"];
-            G -- Áudio Final --> I;
-            H -- Legendas --> I;
-        end
-        I --> J{"☁️ Fazer Upload? (YouTube API)"};
-        J -- Sim --> K["✅ Publicado"];
-        J -- Não --> L["🏁 Concluído"];
+---
+config:
+  theme: default
+  look: handDrawn
+---
+flowchart LR
+    %% Fontes externas
+    subgraph EX["Fontes de Dados Externas"]
+        direction TB
+        ERP_Bling["🏢 ERP Bling"]
+        ERP_BDI["🗃️ ERP Custom (MySQL)"]
+        Marketplaces["🛒 Marketplaces (Plugg.to, Skyhub)"]
     end
 
-    style K fill:#d4edda,stroke:#155724
-    style L fill:#e2e3e5,stroke:#383d41
+    %% Entrada de dados
+    subgraph IN["Entrada de Dados"]
+        API["📡 API / Webhooks"]
+        Commands["⚙️ Artisan Commands"]
+    end
+
+    %% Processamento
+    subgraph PR["Processamento Assíncrono"]
+        Job_Stock["🧬 Atualizar Estoque"]
+        Job_Order["📄 Processar Pedidos"]
+        Job_Others["… Outros Jobs"]
+    end
+
+    %% Armazenamento
+    MongoDB[("🗄️ MongoDB")]
+    Queues["📦 Filas (Redis)"]
+
+    %% Fluxos
+    ERP_Bling -- "Webhooks (Estoque, NF-e)" --> API
+    ERP_BDI -- "Leitura via Job" --> Commands
+    Marketplaces -- "Importação via Job" --> Commands
+
+    API --> Queues
+    Commands --> Queues
+    Queues --> Job_Stock & Job_Order & Job_Others
+
+    Job_Stock <--> MongoDB
+    Job_Order <--> MongoDB
+    Job_Others <--> MongoDB
+
+    Job_Order -- "Pedido Processado" --> ERP_Bling
+    Job_Stock -- "Atualizar Estoque" --> Marketplaces
+    Job_Order -- "Atualizar Status" --> Marketplaces
+
+    style PR fill:#E8F5E9,stroke:#81C784,stroke-width:2px
+    style EX fill:#FFF3E0,stroke:#FFB74D,stroke-width:2px
+    style IN fill:#E3F2FD,stroke:#64B5F6,stroke-width:2px
+    style MongoDB fill:#F3E5F5,stroke:#BA68C8,stroke-width:2px
+    style Queues fill:#FFEBEE,stroke:#E57373,stroke-width:2px
 ```
 
-#### Diagrama da API
-
-```mermaid
 ---
-config:
-  theme: default
-  look: handDrawn
----
-flowchart TB
- subgraph subGraph0["Microserviço (API Flask)"]
-        N{"API REST"}
-        M["Cliente"]
-        O["Lógica de Geração de Áudio"]
-        P["Lógica de Geração de Legendas"]
-        Q["Lógica de Montagem de Vídeo"]
-  end
-    M --> N
-    N -- "/generate-audio" --> O
-    N -- "/generate-subtitles" --> P
-    N -- "/assemble-video" --> Q
-    M@{ shape: terminal}
-    O@{ shape: card}
-    P@{ shape: card}
-    Q@{ shape: card}
-    style N fill:#FFD600
-    style M color:#000000
-
-```
-
-#### Fluxo da geração de vídeo
-
-```mermaid
----
-config:
-  theme: default
-  look: handDrawn
----
-flowchart TD
- subgraph subGraph0["A. Geração de Conteúdo"]
-        A["🤖 1. Gerar Roteiro<br>(OpenAI API)"]
-        B@{ label: "📝 Salvar em 'content.json'" }
-  end
- subgraph subGraph1["B. Criação de Mídia"]
-        C["🔊 2. Gerar Narração<br>(ElevenLabs ou Coqui TTS)"]
-        D["🖼️ 3. Gerar Imagem<br>(Replicate ou Pixabay)"]
-        E["🎵 4. Adicionar Música de Fundo<br>(Jamendo)"]
-        F["✍️ 5. Gerar Legendas<br>(Local Whisper)"]
-  end
- subgraph subGraph2["C. Finalização e Publicação"]
-        G["🎬 6. Montar Vídeo<br>(FFmpeg)"]
-        H["☁️ 7. Upload para YouTube<br>(YouTube API)"]
-  end
-    A --> B
-    B --> C
-    C --> D
-    D --> E
-    E --> F
-    F --> G
-    G --> H
-    B@{ shape: cyl}
-    style subGraph0 fill:#FFD600
-    style subGraph1 fill:#FFE0B2
-    style subGraph2 fill:#C8E6C9
-```
-
-
----
-
 #### RESUMO TÉCNICO PARA EMBEDDING
 
-Este projeto é uma fábrica de automação de vídeo end-to-end desenvolvida em Python, orquestrando um pipeline que abrange desde a ingestão de conteúdo via `content.json` até a publicação no YouTube. A arquitetura modular suporta múltiplos provedores de IA em um modelo plug-and-play, utilizando ElevenLabs API ou Coqui TTS local para síntese de voz, e Replicate (SDXL) ou Pixabay API para geração de imagens. A solução supera desafios técnicos complexos de manipulação de mídia, como a eliminação de tremor (judder) em animações FFmpeg através de um processo de renderização estável em duas etapas com filtros `scale`/`crop`, e a correção de centralização com fórmulas de coordenadas robustas (`(iw-out_w)/2`). A estabilidade do motor Coqui TTS foi alcançada travando a versão da biblioteca `transformers` (`4.36.2`) e otimizando o processamento de áudio em memória com NumPy e Pydub para evitar deadlocks de I/O. O sistema também inclui transcrição de áudio via OpenAI Whisper local, adição de trilha sonora pela Jamendo API, e expõe suas funcionalidades de IA como um microserviço desacoplado através de uma API RESTful construída com Flask. A gestão de configuração é feita via `python-dotenv` e testes automatizados com Pytest garantem a qualidade do código.
+Desenvolvimento e arquitetura do "Spider", um hub de integração de e-commerce centralizado, construído em **PHP/Laravel** para orquestrar operações entre múltiplos sistemas. A arquitetura é orientada a serviços e eventos, utilizando **processamento assíncrono** com **Jobs** e **filas em Redis** para garantir resiliência e escalabilidade. O sistema ingere dados via **APIs REST** e **Webhooks** de plataformas como **Bling**, **Plugg.to**, e **Skyhub**, além de realizar extrações de bancos de dados legados **MySQL**. As operações de **ETL (Extract, Transform, Load)** são executadas por **Artisan Commands** para migração e importação em massa. Todos os dados operacionais (pedidos, produtos, logs) são persistidos em um banco de dados **MongoDB**, que funciona como fonte única da verdade. Desafios de sincronização de estoque e preço foram solucionados implementando uma **arquitetura reativa a eventos**, abandonando o polling em favor de webhooks que disparam jobs para filas dedicadas, prevenindo overselling. A inconsistência de dados foi tratada com rotinas de normalização e enriquecimento, como o `ProcessCodeOrders`. A infraestrutura utiliza **Docker** para conteinerização, **AWS S3** para armazenamento e **SSH** para gerenciamento, com processos agendados via **cron**. A gestão do projeto foi feita com **Jira**, e a padronização de logs foi implementada com um `LogTrait` customizado.
 
 #### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
 
-| Categoria                    | Tecnologias e Conceitos                                                                                                                                                          |
-| :--------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **AI & Machine Learning**    | 🧠 OpenAI API (GPT), Replicate (SDXL), Coqui TTS, OpenAI Whisper, `transformers`, NumPy                                                                                           |
-| **Software Development**     | 💻 Python, `subprocess`, Pydub, Pillow, OpenCV, `python-dotenv`, Pytest, SOLID, Clean Code                                                                                        |
-| **Architecture**             | 🏛️ Arquitetura Modular, Microserviços, Plug-and-Play (Provedores de IA), `ContentManager` (Repositório Central), Renderização em Duas Etapas, `MovementFilterGenerator` (Factory) |
-| **Cloud Computing**          | ☁️ ElevenLabs API, Replicate API, Pixabay API, Jamendo API, YouTube Data API v3, OpenAI API                                                                                       |
-| **API RESTFul development**  | 🌐 Flask, Integração de APIs REST                                                                                                                                                 |
-| **Frontend Development**     | N/A                                                                                                                                                                              |
-| **Mobile Development**       | N/A                                                                                                                                                                              |
-| **Database**                 | 🗄️ JSON (utilizado como banco de dados de arquivos)                                                                                                                               |
-| **Data Management**          | 📊 `ContentManager` (Abstração de Dados), Gerenciamento de JSON                                                                                                                   |
-| **Content Management - CMS** | N/A                                                                                                                                                                              |
-| **System Administration**    | ⚙️ `launchd` (Agendamento de tarefas no macOS)                                                                                                                                    |
-| **DevOps**                   | 🚀 Gerenciamento de Ambiente (venv), Gerenciamento de Dependências (`requirements.txt`), Testes Automatizados (Pytest), Agendamento de Publicação                                 |
-| **Leadership**               | 👨‍🏫 Arquiteto de Soluções, Desenvolvedor Principal, Documentação Técnica                                                                                                           |
-| **Coaching**                 | N/A                                                                                                                                                                              |
-| **Agile Project Management** | 🔄 Desenvolvimento Incremental, Refatoração Estratégica, Resolução de Débito Técnico                                                                                              |
+| Categoria | Tecnologias e Conceitos |
+| :--- | :--- |
+| **AI & Machine Learning** | N/A |
+| **Software Development** | PHP, Laravel, Artisan Commands, Jobs, Traits (`LogTrait`), Controllers, Backend Development |
+| **Architecture**| Arquitetura Orientada a Serviços, Arquitetura Orientada a Eventos, Arquitetura Assíncrona, Arquitetura Reativa, Hub de Integração, Modelagem de Entidades, Fluxos de Dados |
+| **Cloud Computing** | AWS S3 |
+| **API RESTFul development** | API REST, Webhooks, Consumo de API (Bling, Plugg.to, Skyhub) |
+| **Frontend Development** | N/A |
+| **Mobile Development** | N/A |
+| **Database** | MongoDB, Redis, MySQL, SQLite, NoSQL |
+| **Data Management** | ETL (Extração, Transformação, Carga), Migração de Dados (Magento, Plugg.to), Sincronização de Dados (Estoque, Preço), Qualidade de Dados, Normalização de Dados, Logs (`LogTrait`) |
+| **Content Management - CMS** | N/A |
+| **System Administration** | Gerenciamento de Servidor (SSH), Cron Jobs |
+| **DevOps** | Docker, Docker Compose, Monitoramento, Logging, Automação de Tarefas |
+| **Leadership** | Liderança Técnica, Documentação Técnica, Mentoria (Coaching) |
+| **Coaching** | N/A |
+| **Agile Project Management** | Jira, Gestão de Tarefas, Acompanhamento de Status |
+
 
 ---
-#### Documentos
-Aqui está uma descrição de cada arquivo:
 
-##### 📄 `README.md`
-Este é o documento principal do projeto, a "Fábrica de vídeos automatizada". Ele descreve de forma completa o sistema, que automatiza a criação e publicação de vídeos curtos e longos para o YouTube. O `README` detalha:
-* **Tecnologias Usadas**: Python, ElevenLabs, Coqui TTS, Replicate, Pixabay, Jamendo, Whisper, FFmpeg e a API do YouTube.
-* **Fluxo de Trabalho**: Desde a geração do roteiro até o upload do vídeo finalizado.
-* **Estrutura de Pastas**: Uma visão geral da organização modular do código.
-* **Integrações**: Explica o papel de cada ferramenta e API no processo.
-* **Microserviço API**: Detalha uma API REST (com Flask) que expõe funcionalidades como geração de áudio e legendas para outras aplicações.
-* **Instruções de Uso**: Como configurar o ambiente, instalar dependências, usar as chaves de API e executar o projeto com diferentes argumentos de linha de comando.
-* **Diagramas**: Inclui um fluxograma e um diagrama de sequência para ilustrar o processo.
+***
 
-##### 🧠 `CONTRIBUTING.md`
-Este é o guia de contribuição e padrões de código. É um documento essencial para garantir a qualidade e a manutenibilidade do projeto. Ele estabelece regras rígidas sobre:
-* **Ambiente de Desenvolvimento**: Exige Python 3.11/3.12 e um ambiente virtual (`venv`).
-* **Segurança**: Proíbe o uso de chaves de API diretamente no código, exigindo o uso de arquivos `.env`.
-* **Modularidade e Clean Code**: Define o Princípio da Responsabilidade Única, com exemplos de código certo e errado.
-* **Robustez**: Como lidar com processos externos (como FFmpeg) de forma segura usando `subprocess`.
-* **Testes e Debugging**: Enfatiza a importância de testes incrementais e sistemáticos.
-* **Proibições**: Lista práticas estritamente proibidas para manter a consistência.
+### 🚀 Project:  Telegram Course Tools
 
-##### 📝 `plano-de-migracao-content-json.md`
-Este arquivo detalha um plano de refatoração para centralizar a gestão de conteúdo. O objetivo é substituir dois arquivos (`frases.json` e `reflexao.json`) por um único `content.json` com uma estrutura de dados padronizada. O plano é dividido em etapas claras:
-1.  Criação de um novo módulo `ContentManager`.
-2.  Refatoração do script principal (`main.py`) para usar o novo gerenciador.
-3.  Atualização de todos os scripts dependentes.
-4.  Limpeza de arquivos antigos e atualização da documentação.
-
-##### 🎶 `plano-de-implementacao-bg-musical.md`
-Este documento descreve o plano para adicionar trilhas sonoras aos vídeos. A estratégia é integrar a API do **Jamendo** para buscar e baixar músicas livres de direitos autorais. O plano inclui:
-* **Configuração Inicial**: Adicionar chaves de API ao `.env` e criar um módulo `music_manager.py`.
-* **Integração com a API**: Funções para buscar e baixar as faixas.
-* **Lógica de Mesclagem**: Como usar a biblioteca `pydub` para combinar a narração com a música de fundo.
-* **Testes e Documentação**: Etapas para validar a funcionalidade e atualizar o `README.md`.
-
-##### 🖼️ `plano-de-integracao-pixabay-imagens.md`
-Este é um plano para integrar o **Pixabay** como uma fonte alternativa e gratuita para as imagens de fundo dos vídeos, complementando o gerador de IA (Replicate/SDXL). O plano cobre:
-* Implementação da função de busca e download de imagens via API do Pixabay.
-* Adição de controle via arquivo `.env` e argumentos de linha de comando.
-* Criação de testes automatizados.
-* Atualização da documentação para refletir a nova opção.
-
-##### 🔧 `video_ajuste.md`
-Este é um plano de ação técnico para corrigir um problema de "tremor" (judder) nas animações dos vídeos. É um exemplo excelente de debugging sistemático, detalhando:
-* **Estratégia de Teste**: Isolar cada tentativa de solução e reverter o código antes de tentar a próxima.
-* **Fases de Implementação**: Desde o diagnóstico até a validação, testando múltiplas soluções com FFmpeg, como renderização em duas etapas, uso do filtro `setpts`, e a troca do instável `zoompan` pela combinação estável de `scale`/`crop`.
-
-##### 🎯 `video_centralizar.md`
-Similar ao plano de ajuste, este documento foca em resolver um problema específico: o movimento de zoom e panorâmica não estava centralizado na imagem. O plano segue uma estrutura de fases:
-* **Diagnóstico**: Adicionar logs para inspecionar variáveis e dimensões.
-* **Correção Rápida**: Forçar um movimento central para uma solução imediata.
-* **Solução Robusta**: Refatorar o código para uma classe `MovementFilterGenerator`, tornando-o mais limpo e centralizado.
-* **Testes e Validação**: Inclui a criação de um script de teste visual com uma imagem de referência para validar a centralização de forma precisa.
-
-##### 🔊 `Audio Gen - Fix Plan.md` e `Fix-Plan-TTS.md`
-Estes dois documentos abordam problemas de instabilidade com a biblioteca de geração de áudio **Coqui TTS**.
-* **`Fix-Plan-TTS.md`**: Diagnostica um erro de validação que impedia o uso da língua portuguesa (`pt`). A solução proposta é aplicar um "patch" no código da biblioteca em tempo de execução para permitir o idioma.
-* **`Audio Gen - Fix Plan.md`**: Resolve um problema mais profundo de compatibilidade entre as bibliotecas `TTS` e `transformers`. A solução definitiva encontrada foi travar as versões das bibliotecas no arquivo `requirements.txt`. Além disso, o documento diagnostica e corrige um "deadlock" (travamento) que ocorria ao manipular o áudio, otimizando o processo para ser executado totalmente em memória, o que é mais rápido e seguro.
-
-Em resumo, os arquivos mostram um projeto de automação maduro, com documentação robusta, planejamento cuidadoso de novas funcionalidades e uma abordagem metódica e profissional para a resolução de problemas técnicos.
-
-
-### 🚀 Projeto: Telegram Course Tools
-
-##### 🎯 Visão Geral e Arquitetura da Solução
+#### 🎯 Visão Geral e Arquitetura da Solução
 
 Em um cenário onde o Telegram se tornou um vasto repositório de conhecimento, o projeto **Telegram Course Tools** emerge como uma solução estratégica para um desafio comum: a desorganização. A plataforma, embora excelente para comunicação, não foi projetada para e-learning, transformando o acompanhamento de múltiplos cursos em uma tarefa frustrante.
 
@@ -961,15 +1548,15 @@ Embora a solução seja totalmente funcional para seu propósito inicial, existe
 
 #### 🛠️ Pilha de Tecnologias (Tech Stack)
 
-| Componente                     | Tecnologia Utilizada            | Papel na Arquitetura                                                                                                              |
-| :----------------------------- | :------------------------------ | :-------------------------------------------------------------------------------------------------------------------------------- |
-| **Linguagem Principal**        | **Python 3.8+**                 | A base para toda a automação, orquestrando a lógica, a interação com APIs e a manipulação de arquivos.                            |
-| **Comunicação com API**        | **Telethon**                    | Cliente assíncrono para interagir com a API do Telegram, permitindo buscar históricos e baixar mídias de forma robusta.           |
-| **Interface de Usuário (CLI)** | **tqdm**                        | Fornece feedback visual com barras de progresso durante os downloads, melhorando significativamente a experiência do usuário.     |
-| **Estruturação de Conteúdo**   | **`re` (Expressões Regulares)** | O motor de inteligência para identificar padrões em texto não-estruturado e organizar as aulas em módulos nos sumários.           |
-| **Manipulação de Dados**       | **`json`**                      | Utilizado como o formato de intercâmbio de dados entre a etapa de mapeamento e a de indexação, garantindo um "contrato" claro.    |
-| **Gestão do Sistema**          | **`os`**                        | Essencial para interações com o sistema de arquivos, como criar diretórios para os cursos e verificar a existência de vídeos.     |
-| **Programação Assíncrona**     | **`asyncio`**                   | Usado implicitamente pelo Telethon para otimizar a comunicação de rede com a API do Telegram, tornando as operações mais rápidas. |
+| Componente | Tecnologia Utilizada | Papel na Arquitetura |
+| :--- | :--- | :--- |
+| **Linguagem Principal** | **Python 3.8+** | A base para toda a automação, orquestrando a lógica, a interação com APIs e a manipulação de arquivos. |
+| **Comunicação com API** | **Telethon** | Cliente assíncrono para interagir com a API do Telegram, permitindo buscar históricos e baixar mídias de forma robusta. |
+| **Interface de Usuário (CLI)** | **tqdm** | Fornece feedback visual com barras de progresso durante os downloads, melhorando significativamente a experiência do usuário. |
+| **Estruturação de Conteúdo** | **`re` (Expressões Regulares)** | O motor de inteligência para identificar padrões em texto não-estruturado e organizar as aulas em módulos nos sumários. |
+| **Manipulação de Dados** | **`json`** | Utilizado como o formato de intercâmbio de dados entre a etapa de mapeamento e a de indexação, garantindo um "contrato" claro. |
+| **Gestão do Sistema** | **`os`** | Essencial para interações com o sistema de arquivos, como criar diretórios para os cursos e verificar a existência de vídeos. |
+| **Programação Assíncrona** | **`asyncio`** | Usado implicitamente pelo Telethon para otimizar a comunicação de rede com a API do Telegram, tornando as operações mais rápidas. |
 
 -----
 
@@ -1033,480 +1620,27 @@ Este projeto implementa uma suíte de automação em Python para organizar conte
 
 #### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
 
-| Categoria                    | Tecnologias e Conceitos                                                                                                                                                        |
-| :--------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **AI & Machine Learning**    | N/A                                                                                                                                                                            |
-| **Software Development**     | Python, Automação de Scripts, Programação Assíncrona (asyncio), Manipulação de Sistema de Arquivos (os), Expressões Regulares (re), Modularidade, CLI (Command-Line Interface) |
-| **Architecture**             | Arquitetura Modular, Arquitetura de Solução, Fluxo de Dados (ETL), Design de Componentes Independentes                                                                         |
-| **Cloud Computing**          | Consumo de API de Plataforma (Telegram API)                                                                                                                                    |
-| **API RESTFul development**  | Consumo de API (Telethon)                                                                                                                                                      |
-| **Frontend Development**     | CLI User Experience (tqdm)                                                                                                                                                     |
-| **Mobile Development**       | N/A                                                                                                                                                                            |
-| **Database**                 | N/A                                                                                                                                                                            |
-| **Data Management**          | Extração de Dados, Transformação de Dados (Parsing), JSON, Markdown, Dados Não-Estruturados                                                                                    |
-| **Content Management - CMS** | N/A                                                                                                                                                                            |
-| **System Administration**    | Gerenciamento de Arquivos e Diretórios                                                                                                                                         |
-| **DevOps**                   | N/A                                                                                                                                                                            |
-| **Leadership**               | Arquitetura de Solução, Product Ownership, Tomada de Decisão Técnica                                                                                                           |
-| **Coaching**                 | N/A                                                                                                                                                                            |
-| **Agile Project Management** | Definição de Requisitos, Validação de Solução, Product Owner                                                                                                                   |
-
-
-
-### 🚀 Projeto: Air Combat 3D: Um Estudo de Caso sobre Produtividade com IAs
-
-#### 🎯 Visão Geral e Arquitetura da Solução
-
-Este projeto nasceu de uma questão estratégica: qual o impacto real de ferramentas de IA generativa na produtividade de um desenvolvedor full-stack? Para responder a isso, conduzi um estudo de caso prático, desenvolvendo do zero um jogo 3D de combate aéreo multiplayer. O objetivo não era apenas criar um jogo, mas sim mensurar a aceleração no ciclo de vida do desenvolvimento.
-
-A solução é uma aplicação web onde jogadores podem entrar em uma arena e pilotar aviões de combate em tempo real. O frontend, construído com **Three.js**, é responsável por toda a renderização 3D, desde os modelos das aeronaves até o ambiente de batalha e os controles interativos. A comunicação em tempo real, coração da experiência multiplayer, é garantida por um backend robusto em **Node.js** e **Express**, utilizando **WebSockets** para sincronizar as ações dos jogadores com latência mínima. Toda a aplicação foi conteinerizada com **Docker**, garantindo a portabilidade e a consistência do ambiente, e implantada na nuvem através do **Render.com**.
-
-O resultado mais expressivo foi a validação da hipótese inicial: o uso de IDEs assistidas por IA (Cursor, Trae) resultou em uma **redução de aproximadamente 40% no tempo total de desenvolvimento**, desde a concepção até a entrega final.
-
-#### 👨‍💻 Meu Papel no Projeto
-
-Como único desenvolvedor e pesquisador neste estudo de caso, atuei de ponta a ponta, assumindo os seguintes papéis:
-
-  * **Arquiteto e Desenvolvedor Full-Stack:** Idealizei a arquitetura, desenvolvi o frontend interativo com Three.js, construí o servidor de backend em Node.js para a lógica de jogo e comunicação em tempo real via WebSockets.
-  * **Engenheiro DevOps:** Fui responsável por todo o ciclo de vida da infraestrutura, incluindo a conteinerização da aplicação com Docker e a automação do processo de deploy contínuo na plataforma Render.com.
-  * **Pesquisador de Fluxo de Trabalho:** Defini a metodologia para o estudo, integrei as ferramentas de IA generativa no meu fluxo de trabalho diário e mensurei ativamente o ganho de produtividade em comparação com métodos tradicionais.
-
-#### ✨ Pontos Fortes e Desafios Superados
-
-O principal ponto forte do projeto é a demonstração clara e quantificável do poder da IA como uma ferramenta de alavancagem para desenvolvedores. O jogo funcional é a prova de conceito que materializa essa conclusão.
-
-  * **Desafio Superado:** O maior desafio técnico foi garantir a **sincronização de estado em tempo real** entre múltiplos jogadores. Manter a posição e as ações de cada avião consistentes para todos os clientes, com baixa latência, é complexo. Superei isso implementando um loop de jogo eficiente no servidor Node.js que processa as entradas dos jogadores e transmite o estado atualizado do jogo de volta aos clientes através de uma conexão WebSocket estável.
-  * **Vitória Estratégica:** A maior vitória, no entanto, foi a **validação bem-sucedida do fluxo de trabalho assistido por IA**. Provar uma redução de 40% no tempo de desenvolvimento transformou uma crença intuitiva em um dado concreto, oferecendo um forte argumento para a adoção moderna de ferramentas no ciclo de desenvolvimento de software.
-
-#### 🌱 Pontos para Evolução Futura
-
-Embora o projeto tenha cumprido seu objetivo principal, ele possui um grande potencial para evolução. Como próximos passos, poderíamos implementar um sistema de **persistência de pontuação e ranking de jogadores**, utilizando um banco de dados como PostgreSQL ou Redis. Outra melhoria seria a criação de **salas de jogo privadas e diferentes modos de batalha** (como "Team Deathmatch"), enriquecendo a experiência multiplayer.
-
------
-
-#### 🛠️ Pilha de Tecnologias (Tech Stack)
-
-| Componente                      | Tecnologia Utilizada             | Papel na Arquitetura                                                                                                                |
-| :------------------------------ | :------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------- |
-| **Renderização e Interação 3D** | **Three.js**                     | Criação do ambiente 3D, renderização dos aviões e gerenciamento da câmera e controles do jogador no navegador.                      |
-| **Servidor de Aplicação**       | **Node.js com Express**          | Orquestra a lógica de negócio, gerencia o matchmaking e serve como a base para a comunicação em tempo real.                         |
-| **Comunicação em Tempo Real**   | **WebSockets**                   | Estabelece um canal de comunicação bidirecional e de baixa latência entre o cliente e o servidor para sincronizar as ações.         |
-| **Conteinerização**             | **Docker**                       | Empacota a aplicação e suas dependências em um contêiner, garantindo consistência entre os ambientes de desenvolvimento e produção. |
-| **Hospedagem e Deploy**         | **Render.com**                   | Plataforma de nuvem utilizada para hospedar a aplicação conteinerizada e disponibilizá-la publicamente online.                      |
-| **Aceleração de Código**        | **IA Generativa (Cursor, Trae)** | Ferramentas integradas à IDE para acelerar a escrita de código, prototipagem de funcionalidades e resolução de problemas.           |
-
------
-
-#### 🗺️ Diagrama da Arquitetura
-
-```mermaid
----
-config:
-  theme: default
-  look: handDrawn
----
-flowchart LR
-    %% Plataforma Render.com
-    subgraph Render["🌐 Plataforma Render.com"]
-        style Render fill:#E0F7FA,stroke:#00ACC1,stroke-width:2px
-        subgraph Docker["🐳 Contêiner Docker"]
-            style Docker fill:#B2EBF2,stroke:#00838F,stroke-width:2px
-            B[🚀 Servidor Node.js/Express]
-        end
-    end
-
-    %% Cliente (Browser)
-    subgraph Client["💻 Cliente (Browser)"]
-        style Client fill:#FFF3E0,stroke:#FFB300,stroke-width:2px
-        A[🎮 Aplicação Three.js]
-    end
-
-    %% Jogadores
-    P1[👨‍✈️ Jogador 1]
-    P2[👨‍✈️ Jogador 2]
-
-    %% Fluxos de interação
-    P1 -- "Interage com" --> A
-    P2 -- "Interage com" --> A
-
-    A -- "Conexão WebSocket em Tempo Real 🔌" --> B
-    B -- "Sincroniza Estado do Jogo 🔄" --> A
-    B -- "Lógica de Jogo e Matchmaking 🎲" --> B
-
-```
-
----
-#### RESUMO TÉCNICO PARA EMBEDDING
-
-Estudo de caso prático sobre o impacto de IA generativa na produtividade, materializado no desenvolvimento de um jogo 3D multiplayer de combate aéreo. A arquitetura da solução emprega um frontend em **Three.js** para renderização 3D e um backend em **Node.js** com **Express** para a lógica de jogo. O principal desafio técnico, a **sincronização de estado em tempo real** entre múltiplos jogadores, foi solucionado com **WebSockets** para comunicação de baixa latência. A aplicação foi conteinerizada com **Docker**, garantindo portabilidade e consistência, com o ciclo de **deploy contínuo** automatizado na plataforma de nuvem **Render.com**. O uso de IDEs assistidas por **IA generativa (Cursor, Trae)** validou uma redução de 40% no tempo de desenvolvimento. Evoluções futuras planejadas incluem a implementação de persistência de dados com **PostgreSQL** ou **Redis** para rankings e pontuações.
-
-#### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
-
-| Categoria                    | Tecnologias e Conceitos                                                                       |
-| :--------------------------- | :-------------------------------------------------------------------------------------------- |
-| **AI & Machine Learning**    | IA Generativa, Cursor, Trae                                                                   |
-| **Software Development**     | Desenvolvedor Full-Stack, Loop de jogo, Prototipagem, Ciclo de vida do desenvolvimento        |
-| **Architecture**             | Arquitetura de aplicação web, Multiplayer em tempo real, Sincronização de estado, Matchmaking |
-| **Cloud Computing**          | Render.com, Hospedagem em nuvem                                                               |
-| **API RESTFul development**  | Node.js, Express                                                                              |
-| **Frontend Development**     | Three.js, Renderização 3D, Controles interativos                                              |
-| **Mobile Development**       | N/A                                                                                           |
-| **Database**                 | PostgreSQL, Redis                                                                             |
-| **Data Management**          | Persistência de pontuação                                                                     |
-| **Content Management - CMS** | N/A                                                                                           |
-| **System Administration**    | N/A                                                                                           |
-| **DevOps**                   | Docker, Conteinerização, Deploy Contínuo                                                      |
-| **Leadership**               | N/A                                                                                           |
-| **Coaching**                 | N/A                                                                                           |
-| **Agile Project Management** | N/A                                                                                           |
-### 🚀 Projeto: Kpro After Sales: API para Otimização de Processos de Pós-Venda
-
-#### 🎯 Visão Geral e Arquitetura da Solução
-
-Em um cenário onde os processos de pós-venda da Kpro — abrangendo aluguéis, vendas e compras compartilhadas — precisavam de coesão e eficiência, a solução foi arquitetar e construir um núcleo digital central: uma **API RESTful robusta e escalável**. Este projeto nasceu para ser o "cérebro" da operação, orquestrando todo o ciclo de vida dos equipamentos, desde a gestão de checklists e documentos até o controle de status e histórico.
-
-A API foi desenvolvida em **Laravel Lumen**, servindo como o backend desacoplado para uma moderna interface de usuário em Vue.js. Essa arquitetura garantiu não apenas uma separação clara de responsabilidades, mas também uma agilidade ímpar para as equipes de frontend e backend trabalharem em paralelo, conectadas por um contrato de API bem definido e documentado.
-
-#### 👨‍💻 Meu Papel no Projeto
-
-Atuando como **Desenvolvedor Back-End**, em estreita colaboração com o Arquiteto de Soluções, minhas principais responsabilidades foram:
-
-  * **Construção da API:** Desenvolver os endpoints, implementar as regras de negócio e realizar a integração com serviços externos utilizando o framework Laravel Lumen.
-  * **Otimização de Performance:** Realizar *query tuning* no banco de dados MySQL e implementar estratégias de cache para garantir a velocidade da aplicação.
-  * **Garantia de Qualidade:** Criar uma suíte sólida de testes automatizados com PHPUnit para assegurar a estabilidade e evitar regressões.
-  * **Facilitação da Integração:** Elaborar a documentação completa da API com Swagger/OpenAPI para acelerar o desenvolvimento e a integração com a equipe de frontend.
-
-#### ✨ Pontos Fortes e Desafios Superados
-
-O maior triunfo deste projeto foi transformar desafios técnicos complexos em vitórias mensuráveis para o negócio.
-
-  * **Performance como Prioridade:** Um dos principais desafios era garantir que a API respondesse com baixa latência, mesmo sob carga. Enfrentei isso com uma otimização criteriosa das consultas ao banco de dados e a implementação de uma camada de cache inteligente. O resultado? Uma **melhora de 30% no tempo de resposta** dos endpoints críticos, impactando diretamente a experiência do usuário final.
-  * **Qualidade e Estabilidade Inegociáveis:** Para construir uma base sólida e confiável, a estratégia foi investir pesado em automação de testes. O desafio era cobrir a complexidade das regras de negócio. Superamos isso ao desenvolver uma suíte de testes com **cobertura de código de aproximadamente 80%** usando PHPUnit, o que blindou a API contra bugs e regressões.
-  * **Colaboração Acelerada por Documentação:** A sinergia entre backend e frontend é crucial. Para eliminar qualquer atrito, produzi uma documentação interativa e detalhada com **Swagger/OpenAPI**. Isso não apenas serviu como um contrato claro, mas também **acelerou o onboarding e a produtividade da equipe de frontend** em Vue.js, permitindo que eles consumissem os endpoints com total autonomia e clareza.
-
-#### 🌱 Pontos para Evolução Futura
-
-Como próximos passos para evoluir a maturidade da solução, poderíamos considerar:
-
-1.  A implementação de um **pipeline de CI/CD** para automatizar os processos de build, teste e deploy.
-2.  Adoção de uma ferramenta de **monitoramento e observabilidade** (como Prometheus/Grafana) para acompanhar a saúde da API em tempo real.
-
------
-
-#### 🛠️ Pilha de Tecnologias (Tech Stack)
-
-| Componente               | Tecnologia Utilizada    | Papel na Arquitetura                                                                                                           |
-| :----------------------- | :---------------------- | :----------------------------------------------------------------------------------------------------------------------------- |
-| **Backend API**          | **Laravel Lumen (PHP)** | Núcleo da aplicação, responsável por toda a lógica de negócio, regras e exposição dos dados via endpoints RESTful.             |
-| **Banco de Dados**       | **MySQL**               | Sistema de gerenciamento de banco de dados relacional para a persistência de todas as informações da plataforma.               |
-| **Testes Automatizados** | **PHPUnit**             | Ferramenta utilizada para criar a suíte de testes unitários e de integração, garantindo a qualidade e estabilidade do código.  |
-| **Documentação da API**  | **Swagger (OpenAPI)**   | Padrão utilizado para desenhar, construir e documentar a API, servindo como um contrato claro para os consumidores (frontend). |
-
------
-
-#### 🗺️ Diagrama da Arquitetura
-
-```mermaid
----
-config:
-  theme: default
-  look: handDrawn
----
-flowchart LR
- subgraph FE["👩‍💻 Time de Frontend"]
-        A["Equipe Vue.js"]
-  end
- subgraph KPRO["🚀 Solução Kpro After Sales"]
-        B["Interface Vue.js"]
-        C["API RESTful<br>Laravel Lumen"]
-        D["Banco de Dados<br>MySQL"]
-        E["Testes Automatizados<br>PHPUnit"]
-        F["Documentação<br>Swagger / OpenAPI"]
-  end
-    A -- Desenvolve e consome --> B
-    B -- Requisições HTTP --> C
-    C -- Lê e escreve dados --> D
-    C -- Validada por --> E
-    C -- Documentada por --> F
-    F -- Guia a integração do --> B
-    D@{ shape: cyl}
-    E@{ shape: lean-r}
-    F@{ shape: rounded}
-    style FE fill:#D6EAF8,stroke:#2980B9,stroke-width:2px
-    style KPRO fill:#F9EBEA,stroke:#C0392B,stroke-width:2px
-
-```
-
-
-
----
-#### RESUMO TÉCNICO PARA EMBEDDING
-
-Desenvolvimento de uma API RESTful em Laravel Lumen como núcleo de uma arquitetura desacoplada para otimização de processos de pós-venda (aluguéis, vendas, compras). A solução, com backend em PHP, orquestra o ciclo de vida de equipamentos, incluindo checklists e documentos, servindo uma interface em Vue.js. O foco foi em performance, com otimização via query tuning em MySQL e implementação de cache, resultando em 30% de melhora na latência. A qualidade foi assegurada por uma suíte de testes automatizados em PHPUnit com 80% de cobertura de código para evitar regressões. A integração com o frontend foi acelerada pela documentação da API com Swagger/OpenAPI, que serviu como contrato entre as equipes. Propostas de evolução incluem a implementação de um pipeline de CI/CD e a adoção de ferramentas de monitoramento e observabilidade como Prometheus/Grafana.
-
-#### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
-
-| Categoria                    | Tecnologias e Conceitos                                                                                    |
-| :--------------------------- | :--------------------------------------------------------------------------------------------------------- |
-| **AI & Machine Learning**    | N/A                                                                                                        |
-| **Software Development**     | 👨‍💻 Laravel Lumen (PHP), PHPUnit, Testes Automatizados, Cobertura de Código, Regras de Negócio, Query Tuning |
-| **Architecture**             | 🏗️ Arquitetura Desacoplada, API RESTful, Cache, Baixa Latência                                              |
-| **Cloud Computing**          | N/A                                                                                                        |
-| **API RESTFul development**  | 🔌 API RESTful, Endpoints, Swagger (OpenAPI), Documentação da API                                           |
-| **Frontend Development**     | 🖥️ Vue.js                                                                                                   |
-| **Mobile Development**       | N/A                                                                                                        |
-| **Database**                 | 🗃️ MySQL, Query Tuning                                                                                      |
-| **Data Management**          | N/A                                                                                                        |
-| **Content Management - CMS** | N/A                                                                                                        |
-| **System Administration**    | ⚙️ Monitoramento e Observabilidade (Proposto), Prometheus/Grafana (Proposto)                                |
-| **DevOps**                   | 🚀 CI/CD (Proposto), Monitoramento e Observabilidade (Proposto)                                             |
-| **Leadership**               | 👨‍🏫 Arquiteto de Soluções                                                                                    |
-| **Coaching**                 | N/A                                                                                                        |
-| **Agile Project Management** | N/A                                                                                                        |
-
-### 🚀 Projeto: Shosales Review: Otimização de Performance (10x) e Implantação de Testes E2E
-
-#### 🎯 Visão Geral e Arquitetura da Solução
-
-O projeto Shosales Review enfrentava um desafio clássico em sistemas legados: uma experiência de usuário lenta e uma base de código que a equipe hesitava em modificar por medo de introduzir bugs. A página de visualização de imóveis, um ponto crucial da jornada do usuário, levava longos 5 segundos para carregar, comprometendo a usabilidade e a satisfação do cliente.
-
-A solução foi arquitetada em duas frentes estratégicas e complementares:
-
-1.  **Otimização Cirúrgica de Performance:** Realizei um diagnóstico profundo na aplicação Laravel, identificando que a lentidão era causada por um excesso de 37 consultas ao banco de dados para renderizar uma única página. A estratégia foi refatorar a camada de acesso a dados, otimizando as queries com o Eloquent ORM, implementando índices estratégicos no MySQL e, como resultado, **reduzindo o número de consultas para apenas 4**. Essa intervenção resultou em uma **melhora de 10x na performance**, diminuindo o tempo de carregamento para aproximadamente 0.5 segundos.
-
-2.  **Escudo de Qualidade Automatizado:** Para dar segurança à equipe e viabilizar futuras evoluções, implementei uma suíte completa de testes de ponta-a-ponta (E2E) com Laravel Dusk. Esses testes simulam os fluxos de usuário mais críticos e foram integrados a um pipeline de CI/CD (GitHub Actions/Jenkins), rodando automaticamente a cada nova alteração no código. Com a integração do CrossBrowserTesting, garantimos que a aplicação funcionava de forma consistente em múltiplos navegadores e dispositivos, eliminando regressões em produção.
-
-#### 👨‍💻 Meu Papel no Projeto
-
-Como o principal responsável pela modernização e garantia de qualidade da plataforma, minhas responsabilidades foram:
-
-  * **Análise de Performance:** Liderar a investigação e o diagnóstico dos gargalos de performance da aplicação, utilizando ferramentas de profiling para identificar as queries ineficientes.
-  * **Engenharia de Backend:** Refatorar o código PHP/Laravel, otimizar as interações com o banco de dados (MySQL) e ajustar o uso do ORM para alcançar a máxima eficiência.
-  * **Automação de Testes (QA):** Desenhar, codificar e manter a suíte de testes E2E com Laravel Dusk, definindo os cenários críticos a serem cobertos.
-  * **Cultura DevOps:** Estruturar e integrar a execução dos testes automatizados ao pipeline de CI/CD, garantindo que nenhuma alteração que quebrasse a funcionalidade existente chegasse à produção.
-
-#### ✨ Pontos Fortes e Desafios Superados
-
-O maior triunfo deste projeto foi transformar um ponto de grande frustração em um case de sucesso. O desafio não era apenas técnico, mas também cultural. A equipe tinha receio de mexer no código legado.
-
-  * **Superação da Lentidão:** O ganho de performance de 10x não foi apenas uma métrica; foi uma mudança radical na experiência do usuário, visível e comprovável.
-  * **Construindo Confiança com Código:** A suíte de testes E2E funcionou como uma "rede de segurança". Ao automatizar a validação dos fluxos críticos, demos à equipe a confiança necessária para refatorar e melhorar o sistema continuamente, sabendo que qualquer regressão seria detectada de forma imediata pelo pipeline. Isso quebrou o ciclo de medo e estagnação.
-
-#### 🌱 Pontos para Evolução Futura
-
-Com a base sólida de performance e qualidade estabelecida, os próximos passos naturais para evoluir o projeto seriam:
-
-1.  **Cache Inteligente:** Expandir o uso do Redis para implementar cache em camadas mais altas da aplicação, como em fragmentos de views e resultados de API, para ganhos de performance ainda mais expressivos.
-2.  **Testes de Regressão Visual:** Adicionar testes de regressão visual ao pipeline para detectar automaticamente quebras de layout na interface, garantindo consistência visual a cada deploy.
-
------
-
-#### 🛠️ Pilha de Tecnologias (Tech Stack)
-
-| Componente               | Tecnologia Utilizada         | Papel na Arquitetura                                                                                  |
-| :----------------------- | :--------------------------- | :---------------------------------------------------------------------------------------------------- |
-| **Backend**              | **Laravel (PHP)**            | Framework principal da aplicação, orquestrando as regras de negócio e a lógica de apresentação.       |
-| **Banco de Dados**       | **MySQL**                    | Armazenamento persistente de todos os dados relacionados a imóveis e avaliações.                      |
-| **Cache**                | **Redis**                    | Utilizado para cache de sessão e otimizações pontuais de performance.                                 |
-| **Testes E2E**           | **Laravel Dusk**             | Ferramenta para automação de testes de ponta-a-ponta, simulando a interação do usuário no navegador.  |
-| **Testes Cross-Browser** | **CrossBrowserTesting**      | Plataforma em nuvem para executar os testes do Dusk em múltiplos navegadores e sistemas operacionais. |
-| **CI/CD**                | **GitHub Actions / Jenkins** | Orquestradores do pipeline de integração e entrega contínua, automatizando build, testes e deploy.    |
-
------
-
-#### 🗺️ Diagrama da Arquitetura de Qualidade e CI/CD
-
-```mermaid
----
-config:
-  theme: default
-  look: handDrawn
----
-flowchart LR
-    %% Fluxo de Desenvolvimento e Qualidade
-    subgraph DEV["🚧 Fluxo de Desenvolvimento e Qualidade"]
-        style DEV fill:#E8F6F3,stroke:#1ABC9C,stroke-width:2px
-
-        Dev[👨‍💻 Desenvolvedor] -- "1\. git push" --> Repo[🐙 GitHub Repo]
-
-        Repo -- "2\. Aciona Pipeline" --> CI_CD{"CI/CD Pipeline <br>(GitHub Actions / Jenkins)"}
-
-        CI_CD -- "3\. Executa Testes Rápidos" --> UnitTests[🧪 Testes Unitários / Integração]
-
-        UnitTests -- "4\. Se passar, executa E2E" --> E2E_Dusk[🚗 Laravel Dusk]
-
-        E2E_Dusk -- "5\. Executa em" --> CBT[(🌐 CrossBrowserTesting)]
-
-        subgraph BROWSERS["🔍 Validação Multi-plataforma"]
-            style BROWSERS fill:#FEF9E7,stroke:#F1C40F,stroke-width:2px
-            CBT -- "Chrome" --> Chrome["<img src='https://raw.githubusercontent.com/alrra/browser-logos/main/src/chrome/chrome_48x48.png' width='24' />"]
-            CBT -- "Firefox" --> Firefox["<img src='https://raw.githubusercontent.com/alrra/browser-logos/main/src/firefox/firefox_48x48.png' width='24' />"]
-            CBT -- "Safari" --> Safari["<img src='https://raw.githubusercontent.com/alrra/browser-logos/main/src/safari/safari_48x48.png' width='24' />"]
-        end
-
-        CBT -- "6\. Reporta Resultado" --> CI_CD
-
-        CI_CD -- "✅ Sucesso" --> Deploy[🚀 Deploy para Produção]
-        CI_CD -- "❌ Falha" --> Notify[📨 Notifica Equipe]
-    end
-
-    %% Stack da Aplicação
-    subgraph STACK["🛠️ Stack da Aplicação"]
-        style STACK fill:#EBF5FB,stroke:#2980B9,stroke-width:2px
-        App["🖥️ Laravel App <br> (PHP)"] --- DBLayer[🐘 PHP Data Layer]
-        DBLayer -- "Consultas Otimizadas" --> DB[(🗄️ MySQL)]
-        App --- Cache[(⚡ Redis)]
-    end
-
-    Deploy --> App
-
-```
-
-
----
-#### RESUMO TÉCNICO PARA EMBEDDING
-
-O projeto consistiu na otimização de performance e implementação de um escudo de qualidade para uma aplicação legada em Laravel (PHP), o Shosales Review. O principal desafio foi a lentidão na renderização de páginas, causada por 37 consultas ineficientes ao banco de dados MySQL via Eloquent ORM. A solução envolveu uma refatoração profunda da camada de acesso a dados, com a otimização de queries e a criação de índices estratégicos no MySQL, resultando em uma redução para apenas 4 consultas e um ganho de performance de 10x. Para garantir a estabilidade e dar confiança à equipe para futuras modificações, foi implementada uma suíte de testes de ponta-a-ponta (E2E) com Laravel Dusk. Esses testes foram integrados a um pipeline de CI/CD utilizando GitHub Actions e Jenkins, com validação em múltiplos navegadores através da plataforma em nuvem CrossBrowserTesting. A automação de QA funcionou como uma rede de segurança contra regressões, fomentando uma cultura de melhoria contínua e superando o receio de modificar o código legado. As evoluções futuras planejadas incluem a implementação de cache com Redis e testes de regressão visual.
-
-#### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
-
-| Categoria                          | Tecnologias e Conceitos                                                    |
-| :--------------------------------- | :------------------------------------------------------------------------- |
-| 🤖 **AI & Machine Learning**        | N/A                                                                        |
-| 💻 **Software Development**         | Laravel, PHP, Eloquent ORM, Legacy Code Refactoring, Performance Profiling |
-| 🏛️ **Architecture**                 | Legacy System Modernization, Data Access Layer Optimization                |
-| ☁️ **Cloud Computing**              | CrossBrowserTesting                                                        |
-| 🌐 **API RESTFul development**      | N/A                                                                        |
-| 🎨 **Frontend Development**         | User Experience (UX) Optimization, Visual Regression Testing (future work) |
-| 📱 **Mobile Development**           | N/A                                                                        |
-| 🗃️ **Database**                     | MySQL, Query Optimization, Database Indexing                               |
-| 📊 **Data Management**              | N/A                                                                        |
-| 📝 **Content Management - CMS**     | N/A                                                                        |
-| 🖥️ **System Administration**        | N/A                                                                        |
-| 🚀 **DevOps**                       | CI/CD, GitHub Actions, Jenkins, QA Automation, E2E Testing, Laravel Dusk   |
-| 👨‍💼 **Leadership**                   | Technical Leadership, Project Modernization                                |
-| 🤝 **Coaching**                     | Team Confidence Building, Cultural Change Management                       |
-| agile **Agile Project Management** | Continuous Improvement, Regression Prevention                              |
-
-### 🚀 Projeto: Toot 🚘 Otimização de Geodata (30x) e API para Market Intelligence
-
-#### 🎯 Visão Geral e Arquitetura da Solução
-
-Este projeto nasceu da necessidade de transformar uma vasta quantidade de dados geoespaciais brutos em insights acionáveis para inteligência de mercado. O desafio era claro: como visualizar mais de 200.000 pontos de dados em um mapa interativo sem comprometer a performance? A solução foi arquitetada em torno de uma API robusta em Laravel, que não apenas servia os dados para um frontend em React, mas também replicava a complexa lógica de filtragem de relatórios do PowerBI, garantindo uma análise de dados consistente e poderosa. A arquitetura foi projetada para ser altamente eficiente, utilizando a biblioteca Superfetch para carregamento progressivo e renderização inteligente dos dados, o que permitiu uma experiência de usuário fluida e responsiva.
-
-#### 👨‍💻 Meu Papel no Projeto
-
-Como desenvolvedor backend da equipe, minhas principais responsabilidades foram:
-
-  * **Desenvolvimento da API:** Criei os endpoints em Laravel/MySQL que serviam como a espinha dorsal da plataforma, fornecendo os dados para os dashboards e mapas geoespaciais.
-  * **Otimização de Performance:** Identifiquei e resolvi um gargalo crítico de performance, aumentando a velocidade de interação com os mapas em 30 vezes.
-  * **Documentação da API:** Utilizei o Swagger para documentar a API, facilitando a integração com o frontend em React.
-  * **Colaboração Full-Stack:** Trabalhei em estreita colaboração com os desenvolvedores React e a equipe de QA para garantir a entrega contínua de uma plataforma estável e de alta qualidade.
-
-#### ✨ Pontos Fortes e Desafios Superados
-
-O ponto mais forte da solução foi, sem dúvida, a **otimização de performance geoespacial**. Aumentar em 30 vezes a velocidade de interação com os mapas, reduzindo o tempo de resposta de \~15s para \~0.5s, foi uma vitória técnica que transformou a experiência do usuário. Outro ponto de destaque foi o desenvolvimento de uma API que replicava com sucesso a complexa lógica de filtragem de relatórios do PowerBI, fornecendo uma base de dados sólida e confiável para a plataforma de Market Intelligence.
-
-#### 🌱 Pontos para Evolução Futura
-
-Para evoluir o projeto, poderíamos explorar a implementação de um sistema de cache mais avançado, como o Redis, para otimizar ainda mais as consultas à API. Além disso, a plataforma de Market Intelligence poderia ser expandida para incluir mais fontes de dados e análises preditivas, agregando ainda mais valor ao negócio.
-
------
-
-#### 🛠️ Pilha de Tecnologias (Tech Stack)
-
-| Componente                    | Tecnologia Utilizada     | Papel na Arquitetura                                                       |
-| :---------------------------- | :----------------------- | :------------------------------------------------------------------------- |
-| **Backend**                   | **Laravel (PHP)**        | Desenvolvimento da API para servir os dados geoespaciais e de BI.          |
-| **Banco de Dados**            | **MySQL**                | Armazenamento e consulta dos dados da plataforma.                          |
-| **Frontend**                  | **React**                | Construção da interface de usuário, incluindo os mapas interativos.        |
-| **Mapas**                     | **Google Maps API**      | Renderização dos mapas e visualização dos dados geoespaciais.              |
-| **Otimização de Performance** | **Superfetch**           | Carregamento progressivo e renderização inteligente dos dados nos mapas.   |
-| **Business Intelligence**     | **PowerBI (integração)** | Análise e visualização de dados, com lógica de filtragem replicada na API. |
-| **Testes**                    | **PHPUnit**              | Testes unitários para garantir a qualidade e a estabilidade da API.        |
-| **Documentação da API**       | **Swagger**              | Documentação dos endpoints da API para facilitar a integração.             |
-| **DevOps**                    | **CI/CD**                | Entrega contínua de novas features e correções de bugs.                    |
-
------
-
-#### 🗺️ Diagrama da Arquitetura
-
-```mermaid
----
-config:
-  theme: default
-  look: handDrawn
----
-flowchart LR
-    %% Frontend
-    subgraph Frontend["🌐 Frontend"]
-        style Frontend fill:#D6EAF8,stroke:#3498DB,stroke-width:2px
-        A[👨‍💻 Usuário]
-        B[⚛️ React App]
-        style B fill:#61dafb,stroke:#21a1f1,stroke-width:4px,stroke-dasharray: 5 5
-        C[🗺️ Google Maps API]
-        D[🚀 Superfetch]
-        A --> B
-        B --> C
-        B --> D
-    end
-
-    %% Backend
-    subgraph Backend["🖥️ Backend"]
-        style Backend fill:#FDEDEC,stroke:#E74C3C,stroke-width:2px
-        E[🛠️ API Laravel]
-        F[🐬 MySQL]
-        G[📄 Swagger]
-        E --> F
-        E --> G
-    end
-
-    %% CI/CD
-    subgraph CICD["🔄 CI/CD"]
-        style CICD fill:#F9E79F,stroke:#B7950B,stroke-width:2px
-        H[🚧 Pipeline CI/CD]
-        H --> E
-    end
-
-    %% BI
-    subgraph BI["📊 BI"]
-        style BI fill:#ABEBC6,stroke:#27AE60,stroke-width:2px
-        I[📈 PowerBI]
-        I --> E
-    end
-
-    %% Fluxos principais
-    B --> E
-
-```
-
----
-#### RESUMO TÉCNICO PARA EMBEDDING
-
-Desenvolvimento de uma API backend em Laravel e MySQL para uma plataforma de Market Intelligence, focada na otimização de performance para visualização de mais de 200.000 pontos de geodata. A solução resolveu um gargalo crítico, aumentando a velocidade de interação em 30x (de ~15s para ~0.5s) em um frontend React com Google Maps API, utilizando a biblioteca Superfetch para carregamento progressivo. A API foi documentada com Swagger, testada com PHPUnit, e replicava a complexa lógica de filtragem de relatórios do PowerBI, sendo entregue via um pipeline de CI/CD. A arquitetura foi desenhada para ser responsiva e escalável, com futuras evoluções considerando a implementação de cache com Redis e análises preditivas.
-
-#### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
-
-| Categoria                    | Tecnologias e Conceitos                                                                    |
-| :--------------------------- | :----------------------------------------------------------------------------------------- |
-| **AI & Machine Learning**    | Análises Preditivas (Evolução Futura)                                                      |
-| **Software Development**     | Laravel (PHP), PHPUnit                                                                     |
-| **Architecture**             | Otimização de Performance Geoespacial, Arquitetura de API, Cache (Redis - Evolução Futura) |
-| **Cloud Computing**          | N/A                                                                                        |
-| **API RESTFul development**  | API RESTFul, Laravel, Swagger, Integração com PowerBI                                      |
-| **Frontend Development**     | React, Google Maps API, Superfetch                                                         |
-| **Mobile Development**       | N/A                                                                                        |
-| **Database**                 | MySQL                                                                                      |
-| **Data Management**          | Geodata, Market Intelligence, Lógica de Filtragem de Dados                                 |
-| **Content Management - CMS** | N/A                                                                                        |
-| **System Administration**    | N/A                                                                                        |
-| **DevOps**                   | CI/CD                                                                                      |
-| **Leadership**               | N/A                                                                                        |
-| **Coaching**                 | N/A                                                                                        |
-| **Agile Project Management** | Colaboração com QA, Entrega Contínua                                                       |
-
-
-### 🚀 Projeto: Toot: Resiliência no Processamento de Jornadas Longas
+| Categoria | Tecnologias e Conceitos |
+| :--- | :--- |
+| **AI & Machine Learning** | N/A |
+| **Software Development** | Python, Automação de Scripts, Programação Assíncrona (asyncio), Manipulação de Sistema de Arquivos (os), Expressões Regulares (re), Modularidade, CLI (Command-Line Interface) |
+| **Architecture**| Arquitetura Modular, Arquitetura de Solução, Fluxo de Dados (ETL), Design de Componentes Independentes |
+| **Cloud Computing** | Consumo de API de Plataforma (Telegram API) |
+| **API RESTFul development** | Consumo de API (Telethon) |
+| **Frontend Development** | CLI User Experience (tqdm) |
+| **Mobile Development** | N/A |
+| **Database** | N/A |
+| **Data Management** | Extração de Dados, Transformação de Dados (Parsing), JSON, Markdown, Dados Não-Estruturados |
+| **Content Management - CMS** | N/A |
+| **System Administration** | Gerenciamento de Arquivos e Diretórios |
+| **DevOps** | N/A |
+| **Leadership** | Arquitetura de Solução, Product Ownership, Tomada de Decisão Técnica |
+| **Coaching** | N/A |
+| **Agile Project Management** | Definição de Requisitos, Validação de Solução, Product Owner |
+
+***
+
+### 🚀 Project:  Toot - Resiliência no Processamento de Jornadas Longas
 
 #### 🎯 Visão Geral e Arquitetura da Solução
 
@@ -1630,70 +1764,64 @@ O projeto implementou uma arquitetura resiliente para processamento de jornadas 
 
 #### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
 
-| Categoria                    | Tecnologias e Conceitos                                                                                                                                                             |
-| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **AI & Machine Learning**    | N/A                                                                                                                                                                                 |
-| **Software Development**     | PHP, Laravel, Laravel Queues (`Bus::chain`), `.catch()`, Depuração Proativa                                                                                                         |
-| **Architecture**             | Padrão de Design SAGA, Arquitetura Assíncrona, Micro-Jobs, Coordenador SAGA, Transações de Compensação, Resiliência, Recuperação de Falhas, Dead Letter Queue (DLQ), Job Monolítico |
-| **Cloud Computing**          | N/A                                                                                                                                                                                 |
-| **API RESTFul development**  | Google Maps API, Overpass API                                                                                                                                                       |
-| **Frontend Development**     | N/A                                                                                                                                                                                 |
-| **Mobile Development**       | N/A                                                                                                                                                                                 |
-| **Database**                 | PostgreSQL, MySQL, Redis                                                                                                                                                            |
-| **Data Management**          | Atomicidade, Consistência de Dados, Integridade de Dados                                                                                                                            |
-| **Content Management - CMS** | N/A                                                                                                                                                                                 |
-| **System Administration**    | N/A                                                                                                                                                                                 |
-| **DevOps**                   | Laravel Horizon, Observabilidade, Gerenciamento de Filas (Queues), Queue Workers                                                                                                    |
-| **Leadership**               | Arquiteto de Soluções, Desenvolvedor Sênior                                                                                                                                         |
-| **Coaching**                 | N/A                                                                                                                                                                                 |
-| **Agile Project Management** | N/A                                                                                                                                                                                 |
+|Categoria|Tecnologias e Conceitos|
+|---|---|
+|**AI & Machine Learning**|N/A|
+|**Software Development**|PHP, Laravel, Laravel Queues (`Bus::chain`), `.catch()`, Depuração Proativa|
+|**Architecture**|Padrão de Design SAGA, Arquitetura Assíncrona, Micro-Jobs, Coordenador SAGA, Transações de Compensação, Resiliência, Recuperação de Falhas, Dead Letter Queue (DLQ), Job Monolítico|
+|**Cloud Computing**|N/A|
+|**API RESTFul development**|Google Maps API, Overpass API|
+|**Frontend Development**|N/A|
+|**Mobile Development**|N/A|
+|**Database**|PostgreSQL, MySQL, Redis|
+|**Data Management**|Atomicidade, Consistência de Dados, Integridade de Dados|
+|**Content Management - CMS**|N/A|
+|**System Administration**|N/A|
+|**DevOps**|Laravel Horizon, Observabilidade, Gerenciamento de Filas (Queues), Queue Workers|
+|**Leadership**|Arquiteto de Soluções, Desenvolvedor Sênior|
+|**Coaching**|N/A|
+|**Agile Project Management**|N/A|
 
+***
 
-
-### 🚀 Projeto: Huktup: Plataforma de Agendamento e Gestão para Provedores de Serviço
+### 🚀 Project:  Toot - Otimização de Geodata (30x) e API para Market Intelligence
 
 #### 🎯 Visão Geral e Arquitetura da Solução
 
-No cenário de serviços, a gestão descentralizada de agendamentos, pagamentos e comunicação com clientes é um grande obstáculo para o crescimento. O Huktup nasceu para resolver exatamente essa dor, oferecendo um ecossistema completo onde provedores de serviço podem centralizar toda a sua operação.
-
-A solução foi arquitetada em torno de uma **API RESTful robusta, construída com Laravel (PHP)**, que serve como o cérebro de toda a plataforma. Esta API orquestra desde a criação de um agendamento até a análise de performance financeira. Para os provedores, desenvolvi um **dashboard analítico interativo com Vue.js e Chart.js**, que transforma dados brutos de faturamento e aquisição de clientes em insights visuais e acionáveis, permitindo filtros dinâmicos para uma análise aprofundada. A comunicação com o cliente final é automatizada e eficiente, graças à integração com a **Twilio API**, que gerencia o envio de lembretes, alertas e a coleta de feedbacks via SMS, reduzindo o não comparecimento e melhorando o engajamento.
+Este projeto nasceu da necessidade de transformar uma vasta quantidade de dados geoespaciais brutos em insights acionáveis para inteligência de mercado. O desafio era claro: como visualizar mais de 200.000 pontos de dados em um mapa interativo sem comprometer a performance? A solução foi arquitetada em torno de uma API robusta em Laravel, que não apenas servia os dados para um frontend em React, mas também replicava a complexa lógica de filtragem de relatórios do PowerBI, garantindo uma análise de dados consistente e poderosa. A arquitetura foi projetada para ser altamente eficiente, utilizando a biblioteca Superfetch para carregamento progressivo e renderização inteligente dos dados, o que permitiu uma experiência de usuário fluida e responsiva.
 
 #### 👨‍💻 Meu Papel no Projeto
 
-Atuando como o principal desenvolvedor backend, minhas responsabilidades foram cruciais para a fundação e o sucesso da plataforma:
+Como desenvolvedor backend da equipe, minhas principais responsabilidades foram:
 
-  * **Desenvolvimento do Core:** Construí a API RESTful em Laravel, que centraliza todas as regras de negócio, desde o agendamento até a gestão de ofertas.
-  * **Criação do Dashboard Analítico:** Desenvolvi a interface de gestão para os provedores utilizando Vue.js, com foco na visualização de dados com Chart.js para apresentar métricas de negócio de forma clara e objetiva.
-  * **Integração de Serviços:** Implementei integrações essenciais com a **Twilio API** para automação da comunicação via SMS e com o **Firebase Authentication** para garantir um processo de onboarding e login seguro (incluindo SSO).
-  * **Garantia de Qualidade e Colaboração:** Colaborei ativamente com a equipe de QA para definir cenários de teste e validar a qualidade das entregas. Elaborei a documentação completa da API no padrão **Swagger**, o que foi fundamental para alinhar e acelerar o trabalho da equipe de frontend.
+  * **Desenvolvimento da API:** Criei os endpoints em Laravel/MySQL que serviam como a espinha dorsal da plataforma, fornecendo os dados para os dashboards e mapas geoespaciais.
+  * **Otimização de Performance:** Identifiquei e resolvi um gargalo crítico de performance, aumentando a velocidade de interação com os mapas em 30 vezes.
+  * **Documentação da API:** Utilizei o Swagger para documentar a API, facilitando a integração com o frontend em React.
+  * **Colaboração Full-Stack:** Trabalhei em estreita colaboração com os desenvolvedores React e a equipe de QA para garantir a entrega contínua de uma plataforma estável e de alta qualidade.
 
 #### ✨ Pontos Fortes e Desafios Superados
 
-O maior trunfo da plataforma é sua capacidade de **unificar a jornada do provedor em um único lugar**. A combinação de uma API sólida com um dashboard intuitivo oferece um controle sem precedentes sobre o negócio.
-
-Um dos principais desafios foi **garantir uma comunicação confiável e automatizada em escala**. Superamos isso ao desenhar fluxos de conversa inteligentes com a Twilio, não apenas enviando lembretes, mas criando um canal de mão dupla para feedback. Outro desafio significativo foi **criar um ambiente seguro e colaborativo para as equipes de desenvolvimento**. A padronização da documentação da API com Swagger foi uma vitória, pois eliminou ambiguidades e permitiu que as equipes de frontend e backend trabalhassem em paralelo com muito mais eficiência.
+O ponto mais forte da solução foi, sem dúvida, a **otimização de performance geoespacial**. Aumentar em 30 vezes a velocidade de interação com os mapas, reduzindo o tempo de resposta de \~15s para \~0.5s, foi uma vitória técnica que transformou a experiência do usuário. Outro ponto de destaque foi o desenvolvimento de uma API que replicava com sucesso a complexa lógica de filtragem de relatórios do PowerBI, fornecendo uma base de dados sólida e confiável para a plataforma de Market Intelligence.
 
 #### 🌱 Pontos para Evolução Futura
 
-Para o futuro, a plataforma poderia evoluir com a implementação de duas funcionalidades de alto valor:
-
-1.  Um módulo de **notificações push** no aplicativo para complementar a comunicação via SMS.
-2.  A integração de um sistema de **Inteligência Artificial** para analisar padrões de agendamento e sugerir horários de maior rentabilidade para os provedores.
+Para evoluir o projeto, poderíamos explorar a implementação de um sistema de cache mais avançado, como o Redis, para otimizar ainda mais as consultas à API. Além disso, a plataforma de Market Intelligence poderia ser expandida para incluir mais fontes de dados e análises preditivas, agregando ainda mais valor ao negócio.
 
 -----
 
 #### 🛠️ Pilha de Tecnologias (Tech Stack)
 
-| Componente                   | Tecnologia Utilizada        | Papel na Arquitetura                                                                                  |
-| :--------------------------- | :-------------------------- | :---------------------------------------------------------------------------------------------------- |
-| **Backend (API Core)**       | **Laravel (PHP)**           | Orquestra todas as regras de negócio, dados e integrações como o núcleo da plataforma.                |
-| **Frontend (Dashboard)**     | **Vue.js**                  | Constrói a interface reativa e interativa para os provedores de serviço gerenciarem seus negócios.    |
-| **Visualização de Dados**    | **Chart.js**                | Renderiza gráficos dinâmicos no dashboard para análise de faturamento, reservas e clientes.           |
-| **Banco de Dados**           | **MySQL**                   | Armazena de forma persistente todos os dados relacionais da aplicação (agendamentos, usuários, etc.). |
-| **Autenticação de Usuários** | **Firebase Authentication** | Gerencia o onboarding, login e segurança dos usuários (provedores) com suporte a SSO.                 |
-| **Comunicação por SMS**      | **Twilio API**              | Automatiza o envio de lembretes, alertas transacionais e coleta de feedback dos clientes finais.      |
-| **Documentação da API**      | **Swagger (OpenAPI)**       | Padroniza e documenta os endpoints da API para facilitar a integração entre equipes.                  |
-| **Ambiente de Dev**          | **Docker**                  | Garante a consistência e portabilidade do ambiente de desenvolvimento e produção.                     |
+| Componente | Tecnologia Utilizada | Papel na Arquitetura |
+| :--- | :--- | :--- |
+| **Backend** | **Laravel (PHP)** | Desenvolvimento da API para servir os dados geoespaciais e de BI. |
+| **Banco de Dados** | **MySQL** | Armazenamento e consulta dos dados da plataforma. |
+| **Frontend** | **React** | Construção da interface de usuário, incluindo os mapas interativos. |
+| **Mapas** | **Google Maps API** | Renderização dos mapas e visualização dos dados geoespaciais. |
+| **Otimização de Performance**| **Superfetch** | Carregamento progressivo e renderização inteligente dos dados nos mapas. |
+| **Business Intelligence** | **PowerBI (integração)** | Análise e visualização de dados, com lógica de filtragem replicada na API. |
+| **Testes** | **PHPUnit** | Testes unitários para garantir a qualidade e a estabilidade da API. |
+| **Documentação da API**| **Swagger** | Documentação dos endpoints da API para facilitar a integração. |
+| **DevOps** | **CI/CD** | Entrega contínua de novas features e correções de bugs. |
 
 -----
 
@@ -1706,221 +1834,195 @@ config:
   look: handDrawn
 ---
 flowchart LR
- subgraph Users["👥 Usuários"]
-        A["🛠️ Provedor de Serviço"]
-        B["👤 Cliente Final"]
-  end
- subgraph Platform["☁️ Plataforma Huktup (Cloud)"]
-        C["📊 Dashboard Administrativo<br>(Vue.js + Chart.js)"]
-        D["⚙️ API RESTful<br>(Laravel)"]
-        E["🐬 Banco de Dados<br>(MySQL)"]
-        F["🔐 Firebase Authentication"]
-        G["📲 Twilio API"]
-  end
-    A -- 🔐 Login / Gestão --> C
-    A -- 🔐 Autenticação SSO --> F
-    C -- 🔄 Solicita / Envia Dados --> D
-    D -- 💾 Persiste / Lê Dados --> E
-    D -- 🔐 Valida Token --> F
-    D -- 📨 Dispara SMS --> G
-    G -- 💬 Envia Lembrete / Alerta --> B
-    E@{ shape: cyl}
-    F@{ shape: rounded}
-    style C fill:#FFD600
-    style G fill:#FFCDD2
-    style Users fill:#D6EAF8,stroke:#3498DB,stroke-width:2px
-    style Platform fill:#FFF9C4,stroke:#34495E,stroke-width:2px
-```
+    %% Frontend
+    subgraph Frontend["🌐 Frontend"]
+        style Frontend fill:#D6EAF8,stroke:#3498DB,stroke-width:2px
+        A[👨‍💻 Usuário]
+        B[⚛️ React App]
+        style B fill:#61dafb,stroke:#21a1f1,stroke-width:4px,stroke-dasharray: 5 5
+        C[🗺️ Google Maps API]
+        D[🚀 Superfetch]
+        A --> B
+        B --> C
+        B --> D
+    end
 
+    %% Backend
+    subgraph Backend["🖥️ Backend"]
+        style Backend fill:#FDEDEC,stroke:#E74C3C,stroke-width:2px
+        E[🛠️ API Laravel]
+        F[🐬 MySQL]
+        G[📄 Swagger]
+        E --> F
+        E --> G
+    end
+
+    %% CI/CD
+    subgraph CICD["🔄 CI/CD"]
+        style CICD fill:#F9E79F,stroke:#B7950B,stroke-width:2px
+        H[🚧 Pipeline CI/CD]
+        H --> E
+    end
+
+    %% BI
+    subgraph BI["📊 BI"]
+        style BI fill:#ABEBC6,stroke:#27AE60,stroke-width:2px
+        I[📈 PowerBI]
+        I --> E
+    end
+
+    %% Fluxos principais
+    B --> E
+
+```
 
 ---
 #### RESUMO TÉCNICO PARA EMBEDDING
 
-Desenvolvimento de uma plataforma de agendamento, Huktup, com arquitetura centrada em uma API RESTful em Laravel (PHP) atuando como core para todas as regras de negócio. O frontend consiste em um dashboard analítico reativo para provedores de serviço, construído com Vue.js e utilizando Chart.js para visualização de dados e métricas de faturamento e aquisição de clientes. A solução integra serviços de terceiros para funcionalidades críticas: Firebase Authentication para onboarding, login e segurança com suporte a SSO, e a Twilio API para automação da comunicação via SMS, incluindo lembretes e coleta de feedback. A persistência de dados é garantida por um banco de dados MySQL. O ambiente de desenvolvimento é padronizado com Docker, garantindo portabilidade. A colaboração entre equipes de backend e frontend foi otimizada pela documentação da API no padrão Swagger (OpenAPI), permitindo o desenvolvimento paralelo e a validação de entregas com a equipe de QA. Desafios superados incluem a criação de fluxos de comunicação escaláveis e a eliminação de ambiguidades no desenvolvimento através de documentação padronizada.
+Desenvolvimento de uma API backend em Laravel e MySQL para uma plataforma de Market Intelligence, focada na otimização de performance para visualização de mais de 200.000 pontos de geodata. A solução resolveu um gargalo crítico, aumentando a velocidade de interação em 30x (de ~15s para ~0.5s) em um frontend React com Google Maps API, utilizando a biblioteca Superfetch para carregamento progressivo. A API foi documentada com Swagger, testada com PHPUnit, e replicava a complexa lógica de filtragem de relatórios do PowerBI, sendo entregue via um pipeline de CI/CD. A arquitetura foi desenhada para ser responsiva e escalável, com futuras evoluções considerando a implementação de cache com Redis e análises preditivas.
 
 #### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
 
-| Categoria                    | Tecnologias e Conceitos                                                |
-| :--------------------------- | :--------------------------------------------------------------------- |
-| **AI & Machine Learning**    | Sugestão de IA para otimização de agendamentos (evolução futura)       |
-| **Software Development**     | Laravel, PHP, Vue.js, Docker, Chart.js                                 |
-| **Architecture**             | Arquitetura baseada em API, Single Sign-On (SSO)                       |
-| **Cloud Computing**          | Firebase Authentication, Plataforma em Nuvem                           |
-| **API RESTFul development**  | API RESTful, Laravel, Twilio API, Swagger, OpenAPI                     |
-| **Frontend Development**     | Vue.js, Chart.js, Dashboard Analítico, Visualização de Dados           |
-| **Mobile Development**       | Notificações Push (evolução futura)                                    |
-| **Database**                 | MySQL                                                                  |
-| **Data Management**          | Análise de métricas financeiras, Visualização de dados                 |
-| **Content Management - CMS** | N/A                                                                    |
-| **System Administration**    | N/A                                                                    |
-| **DevOps**                   | Docker, Documentação de API (Swagger), Colaboração com QA              |
-| **Leadership**               | Desenvolvedor principal, Alinhamento de equipes                        |
-| **Coaching**                 | N/A                                                                    |
-| **Agile Project Management** | Desenvolvimento paralelo (Backend/Frontend), Colaboração entre equipes |
+| Categoria | Tecnologias e Conceitos |
+| :--- | :--- |
+| **AI & Machine Learning** | Análises Preditivas (Evolução Futura) |
+| **Software Development** | Laravel (PHP), PHPUnit |
+| **Architecture**| Otimização de Performance Geoespacial, Arquitetura de API, Cache (Redis - Evolução Futura) |
+| **Cloud Computing** | N/A |
+| **API RESTFul development** | API RESTFul, Laravel, Swagger, Integração com PowerBI |
+| **Frontend Development** | React, Google Maps API, Superfetch |
+| **Mobile Development** | N/A |
+| **Database** | MySQL |
+| **Data Management** | Geodata, Market Intelligence, Lógica de Filtragem de Dados |
+| **Content Management - CMS** | N/A |
+| **System Administration** | N/A |
+| **DevOps** | CI/CD |
+| **Leadership** | N/A |
+| **Coaching** | N/A |
+| **Agile Project Management** | Colaboração com QA, Entrega Contínua |
 
+***
 
-### 🚀 Projeto: Sisporta: Sincronização Inteligente de Dados
+### 🚀 Project:  Fábrica de Vídeos Automatizada para YouTube
 
 #### 🎯 Visão Geral e Arquitetura da Solução
 
-O projeto Sisporta nasceu de um desafio clássico no mundo do software: a necessidade de modernizar sem poder tocar no legado. Uma empresa especialista em portões de garagem precisava de um sistema ágil para gerar orçamentos personalizados, mas seus dados vitais (produtos, revendedores) residiam em um ERP com um banco de dados SQL Server intocável.
+Em um cenário onde a criação de conteúdo em vídeo é um processo manual, demorado e caro, este projeto surge como uma solução de automação de ponta a ponta. O objetivo é uma "Fábrica de Vídeos" completa, capaz de gerar conteúdo para o YouTube, tanto em formato curto quanto longo, com intervenção humana mínima.
 
-A solução foi arquitetar um **pipeline de dados desacoplado e resiliente**. O coração da operação é um script Python que atua como um agente de extração, lendo os dados do SQL Server e os enviando em formato JSON para uma API na nova aplicação Laravel. Para não sobrecarregar nenhum dos sistemas, a API não processa os dados imediatamente; ela os enfileira usando o **Laravel Horizon**. Essa abordagem assíncrona permite que *workers* em segundo plano processem as informações em lotes, garantindo alto desempenho e escalabilidade. O resultado é um fluxo de dados contínuo e eficiente, que alimenta o novo sistema de orçamentos com informações sempre atualizadas, sem comprometer a performance do ERP legado.
+A arquitetura foi desenhada como um orquestrador em Python que segue um pipeline robusto e flexível:
+
+1.  **Ingestão de Conteúdo**: O fluxo inicia com a leitura de um roteiro ou frase de um banco de dados central em formato `content.json`. Este arquivo gerencia o ciclo de vida de cada vídeo, desde "Pendente" até "Publicado".
+2.  **Geração de Mídia**: O sistema se conecta a um ecossistema de APIs e modelos locais para criar os componentes do vídeo. A narração é gerada com vozes de alta qualidade via **ElevenLabs API** ou uma instância local de **Coqui TTS** para personalização total. O visual é criado por modelos de IA como **SDXL (via Replicate)** ou buscado em bancos de imagem como **Pixabay** para maior flexibilidade de custo. Uma trilha sonora é automaticamente adicionada através da **API do Jamendo**.
+3.  **Montagem e Finalização**: Com todos os recursos prontos, as legendas são geradas com precisão por uma instância local do **OpenAI Whisper**. A montagem final é orquestrada pelo **FFmpeg**, que combina imagem, narração, música de fundo e legendas, aplicando animações dinâmicas.
+4.  **Publicação**: Opcionalmente, o vídeo finalizado é enviado diretamente para o YouTube através da API oficial, completando o ciclo de automação.
+
+Adicionalmente, o projeto expõe suas funcionalidades de geração de mídia através de uma **API REST com Flask**, permitindo que outros sistemas solicitem a criação de narrações ou legendas como um microserviço desacoplado.
 
 #### 👨‍💻 Meu Papel no Projeto
 
-Neste projeto, atuei como a principal força de engenharia, combinando as funções de **Arquiteto de Soluções e Desenvolvedor Full-Stack**. Minhas responsabilidades incluíram:
+Como **Arquiteto de Soluções e Desenvolvedor Principal**, minhas responsabilidades foram abrangentes, cobrindo todo o ciclo de vida do projeto:
 
-  * **Idealizar e desenhar** a arquitetura de integração assíncrona para garantir performance e desacoplamento.
-  * **Desenvolver o script de extração** em Python, responsável por coletar e formatar os dados do sistema legado.
-  * **Implementar a aplicação Laravel**, incluindo o endpoint da API de ingestão e os jobs de processamento em background com Laravel Horizon.
-  * **Garantir a qualidade do código** através da criação de testes unitários e de integração.
-  * **Configurar o pipeline de CI/CD** no Bitbucket para automatizar testes e deploys.
+  * **Desenvolvimento End-to-End**: Projetei e implementei o fluxo de automação completo, desde a concepção da ideia até a publicação final no YouTube.
+  * **Arquitetura de Software**: Defini a arquitetura modular baseada em "passos" e "utilitários", garantindo a manutenibilidade e escalabilidade do sistema. Criei um gerenciador de conteúdo central (`ContentManager`) para abstrair o acesso aos dados e estruturei o projeto para suportar múltiplos provedores de IA.
+  * **Resolução de Desafios Técnicos Complexos**: Investiguei e solucionei problemas críticos de baixo nível, como instabilidade em motores de TTS, e artefatos visuais (tremor e centralização) em vídeos renderizados com FFmpeg.
+  * **Integração de APIs**: Orquestrei a integração de diversas APIs externas e modelos locais, incluindo OpenAI, ElevenLabs, Coqui TTS, Replicate, Pixabay, Jamendo e YouTube.
+  * **Desenvolvimento de API**: Construí um microserviço com Flask para expor a lógica de geração de mídia, desacoplando as funcionalidades de IA para serem reutilizadas por outras aplicações.
+  * **Qualidade e Documentação**: Estabeleci padrões de código, criei testes automatizados com Pytest e documentei extensivamente o projeto, incluindo guias de contribuição e planos de implementação detalhados.
 
 #### ✨ Pontos Fortes e Desafios Superados
 
-O maior desafio era a restrição de não poder modificar o sistema ERP. A superação veio com a **arquitetura de processamento assíncrono**, que transformou essa limitação em um ponto forte. A solução se destaca por:
+A força deste projeto reside em sua **flexibilidade e robustez**. A capacidade de alternar entre provedores de IA (ex: Replicate vs. Pixabay, ElevenLabs vs. Coqui TTS) permite um controle fino sobre custos e qualidade. A arquitetura modular e a API de microserviço tornam o sistema não apenas uma ferramenta, mas uma plataforma de geração de mídia.
 
-  * **Alto Desempenho e Resiliência:** A utilização de filas (Laravel Horizon) evita gargalos. Se a aplicação de destino ficasse offline, os dados simplesmente aguardariam na fila para serem processados, sem perdas.
-  * **Consistência de Dados Inteligente:** Um dos triunfos do projeto foi a criação de um job de "limpeza". Ele remove automaticamente registros que não existem mais no sistema de origem, garantindo que o sistema de orçamentos seja um espelho fiel do ERP, sem acumular dados obsoletos.
-  * **Automação e Qualidade:** Com testes automatizados e um pipeline de CI/CD no Bitbucket, o processo de manutenção e evolução tornou-se seguro e ágil.
+Durante o desenvolvimento, enfrentei desafios técnicos significativos que foram transformados em vitórias de engenharia:
+
+  * **Desafio 1: Tremor (Judder) na Animação de Vídeo:** O uso inicial do filtro `zoompan` do FFmpeg causava um tremor visual irritante nas animações.
+
+      * **Superação:** Após uma investigação metódica documentada no plano de ação, a solução foi refatorar a montagem de vídeo em um **processo de duas etapas**. Primeiro, um clipe de vídeo mudo e perfeitamente estável é renderizado usando a combinação dos filtros `scale` e `crop`. Somente depois, em uma segunda etapa, o áudio e as legendas são mesclados (mux). Isso isolou a complexidade da animação da sincronização de áudio, eliminando completamente o tremor.
+
+  * **Desafio 2: Falha na Centralização da Animação:** O efeito de zoom e panorâmica estava sempre se deslocando para o canto superior esquerdo da imagem, em vez de focar no centro.
+
+      * **Superação:** O problema foi diagnosticado como uma falha do FFmpeg em avaliar dinamicamente as coordenadas de corte. A solução foi implementar uma **fórmula de centralização robusta** (`x='(iw-out_w)/2'`) que utiliza variáveis explícitas de saída. Essa lógica foi encapsulada em uma classe `MovementFilterGenerator` para garantir que todas as animações fossem consistentes e fáceis de manter.
+
+  * **Desafio 3: Instabilidade do Motor TTS Local:** A integração com o Coqui TTS apresentava falhas de compatibilidade com suas dependências (especialmente a biblioteca `transformers`), resultando em travamentos.
+
+      * [cite\_start]**Superação:** A estabilidade foi alcançada ao **travar a versão da biblioteca `transformers`** para uma versão anterior e comprovadamente compatível (`4.36.2`). [cite: 1] Além disso, o processo foi otimizado para gerar o áudio em memória (com NumPy) e carregá-lo diretamente no `pydub`, evitando um deadlock de I/O no disco que causava o travamento do script.
+
+- **Desafio 4: Flexibilidade de Provedores (Plug-and-Play)**: Você não apenas integrou serviços, mas criou uma arquitetura que permite escolher entre diferentes provedores para a mesma função. Isso é um diferencial imenso.
+	  * **Síntese de Voz**: Mencione que o sistema suporta tanto a **API da ElevenLabs (nuvem)** quanto uma instância local de **Coqui TTS**, permitindo alternar entre uma solução gerenciada e uma solução offline com clonagem de voz personalizada.
+	  * **Geração Visual**: Destaque que, além da **Replicate API (SDXL)**, você integrou a **Pixabay API** como uma alternativa gratuita, oferecendo controle de custos e resiliência.
+	  * **Trilha Sonora**: Adicione a integração com a **Jamendo API** para buscar e adicionar música de fundo automaticamente, resolvendo a questão dos direitos autorais de forma programática.
+
+- **Desafio 5: API como Microserviço (Reutilização)**: Um dos pontos mais fortes do seu projeto é a API Flask. Isso transforma a solução de um simples script para uma plataforma reutilizável.
+
+    * Adicione um parágrafo mencionando que o projeto também expõe suas capacidades de IA (geração de áudio, legendas e montagem de vídeo) através de uma **API REST com Flask**. Isso demonstra sua habilidade de pensar em termos de serviços desacoplados e reutilizáveis, permitindo que qualquer outra aplicação consuma essas funcionalidades.
+
+- **Desafio 6: Evolução da Arquitetura (Refatoração Estratégica)**: O texto atual menciona os gerenciadores `frases_manager.py` e `reflexao_manager.py`. No entanto, os planos de migração mostram que você evoluiu o projeto.
+
+    * Mencione a refatoração que unificou múltiplos arquivos (`frases.json`, `reflexao.json`) em um único `content.json` gerenciado por um `ContentManager` centralizado. Isso demonstra sua capacidade de identificar débitos técnicos e melhorar a manutenibilidade e a coesão do sistema ao longo do tempo.
+
+
+#### Resultados e Impacto Quantificável
+
+  * **Redução Drástica do Tempo de Produção**: Automatizou um processo que levaria de **2 a 3 horas** de trabalho manual por vídeo para menos de **5 minutos** de processamento autônomo.
+  * **Escalabilidade de Conteúdo**: Capacitou a produção e agendamento de dezenas de vídeos em lote, permitindo uma frequência de publicação diária que seria insustentável manualmente. O projeto inclui scripts para agendamento automático no macOS (`launchd`).
+  * **Otimização de Custos**: A implementação de provedores alternativos e gratuitos (Coqui TTS, Pixabay) e a otimização de chamadas de API reduziram significativamente os custos operacionais de geração de conteúdo.
 
 #### 🌱 Pontos para Evolução Futura
 
-Para evoluir ainda mais a solução, poderíamos implementar um **dashboard de monitoramento avançado** para observar a saúde das filas e o tempo de processamento dos jobs, além de configurar um mecanismo de ***Dead Letter Queue*** para tratar falhas de processamento de forma isolada, sem interromper o fluxo principal.
+Apesar de sua automação completa, o projeto tem potencial para crescer ainda mais:
+
+1.  **Interface de Gerenciamento Web**: Desenvolver uma interface de usuário simples (com Flask ou FastAPI) para gerenciar o `content.json`, permitindo adicionar, editar e agendar vídeos sem interagir diretamente com o arquivo JSON.
+2.  **Expansão para Outras Plataformas**: Adaptar o formato de saída do vídeo (ex: 1:1 para Instagram, 16:9 padrão) e criar módulos de upload para outras plataformas como Instagram Reels ou TikTok.
 
 -----
 
 #### 🛠️ Pilha de Tecnologias (Tech Stack)
 
-  * **Linguagens:** Python, PHP
-  * **Framework:** Laravel
-  * **Bancos de Dados:** SQL Server, MySQL
-  * **Filas e Jobs:** Laravel Horizon
-  * **DevOps:** Bitbucket Pipelines
+| Componente                   | Tecnologia Utilizada                          | Papel na Arquitetura                                                                                                                                                                                                    |
+| :--------------------------- | :-------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Backend e Orquestração**   | **Python**, **Flask**                         | Linguagem principal do projeto e framework para a API de microserviço.                                                                                                                                                  |
+| **Geração de Conteúdo e IA** | **OpenAI API (GPT)**, **Replicate (SDXL)**    | Geração de roteiros e imagens de fundo a partir de prompts.                                                                                                                                                             |
+| **Síntese de Voz (TTS)**     | **ElevenLabs API**, **Coqui TTS**             | Converte texto em narração de áudio, oferecendo opções de nuvem ou local.                                                                                                                                               |
+| **Transcrição e Legendas**   | **OpenAI Whisper (Local)**                    | Gera legendas com timestamps precisos a partir do áudio da narração.                                                                                                                                                    |
+| **Mídia e Recursos**         | **Pixabay API**, **Jamendo API**              | Fontes alternativas e gratuitas para imagens de fundo e trilhas sonoras.                                                                                                                                                |
+| **Manipulação de Mídia**     | **FFmpeg**, **Pydub**, **Pillow**, **OpenCV** | Ferramentas essenciais para montagem de vídeo, manipulação de áudio e processamento de imagem.                                                                                                                          |
+| **Automação Web**            | **Playwright**, **Selenium**                  | Utilizados para automação de navegador em scripts de coleta de dados ou imagens.                                                                                                                                        |
+| **Testes e Ambiente**        | **Pytest**, **python-dotenv**                 | Framework de testes para garantir a qualidade do código e gerenciamento de variáveis de ambiente.                                                                                                                       |
+| **Publicação**               | **YouTube Data API v3**                       | Conclui o fluxo fazendo o upload do vídeo finalizado para um canal específico, incluindo metadados (título, descrição, tags) gerenciados programaticamente.                                                             |
+
 
 -----
 
 #### 🗺️ Diagrama da Arquitetura
 
 ```mermaid
----
-config:
-  theme: default
-  look: handDrawn
----
 graph TD
-    subgraph "Sistema Legado"
-        ERP[("💾<br>SQL Server<br>ERP Legado")]
+    subgraph "Orquestrador Principal (main.py)"
+        A["▶️ Início do Fluxo"] --> B{Ler próximo job de 'content.json'};
+        B --> C["🤖 Gerar Roteiro (OpenAI API)"];
+        C --> D["🗣️ Gerar Narração <br>(ElevenLabs ou Coqui TTS)"];
+        D --> E["🖼️ Gerar Imagem de Fundo <br>(Replicate ou Pixabay)"];
+        D --> F["🎵 Buscar Música de Fundo <br>(Jamendo API)"];
+        subgraph "Processamento de Áudio"
+            D -- Narração --> G["🎤 Mixar Áudio (Pydub)"];
+            F -- Música --> G;
+        end
+        G -- Áudio Final --> H["✍️ Gerar Legendas (Whisper)"];
+        subgraph "Montagem Final"
+            E -- Imagem --> I["🎬 Montar Vídeo (FFmpeg)"];
+            G -- Áudio Final --> I;
+            H -- Legendas --> I;
+        end
+        I --> J{"☁️ Fazer Upload? (YouTube API)"};
+        J -- Sim --> K["✅ Publicado"];
+        J -- Não --> L["🏁 Concluído"];
     end
 
-    subgraph "Pipeline de Integração"
-        Script["🐍 Script de Extração (Python)"]
-        API["🔌 API de Ingestão (Laravel)"]
-        Horizon["🔄 Fila de Processamento (Laravel Horizon)"]
-        Workers["⚙️ Jobs Assíncronos (Workers)"]
-    end
-
-    subgraph "Nova Aplicação Cloud"
-        DB["☁️ App de Orçamentos (Laravel / MySQL)"]
-    end
-
-    subgraph "Automação e DevOps"
-        CICD["🔧 Bitbucket Pipelines (CI/CD)"]
-    end
-
-    ERP -- "1\. Extrai dados em modo leitura" --> Script
-    Script -- "2\. Envia dados formatados (JSON)" --> API
-    API -- "3\. Enfileira job com os dados" --> Horizon
-    Horizon -- "4\. Despacha jobs para workers" --> Workers
-    Workers -- "5\. Processa em lotes e persiste" --> DB
-    Workers -- "6\. Executa rotina de limpeza" --> DB
-
-    Script -- "Testes e Deploy" --> CICD
-    DB -- "Testes e Deploy" --> CICD
+    style K fill:#d4edda,stroke:#155724
+    style L fill:#e2e3e5,stroke:#383d41
 ```
 
----
-#### RESUMO TÉCNICO PARA EMBEDDING
-
-O projeto implementa um pipeline de dados desacoplado para integração entre um sistema ERP legado com banco de dados SQL Server e uma aplicação moderna em Laravel (PHP) com MySQL, ambos hospedados em nuvem. A solução resolve o desafio da sincronização de dados sem acesso para modificação do ERP. Um script Python atua como agente de ETL, extraindo dados, formatando-os em JSON e enviando para um endpoint de API RESTful na aplicação Laravel. Para garantir alta performance e evitar gargalos, a ingestão é assíncrona, utilizando Laravel Horizon para enfileirar e gerenciar jobs de processamento. Esses jobs processam os dados em lotes (batches), otimizando a persistência no MySQL. A consistência de dados é mantida através de uma rotina de limpeza que remove registros obsoletos. Todo o ciclo de desenvolvimento é automatizado por um pipeline de CI/CD no Bitbucket Pipelines, que executa testes unitários e de integração para garantir a qualidade e a resiliência da arquitetura.
-
-#### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
-
-| Categoria                    | Tecnologias e Conceitos                                                                                                                                                         |
-| :--------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **AI & Machine Learning**    | N/A                                                                                                                                                                             |
-| **Software Development**     | 🐍 Python, 🐘 PHP, ✨ Laravel, 📄 JSON, 🧪 Testes Unitários, 🧪 Testes de Integração                                                                                                  |
-| **Architecture**             | 🔗 Arquitetura Desacoplada, 🔄 Processamento Assíncrono, 📦 Processamento em Lotes, 🛡️ Resiliência, 📈 Escalabilidade, ⚙️ Pipeline de Dados, 🎯 Sincronização Unidirecional            |
-| **Cloud Computing**          | ☁️ Aplicação Cloud, ☁️ Banco de dados hospedado na nuvem                                                                                                                          |
-| **API RESTFul development**  | 🔌 Endpoint de API, 📩 Ingestão de Dados via API                                                                                                                                  |
-| **Frontend Development**     | N/A                                                                                                                                                                             |
-| **Mobile Development**       | N/A                                                                                                                                                                             |
-| **Database**                 | 💾 SQL Server, 💾 MySQL                                                                                                                                                           |
-| **Data Management**          | 🚚 ETL (Extração, Transformação e Carga), 🔄 Sincronização de Dados, ✅ Integridade de Dados, ✅ Consistência de Dados, ✨ Limpeza de Dados (Data Cleansing)                         |
-| **Content Management - CMS** | N/A                                                                                                                                                                             |
-| **System Administration**    | N/A                                                                                                                                                                             |
-| **DevOps**                   | 🛠️ Bitbucket Pipelines, 🔄 CI/CD (Integração Contínua, Implantação Contínua), 🚦 Laravel Horizon, ⚙️ Background Workers, 📜 Gerenciamento de Filas (Queueing), 🚀 Automação de Deploy |
-| **Leadership**               | N/A                                                                                                                                                                             |
-| **Coaching**                 | N/A                                                                                                                                                                             |
-| **Agile Project Management** | N/A                                                                                                                                                                             |
-
-### 🚀 Projeto: Projeto Spider - Hub de Integração E-commerce
-
-#### 🎯 Visão Geral e Arquitetura da Solução
-
-No coração de um ecossistema de e-commerce complexo e multifacetado, o projeto Spider nasceu como a espinha dorsal de automação, um hub de integração projetado para orquestrar o fluxo de operações para múltiplos clientes. O objetivo era claro: conectar de forma transparente e confiável sistemas de ERP (como Bling e bancos de dados customizados), plataformas de marketplace (Plugg.to, Skyhub, B2W) e ferramentas de gestão, garantindo um fluxo de dados à prova de falhas para produtos, estoque, preços e pedidos.
-
-A solução foi arquitetada como um sistema centralizado, construído em **PHP/Laravel**, que adota uma abordagem orientada a serviços e eventos. Do ponto de vista funcional, o Spider opera como o cérebro da operação:
-
-  * **Recebe Dados:** Ele ingere informações de diversas fontes, utilizando **webhooks** para notificações em tempo real (ex: uma nota fiscal emitida no Bling) e **Artisan Commands** agendados para importações em lote (ex: buscar novos pedidos da Plugg.to).
-  * **Processa de Forma Inteligente:** Ao receber os dados, o Spider não apenas os armazena. Ele os enriquece e processa. Um pedido, por exemplo, passa por um job que identifica o cliente correto com base nos SKUs dos produtos antes de ser enviado ao ERP adequado.
-  * **Garante a Consistência:** Para tarefas críticas como atualizações de estoque e preço, o sistema utiliza um robusto mecanismo de **filas em Redis**. Isso garante que as operações sejam processadas de forma assíncrona, resiliente e controlada, evitando sobrecarga nas APIs externas e garantindo que as informações fluam de maneira ordenada para todos os canais de venda.
-  * **Centraliza a Informação:** Todas as operações, dados e logs são persistidos em um banco de dados **MongoDB**, que serve como a única fonte da verdade para o estado de pedidos, produtos e transações financeiras.
-
-#### 👨‍💻 Meu Papel no Projeto
-
-Como **Engenheiro de Integração**, minha atuação foi central na concepção, desenvolvimento e manutenção deste ecossistema. Minhas principais responsabilidades incluíram:
-
-  * **Arquitetura de Integração:** Desenhar os fluxos de dados, modelar entidades críticas no MongoDB (como a de `checking_account` para controle financeiro) e definir a arquitetura de webhooks para processamento de eventos em tempo real.
-  * **Desenvolvimento Back-End:** Construir e manter os pilares da plataforma, incluindo Artisan Commands para importação, Jobs para processamento assíncrono e a lógica de integração com APIs de terceiros como Bling, Plugg.to e Skyhub.
-  * **Orquestração do Ciclo de Pedidos:** Automatizar o fluxo completo de um pedido, desde sua criação no marketplace, passando pelo envio ao ERP, até a atualização de seu status após o faturamento, tratando inclusive cancelamentos.
-  * **Sincronização Multi-plataforma:** Implementar a complexa lógica de sincronização de estoque e preços, garantindo consistência entre o "dono" do estoque (ERP) e múltiplos canais de venda para evitar overselling.
-  * **Onboarding e Migração de Clientes:** Liderar os processos técnicos para integrar novos clientes à plataforma, incluindo a migração massiva de produtos e pedidos de sistemas como Magento e Plugg.to.
-  * **Manutenção e Qualidade:** Criar ferramentas internas, como o `LogTrait` para padronizar logs, e executar scripts de manutenção no MongoDB para garantir a qualidade e a integridade dos dados.
-
-#### ✨ Pontos Fortes e Desafios Superados
-
-O maior ponto forte da solução é sua **arquitetura assíncrona e resiliente**. O uso intensivo de filas (Queues) não apenas tornou a plataforma mais responsiva, mas também permitiu escalar o processamento de um volume massivo de dados sem comprometer a estabilidade.
-
-Um dos desafios mais significativos foi **garantir a sincronização de estoque em tempo real**. Vender um produto que não existe no estoque (overselling) é um dos maiores problemas do e-commerce. Superamos isso abandonando o polling ineficiente e implementando uma **arquitetura reativa a eventos**. Ao configurar webhooks no Bling, o Spider passou a ser notificado instantaneamente sobre qualquer mudança, disparando jobs para filas dedicadas (`pluggto`, `skyhub`) que atualizavam os marketplaces de forma quase imediata e controlada. Essa mudança transformou um ponto de fragilidade em uma fortaleza da plataforma.
-
-Outro grande desafio foi lidar com a **inconsistência de dados** provenientes de múltiplas fontes. Enfrentamos SKUs inválidos, produtos duplicados e pedidos sem associação clara de cliente. A vitória aqui foi conquistada através da engenharia: desenvolvi scripts e rotinas de tratamento, como o job `ProcessCodeOrders`, que implementou uma lógica robusta para **identificar e associar corretamente os pedidos aos seus respectivos clientes**, utilizando os SKUs dos itens como chave primária. Essa automação eliminou um processo manual e propenso a erros, garantindo a fluidez da operação.
-
-#### 🌱 Pontos para Evolução Futura
-
-Apesar da robustez da solução, sempre há espaço para melhorias. Duas evoluções naturais seriam:
-
-1.  **Dashboard de Observabilidade:** Implementar um painel de controle visual para monitorar em tempo real a saúde das filas, o status dos jobs e as métricas de integração, oferecendo uma visão proativa sobre possíveis gargalos.
-2.  **Centralização de Logs Avançada:** Expandir o `LogTrait` para integrar-se a uma plataforma de observabilidade como Datadog ou ELK Stack, permitindo buscas complexas e criação de alertas inteligentes sobre o comportamento das integrações.
-
------
-
-#### 🛠️ Pilha de Tecnologias (Tech Stack)
-
-| Componente                   | Tecnologia Utilizada        | Papel na Arquitetura                                                                                                                                           |
-| :--------------------------- | :-------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Backend & Lógica**         | **PHP / Laravel**           | Framework principal para toda a aplicação, incluindo Artisan Commands para tarefas agendadas e Jobs para processamento em segundo plano.                       |
-| **Banco de Dados Principal** | **MongoDB**                 | Banco de dados NoSQL central para armazenar produtos, pedidos, clientes e logs, oferecendo flexibilidade para modelos de dados complexos.                      |
-| **Filas Assíncronas**        | **Redis**                   | Utilizado como o motor do sistema de filas (Queues), garantindo o processamento assíncrono e resiliente de tarefas como atualizações de estoque e importações. |
-| **Integrações (APIs)**       | **REST & Webhooks**         | Protocolos usados para comunicação com sistemas externos, tanto para buscar dados (REST) quanto para receber notificações em tempo real (Webhooks).            |
-| **Plataformas Conectadas**   | **Plugg.to, Skyhub, Bling** | Principais sistemas de e-commerce (marketplaces e ERP) com os quais o Spider se integrava para orquestrar as operações.                                        |
-| **Infraestrutura & DevOps**  | **Docker, AWS S3, SSH**     | Docker para conteinerização do ambiente, S3 para armazenamento de arquivos (ex: planilhas de importação) e SSH para gerenciamento do servidor.                 |
-| **Bancos de Dados Legados**  | **MySQL**                   | Utilizado para integração direta com o sistema ERP de clientes específicos que não possuíam uma API moderna, como o Novo Século.                               |
-
------
-
-#### 🗺️ Diagrama da Arquitetura
+#### Diagrama da API
 
 ```mermaid
 ---
@@ -1928,85 +2030,93 @@ config:
   theme: default
   look: handDrawn
 ---
-flowchart LR
-    %% Fontes externas
-    subgraph EX["Fontes de Dados Externas"]
-        direction TB
-        ERP_Bling["🏢 ERP Bling"]
-        ERP_BDI["🗃️ ERP Custom (MySQL)"]
-        Marketplaces["🛒 Marketplaces (Plugg.to, Skyhub)"]
-    end
+flowchart TB
+ subgraph subGraph0["Microserviço (API Flask)"]
+        N{"API REST"}
+        M["Cliente"]
+        O["Lógica de Geração de Áudio"]
+        P["Lógica de Geração de Legendas"]
+        Q["Lógica de Montagem de Vídeo"]
+  end
+    M --> N
+    N -- "/generate-audio" --> O
+    N -- "/generate-subtitles" --> P
+    N -- "/assemble-video" --> Q
+    M@{ shape: terminal}
+    O@{ shape: card}
+    P@{ shape: card}
+    Q@{ shape: card}
+    style N fill:#FFD600
+    style M color:#000000
 
-    %% Entrada de dados
-    subgraph IN["Entrada de Dados"]
-        API["📡 API / Webhooks"]
-        Commands["⚙️ Artisan Commands"]
-    end
-
-    %% Processamento
-    subgraph PR["Processamento Assíncrono"]
-        Job_Stock["🧬 Atualizar Estoque"]
-        Job_Order["📄 Processar Pedidos"]
-        Job_Others["… Outros Jobs"]
-    end
-
-    %% Armazenamento
-    MongoDB[("🗄️ MongoDB")]
-    Queues["📦 Filas (Redis)"]
-
-    %% Fluxos
-    ERP_Bling -- "Webhooks (Estoque, NF-e)" --> API
-    ERP_BDI -- "Leitura via Job" --> Commands
-    Marketplaces -- "Importação via Job" --> Commands
-
-    API --> Queues
-    Commands --> Queues
-    Queues --> Job_Stock & Job_Order & Job_Others
-
-    Job_Stock <--> MongoDB
-    Job_Order <--> MongoDB
-    Job_Others <--> MongoDB
-
-    Job_Order -- "Pedido Processado" --> ERP_Bling
-    Job_Stock -- "Atualizar Estoque" --> Marketplaces
-    Job_Order -- "Atualizar Status" --> Marketplaces
-
-    style PR fill:#E8F5E9,stroke:#81C784,stroke-width:2px
-    style EX fill:#FFF3E0,stroke:#FFB74D,stroke-width:2px
-    style IN fill:#E3F2FD,stroke:#64B5F6,stroke-width:2px
-    style MongoDB fill:#F3E5F5,stroke:#BA68C8,stroke-width:2px
-    style Queues fill:#FFEBEE,stroke:#E57373,stroke-width:2px
 ```
 
+#### Diagrama de Fluxo da geração de vídeo
+
+```mermaid
 ---
+config:
+  theme: default
+  look: handDrawn
+---
+flowchart TD
+ subgraph subGraph0["A. Geração de Conteúdo"]
+        A["🤖 1. Gerar Roteiro<br>(OpenAI API)"]
+        B@{ label: "📝 Salvar em 'content.json'" }
+  end
+ subgraph subGraph1["B. Criação de Mídia"]
+        C["🔊 2. Gerar Narração<br>(ElevenLabs ou Coqui TTS)"]
+        D["🖼️ 3. Gerar Imagem<br>(Replicate ou Pixabay)"]
+        E["🎵 4. Adicionar Música de Fundo<br>(Jamendo)"]
+        F["✍️ 5. Gerar Legendas<br>(Local Whisper)"]
+  end
+ subgraph subGraph2["C. Finalização e Publicação"]
+        G["🎬 6. Montar Vídeo<br>(FFmpeg)"]
+        H["☁️ 7. Upload para YouTube<br>(YouTube API)"]
+  end
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+    F --> G
+    G --> H
+    B@{ shape: cyl}
+    style subGraph0 fill:#FFD600
+    style subGraph1 fill:#FFE0B2
+    style subGraph2 fill:#C8E6C9
+```
+
+
+---
+
 #### RESUMO TÉCNICO PARA EMBEDDING
 
-Desenvolvimento e arquitetura do "Spider", um hub de integração de e-commerce centralizado, construído em **PHP/Laravel** para orquestrar operações entre múltiplos sistemas. A arquitetura é orientada a serviços e eventos, utilizando **processamento assíncrono** com **Jobs** e **filas em Redis** para garantir resiliência e escalabilidade. O sistema ingere dados via **APIs REST** e **Webhooks** de plataformas como **Bling**, **Plugg.to**, e **Skyhub**, além de realizar extrações de bancos de dados legados **MySQL**. As operações de **ETL (Extract, Transform, Load)** são executadas por **Artisan Commands** para migração e importação em massa. Todos os dados operacionais (pedidos, produtos, logs) são persistidos em um banco de dados **MongoDB**, que funciona como fonte única da verdade. Desafios de sincronização de estoque e preço foram solucionados implementando uma **arquitetura reativa a eventos**, abandonando o polling em favor de webhooks que disparam jobs para filas dedicadas, prevenindo overselling. A inconsistência de dados foi tratada com rotinas de normalização e enriquecimento, como o `ProcessCodeOrders`. A infraestrutura utiliza **Docker** para conteinerização, **AWS S3** para armazenamento e **SSH** para gerenciamento, com processos agendados via **cron**. A gestão do projeto foi feita com **Jira**, e a padronização de logs foi implementada com um `LogTrait` customizado.
+Este projeto é uma fábrica de automação de vídeo end-to-end desenvolvida em Python, orquestrando um pipeline que abrange desde a ingestão de conteúdo via `content.json` até a publicação no YouTube. A arquitetura modular suporta múltiplos provedores de IA em um modelo plug-and-play, utilizando ElevenLabs API ou Coqui TTS local para síntese de voz, e Replicate (SDXL) ou Pixabay API para geração de imagens. A solução supera desafios técnicos complexos de manipulação de mídia, como a eliminação de tremor (judder) em animações FFmpeg através de um processo de renderização estável em duas etapas com filtros `scale`/`crop`, e a correção de centralização com fórmulas de coordenadas robustas (`(iw-out_w)/2`). A estabilidade do motor Coqui TTS foi alcançada travando a versão da biblioteca `transformers` (`4.36.2`) e otimizando o processamento de áudio em memória com NumPy e Pydub para evitar deadlocks de I/O. O sistema também inclui transcrição de áudio via OpenAI Whisper local, adição de trilha sonora pela Jamendo API, e expõe suas funcionalidades de IA como um microserviço desacoplado através de uma API RESTful construída com Flask. A gestão de configuração é feita via `python-dotenv` e testes automatizados com Pytest garantem a qualidade do código.
 
 #### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
 
 | Categoria                    | Tecnologias e Conceitos                                                                                                                                                            |
 | :--------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **AI & Machine Learning**    | N/A                                                                                                                                                                                |
-| **Software Development**     | PHP, Laravel, Artisan Commands, Jobs, Traits (`LogTrait`), Controllers, Backend Development                                                                                        |
-| **Architecture**             | Arquitetura Orientada a Serviços, Arquitetura Orientada a Eventos, Arquitetura Assíncrona, Arquitetura Reativa, Hub de Integração, Modelagem de Entidades, Fluxos de Dados         |
-| **Cloud Computing**          | AWS S3                                                                                                                                                                             |
-| **API RESTFul development**  | API REST, Webhooks, Consumo de API (Bling, Plugg.to, Skyhub)                                                                                                                       |
+| **AI & Machine Learning**    | OpenAI API (GPT), Replicate (SDXL), Coqui TTS, OpenAI Whisper, `transformers`, NumPy                                                                                            |
+| **Software Development**     | Python, `subprocess`, Pydub, Pillow, OpenCV, `python-dotenv`, Pytest, SOLID, Clean Code                                                                                         |
+| **Architecture**             | Arquitetura Modular, Microserviços, Plug-and-Play (Provedores de IA), `ContentManager` (Repositório Central), Renderização em Duas Etapas, `MovementFilterGenerator` (Factory) |
+| **Cloud Computing**          | ElevenLabs API, Replicate API, Pixabay API, Jamendo API, YouTube Data API v3, OpenAI API                                                                                        |
+| **API RESTFul development**  | Flask, Integração de APIs REST                                                                                                                                                  |
 | **Frontend Development**     | N/A                                                                                                                                                                                |
 | **Mobile Development**       | N/A                                                                                                                                                                                |
-| **Database**                 | MongoDB, Redis, MySQL, SQLite, NoSQL                                                                                                                                               |
-| **Data Management**          | ETL (Extração, Transformação, Carga), Migração de Dados (Magento, Plugg.to), Sincronização de Dados (Estoque, Preço), Qualidade de Dados, Normalização de Dados, Logs (`LogTrait`) |
+| **Database**                 | JSON (utilizado como banco de dados de arquivos)                                                                                                                               |
+| **Data Management**          | `ContentManager` (Abstração de Dados), Gerenciamento de JSON                                                                                                                    |
 | **Content Management - CMS** | N/A                                                                                                                                                                                |
-| **System Administration**    | Gerenciamento de Servidor (SSH), Cron Jobs                                                                                                                                         |
-| **DevOps**                   | Docker, Docker Compose, Monitoramento, Logging, Automação de Tarefas                                                                                                               |
-| **Leadership**               | Liderança Técnica, Documentação Técnica, Mentoria (Coaching)                                                                                                                       |
+| **System Administration**    | `launchd` (Agendamento de tarefas no macOS)                                                                                                                                     |
+| **DevOps**                   | Gerenciamento de Ambiente (venv), Gerenciamento de Dependências (`requirements.txt`), Testes Automatizados (Pytest), Agendamento de Publicação                                  |
+| **Leadership**               | Arquiteto de Soluções, Desenvolvedor Principal, Documentação Técnica                                                                                                         |
 | **Coaching**                 | N/A                                                                                                                                                                                |
-| **Agile Project Management** | Jira, Gestão de Tarefas, Acompanhamento de Status                                                                                                                                  |
+| **Agile Project Management** | Desenvolvimento Incremental, Refatoração Estratégica, Resolução de Débito Técnico                                                                                               |
 
+***
 
----
-
-### 🚀 Projeto: Índicos: Plataforma SaaS de Marketing de Indicação
+### 🚀 Project:  Índicos - Plataforma SaaS de Marketing de Indicação
 
 #### 🎯 Visão Geral e Arquitetura da Solução
 
@@ -2042,12 +2152,12 @@ Para o futuro, o projeto Índicos poderia evoluir com a implementação de duas 
 
 #### 🛠️ Pilha de Tecnologias (Tech Stack)
 
-| Componente                      | Tecnologia Utilizada    | Papel na Arquitetura                                                                                                                                   |
-| :------------------------------ | :---------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Backend & Core da Aplicação** | **Laravel**             | Responsável por toda a lógica de negócio, arquitetura multi-tenant, roteamento por subdomínios, autenticação dupla (master e tenants) e APIs.          |
-| **Banco de Dados**              | **MySQL**               | Persistência dos dados de todos os tenants, incluindo usuários, redes de indicação e configurações, com isolamento garantido por tenant.               |
-| **Frontend & Dinamismo**        | **JavaScript / jQuery** | Utilizado para criar os diagramas de hierarquia dinâmicos no dashboard do usuário, proporcionando uma visualização interativa e em tempo real da rede. |
-| **Ambiente de Deploy**          | **Host Umbler**         | Ambiente de nuvem onde a aplicação foi implantada. O entendimento de suas limitações foi crucial para a resolução de desafios de infraestrutura.       |
+| Componente | Tecnologia Utilizada | Papel na Arquitetura |
+| :--- | :--- | :--- |
+| **Backend & Core da Aplicação** | **Laravel** | Responsável por toda a lógica de negócio, arquitetura multi-tenant, roteamento por subdomínios, autenticação dupla (master e tenants) e APIs. |
+| **Banco de Dados** | **MySQL** | Persistência dos dados de todos os tenants, incluindo usuários, redes de indicação e configurações, com isolamento garantido por tenant. |
+| **Frontend & Dinamismo** | **JavaScript / jQuery** | Utilizado para criar os diagramas de hierarquia dinâmicos no dashboard do usuário, proporcionando uma visualização interativa e em tempo real da rede. |
+| **Ambiente de Deploy** | **Host Umbler** | Ambiente de nuvem onde a aplicação foi implantada. O entendimento de suas limitações foi crucial para a resolução de desafios de infraestrutura. |
 
 -----
 
@@ -2109,165 +2219,20 @@ A plataforma Índicos é um SaaS de marketing de indicação com uma arquitetura
 
 #### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
 
-| Categoria                    | Tecnologias e Conceitos                                                                                                                      |
-| :--------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------- |
-| **AI & Machine Learning**    | Módulo de analytics avançado (evolução futura)                                                                                               |
-| **Software Development**     | Laravel, Middlewares personalizados, Lógica de comissionamento multinível, Automação de distribuição de prêmios, Depuração (Debugging)       |
-| **Architecture**             | Arquitetura multi-tenant, SaaS (Software as a Service), Roteamento por subdomínios, Isolamento de dados, Integração com plataformas externas |
-| **Cloud Computing**          | Host Umbler, Infraestrutura de hospedagem                                                                                                    |
-| **API RESTFul development**  | APIs para integração (evolução futura)                                                                                                       |
-| **Frontend Development**     | JavaScript, jQuery, Dashboards interativos, Visualização de diagramas dinâmicos                                                              |
-| **Mobile Development**       | N/A                                                                                                                                          |
-| **Database**                 | MySQL                                                                                                                                        |
-| **Data Management**          | Segmentação de dados por tenant, Visualização de dados hierárquicos                                                                          |
-| **Content Management - CMS** | N/A                                                                                                                                          |
-| **System Administration**    | Configuração de subdomínios dinâmicos, Gestão de ambiente de hospedagem                                                                      |
-| **DevOps**                   | Implantação (Deploy), Resolução de problemas de infraestrutura                                                                               |
-| **Leadership**               | Arquiteto de Soluções, Desenvolvedor Principal                                                                                               |
-| **Coaching**                 | N/A                                                                                                                                          |
-| **Agile Project Management** | Gestão do ciclo de vida do projeto (concepção à entrega)                                                                                     |
-
-### 🚀 Projeto: OnePush: Plataforma SaaS para Notificações Web Push
-
-#### 🎯 Visão Geral e Arquitetura da Solução
-
-Em um cenário digital onde a comunicação direta e instantânea com o usuário é um diferencial competitivo, nasceu o OnePush. Trata-se de uma plataforma SaaS (Software as a Service) completa, projetada para empoderar empresas com a capacidade de enviar notificações web push, criando um canal de engajamento poderoso para aumentar o retorno e a fidelização de visitantes em seus websites.
-
-A espinha dorsal da solução é uma **arquitetura modular e orientada a eventos**, construída sobre o robusto framework Laravel. Essa escolha estratégica garantiu não apenas a separação clara de responsabilidades entre os diferentes domínios do sistema — como notificações, pagamentos e gestão de clientes —, mas também proporcionou alta coesão e baixo acoplamento. Na prática, quando um cliente cadastra um novo website ou agenda uma notificação, a plataforma dispara eventos que são processados de forma assíncrona por filas (queues). Isso garante que a interface do usuário permaneça ágil e responsiva, enquanto tarefas mais pesadas, como a comunicação com APIs externas, acontecem em segundo plano.
-
-O fluxo é elegante e eficiente: o cliente da plataforma instala um simples script JavaScript em seu site, que se comunica com a API da OneSignal para registrar os assinantes. Pelo painel administrativo do OnePush, o cliente pode então segmentar seu público e disparar notificações, que são orquestradas pelo nosso backend e entregues pela infraestrutura global da OneSignal, garantindo performance e escalabilidade.
-
-#### 👨‍💻 Meu Papel no Projeto
-
-Atuei como o principal arquiteto e desenvolvedor da solução, sendo responsável pelo ciclo de vida completo do produto, desde a concepção até a implementação. Minhas principais responsabilidades incluíram:
-
-  * **Desenho da Arquitetura:** Idealizei e implementei a arquitetura modular e orientada a eventos, garantindo a escalabilidade e manutenibilidade do sistema.
-  * **Desenvolvimento Back-End:** Construí todo o core da aplicação utilizando Laravel (PHP), incluindo a lógica de negócio, o sistema de filas, e a modularização dos componentes.
-  * **Integração de APIs:** Realizei a integração completa com serviços de terceiros essenciais: a **OneSignal API** como motor de envio das notificações e a **Pagar.me API** para a gestão de planos e assinaturas.
-  * **Construção do Painel Administrativo:** Desenvolvi um painel de controle completo, utilizando o Homer Dashboard, que abrange desde a gestão de notificações e websites até o monitoramento de logs, estatísticas de engajamento e um sistema de suporte com funcionalidade de "impersonation" para resolução ágil de problemas.
-  * **Sistema de Pagamentos:** Implementei todo o ciclo de vida de assinaturas, integrando o gateway de pagamentos para processar transações de cartão de crédito e boleto de forma segura com JWT.
-
-#### ✨ Pontos Fortes e Desafios Superados
-
-O grande trunfo do OnePush reside na sua arquitetura resiliente e desacoplada, que foi a resposta direta a um desafio central: como construir uma plataforma SaaS multitenant que fosse ao mesmo tempo robusta, performática e fácil de manter?
-
-A resposta foi a adoção de uma **arquitetura orientada a eventos**. Ao invés de acoplar a criação de uma notificação diretamente ao seu envio, o sistema dispara um evento `NotificationCreated`. Um listener, operando de forma independente, captura esse evento e enfileira uma tarefa para se comunicar com a API da OneSignal. Essa abordagem trouxe vitórias significativas:
-
-1.  **Resiliência:** Se a API da OneSignal estivesse temporariamente indisponível, a tarefa poderia ser reprocessada automaticamente pela fila, sem perda de dados ou impacto na experiência do usuário.
-2.  **Performance:** A interface do usuário respondia instantaneamente, pois a lógica de envio era delegada para um processo em segundo plano.
-3.  **Escalabilidade:** Aumentar a capacidade de envio de notificações se tornou uma questão de adicionar mais workers para processar a fila, uma solução horizontalmente escalável.
-
-Outro ponto de destaque foi a criação de um **painel administrativo centrado na experiência de suporte**. A funcionalidade de "impersonation" permitiu que nossa equipe técnica acessasse a conta de um cliente de forma segura para diagnosticar e resolver problemas, o que reduziu drasticamente o tempo de suporte e aumentou a satisfação do cliente.
-
-#### 🌱 Pontos para Evolução Futura
-
-Embora a plataforma seja robusta, existem caminhos claros para sua evolução. Duas melhorias de alto impacto seriam:
-
-1.  **Testes A/B para Notificações:** Implementar uma funcionalidade que permita aos clientes testar diferentes textos e imagens em suas notificações para otimizar as taxas de clique.
-2.  **Automação e Jornadas de Usuário:** Criar um sistema de automação onde os clientes possam configurar "jornadas" de notificações baseadas no comportamento do usuário (ex: notificação de carrinho abandonado).
-
------
-
-#### 🛠️ Pilha de Tecnologias (Tech Stack)
-
-| Componente                | Tecnologia Utilizada      | Papel na Arquitetura                                                                                                      |
-| :------------------------ | :------------------------ | :------------------------------------------------------------------------------------------------------------------------ |
-| **Framework Back-End**    | **Laravel 5.4 (PHP)**     | Core da aplicação, gerenciando toda a lógica de negócio, APIs, modularização e orquestração de eventos.                   |
-| **Banco de Dados**        | **MySQL**                 | Armazenamento principal para dados de usuários, websites, notificações, assinaturas e transações.                         |
-| **Filas e Eventos**       | **Laravel Queues**        | Gerencia o processamento assíncrono de tarefas, como o envio de notificações, garantindo performance e resiliência.       |
-| **Motor de Notificações** | **OneSignal API**         | Serviço externo utilizado como a infraestrutura principal para registro de assinantes e entrega de notificações web push. |
-| **Gateway de Pagamento**  | **Pagar.me API**          | Responsável por processar pagamentos de assinaturas (cartão de crédito e boleto) de forma segura.                         |
-| **Frontend (Admin)**      | **Homer Dashboard**       | Template utilizado para a construção da interface do painel administrativo, oferecendo uma UI rica e responsiva.          |
-| **Autenticação API**      | **tymondesigns/jwt-auth** | Biblioteca para proteger rotas de API (como as de pagamento) utilizando JSON Web Tokens (JWT).                            |
-| **Logs de Atividade**     | **spatie/activitylog**    | Pacote utilizado para rastrear e registrar todas as ações importantes realizadas pelos usuários na plataforma.            |
-
------
-
-#### 🗺️ Diagrama da Arquitetura
-
-```mermaid
----
-config:
-  theme: default
-  look: handDrawn
----
-flowchart TD
-    %% === LEGENDA DE CORES ===
-    classDef cliente fill:#d8b4fe,stroke:#a855f7,color:#1e1e1e
-    classDef plataforma fill:#bfdbfe,stroke:#3b82f6,color:#1e1e1e
-    classDef servicos fill:#fed7aa,stroke:#f97316,color:#1e1e1e
-    classDef usuario fill:#bbf7d0,stroke:#22c55e,color:#1e1e1e
-
-    %% === CLIENTE DONO DO WEBSITE ===
-    subgraph "Cliente Dono do Website"
-        Admin["Cliente SaaS - Admin"]
-    end
-    class Admin cliente
-
-    %% === PLATAFORMA ONEPUSH ===
-    subgraph "Plataforma OnePush - SaaS"
-        Painel["💻 Painel Administrativo - Laravel + Homer UI"]
-        Core["⚙️ Core da Aplicação - Módulos e Lógica de Negócio"]
-        Fila["🔄 Fila de Processamento - Laravel Queues"]
-        DB["🗄️ Banco de Dados - MySQL"]
-    end
-    class Painel,Core,Fila,DB plataforma
-
-    %% === SERVIÇOS EXTERNOS ===
-    subgraph "Serviços Externos"
-        OneSignal["📡 OneSignal API"]
-        PagarMe["💳 Pagar-me API"]
-    end
-    class OneSignal,PagarMe servicos
-
-    %% === USUÁRIO FINAL ===
-    subgraph "Usuário Final"
-        WebsiteCliente["🌐 Website do Cliente - com SDK OneSignal"]
-        Navegador["🖥️ Navegador do Usuário Final"]
-    end
-    class WebsiteCliente,Navegador usuario
-
-    %% === FLUXO DE ADMINISTRAÇÃO E ENVIO ===
-    Admin -->|"Cria Notificação"| Painel
-    Painel -->|"1\. Salva no DB"| DB
-    Painel -->|"2\. Dispara Evento"| Core
-    Core -->|"3\. Enfileira Job"| Fila
-    Fila -->|"4\. Processa Job e Chama API"| OneSignal
-
-    %% === FLUXO DE PAGAMENTO ===
-    Admin -->|"Gerencia Assinatura"| Painel
-    Painel -->|"Requisição de Pagamento"| Core
-    Core -->|"Processa via API"| PagarMe
-    PagarMe -->|"Retorna Status"| Core
-    Core -->|"Salva Transação"| DB
-
-    %% === FLUXO DO USUÁRIO FINAL ===
-    Navegador -->|"Acessa o site"| WebsiteCliente
-    WebsiteCliente -->|"Registra para Push"| OneSignal
-    OneSignal -->|"5\. Entrega Notificação"| Navegador
-```
-
-#### RESUMO TÉCNICO PARA EMBEDDING
-
-Desenvolvimento de uma plataforma SaaS multitenant, OnePush, para envio de notificações web push, utilizando uma arquitetura modular e orientada a eventos. O core da aplicação foi construído com Laravel (PHP) e MySQL, implementando o padrão de filas (Laravel Queues) para processamento assíncrono de tarefas, garantindo resiliência, performance e escalabilidade horizontal. A solução integra-se com a API da OneSignal para o registro de assinantes e entrega de notificações e com a API da Pagar.me para a gestão de assinaturas e processamento de pagamentos (cartão de crédito, boleto), com rotas de API protegidas por JSON Web Tokens (JWT). O painel administrativo, desenvolvido com Homer Dashboard, inclui funcionalidades de gestão, monitoramento de logs (`spatie/activitylog`), estatísticas e um sistema de "impersonation" para suporte técnico. A arquitetura desacoplada resolveu o desafio de comunicação com APIs externas, permitindo o reprocessamento de tarefas em caso de falha e mantendo a UI responsiva.
-
-#### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
-
-| Categoria                    | Tecnologias e Conceitos                                                                                                                                                      |
-| :--------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **AI & Machine Learning**    | Testes A/B (evolução futura), Automação de Jornadas (evolução futura)                                                                                                        |
-| **Software Development**     | Laravel 5.4, PHP, Modularização, Baixo Acoplamento, Alta Coesão, `tymondesigns/jwt-auth`, `spatie/activitylog`                                                               |
-| **Architecture**             | Arquitetura Modular, Arquitetura Orientada a Eventos, SaaS (Software as a Service), Arquitetura Multitenant, Arquitetura Desacoplada, Escalabilidade Horizontal, Resiliência |
-| **Cloud Computing**          | SaaS (Software as a Service)                                                                                                                                                 |
-| **API RESTFul development**  | Integração de APIs, OneSignal API, Pagar.me API, JSON Web Tokens (JWT), Gateway de Pagamento                                                                                 |
-| **Frontend Development**     | Homer Dashboard, JavaScript                                                                                                                                                  |
-| **Mobile Development**       | Notificações Web Push                                                                                                                                                        |
-| **Database**                 | MySQL                                                                                                                                                                        |
-| **Data Management**          | Logs de Atividade, Estatísticas de Engajamento, Monitoramento de Logs                                                                                                        |
-| **Content Management - CMS** | N/A                                                                                                                                                                          |
-| **System Administration**    | Impersonation, Suporte Técnico, Monitoramento de Logs                                                                                                                        |
-| **DevOps**                   | Filas (Queues), Processamento Assíncrono, Workers                                                                                                                            |
-| **Leadership**               | Arquiteto da solução, Ciclo de vida completo do produto, Concepção de produto                                                                                                |
-| **Coaching**                 | N/A                                                                                                                                                                          |
-| **Agile Project Management** | N/A                                                                                                                                                                          |
-
+| Categoria | Tecnologias e Conceitos |
+| :--- | :--- |
+| **AI & Machine Learning** | Módulo de analytics avançado (evolução futura) |
+| **Software Development** | Laravel, Middlewares personalizados, Lógica de comissionamento multinível, Automação de distribuição de prêmios, Depuração (Debugging) |
+| **Architecture**| Arquitetura multi-tenant, SaaS (Software as a Service), Roteamento por subdomínios, Isolamento de dados, Integração com plataformas externas |
+| **Cloud Computing** | Host Umbler, Infraestrutura de hospedagem |
+| **API RESTFul development** | APIs para integração (evolução futura) |
+| **Frontend Development** | JavaScript, jQuery, Dashboards interativos, Visualização de diagramas dinâmicos |
+| **Mobile Development** | N/A |
+| **Database** | MySQL |
+| **Data Management** | Segmentação de dados por tenant, Visualização de dados hierárquicos |
+| **Content Management - CMS** | N/A |
+| **System Administration** | Configuração de subdomínios dinâmicos, Gestão de ambiente de hospedagem |
+| **DevOps** | Implantação (Deploy), Resolução de problemas de infraestrutura |
+| **Leadership** | Arquiteto de Soluções, Desenvolvedor Principal |
+| **Coaching** | N/A |
+| **Agile Project Management** | Gestão do ciclo de vida do projeto (concepção à entrega) |

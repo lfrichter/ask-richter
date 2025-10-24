@@ -1,0 +1,81 @@
+
+> backend@1.0.0 build-index
+> npx tsx src/scripts/generate-index.ts --
+
+[LIMPEZA] Verificando e limpando o diretório de índice antigo em: /tmp/faiss_index...
+[LIMPEZA] Diretório antigo removido com sucesso.
+Iniciando indexação com a função de chunking customizada...
+--- VERIFICAÇÃO FINAL DE TECNOLOGIAS POR PROJETO ---
+Projeto/Arquivo: project, Tecnologias Extraídas: [Languages  Frameworks PHP, Laravel, Horizon, Lumen, Vue.js, React, JavaScript, TypeScript, Python, TDD, GraphQL, Gitflow, Jest, Databases MySQL, SQLite, SQL Server, MongoDB, PL, SQL, SaaS, Deployment  DevOps CI, CD, AWS, GCP, Bitbucket Pipelines, GitHub Actions, Docker, Dockerize, Kubernetes, System architecture, Performance optimization, Application security, Automated testing, Code refactoring]
+-----------------------------------------------------
+--- VERIFICAÇÃO FINAL DE TECNOLOGIAS POR PROJETO ---
+-----------------------------------------------------
+--- VERIFICAÇÃO FINAL DE TECNOLOGIAS POR PROJETO ---
+Projeto/Arquivo: Cache Semântico de Alta Performance para Otimização de LLMs - PoC, Tecnologias Extraídas: [Linguagem Principal, Python, Busca por Similaridade, FAISS, Ollama, NumPy]
+Projeto/Arquivo: Análise de Jobs de Renderização com PySpark - PoC, Tecnologias Extraídas: [Processamento de Dados, PySpark, Jupyter Notebook, Fonte de Dados, SQLite, Pandas]
+Projeto/Arquivo: Robo de Atendimento por Voz - PoC, Tecnologias Extraídas: [Python Flask, LiveKit Voice Agents, OpenAI GPT-4o-mini, Reconhecimento de Fala STT, Deepgram, ElevenLabs, Silero VAD, Processamento de Imagem OCR, Pytesseract  Pillow]
+Projeto/Arquivo: Gerenciador de Tarefas Conversacional via E-mail 📥 Postmark Challenge, Tecnologias Extraídas: [Backend, Laravel, Frontend Reativo, Livewire  Tailwind CSS, Testes Automatizados, Pest, Gateway de E-mail, Postmark API  Webhooks, Modelo Arquitetural]
+Projeto/Arquivo: Favorite Products API, Tecnologias Extraídas: [Linguagem  Framework, Laravel, Banco de Dados, PostgreSQL, Ambiente Local, Docker  Docker Compose, Testes Automatizados, Pest, Swagger OpenAPI, Fake Store API Client]
+Projeto/Arquivo: Twin Quest: Desafio Full-Stack, Tecnologias Extraídas: [Backend API, Laravel, Frontend UI, Vue.js, TypeScript, Gerenciamento de Estado, Pinia, Testes Automatizados, Pest]
+-----------------------------------------------------
+--- VERIFICAÇÃO FINAL DE TECNOLOGIAS POR PROJETO ---
+Projeto/Arquivo: Air Combat 3D - Um Estudo de Caso sobre Produtividade com IAs, Tecnologias Extraídas: [Three.js, Node.js com Express, WebSockets, Docker, Hospedagem e Deploy, Render.com, IA Generativa Cursor, Trae]
+Projeto/Arquivo: Canaoaves - Plataforma Colaborativa para a Comunidade de Observadores de Aves, Tecnologias Extraídas: [Backend-as-a-Service, Supabase, Banco de Dados, PostgreSQL, Hosting do Frontend, Vercel, Framework Frontend, Next.js, React]
+Projeto/Arquivo: EuPizza - Plataforma SaaS de Atendimento por Voz, Tecnologias Extraídas: [Linguagem Backend, Python 3.12, Framework Backend, FastAPI, Docker  Docker Compose, Docker Swarm, Banco de Dados, Supabase PostgreSQL, LiveKit  LiveKit SIP, NAT Traversal, coturn, Speech-to-Text STT, Deepgram, Text-to-Speech TTS, ElevenLabs, OpenAI, CI, CD, GitHub Actions, pre-commit Ruff, Black, Mypy]
+Projeto/Arquivo: Huktup - Plataforma de Agendamento e Gestão para Provedores de Serviço, Tecnologias Extraídas: [Backend API Core, Laravel, Frontend Dashboard, Vue.js, Chart.js, Banco de Dados, MySQL, Firebase Authentication, Twilio API, Swagger OpenAPI, Ambiente de Dev, Docker]
+Projeto/Arquivo: Kpro After Sales - API para Otimização de Processos de Pós-Venda, Tecnologias Extraídas: [Backend API, Laravel, Banco de Dados, MySQL, Testes Automatizados, PHPUnit, Swagger OpenAPI]
+Projeto/Arquivo: OnePush - Plataforma SaaS para Notificações Web Push, Tecnologias Extraídas: [Framework Back-End, Laravel, Banco de Dados, MySQL, Filas e Eventos, OneSignal API, Gateway de Pagamento, Pagar.me API, Frontend Admin, Homer Dashboard, tymondesigns, jwt-auth, Logs de Atividade, spatie, activitylog]
+Projeto/Arquivo: Shosales Review - Otimização de Performance (10x) e Implantação de Testes E2E, Tecnologias Extraídas: [Backend, Laravel, Banco de Dados, MySQL, Cache, Redis, Testes E2E, Testes Cross-Browser, CrossBrowserTesting, CI, CD, GitHub Actions, Jenkins]
+Projeto/Arquivo: Spider - Hub de Integração E-commerce, Tecnologias Extraídas: [PHP, Laravel, Banco de Dados Principal, MongoDB, Redis, REST  Webhooks, Plataformas Conectadas, Plugg.to, Skyhub, Bling, Infraestrutura  DevOps, Docker, AWS S3, SSH, Bancos de Dados Legados, MySQL]
+Projeto/Arquivo: Telegram Course Tools, Tecnologias Extraídas: [Linguagem Principal, Python 3.8+, Telethon, tqdm, json, os, asyncio]
+Projeto/Arquivo: Toot - Otimização de Geodata (30x) e API para Market Intelligence, Tecnologias Extraídas: [Backend, Laravel, Banco de Dados, MySQL, Frontend, React, Mapas, Google Maps API, Superfetch, Business Intelligence, Testes, PHPUnit, Swagger, CI, CD]
+Projeto/Arquivo: Fábrica de Vídeos Automatizada para YouTube, Tecnologias Extraídas: [Python, Flask, OpenAI API GPT, Replicate SDXL, ElevenLabs API, Coqui TTS, OpenAI Whisper Local, Pixabay API, Jamendo API, FFmpeg, Pydub, Pillow, OpenCV, Playwright, Selenium, Testes e Ambiente, Pytest, python-dotenv, YouTube Data API v3]
+Projeto/Arquivo: Índicos - Plataforma SaaS de Marketing de Indicação, Tecnologias Extraídas: [Laravel, Banco de Dados, MySQL, Frontend  Dinamismo, JavaScript, jQuery, Ambiente de Deploy, Host Umbler]
+-----------------------------------------------------
+[CHUNKING] Total de 4 documentos divididos em 352 chunks semânticos.
+Exemplo de metadados do primeiro chunk: {
+  source: '/Users/master/projects/chatbot/ask-richter/apps/backend/src/knowledge-base/CV-Consolidated.md',
+  section_header: 'Basic CV',
+  technologies: [
+    'Languages  Frameworks PHP',
+    'Laravel',
+    'Horizon',
+    'Lumen',
+    'Vue.js',
+    'React',
+    'JavaScript',
+    'TypeScript',
+    'Python',
+    'TDD',
+    'GraphQL',
+    'Gitflow',
+    'Jest',
+    'Databases MySQL',
+    'SQLite',
+    'SQL Server',
+    'MongoDB',
+    'PL',
+    'SQL',
+    'SaaS',
+    'Deployment  DevOps CI',
+    'CD',
+    'AWS',
+    'GCP',
+    'Bitbucket Pipelines',
+    'GitHub Actions',
+    'Docker',
+    'Dockerize',
+    'Kubernetes',
+    'System architecture',
+    'Performance optimization',
+    'Application security',
+    'Automated testing',
+    'Code refactoring'
+  ]
+}
+[SINTÉTICO] Procurando por nomes de projetos para criar documento de lista...
+[SINTÉTICO] Documento criado com 23 projetos.
+[SINTÉTICO] Documento de lista de projetos criado e adicionado. Total de chunks agora: 353
+Índice FAISS salvo localmente em: /tmp/faiss_index
+
+[AVISO] Upload para o Supabase não solicitado. Use a flag --upload para fazer o upload.

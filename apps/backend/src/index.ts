@@ -132,6 +132,55 @@ const knownTechnologies = [
   // Adicione mais conforme necessário
 ].map(tech => tech.toLowerCase()); // Converte para minúsculas para comparação
 
+// function decomposeQuery(query: string): QueryPlan {
+//   const lowerCaseQuery = query.toLowerCase();
+
+//   // --- REGRA 1: Lista Completa (Mantida) ---
+//   const listTriggers = ['todos os projetos', 'lista completa', 'quantos projetos', 'liste os projetos'];
+//   if (listTriggers.some(trigger => lowerCaseQuery.includes(trigger))) {
+//     console.log("[QueryPlan] Intenção 'LIST_PROJECTS' detectada.");
+//     return { type: 'LIST_PROJECTS', payload: { originalQuery: query } };
+//   }
+
+//   // --- REGRA 2: Busca por Tecnologia (Lógica Reforçada) ---
+//   const techSearchTriggers = ['projetos?', 'project[s]?', 'usam?', 'utilizam?', 'feitos? com', 'desenvolvidos? com', 'em'];
+//   const techSearchRegex = new RegExp(`\\b(${techSearchTriggers.join('|')})\\b`, 'i');
+//   const containsTechSearchKeyword = techSearchRegex.test(lowerCaseQuery);
+
+//   let foundTechnology: string | null = null;
+
+//   for (const tech of knownTechnologies) {
+//     const techRegex = new RegExp(`\\b${tech.replace('.', '\\.')}\\b`, 'i');
+//     if (techRegex.test(lowerCaseQuery)) {
+//       foundTechnology = tech;
+//       break;
+//     }
+//   }
+
+//   // A intenção só é acionada se UMA tecnologia e UMA palavra-chave de busca forem encontradas.
+//   if (foundTechnology && containsTechSearchKeyword) {
+//     console.log(`[QueryPlan] Intenção 'PROJECT_TECHNOLOGY_SEARCH' detectada. Tecnologia: ${foundTechnology}, Trigger: ${lowerCaseQuery.match(techSearchRegex)?.[0]}`);
+//     return {
+//       type: 'PROJECT_TECHNOLOGY_SEARCH',
+//       payload: { technology: foundTechnology }
+//     };
+//   }
+
+//   // --- REGRA 3: (Fallback) Busca Simples ---
+//   console.log("[QueryPlan] Nenhuma intenção específica. Usando 'SIMPLE_SEARCH'.");
+//   return { type: 'SIMPLE_SEARCH', payload: { originalQuery: query } };
+// }
+// EM: apps/backend/src/index.ts
+// (Certifique-se que 'vue.js' está na sua lista 'knownTechnologies' no topo do arquivo)
+// const knownTechnologies = [ 'laravel', 'vue.js', 'react', ... ];
+
+// EM: apps/backend/src/index.ts
+// (Certifique-se que 'vue.js', 'laravel', 'react', 'python', 'node.js' estão na sua lista 'knownTechnologies')
+
+// EM: apps/backend/src/index.ts
+// (Certifique-se que 'vue.js', 'laravel', 'react', 'python', 'node.js' estão na sua lista 'knownTechnologies')
+// const knownTechnologies = [ 'laravel', 'vue.js', 'react', ... ];
+
 function decomposeQuery(query: string): QueryPlan {
   const lowerCaseQuery = query.toLowerCase();
 
@@ -142,34 +191,36 @@ function decomposeQuery(query: string): QueryPlan {
     return { type: 'LIST_PROJECTS', payload: { originalQuery: query } };
   }
 
-  // --- REGRA 2: Busca por Tecnologia (Lógica Reforçada) ---
-  const techSearchTriggers = ['projetos?', 'project[s]?', 'usam?', 'utilizam?', 'feitos? com', 'desenvolvidos? com', 'em'];
-  const techSearchRegex = new RegExp(`\\b(${techSearchTriggers.join('|')})\\b`, 'i');
-  const containsTechSearchKeyword = techSearchRegex.test(lowerCaseQuery);
-
+  // --- REGRA 2: Busca por Tecnologia (Lógica Simplificada) ---
   let foundTechnology: string | null = null;
-
   for (const tech of knownTechnologies) {
-    const techRegex = new RegExp(`\\b${tech.replace('.', '\\.')}\\b`, 'i');
-    if (techRegex.test(lowerCaseQuery)) {
-      foundTechnology = tech;
-      break;
-    }
+      // Regex \b garante que é a palavra inteira (ex: "vue" e não "revenue")
+      const techRegex = new RegExp(`\\b${tech.replace('.', '\\.')}\\b`, 'i');
+      if (techRegex.test(lowerCaseQuery)) {
+        // Normaliza "vue" para "vue.js" para o filtro de metadados
+        foundTechnology = (tech === 'vue') ? 'vue.js' : tech;
+        break;
+      }
   }
 
-  // A intenção só é acionada se UMA tecnologia e UMA palavra-chave de busca forem encontradas.
-  if (foundTechnology && containsTechSearchKeyword) {
-    console.log(`[QueryPlan] Intenção 'PROJECT_TECHNOLOGY_SEARCH' detectada. Tecnologia: ${foundTechnology}, Trigger: ${lowerCaseQuery.match(techSearchRegex)?.[0]}`);
+  // Se encontramos uma tecnologia, é 99% de chance de ser uma busca por tecnologia.
+  if (foundTechnology) {
+    console.log(`[QueryPlan] Intenção 'PROJECT_TECHNOLOGY_SEARCH' detectada para: ${foundTechnology}`);
     return {
       type: 'PROJECT_TECHNOLOGY_SEARCH',
+      // Passa a tecnologia normalizada (ex: "vue.js")
       payload: { technology: foundTechnology }
     };
   }
 
   // --- REGRA 3: (Fallback) Busca Simples ---
-  console.log("[QueryPlan] Nenhuma intenção específica. Usando 'SIMPLE_SEARCH'.");
-  return { type: 'SIMPLE_SEARCH', payload: { originalQuery: query } };
+  console.log(`[QueryPlan] Fallback para 'SIMPLE_SEARCH'. Query: "${lowerCaseQuery}"`);
+  return {
+    type: 'SIMPLE_SEARCH',
+    payload: { originalQuery: query }
+  };
 }
+
 
 /**
  * Realiza uma busca inteligente, decidindo entre a busca normal e a busca pelo documento sintético.
@@ -363,17 +414,22 @@ function assembleStructuredContext(retrievedChunks: [Document, number][]): strin
       console.log("=======================================================================");
 
       // --- PASSO 1.1: IMPLEMENTAR O NOVO PROMPT BLINDADO ---
-      const systemPrompt = `Você é um assistente que responde EXCLUSIVAMENTE baseado no contexto fornecido.
+      const systemPrompt = `Você é um assistente especialista na carreira de Luis Fernando Richter e responde EXCLUSIVAMENTE baseado no contexto fornecido.
 
 REGRAS OBRIGATÓRIAS:
-1.  Use APENAS informações presentes no contexto fornecido.
-2.  Se a informação não estiver no contexto, responda: "Com base nas informações que tenho, não consigo responder a essa pergunta."
-3.  NÃO faça inferências, suposições ou combine informações de forma criativa.
+1.  Use APENAS o contexto abaixo. NÃO use seu conhecimento prévio.
+2.  Se a resposta não estiver no contexto, diga "Com base nas informações que tenho, não consigo responder a essa pergunta." NÃO invente.
+3.  NÃO faça inferências, suposições ou cálculos (como "X anos de experiência").
+4.  Ao listar projetos, SEMPRE use o formato de bullet point: "* Projeto: [Nome Completo do Projeto]".
 
-PROCESSO DE RESPOSTA:
-1.  Leia o contexto completamente.
-2.  Identifique as partes EXATAS que são relevantes para a pergunta.
-3.  Responda usando APENAS essas partes, citando diretamente sempre que possível.`;
+CONTEXTO:
+{context}
+
+PERGUNTA:
+{query}
+
+RESPOSTA (seguindo rigorosamente as regras acima):`;
+
 
       // Formato final do prompt injetando as variáveis
       const finalPrompt = `${systemPrompt}\n\nCONTEXTO:\n${structuredContext}\n\nPERGUNTA:\n${question}\n\nRESPOSTA (seguindo rigorosamente as regras acima):\n`;

@@ -42,8 +42,8 @@ function customMarkdownSplitter(markdownContent: string, source: string): Docume
     // Identifica o início de um novo projeto (ou seção não-projeto)
     if (firstLine.startsWith('### 🚀')) {
 
-      // --- CORREÇÃO DO REGEX PARA INCLUIR TODOS OS PREFIXOS ---
-      currentProjectName = sectionHeader.replace(/^(Projeto: |Project: |SideProject: |PoC: |Challenge: )/i, '').trim();
+      // --- CORREÇÃO 1: Limpa TODOS os prefixos de projeto ---
+      currentProjectName = sectionHeader.replace(/^(🚀 (PoC|Challenge|SideProject|Project): )/i, '').trim();
       currentProjectKey = currentProjectName; // Usa o nome limpo como chave
       // ----------------------------------------------------
 
@@ -52,7 +52,7 @@ function customMarkdownSplitter(markdownContent: string, source: string): Docume
       }
     } else if (!currentProjectKey || (!firstLine.startsWith('####') && projectsMap.has(currentProjectKey))) {
         // Chunks fora de um projeto (ex: CV, Experience)
-        currentProjectKey = `_non_project_${source}_${projectsMap.size}`;
+        currentProjectKey = `_non_project_${source}`; // Chave genérica mais simples
         currentProjectName = null;
         if (!projectsMap.has(currentProjectKey)) {
              projectsMap.set(currentProjectKey, { projectName: null, techRelevantContent: '', chunks: [] });
@@ -62,7 +62,7 @@ function customMarkdownSplitter(markdownContent: string, source: string): Docume
     const projectData = projectsMap.get(currentProjectKey!)!;
     projectData.chunks.push({ originalContent: content, sectionHeader: sectionHeader });
 
-    // --- ACUMULA CONTEÚDO SELETIVAMENTE (IGNORANDO 'CLASSIFICAÇÃO') ---
+    // --- CORREÇÃO 2: Acumula conteúdo SELETIVAMENTE (IGNORANDO 'CLASSIFICAÇÃO') ---
     const lowerContent = content.toLowerCase();
 
     // 1. Apenas da tabela "Pilha de Tecnologias" (Tech Stack)
@@ -75,6 +75,7 @@ function customMarkdownSplitter(markdownContent: string, source: string): Docume
     } else if (source.includes('Experience-Consolidated.md') && lowerContent.includes('🛠️ 5. tabela de tecnologias utilizadas')) {
        projectData.techRelevantContent += content + '\n\n';
     }
+    // (IGNORAMOS a tabela "CLASSIFICAÇÃO DE TECNOLOGIAS" de propósito para evitar poluição)
   }
 
   // 3. Segunda passagem: Processa cada projeto, extrai tecnologias e cria Documents
@@ -101,16 +102,14 @@ function customMarkdownSplitter(markdownContent: string, source: string): Docume
     }
   }
 
-  // LOG DE DEPURAÇÃO (Mantido para verificação final)
+  // LOG DE DEPURAÇÃO (Manter)
   console.log("--- VERIFICAÇÃO FINAL DE TECNOLOGIAS POR PROJETO ---");
   for (const [projectKey, projectData] of projectsMap.entries()) {
     const technologies = parseTechnologiesFromChunk(projectData.techRelevantContent);
-    const sourceName = projectKey.includes('_non_project_') ? projectKey.split('_')[3] : projectKey;
+    const sourceName = projectKey.includes('_non_project_') ? projectKey.split('_')[2] : projectKey;
 
     if (technologies.length > 0) {
         console.log(`Projeto/Arquivo: ${projectData.projectName || sourceName}, Tecnologias Extraídas: [${technologies.join(', ')}]`);
-    } else {
-        // console.log(`Projeto/Arquivo: ${projectData.projectName || sourceName}, Tecnologias Extraídas: [NENHUMA]`);
     }
   }
   console.log("-----------------------------------------------------");
@@ -165,10 +164,13 @@ Projetos: ${projectListString}
  * @param relevantContent O conteúdo combinado APENAS das seções de tecnologia.
  * @returns Um array de strings com as tecnologias limpas encontradas.
  */
+// EM: apps/backend/src/scripts/generate-index.ts
+// SUBSTITUA A FUNÇÃO 'parseTechnologiesFromChunk' INTEIRA POR ESTA:
+
 function parseTechnologiesFromChunk(relevantContent: string): string[] {
   const techSet = new Set<string>();
 
-  // Lista de termos a serem IGNORADOS (Exemplo, ajuste conforme necessidade)
+  // Lista de termos a serem IGNORADOS
   const ignoreList = new Set([
      'tecnologia utilizada', 'tecnologias e conceitos', 'tecnologia',
      'categoria', 'componente', 'papel na arquitetura', 'descrição', 'software development',
@@ -183,20 +185,20 @@ function parseTechnologiesFromChunk(relevantContent: string): string[] {
   const addCleanedTech = (techString: string | undefined) => {
     if (!techString || techString.toLowerCase() === 'n/a' || techString.includes('---')) return;
 
-    // console.log(`[addCleanedTech PRE-NORMALIZATION] Input: "${techString}"`);
+    // console.log(`[addCleanedTech PRE-NORMALIZATION] Input: "${techString}"`); // Log Descomente se precisar
 
     techString.split(',')
       .flatMap(part => part.split('·'))
       .flatMap(part => part.split('/'))
       .map(t => t.replace(/[[\]{}()#*`]/g, '')) // Limpa caracteres Markdown
-      // --- CORREÇÃO DO EMOJI: Remove símbolos e emojis ---
-      .map(t => t.replace(/[^\p{L}\p{N}\s.\-+#/]/gu, ''))
+      // --- CORREÇÃO 3: Remove emojis e símbolos ANTES da validação ---
+      .map(t => t.replace(/[^\p{L}\p{N}\s.\-+#/]/gu, '')) // Remove qualquer coisa que não seja Letra, Número, espaço ou (.-+#/)
       // --------------------------------------------------
       .map(t => t.split(':')[0])
       .map(t => t.split('<')[0])
       .map(t => t.replace(/^[-\* ]+|[.$]$/g, ''))
       .map(t => t.trim())
-      .filter(t => /^[a-zA-Z0-9.\-+#/ ]+$/.test(t)) // Validação
+      .filter(t => /^[a-zA-Z0-9.\-+#/ ]+$/.test(t)) // Validação (agora vai passar)
       .filter(t => t.length > 1 && t.length < 30)
       .filter(t => !t.match(/^\d+$/))
       .forEach(cleanedTech => {
@@ -225,21 +227,22 @@ function parseTechnologiesFromChunk(relevantContent: string): string[] {
       });
   };
 
-  // --- LÓGICA RÍGIDA DE PARSING (sem alterações) ---
+  // --- LÓGICA RÍGIDA DE PARSING ---
 
-  // 1. Extração de Tabelas
+  // 1. Extração de Tabelas (Apenas da Pilha de Tecnologias)
   const tableSections = relevantContent.match(/(\|.*\| *\n)((?:\| *[-:]+ *\|.*\n)+)((?:\|.*\| *\n)+)/g) || [];
   for (const tableSection of tableSections) {
       const tableLines = tableSection.split('\n').filter(line => line.trim().startsWith('|'));
       const headerLine = tableLines[0]?.toLowerCase() || '';
-      const isTechTable = headerLine.includes('tecnologia') || headerLine.includes('componente') || headerLine.includes('stack');
-
-      if (isTechTable) {
+      // Confirma que é a tabela "Pilha de Tecnologias"
+      if (headerLine.includes('tecnologia utilizada') && headerLine.includes('papel na arquitetura')) {
           for (const line of tableLines) {
               const columns = line.split('|').map(col => col.trim());
               if (columns.length < 3 || columns[1].includes('---')) continue;
+              // console.log(`[Parser Debug Table] Processando Coluna[1]: "${columns[1]}"`);
               // console.log(`[Parser Debug Table] Processando Coluna[2]: "${columns[2]}"`);
-              addCleanedTech(columns[2]); // Extrai da segunda coluna (índice 2)
+              addCleanedTech(columns[1]); // Coluna do Componente (ex: Frontend (UI))
+              addCleanedTech(columns[2]); // Coluna da Tecnologia (ex: Vue 3)
           }
       }
   }
