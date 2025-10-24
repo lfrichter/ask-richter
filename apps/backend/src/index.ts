@@ -136,28 +136,25 @@ const knownTechnologies = knownTechnologiesOriginal.map(tech => tech.toLowerCase
 function decomposeQuery(query: string): QueryPlan {
   const lowerCaseQuery = query.toLowerCase();
 
-  // --- REGRA 1: Lista Completa (Mantida) ---
   const listTriggers = ['todos os projetos', 'lista completa', 'quantos projetos', 'liste os projetos'];
   if (listTriggers.some(trigger => lowerCaseQuery.includes(trigger))) {
     console.log("[QueryPlan] Intenção 'LIST_PROJECTS' detectada.");
     return { type: 'LIST_PROJECTS', payload: { originalQuery: query } };
   }
 
-  // --- REGRA 2: Busca por Tecnologia (Lógica Simplificada e com Normalização) ---
   let foundTechnology: string | null = null;
   for (let i = 0; i < knownTechnologies.length; i++) {
-      const tech = knownTechnologies[i];
-      const techRegex = new RegExp(`\b${tech.replace('.', '\.')}\b`, 'i');
-      if (techRegex.test(lowerCaseQuery)) {
-        // Normaliza 'vue' para 'vue.js' para consistência na busca
-        if (tech === 'vue') {
-          foundTechnology = 'vue.js';
-        } else {
-          foundTechnology = knownTechnologiesOriginal[i];
-        }
-        console.log(`[QueryPlan] Tecnologia encontrada: ${foundTechnology}`);
-        break;
+    const tech = knownTechnologies[i];
+    const techRegex = new RegExp(`\b${tech.replace('.', '\\.')}\b`, 'i');
+    if (techRegex.test(lowerCaseQuery)) {
+      if (tech === 'vue') {
+        foundTechnology = 'vue.js';
+      } else {
+        foundTechnology = knownTechnologiesOriginal[i];
       }
+      console.log(`[QueryPlan] Tecnologia encontrada: ${foundTechnology}`);
+      break;
+    }
   }
 
   if (foundTechnology) {
@@ -168,7 +165,6 @@ function decomposeQuery(query: string): QueryPlan {
     };
   }
 
-  // --- REGRA 3: (Fallback) Busca Simples ---
   console.log(`[QueryPlan] Fallback para 'SIMPLE_SEARCH'. Query: "${lowerCaseQuery}"`);
   return {
     type: 'SIMPLE_SEARCH',
@@ -206,13 +202,11 @@ async function smartSearch(queryPlan: QueryPlan): Promise<[Document, number][]> 
       const filterFunction = (doc: Document) => {
         const technologies = doc.metadata.technologies;
         if (!technologies || !Array.isArray(technologies)) {
-          // console.log(`[Filter] REJEITADO (sem metadados de tecnologia): ${doc.metadata.project_name || 'Chunk sem projeto'}`);
           return false;
         }
 
         const match = technologies.some((t: string) => t.toLowerCase() === technology.toLowerCase());
 
-        // Log detalhado para cada chunk verificado
         console.log(`[Filter] Chunk: ${doc.metadata.project_name || doc.metadata.source} | Tecnologias: [${technologies.join(', ')}] | Busca por: ${technology} | Match: ${match}`);
 
         return match;
@@ -225,15 +219,12 @@ async function smartSearch(queryPlan: QueryPlan): Promise<[Document, number][]> 
       );
       console.log(`[SMART SEARCH] Filtro por metadados para '${technology}' encontrou ${results.length} chunks.`);
 
-      // A lógica de agrupamento agora é tratada em assembleStructuredContext.
-      // Simplesmente retornamos todos os resultados filtrados.
       console.log(`[SMART SEARCH] Retornando todos os ${results.length} chunks filtrados.`);
       return results.map((doc: Document) => [doc, 1.0]); // Retorna com score 1.0
 
     case 'SIMPLE_SEARCH':
     default:
-      // const originalQuery = queryPlan.payload.originalQuery;
-      const intent = classifyIntent(originalQuery); // Still use intent for general searches
+      const intent = classifyIntent(originalQuery);
       console.log(`[SMART SEARCH] Intenção classificada como: ${intent}`);
 
       switch (intent) {
@@ -283,9 +274,8 @@ async function main() {
 function assembleStructuredContext(retrievedChunks: [Document, number][]): string {
   const projectsMap = new Map<string, Document[]>();
 
-  // Group chunks by project_name
   for (const [doc] of retrievedChunks) {
-    const projectName = doc.metadata.project_name || 'Outros'; // Default to 'Outros' if no project_name
+    const projectName = doc.metadata.project_name || 'Outros';
     if (!projectsMap.has(projectName)) {
       projectsMap.set(projectName, []);
     }
@@ -294,28 +284,24 @@ function assembleStructuredContext(retrievedChunks: [Document, number][]): strin
 
   let structuredOutput = '';
   for (const [projectName, docs] of projectsMap.entries()) {
-    if (projectName !== 'Outros') { // Don't add "PROJETO: Outros" header
+    if (projectName !== 'Outros') {
       structuredOutput += `PROJETO: ${projectName}\n`;
     }
 
-    // Sort documents within each project by section_header for consistent output
     docs.sort((a, b) => (a.metadata.section_header || '').localeCompare(b.metadata.section_header || ''));
 
     for (const doc of docs) {
       const sectionHeader = doc.metadata.section_header || 'Seção Desconhecida';
       const source = doc.metadata.source?.split('/').pop() || 'Fonte desconhecida';
 
-      // Add section header and content
       structuredOutput += `  - ${sectionHeader} 
 `;
-      structuredOutput += `    ${doc.pageContent.trim()}
-
-`;
+      structuredOutput += `    ${doc.pageContent.trim()}\n\n`;
     }
-    structuredOutput += '\n'; // Add an extra newline between projects for readability
+    structuredOutput += '\n';
   }
 
-  return structuredOutput.trim(); // Remove trailing newlines
+  return structuredOutput.trim();
 }
 
   app.post('/api/chat', async (req: Request, res: Response) => {
@@ -329,59 +315,31 @@ function assembleStructuredContext(retrievedChunks: [Document, number][]): strin
 
       console.log(`[API] Pergunta recebida: "${question}"`);
 
-      // --- PASSO 1: DECOMPOSIÇÃO DA CONSULTA ---
       const queryPlan = decomposeQuery(question);
       console.log(`[API] Plano de consulta gerado: ${queryPlan.type}`);
 
-      // --- PASSO 2: ROTEAMENTO INTELIGENTE DA BUSCA ---
       const searchResults = await smartSearch(queryPlan);
 
-      // --- PASSO 2.1: LIMITAR E ESTRUTURAR O CONTEXTO ---
-      // Re-ranking simples por score e limitação aos 3 melhores resultados
-      // const topResults = searchResults.sort((a, b) => b[1] - a[1]).slice(0, 3);
-      // --- PASSO 2.1: LIMITAÇÃO DE CONTEXTO CONDICIONAL (CORREÇÃO APLICADA) ---
       let topResults;
 
       if (queryPlan.type === 'LIST_PROJECTS') {
-        // Se o plano é a lista, NÃO limitamos a 3.
-        // Usamos todos os resultados (que deve ser apenas 1: o chunk sintético)
         console.log('[API] Plano LIST_PROJECTS: Usando todos os resultados da busca (sem slice).');
         topResults = searchResults;
       } else {
-        // Para qualquer outro plano, aplicamos o Top-K (K=3)
         console.log(`[API] Plano ${queryPlan.type}: Aplicando re-ranking e limitando a Top-K=15.`);
         topResults = searchResults.sort((a, b) => b[1] - a[1]).slice(0, 15);
       }
 
-      // 3. Construção do contexto estruturado, agora com o cabeçalho da seção
       const structuredContext = assembleStructuredContext(topResults);
 
 
-      console.log(`================ CONTEXTO ESTRUTURADO PARA A IA (TOP ${topResults.length}) ================
-`);
+      console.log(`================ CONTEXTO ESTRUTURADO PARA A IA (TOP ${topResults.length}) ================\n`);
       console.log(structuredContext);
       console.log("=======================================================================");
 
-      // --- PASSO 1.1: IMPLEMENTAR O NOVO PROMPT BLINDADO ---
-      const systemPrompt = `Você é um assistente especialista na carreira de Luis Fernando Richter e responde EXCLUSIVAMENTE baseado no contexto fornecido.
-
-REGRAS OBRIGATÓRIAS:
-1.  Use APENAS o contexto abaixo. NÃO use seu conhecimento prévio.
-2.  Se a resposta não estiver no contexto, diga "Com base nas informações que tenho, não consigo responder a essa pergunta." NÃO invente.
-3.  NÃO faça inferências, suposições ou cálculos (como "X anos de experiência").
-4.  Ao listar projetos, SEMPRE use o formato de bullet point: "* Projeto: [Nome Completo do Projeto]".
-
-CONTEXTO:
-{context}
-
-PERGUNTA:
-{query}
-
-RESPOSTA (seguindo rigorosamente as regras acima):
-`;
+      const systemPrompt = `Você é um assistente especialista na carreira de Luis Fernando Richter e responde EXCLUSIVamente baseado no contexto fornecido.\n\nREGRAS OBRIGATÓRIAS:\n1.  Use APENAS o contexto abaixo. NÃO use seu conhecimento prévio.\n2.  Se a resposta não estiver no contexto, diga \"Com base nas informações que tenho, não consigo responder a essa pergunta.\" NÃO invente.\n3.  NÃO faça inferências, suposições ou cálculos (como \"X anos de experiência\").\n4.  Ao listar projetos, SEMPRE use o formato de bullet point: \"* Projeto: [Nome Completo do Projeto]\".\n\nCONTEXTO:\n{context}\n\nPERGUNTA:\n{query}\n\nRESPOSTA (seguindo rigorosamente as regras acima):\n`;
 
 
-      // Formato final do prompt injetando as variáveis
       const finalPrompt = `${systemPrompt}\n\nCONTEXTO:\n${structuredContext}\n\nPERGUNTA:\n${question}\n\nRESPOSTA (seguindo rigorosamente as regras acima):\n`;
 
       let responseText: string;
@@ -389,7 +347,7 @@ RESPOSTA (seguindo rigorosamente as regras acima):
       console.log(`[API] Roteando para o provedor: ${provider}`);
 
       if (provider === 'ollama') {
-        const model = (process.env.OLLAMA_MODEL as string) || 'mistral:7b'; // Explicit cast
+        const model = (process.env.OLLAMA_MODEL as string) || 'mistral:7b';
         responseText = await callOllamaAPI(model, finalPrompt);
       } else if (provider === 'huggingface') {
         const model = process.env.HUGGINGFACE_MODEL || 'meta-llama/Llama-3.1-8B-Instruct:novita';
