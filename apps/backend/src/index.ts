@@ -122,7 +122,7 @@ function classifyIntent(query: string): string {
 
 // Lista de tecnologias conhecidas (Idealmente, isso seria gerado dinamicamente a partir dos seus arquivos .md)
 // Adicione outras tecnologias importantes que você usa aqui.
-const knownTechnologies = [
+const knownTechnologiesOriginal = [
   'Laravel', 'Lumen', 'PHP', 'Vue', 'Vue.js', 'React', 'React.js', 'JavaScript', 'TypeScript', 'Python',
   'MySQL', 'PostgreSQL', 'SQLite', 'SQL Server', 'MongoDB', 'Redis',
   'Docker', 'Kubernetes', 'AWS', 'GCP', 'Vercel', 'Render.com', 'Supabase',
@@ -130,7 +130,8 @@ const knownTechnologies = [
   'LiveKit', 'WebRTC', 'Ollama', 'LangChain.js', 'FAISS', 'OpenAI', 'Hugging Face',
   'Next.js', 'FastAPI', 'Node.js', 'Express', // Adicionadas com base nos projetos
   // Adicione mais conforme necessário
-].map(tech => tech.toLowerCase()); // Converte para minúsculas para comparação
+];
+const knownTechnologies = knownTechnologiesOriginal.map(tech => tech.toLowerCase()); // Converte para minúsculas para comparação
 
 // function decomposeQuery(query: string): QueryPlan {
 //   const lowerCaseQuery = query.toLowerCase();
@@ -193,23 +194,28 @@ function decomposeQuery(query: string): QueryPlan {
     return { type: 'LIST_PROJECTS', payload: { originalQuery: query } };
   }
 
-  // --- REGRA 2: Busca por Tecnologia (Lógica Simplificada) ---
+  // --- REGRA 2: Busca por Tecnologia (Lógica Simplificada e com Normalização) ---
   let foundTechnology: string | null = null;
-  for (const tech of knownTechnologies) {
-      // Regex \b garante que é a palavra inteira (ex: "vue" e não "revenue")
+  for (let i = 0; i < knownTechnologies.length; i++) {
+      const tech = knownTechnologies[i];
       const techRegex = new RegExp(`\\b${tech.replace('.', '\\.')}\\b`, 'i');
       if (techRegex.test(lowerCaseQuery)) {
-        foundTechnology = tech; // Pega a primeira (ex: "vue.js")
+        // Normaliza 'vue' para 'vue.js' para consistência na busca
+        if (tech === 'vue') {
+          foundTechnology = 'vue.js';
+        } else {
+          foundTechnology = knownTechnologiesOriginal[i];
+        }
+        console.log(`[QueryPlan] Tecnologia encontrada: ${foundTechnology}`);
         break;
       }
   }
 
-  // Se encontramos uma tecnologia, assumimos que é uma busca por tecnologia.
   if (foundTechnology) {
     console.log(`[QueryPlan] Intenção 'PROJECT_TECHNOLOGY_SEARCH' detectada para: ${foundTechnology}`);
     return {
       type: 'PROJECT_TECHNOLOGY_SEARCH',
-      payload: { technology: foundTechnology } // Passa o nome minúsculo da lista
+      payload: { technology: foundTechnology }
     };
   }
 
@@ -248,43 +254,32 @@ async function smartSearch(queryPlan: QueryPlan): Promise<[Document, number][]> 
       const technology = queryPlan.payload.technology;
       console.log(`[SMART SEARCH] Executando busca por METADATOS para tecnologia: ${technology}`);
 
-      // Criamos um filtro de função que o FaissStore suporta.
-      // Isso é muito mais preciso do que a busca semântica.
       const filterFunction = (doc: Document) => {
-        if (!doc.metadata.technologies || !Array.isArray(doc.metadata.technologies)) {
+        const technologies = doc.metadata.technologies;
+        if (!technologies || !Array.isArray(technologies)) {
+          // console.log(`[Filter] REJEITADO (sem metadados de tecnologia): ${doc.metadata.project_name || 'Chunk sem projeto'}`);
           return false;
         }
 
-        // Compara a tecnologia pedida (ex: "laravel")
-        // com a lista de tecnologias nos metadados do chunk (ex: ['Laravel', 'PHP', 'Vue.js'])
-        // de forma case-insensitive.
-        return doc.metadata.technologies.some((t: string) =>
-          t.toLowerCase() === technology.toLowerCase()
-        );
+        const match = technologies.some((t: string) => t.toLowerCase() === technology.toLowerCase());
+
+        // Log detalhado para cada chunk verificado
+        console.log(`[Filter] Chunk: ${doc.metadata.project_name || doc.metadata.source} | Tecnologias: [${technologies.join(', ')}] | Busca por: ${technology} | Match: ${match}`);
+
+        return match;
       };
 
-      // Aplica o filtro de metadados e loga os resultados
       results = await vectorStore.similaritySearch(
         `projetos com ${technology}`,
-        30, // Aumentado para 30 para garantir que todos os chunks relevantes sejam considerados
+        30, // Aumentado para garantir que todos os chunks relevantes sejam considerados
         filterFunction
       );
       console.log(`[SMART SEARCH] Filtro por metadados para '${technology}' encontrou ${results.length} chunks.`);
 
-      // Como o filtro pode trazer vários chunks do *mesmo* projeto (header, descrição, etc.)
-      // Nós agrupamos por nome de projeto para evitar duplicatas.
-      const uniqueProjects = new Map<string, Document>();
-      for (const doc of results) {
-        const projectName = doc.metadata.project_name;
-        if (projectName && !uniqueProjects.has(projectName)) {
-          uniqueProjects.set(projectName, doc);
-        }
-      }
-
-      console.log(`[SMART SEARCH] Encontrados ${results.length} chunks, ${uniqueProjects.size} projetos únicos.`);
-
-      // Retornamos apenas os chunks únicos
-      return Array.from(uniqueProjects.values()).map(doc => [doc, 1.0]); // Retorna com score 1.0
+      // A lógica de agrupamento agora é tratada em assembleStructuredContext.
+      // Simplesmente retornamos todos os resultados filtrados.
+      console.log(`[SMART SEARCH] Retornando todos os ${results.length} chunks filtrados.`);
+      return results.map((doc: Document) => [doc, 1.0]); // Retorna com score 1.0
 
     case 'SIMPLE_SEARCH':
     default:
