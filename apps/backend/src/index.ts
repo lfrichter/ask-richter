@@ -133,57 +133,6 @@ const knownTechnologiesOriginal = [
 ];
 const knownTechnologies = knownTechnologiesOriginal.map(tech => tech.toLowerCase()); // Converte para minúsculas para comparação
 
-// function decomposeQuery(query: string): QueryPlan {
-//   const lowerCaseQuery = query.toLowerCase();
-
-//   // --- REGRA 1: Lista Completa (Mantida) ---
-//   const listTriggers = ['todos os projetos', 'lista completa', 'quantos projetos', 'liste os projetos'];
-//   if (listTriggers.some(trigger => lowerCaseQuery.includes(trigger))) {
-//     console.log("[QueryPlan] Intenção 'LIST_PROJECTS' detectada.");
-//     return { type: 'LIST_PROJECTS', payload: { originalQuery: query } };
-//   }
-
-//   // --- REGRA 2: Busca por Tecnologia (Lógica Reforçada) ---
-//   const techSearchTriggers = ['projetos?', 'project[s]?', 'usam?', 'utilizam?', 'feitos? com', 'desenvolvidos? com', 'em'];
-//   const techSearchRegex = new RegExp(`\\b(${techSearchTriggers.join('|')})\\b`, 'i');
-//   const containsTechSearchKeyword = techSearchRegex.test(lowerCaseQuery);
-
-//   let foundTechnology: string | null = null;
-
-//   for (const tech of knownTechnologies) {
-//     const techRegex = new RegExp(`\\b${tech.replace('.', '\\.')}\\b`, 'i');
-//     if (techRegex.test(lowerCaseQuery)) {
-//       foundTechnology = tech;
-//       break;
-//     }
-//   }
-
-//   // A intenção só é acionada se UMA tecnologia e UMA palavra-chave de busca forem encontradas.
-//   if (foundTechnology && containsTechSearchKeyword) {
-//     console.log(`[QueryPlan] Intenção 'PROJECT_TECHNOLOGY_SEARCH' detectada. Tecnologia: ${foundTechnology}, Trigger: ${lowerCaseQuery.match(techSearchRegex)?.[0]}`);
-//     return {
-//       type: 'PROJECT_TECHNOLOGY_SEARCH',
-//       payload: { technology: foundTechnology }
-//     };
-//   }
-
-//   // --- REGRA 3: (Fallback) Busca Simples ---
-//   console.log("[QueryPlan] Nenhuma intenção específica. Usando 'SIMPLE_SEARCH'.");
-//   return { type: 'SIMPLE_SEARCH', payload: { originalQuery: query } };
-// }
-// EM: apps/backend/src/index.ts
-// (Certifique-se que 'vue.js' está na sua lista 'knownTechnologies' no topo do arquivo)
-// const knownTechnologies = [ 'laravel', 'vue.js', 'react', ... ];
-
-// EM: apps/backend/src/index.ts
-// (Certifique-se que 'vue.js', 'laravel', 'react', 'python', 'node.js' estão na sua lista 'knownTechnologies')
-
-// EM: apps/backend/src/index.ts
-// (Certifique-se que 'vue.js', 'laravel', 'react', 'python', 'node.js' estão na sua lista 'knownTechnologies')
-// const knownTechnologies = [ 'laravel', 'vue.js', 'react', ... ];
-
-// EM: apps/backend/src/index.ts
-
 function decomposeQuery(query: string): QueryPlan {
   const lowerCaseQuery = query.toLowerCase();
 
@@ -198,7 +147,7 @@ function decomposeQuery(query: string): QueryPlan {
   let foundTechnology: string | null = null;
   for (let i = 0; i < knownTechnologies.length; i++) {
       const tech = knownTechnologies[i];
-      const techRegex = new RegExp(`\\b${tech.replace('.', '\\.')}\\b`, 'i');
+      const techRegex = new RegExp(`\b${tech.replace('.', '\\.')}\b`, 'i');
       if (techRegex.test(lowerCaseQuery)) {
         // Normaliza 'vue' para 'vue.js' para consistência na busca
         if (tech === 'vue') {
@@ -357,8 +306,11 @@ function assembleStructuredContext(retrievedChunks: [Document, number][]): strin
       const source = doc.metadata.source?.split('/').pop() || 'Fonte desconhecida';
 
       // Add section header and content
-      structuredOutput += `  - ${sectionHeader} \n`;
-      structuredOutput += `    ${doc.pageContent.trim()}\n\n`;
+      structuredOutput += `  - ${sectionHeader} 
+`;
+      structuredOutput += `    ${doc.pageContent.trim()}
+
+`;
     }
     structuredOutput += '\n'; // Add an extra newline between projects for readability
   }
@@ -405,7 +357,8 @@ function assembleStructuredContext(retrievedChunks: [Document, number][]): strin
       const structuredContext = assembleStructuredContext(topResults);
 
 
-      console.log(`================ CONTEXTO ESTRUTURADO PARA A IA (TOP ${topResults.length}) ================`);
+      console.log(`================ CONTEXTO ESTRUTURADO PARA A IA (TOP ${topResults.length}) ================
+`);
       console.log(structuredContext);
       console.log("=======================================================================");
 
@@ -424,7 +377,8 @@ CONTEXTO:
 PERGUNTA:
 {query}
 
-RESPOSTA (seguindo rigorosamente as regras acima):`;
+RESPOSTA (seguindo rigorosamente as regras acima):
+`;
 
 
       // Formato final do prompt injetando as variáveis
