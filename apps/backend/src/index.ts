@@ -181,6 +181,8 @@ const knownTechnologies = [
 // (Certifique-se que 'vue.js', 'laravel', 'react', 'python', 'node.js' estão na sua lista 'knownTechnologies')
 // const knownTechnologies = [ 'laravel', 'vue.js', 'react', ... ];
 
+// EM: apps/backend/src/index.ts
+
 function decomposeQuery(query: string): QueryPlan {
   const lowerCaseQuery = query.toLowerCase();
 

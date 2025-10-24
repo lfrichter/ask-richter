@@ -170,7 +170,6 @@ Projetos: ${projectListString}
 function parseTechnologiesFromChunk(relevantContent: string): string[] {
   const techSet = new Set<string>();
 
-  // Lista de termos a serem IGNORADOS
   const ignoreList = new Set([
      'tecnologia utilizada', 'tecnologias e conceitos', 'tecnologia',
      'categoria', 'componente', 'papel na arquitetura', 'descrição', 'software development',
@@ -181,11 +180,10 @@ function parseTechnologiesFromChunk(relevantContent: string): string[] {
   ].map(term => term.toLowerCase()));
 
 
-  // Função auxiliar de limpeza
   const addCleanedTech = (techString: string | undefined) => {
     if (!techString || techString.toLowerCase() === 'n/a' || techString.includes('---')) return;
 
-    // console.log(`[addCleanedTech PRE-NORMALIZATION] Input: "${techString}"`); // Log Descomente se precisar
+    // console.log(`[addCleanedTech PRE-NORMALIZATION] Input: "${techString}"`);
 
     techString.split(',')
       .flatMap(part => part.split('·'))
@@ -214,7 +212,6 @@ function parseTechnologiesFromChunk(relevantContent: string): string[] {
         if (lowerTech === 'vue' || lowerTech === 'vue.js' || lowerTech.startsWith('vue 3')) {
            normalizedTech = 'Vue.js';
         }
-        // Outras normalizações
         else if (lowerTech.includes('laravel')) normalizedTech = 'Laravel';
         else if (lowerTech.includes('mongo')) normalizedTech = 'MongoDB';
         else if (lowerTech.includes('react')) normalizedTech = 'React';
@@ -227,22 +224,26 @@ function parseTechnologiesFromChunk(relevantContent: string): string[] {
       });
   };
 
-  // --- LÓGICA RÍGIDA DE PARSING ---
-
-  // 1. Extração de Tabelas (Apenas da Pilha de Tecnologias)
+  // --- LÓGICA RÍGIDA DE PARSING (lendo ambas as tabelas) ---
   const tableSections = relevantContent.match(/(\|.*\| *\n)((?:\| *[-:]+ *\|.*\n)+)((?:\|.*\| *\n)+)/g) || [];
   for (const tableSection of tableSections) {
       const tableLines = tableSection.split('\n').filter(line => line.trim().startsWith('|'));
       const headerLine = tableLines[0]?.toLowerCase() || '';
-      // Confirma que é a tabela "Pilha de Tecnologias"
-      if (headerLine.includes('tecnologia utilizada') && headerLine.includes('papel na arquitetura')) {
+
+      const isTechTable = headerLine.includes('tecnologia utilizada') && headerLine.includes('papel na arquitetura');
+      const isClassificationTable = headerLine.includes('categoria') && headerLine.includes('conceitos');
+
+      if (isTechTable || isClassificationTable) { // Processa AMBAS as tabelas
           for (const line of tableLines) {
               const columns = line.split('|').map(col => col.trim());
               if (columns.length < 3 || columns[1].includes('---')) continue;
-              // console.log(`[Parser Debug Table] Processando Coluna[1]: "${columns[1]}"`);
-              // console.log(`[Parser Debug Table] Processando Coluna[2]: "${columns[2]}"`);
-              addCleanedTech(columns[1]); // Coluna do Componente (ex: Frontend (UI))
-              addCleanedTech(columns[2]); // Coluna da Tecnologia (ex: Vue 3)
+
+              if (isTechTable) {
+                addCleanedTech(columns[1]); // Coluna do Componente
+                addCleanedTech(columns[2]); // Coluna da Tecnologia
+              } else if (isClassificationTable) {
+                addCleanedTech(columns[2]); // Apenas a coluna de tecnologias
+              }
           }
       }
   }
@@ -251,7 +252,6 @@ function parseTechnologiesFromChunk(relevantContent: string): string[] {
   const skillLines = relevantContent.match(/^(?:\* |\- |Skills:|Languages & Frameworks:|Databases:|Deployment & DevOps:|Other Competencies:).*/gmi) || [];
   for (const line of skillLines) {
       const contentOnly = line.replace(/^(\* |\- |Skills:|Languages & Frameworks:|Databases:|Deployment & DevOps:|Other Competencies:)/i, '').trim();
-      // console.log(`[Parser Debug List] Processando Conteúdo: "${contentOnly}"`);
       addCleanedTech(contentOnly);
   }
 
