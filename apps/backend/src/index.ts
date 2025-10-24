@@ -199,19 +199,17 @@ function decomposeQuery(query: string): QueryPlan {
       // Regex \b garante que é a palavra inteira (ex: "vue" e não "revenue")
       const techRegex = new RegExp(`\\b${tech.replace('.', '\\.')}\\b`, 'i');
       if (techRegex.test(lowerCaseQuery)) {
-        // Normaliza "vue" para "vue.js" para o filtro de metadados
-        foundTechnology = (tech === 'vue') ? 'vue.js' : tech;
+        foundTechnology = tech; // Pega a primeira (ex: "vue.js")
         break;
       }
   }
 
-  // Se encontramos uma tecnologia, é 99% de chance de ser uma busca por tecnologia.
+  // Se encontramos uma tecnologia, assumimos que é uma busca por tecnologia.
   if (foundTechnology) {
     console.log(`[QueryPlan] Intenção 'PROJECT_TECHNOLOGY_SEARCH' detectada para: ${foundTechnology}`);
     return {
       type: 'PROJECT_TECHNOLOGY_SEARCH',
-      // Passa a tecnologia normalizada (ex: "vue.js")
-      payload: { technology: foundTechnology }
+      payload: { technology: foundTechnology } // Passa o nome minúsculo da lista
     };
   }
 
@@ -222,6 +220,7 @@ function decomposeQuery(query: string): QueryPlan {
     payload: { originalQuery: query }
   };
 }
+
 
 
 /**
