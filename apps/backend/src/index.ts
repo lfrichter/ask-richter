@@ -147,7 +147,7 @@ function decomposeQuery(query: string): QueryPlan {
   let foundTechnology: string | null = null;
   for (let i = 0; i < knownTechnologies.length; i++) {
       const tech = knownTechnologies[i];
-      const techRegex = new RegExp(`\b${tech.replace('.', '\\.')}\b`, 'i');
+      const techRegex = new RegExp(`\b${tech.replace('.', '\.')}\b`, 'i');
       if (techRegex.test(lowerCaseQuery)) {
         // Normaliza 'vue' para 'vue.js' para consistência na busca
         if (tech === 'vue') {
