@@ -35,6 +35,16 @@ Claro! Abaixo está a versão consolidada da sua experiência profissional em **
 
 ### **Experiência Profissional**
 
+#### **Senior Software Engineer | Automation & AI**
+**Accenture** · Full-time
+**Jan 2026 - Apr 2026**
+São Paulo, Brazil · Remote
+
+Principais Conquistas e Responsabilidades:
+- Desenvolvimento de Software e Automação: Arquitetou e desenvolveu, do zero, uma Prova de Conceito (PoC) robusta utilizando Python e Selenium. Criou uma solução para autenticação e navegação autônomas no SAP Fiori/GUI, realizando a injeção de parâmetros dinâmicos e a exportação de dados, o que reduziu significativamente gargalos operacionais.
+- DevOps e Arquitetura: Projetou e implementou estratégias de integração contínua, incorporando frameworks de automação diretamente aos pipelines de CI/CD para otimizar o ciclo de vida de entrega de software.
+- Integração de IA e Liderança Técnica: Orientou equipes de engenharia sobre arquitetura moderna de automação e liderou a adoção de ferramentas de Inteligência Artificial (IA) para otimizar fluxos de trabalho e acelerar os ciclos de entrega.
+
 #### **Engenheiro de Software Líder**  
 **Turno (anteriormente TurnoverBnB)** — Remoto (Honolulu, Havaí, EUA)  
 **Nov 2022 – Mar 2025**  

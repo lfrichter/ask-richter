@@ -458,6 +458,231 @@ A solução é um gerenciador de tarefas conversacional implementado em uma arqu
 
 ***
 
+### 🚀 SideProject:  Air Combat 3D - Um Estudo de Caso sobre Produtividade com IAs
+
+#### 🎯 Visão Geral e Arquitetura da Solução
+
+Este projeto nasceu de uma questão estratégica: qual o impacto real de ferramentas de IA generativa na produtividade de um desenvolvedor full-stack? Para responder a isso, conduzi um estudo de caso prático, desenvolvendo do zero um jogo 3D de combate aéreo multiplayer. O objetivo não era apenas criar um jogo, mas sim mensurar a aceleração no ciclo de vida do desenvolvimento.
+
+A solução é uma aplicação web onde jogadores podem entrar em uma arena e pilotar aviões de combate em tempo real. O frontend, construído com **Three.js**, é responsável por toda a renderização 3D, desde os modelos das aeronaves até o ambiente de batalha e os controles interativos. A comunicação em tempo real, coração da experiência multiplayer, é garantida por um backend robusto em **Node.js** e **Express**, utilizando **WebSockets** para sincronizar as ações dos jogadores com latência mínima. Toda a aplicação foi conteinerizada com **Docker**, garantindo a portabilidade e a consistência do ambiente, e implantada na nuvem através do **Render.com**.
+
+O resultado mais expressivo foi a validação da hipótese inicial: o uso de IDEs assistidas por IA (Cursor, Trae) resultou em uma **redução de aproximadamente 40% no tempo total de desenvolvimento**, desde a concepção até a entrega final.
+
+#### 👨‍💻 Meu Papel no Projeto
+
+Como único desenvolvedor e pesquisador neste estudo de caso, atuei de ponta a ponta, assumindo os seguintes papéis:
+
+  * **Arquiteto e Desenvolvedor Full-Stack:** Idealizei a arquitetura, desenvolvi o frontend interativo com Three.js, construí o servidor de backend em Node.js para a lógica de jogo e comunicação em tempo real via WebSockets.
+  * **Engenheiro DevOps:** Fui responsável por todo o ciclo de vida da infraestrutura, incluindo a conteinerização da aplicação com Docker e a automação do processo de deploy contínuo na plataforma Render.com.
+  * **Pesquisador de Fluxo de Trabalho:** Defini a metodologia para o estudo, integrei as ferramentas de IA generativa no meu fluxo de trabalho diário e mensurei ativamente o ganho de produtividade em comparação com métodos tradicionais.
+
+#### ✨ Pontos Fortes e Desafios Superados
+
+O principal ponto forte do projeto é a demonstração clara e quantificável do poder da IA como uma ferramenta de alavancagem para desenvolvedores. O jogo funcional é a prova de conceito que materializa essa conclusão.
+
+  * **Desafio Superado:** O maior desafio técnico foi garantir a **sincronização de estado em tempo real** entre múltiplos jogadores. Manter a posição e as ações de cada avião consistentes para todos os clientes, com baixa latência, é complexo. Superei isso implementando um loop de jogo eficiente no servidor Node.js que processa as entradas dos jogadores e transmite o estado atualizado do jogo de volta aos clientes através de uma conexão WebSocket estável.
+  * **Vitória Estratégica:** A maior vitória, no entanto, foi a **validação bem-sucedida do fluxo de trabalho assistido por IA**. Provar uma redução de 40% no tempo de desenvolvimento transformou uma crença intuitiva em um dado concreto, oferecendo um forte argumento para a adoção moderna de ferramentas no ciclo de desenvolvimento de software.
+
+#### 🌱 Pontos para Evolução Futura
+
+Embora o projeto tenha cumprido seu objetivo principal, ele possui um grande potencial para evolução. Como próximos passos, poderíamos implementar um sistema de **persistência de pontuação e ranking de jogadores**, utilizando um banco de dados como PostgreSQL ou Redis. Outra melhoria seria a criação de **salas de jogo privadas e diferentes modos de batalha** (como "Team Deathmatch"), enriquecendo a experiência multiplayer.
+
+-----
+
+#### 🛠️ Pilha de Tecnologias (Tech Stack)
+
+| Componente | Tecnologia Utilizada | Papel na Arquitetura |
+| :--- | :--- | :--- |
+| **Renderização e Interação 3D** | **Three.js** | Criação do ambiente 3D, renderização dos aviões e gerenciamento da câmera e controles do jogador no navegador. |
+| **Servidor de Aplicação** | **Node.js com Express** | Orquestra a lógica de negócio, gerencia o matchmaking e serve como a base para a comunicação em tempo real. |
+| **Comunicação em Tempo Real** | **WebSockets** | Estabelece um canal de comunicação bidirecional e de baixa latência entre o cliente e o servidor para sincronizar as ações. |
+| **Conteinerização** | **Docker** | Empacota a aplicação e suas dependências em um contêiner, garantindo consistência entre os ambientes de desenvolvimento e produção. |
+| **Hospedagem e Deploy** | **Render.com** | Plataforma de nuvem utilizada para hospedar a aplicação conteinerizada e disponibilizá-la publicamente online. |
+| **Aceleração de Código** | **IA Generativa (Cursor, Trae)** | Ferramentas integradas à IDE para acelerar a escrita de código, prototipagem de funcionalidades e resolução de problemas. |
+
+-----
+
+#### 🗺️ Diagrama da Arquitetura
+
+```mermaid
+---
+config:
+  theme: default
+  look: handDrawn
+---
+flowchart LR
+    %% Plataforma Render.com
+    subgraph Render["🌐 Plataforma Render.com"]
+        style Render fill:#E0F7FA,stroke:#00ACC1,stroke-width:2px
+        subgraph Docker["🐳 Contêiner Docker"]
+            style Docker fill:#B2EBF2,stroke:#00838F,stroke-width:2px
+            B[🚀 Servidor Node.js/Express]
+        end
+    end
+
+    %% Cliente (Browser)
+    subgraph Client["💻 Cliente (Browser)"]
+        style Client fill:#FFF3E0,stroke:#FFB300,stroke-width:2px
+        A[🎮 Aplicação Three.js]
+    end
+
+    %% Jogadores
+    P1[👨‍✈️ Jogador 1]
+    P2[👨‍✈️ Jogador 2]
+
+    %% Fluxos de interação
+    P1 -- "Interage com" --> A
+    P2 -- "Interage com" --> A
+
+    A -- "Conexão WebSocket em Tempo Real 🔌" --> B
+    B -- "Sincroniza Estado do Jogo 🔄" --> A
+    B -- "Lógica de Jogo e Matchmaking 🎲" --> B
+
+```
+
+---
+#### RESUMO TÉCNICO PARA EMBEDDING
+
+Estudo de caso prático sobre o impacto de IA generativa na produtividade, materializado no desenvolvimento de um jogo 3D multiplayer de combate aéreo. A arquitetura da solução emprega um frontend em **Three.js** para renderização 3D e um backend em **Node.js** com **Express** para a lógica de jogo. O principal desafio técnico, a **sincronização de estado em tempo real** entre múltiplos jogadores, foi solucionado com **WebSockets** para comunicação de baixa latência. A aplicação foi conteinerizada com **Docker**, garantindo portabilidade e consistência, com o ciclo de **deploy contínuo** automatizado na plataforma de nuvem **Render.com**. O uso de IDEs assistidas por **IA generativa (Cursor, Trae)** validou uma redução de 40% no tempo de desenvolvimento. Evoluções futuras planejadas incluem a implementação de persistência de dados com **PostgreSQL** ou **Redis** para rankings e pontuações.
+
+#### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
+
+| Categoria | Tecnologias e Conceitos |
+| :--- | :--- |
+| **AI & Machine Learning** | IA Generativa, Cursor, Trae |
+| **Software Development** | Desenvolvedor Full-Stack, Loop de jogo, Prototipagem, Ciclo de vida do desenvolvimento |
+| **Architecture**| Arquitetura de aplicação web, Multiplayer em tempo real, Sincronização de estado, Matchmaking |
+| **Cloud Computing** | Render.com, Hospedagem em nuvem |
+| **API RESTFul development** | Node.js, Express |
+| **Frontend Development** | Three.js, Renderização 3D, Controles interativos |
+| **Mobile Development** | N/A |
+| **Database** | PostgreSQL, Redis |
+| **Data Management** | Persistência de pontuação |
+| **Content Management - CMS** | N/A |
+| **System Administration** | N/A |
+| **DevOps** | Docker, Conteinerização, Deploy Contínuo |
+| **Leadership** | N/A |
+| **Coaching** | N/A |
+| **Agile Project Management** | N/A |
+
+***
+
+### 🚀 SideProject:  E-Commerce Performance Engineering: End-to-End Observability
+
+#### 🎯 Visão Geral e Arquitetura da Solução
+Este projeto transcende a execução básica de scripts de teste, estabelecendo uma suíte robusta de **Engenharia de Performance** baseada nos princípios de *Infrastructure as Code* (IaC) e *Observability*. O objetivo central foi simular jornadas de usuário de alta carga em uma plataforma de e-commerce .NET (Tricentis Demo Web Shop), garantindo que tanto a saúde do backend quanto a experiência do usuário no frontend fossem mensuradas com precisão.
+
+A arquitetura foi desenhada para ser "Plug & Play", utilizando Docker Compose para orquestrar não apenas os geradores de carga, mas todo o pipeline de dados. A solução implementa uma abordagem híbrida: combina a robustez protocolar do **Apache JMeter** com a agilidade moderna e orientada a desenvolvedores do **k6** (TypeScript). Para completar a visão 360º, o **Playwright** é acionado para capturar métricas visuais críticas (Web Vitals) simulando um navegador real, garantindo que métricas como *LCP* e *DOM Interactive* sejam correlacionadas com a carga no servidor.
+
+#### 👨‍💻 Meu Papel no Projeto
+Atuei como **Engenheiro de Performance e Arquiteto de Automação**, liderando a concepção e implementação completa da solução. Minhas responsabilidades incluíram:
+
+* **Arquitetura de Observabilidade:** Design e provisionamento automático da stack de monitoramento (InfluxDB e Grafana) via Docker.
+* **Desenvolvimento de Scripts de Carga:** Criação de scripts complexos em Java (JMeter) e TypeScript (k6), implementando lógicas avançadas de correlação.
+* **Automação de Frontend:** Implementação de testes E2E com Playwright focados na captura de métricas de performance visual (Navigation Timing API).
+* **Engenharia de Resiliência:** Desenvolvimento de lógica para tratar condições de corrida e estados dinâmicos da aplicação alvo.
+
+#### ✨ Pontos Fortes e Desafios Superados
+O grande diferencial desta solução é a implementação da filosofia **"Performance as Code"**. O ambiente é efêmero e reprodutível: scripts de shell e configurações de *provisioning* do Grafana garantem que dashboards analíticos estejam prontos segundos após o início dos containers.
+
+**Desafios Técnicos e Superações:**
+* **Correlação Dinâmica e Segurança:** A aplicação alvo utiliza tokens Anti-CSRF e Cookies de Sessão que variam a cada requisição. O desafio foi superado implementando extratores robustos (Regex e parsers HTML) tanto no JMeter quanto no k6, garantindo a manutenção da sessão do usuário virtual.
+* **Condições de Corrida no Checkout:** O fluxo de "One Page Checkout" dependia fortemente de AJAX e atualizações de DOM assíncronas. Scripts de carga tradicionais falhavam ao tentar avançar antes da conclusão do processamento. Solucionei isso criando lógicas de espera explícita (wait strategies) que aguardam a conclusão de animações de acordeão e *loading overlays* antes de prosseguir, garantindo a integridade da transação.
+* **Gestão de Dados:** Para evitar poluição métrica entre execuções, implementei *entrypoints* customizados no Docker que realizam a limpeza automática de relatórios HTML e dados antigos do InfluxDB, mantendo a análise de resultados sempre limpa e confiável.
+
+#### 🌱 Pontos para Evolução Futura
+* **Integração CI/CD:** Incorporar a execução do `npm run test:full` em pipelines do GitHub Actions ou Jenkins para feedback contínuo a cada *commit*.
+* **Testes de Carga Distribuídos:** Evoluir a configuração do k6 e JMeter para suportar execução em modo *cluster* (Kubernetes), permitindo a simulação de cargas massivas distribuídas geograficamente.
+
+---
+
+#### 🛠️ Pilha de Tecnologias (Tech Stack)
+
+| Componente | Tecnologia Utilizada | Papel na Arquitetura |
+| :--- | :--- | :--- |
+| **Geração de Carga (Backend)** | **Apache JMeter 5.5** | Execução de testes baseados em threads/protocolo para estresse pesado do servidor e validação de APIs. |
+| **Geração de Carga (Modern)** | **k6 (TypeScript)** | Testes de carga leves e orientados a código, com compilação via Webpack para modularização e fácil manutenção. |
+| **Performance Frontend** | **Playwright** | Simulação de navegador real para captura de *Web Vitals* (FCP, LCP) e validação da experiência do usuário final. |
+| **Banco de Dados** | **InfluxDB 1.8** | Banco de dados de séries temporais (TSDB) responsável por armazenar métricas em tempo real de todas as ferramentas de teste. |
+| **Visualização** | **Grafana 10.0** | Dashboards pré-provisionados (IaC) para análise visual e correlação de dados de infraestrutura e aplicação. |
+| **Orquestração** | **Docker Compose** | Gerenciamento de containers, redes internas e volumes, garantindo a portabilidade e isolamento do ambiente. |
+
+---
+
+#### 🗺️ Diagrama da Arquitetura
+
+```mermaid
+graph TD
+subgraph "Orchestration & Automation"
+User((Engenheiro)) -->|npm run test:full| Shell[Script de Automação]
+Shell -->|Provisiona| DC[Docker Compose]
+end
+
+subgraph "Test Runners (Load Generators)"
+direction TB
+JM[Apache JMeter Container]
+K6[k6 TypeScript Container]
+PW[Playwright Container]
+end
+
+subgraph "Target System"
+WebShop[E-Commerce .NET<br/>Tricentis Demo Shop]
+end
+
+subgraph "Observability Stack"
+Influx[(InfluxDB)]
+Grafana[Grafana Dashboards]
+end
+
+%% Fluxo de Execução
+DC -->|Inicia| JM
+DC -->|Inicia| K6
+DC -->|Inicia| PW
+DC -->|Inicia| Influx
+DC -->|Inicia| Grafana
+
+%% Testes contra o Alvo
+JM -->|HTTP/S Protocol Load| WebShop
+K6 -->|HTTP/S - User Simulation| WebShop
+PW -->|Browser Interaction/Visual Metrics| WebShop
+
+%% Fluxo de Métricas
+JM -.->|Backend Metrics| Influx
+K6 -.->|Custom Metrics| Influx
+PW -.->|"Web Vitals (FCP/LCP)"| Influx
+
+%% Visualização
+Grafana <-->|Query Data| Influx
+
+classDef highlight fill:#f9f,stroke:#333,stroke-width:2px;
+class DC,Grafana highlight
+```
+#### RESUMO TÉCNICO PARA EMBEDDING
+
+Este projeto open-source é uma Suíte de Engenharia de Performance projetada para simular jornadas de usuário sob alta carga em uma plataforma de e-commerce .NET (Tricentis Demo Web Shop). A arquitetura é construída sob o paradigma de Infraestrutura como Código (IaC) e "Performance as Code", orquestrada via Docker Compose. A solução utiliza uma abordagem híbrida de geração de carga: Apache JMeter para estresse baseado em protocolo, e k6 (com TypeScript compilado via Webpack) para testes leves e modernos. Para validação de UX, o Playwright simula um navegador real interagindo com a Navigation Timing API para capturar Web Vitals (como FCP e LCP). O pipeline de observabilidade em tempo real é composto por InfluxDB para armazenamento de séries temporais e Grafana para dashboards pré-provisionados. Desafios técnicos superados incluem a Correlação Dinâmica para gerenciamento de tokens Anti-CSRF e Cookies de sessão via regex e parsing HTML, além do tratamento de _race conditions_ assíncronas (AJAX overlays/accordions) no fluxo de "One Page Checkout". Scripts em Shell e entrypoints Docker customizados garantem um ambiente _Plug & Play_ e realizam limpeza automática (auto-cleanup) de artefatos residuais para evitar poluição de dados.
+
+#### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
+
+| **Categoria**                | **Tecnologias e Conceitos**                                                                                   |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| **AI & Machine Learning**    | N/A                                                                                                           |
+| **Software Development**     | TypeScript, JavaScript, Shell Scripting, Webpack, Regex, HTML Parsing                                         |
+| **Architecture**             | Infrastructure as Code (IaC), Performance as Code, End-to-End Observability, Plug & Play Architecture         |
+| **Cloud Computing**          | N/A                                                                                                           |
+| **API RESTFul development**  | Autenticação (Anti-CSRF Tokens, Session Cookies)                                                              |
+| **Frontend Development**     | Web Vitals (FCP, LCP, domComplete), Navigation Timing API, AJAX, Race Conditions                              |
+| **Mobile Development**       | N/A                                                                                                           |
+| **Database**                 | InfluxDB (Time-Series Database - TSDB)                                                                        |
+| **Data Management**          | Data Pollution Prevention (Auto-Cleanup)                                                                      |
+| **Content Management - CMS** | N/A                                                                                                           |
+| **System Administration**    | N/A                                                                                                           |
+| **DevOps**                   | Docker, Docker Compose, Grafana (Provisioning), Apache JMeter, k6, Playwright, Continuous Performance Testing |
+| **Leadership**               | Engenharia de Performance, Arquitetura de Automação                                                           |
+| **Coaching**                 | N/A                                                                                                           |
+| **Agile Project Management** | N/A                                                                                                           |
+
+***
+
 ### 🚀 SideProject:  Favorite Products API
 
 #### 🎯 Visão Geral e Arquitetura da Solução
@@ -623,6 +848,208 @@ Este documento detalha a arquitetura de uma **API RESTful**, a **Favorite Produc
 
 ***
 
+### 🚀 SideProject:  Framework de Engenharia de Software Guiado por IA v2.0 Master
+
+#### 🎯 Visão Geral e Arquitetura da Solução
+
+A integração de Inteligência Artificial no desenvolvimento de software frequentemente esbarra em um obstáculo crítico: tratar os modelos como "geradores mágicos" acaba gerando códigos insustentáveis, alucinações e perda do controle arquitetural. Para resolver essa dor, criei o **Framework v2.0 Master**, um ecossistema definitivo que transforma IAs em membros estruturados e operacionais da equipe de engenharia.
+
+A solução atua como um maestro rigoroso. No coração do sistema, abandonamos o código-fonte como fonte primária da verdade e adotamos o paradigma *Spec-as-Code* através da **META SPEC** (Constituição do Projeto). A arquitetura orquestra um "Enxame" de agentes (via conceitos do *Ruflo*) liderados por um orquestrador central (*Chief of Staff*). Para garantir que a IA não saia dos trilhos, implementei as diretrizes de Andrej Karpathy para o comportamento dos agentes e o princípio *Jidoka* (Andon Cord) — garantindo que qualquer anomalia no código ou desvio da arquitetura interrompa a execução imediatamente para um "reset limpo", impedindo que erros se propaguem em cascata ao longo das 7 fases do ciclo de vida **SPARC+DD**.
+
+#### 👨‍💻 Meu Papel no Projeto
+
+* **Arquiteto de Soluções de IA:** Idealizei e desenhei a topologia de enxames hierárquicos e o subsistema de memória isolada.
+* **Tech Lead:** Estruturei as diretrizes de governança técnica, definindo os checkpoints de validação rigorosa (Jidoka) e adaptando as regras comportamentais de Karpathy para o contexto de agentes autônomos.
+* **Engenheiro de Processos:** Criei o ciclo de vida SPARC+DD e o modelo de engenharia de contexto (WSCI) para garantir escalabilidade na automação do código.
+
+#### ✨ Pontos Fortes e Desafios Superados
+
+O framework brilha ao trazer o rigor da engenharia de software tradicional para o universo estocástico das IAs.
+
+Um dos desafios mais profundos e complexos que enfrentamos foi a **degradação da janela de contexto** (envenenamento e distração) quando os agentes precisavam lidar com bases de código muito grandes ou execuções longas. Superamos isso implementando a **Engenharia de Contexto WSCI** (Write, Select, Compress, Isolate). Ao invés de jogar todo o repositório para o LLM, estruturamos ferramentas precisas que selecionam apenas a AST necessária, comprimem o histórico e isolam a execução em sub-agentes especialistas utilizando **Git Worktrees** (*Superpowers*). Isso não apenas zerou as colisões de arquivos, como blindou a memória de trabalho da IA, permitindo execuções cirúrgicas e altamente confiáveis.
+
+#### 🌱 Pontos para Evolução Futura
+
+* Implementar um mecanismo de **telemetria descentralizada** para medir a eficiência (tempo/tokens) de cada sub-agente sem comprometer a política *Zero-Trust* e a soberania dos dados.
+* Automatizar a geração dos registros de decisão (ADRs) a partir de debates síncronos entre múltiplos agentes durante a fase de Arquitetura do SPARC+DD.
+
+---
+
+#### 🛠️ Pilha de Tecnologias (Tech Stack)
+
+| Componente | Tecnologia / Conceito Utilizado | Papel na Arquitetura |
+| --- | --- | --- |
+| **Governança de IA** | **Spec-as-Code (META SPEC)** | Atua como a "Constituição" imutável do projeto, servindo como a fonte da verdade para o alinhamento e regras de negócio lidas pelos agentes. |
+| **Engenharia de Contexto** | **Framework WSCI** | Gerencia a carga cognitiva da IA executando persistência (Write), curadoria de arquivos (Select), sumarização (Compress) e isolamento em sub-agentes (Isolate). |
+| **Orquestração de Agentes** | **Ruflo (Queen-Led Swarm)** | Mantém a topologia de enxame onde um nó central (Chief of Staff) coordena tarefas em paralelo para agentes especialistas em janelas de contexto separadas. |
+| **Gestão Visual e UI** | **Open Design (MCP)** | Subsistema condicional (`ui_enabled`) via Model Context Protocol para injetar componentes padronizados quando o agente atua no Frontend. |
+| **Controle de Qualidade** | **Jidoka & Superpowers** | Realiza validações Andon Cord contínuas, forçando testes reproduzíveis e utilizando *Git Worktrees* para isolar o código de possíveis execuções destrutivas. |
+
+---
+
+#### 🗺️ Diagrama da Arquitetura
+
+```mermaid
+---
+config:
+  theme: default
+  look: handDrawn
+---
+graph TD
+    A["Desenvolvedor Humano"] -->|Define Visão via| B["META SPEC (Spec-as-Code)"]
+    B --> C["Agente Orquestrador (Chief of Staff)"]
+    C -->|Aplica WSCI| D["Gestor de Janela de Contexto"]
+    C -->|Topologia Ruflo| E["Enxame de Sub-agentes"]
+    
+    E --> F["Agente Desenvolvedor"]
+    E --> G["Agente Code Reviewer"]
+    
+    F -->|Ciclo SPARC+DD| H["Git Worktree (Isolamento)"]
+    G -->|Zero-Trust/AIDefence| H
+    
+    H --> I{"Validação Jidoka / Andon Cord"}
+    I -- "Anomalia Detectada" --> J["Apagar para Recomeçar (Reset Limpo)"]
+    J --> C
+    I -- "Testes Aprovados" --> K["Integração e Documentação Atualizada"]
+
+```
+
+***
+
+### 🚀 SideProject:  Telegram Course Tools
+
+#### 🎯 Visão Geral e Arquitetura da Solução
+
+Em um cenário onde o Telegram se tornou um vasto repositório de conhecimento, o projeto **Telegram Course Tools** emerge como uma solução estratégica para um desafio comum: a desorganização. A plataforma, embora excelente para comunicação, não foi projetada para e-learning, transformando o acompanhamento de múltiplos cursos em uma tarefa frustrante.
+
+Para resolver isso, projetei uma suíte de automação modular em Python, que transforma coleções dispersas de mensagens em uma biblioteca de aprendizado pessoal, organizada e pronta para consumo. A arquitetura foi pensada em um fluxo de trabalho de três etapas independentes e sequenciais, garantindo clareza e manutenibilidade:
+
+1.  **Descoberta e Mapeamento (`listarGrupos.py`):** A primeira etapa atua como um radar, conectando-se à API do Telegram para catalogar todos os cursos em que o usuário está inscrito. O resultado é um "mapa" em formato JSON (`cursos-telegram.json`), que serve como a fonte da verdade para o restante do processo.
+2.  **Indexação e Estruturação (`listarVideos.py`):** O coração da solução. Este módulo consome o mapa gerado e, para cada curso, extrai meticulosamente o histórico de mensagens. Usando expressões regulares para identificar padrões como "Módulo" e "Aula", ele estrutura o conteúdo bruto e o converte em sumários elegantes em formato Markdown, um para cada curso.
+3.  **Consumo e Download (`downloadVideosById.py`):** Com os sumários em mãos, o usuário pode tomar decisões estratégicas sobre o que estudar. Esta etapa final permite o download sob demanda de todo o conteúdo de vídeo de um curso específico, de forma otimizada para evitar duplicatas e com uma barra de progresso (`tqdm`) para uma experiência de usuário aprimorada.
+
+O resultado final é o empoderamento do usuário, que agora possui uma biblioteca de aprendizado curada, acessível e pronta para consumo offline.
+
+#### 👨‍💻 Meu Papel no Projeto
+
+Como idealizador e único desenvolvedor deste projeto, minhas responsabilidades abrangeram todo o ciclo de vida da solução:
+
+  * **Arquiteto da Solução:** Defini a arquitetura modular em três etapas, garantindo que cada componente tivesse uma responsabilidade única e que o fluxo de dados entre eles fosse limpo e eficiente.
+  * **Desenvolvedor Python:** Escrevi todo o código para os scripts de automação, desde a interação com a API do Telegram usando a biblioteca `Telethon` até a lógica de parsing com expressões regulares e a manipulação do sistema de arquivos.
+  * **Engenheiro de Dados (em pequena escala):** Modelei o fluxo de dados, definindo como as informações seriam extraídas (dados brutos), armazenadas temporariamente (JSON) e transformadas em um produto final de valor (sumários em Markdown).
+  * **Product Owner:** Identifiquei a dor inicial (minha própria necessidade), defini os objetivos e requisitos do projeto e validei que a solução final atendia efetivamente ao problema proposto.
+
+#### ✨ Pontos Fortes e Desafios Superados
+
+A principal força do projeto reside em sua capacidade de **transformar caos em clareza**. O maior desafio era lidar com conteúdo valioso, porém totalmente não estruturado, dentro do Telegram.
+
+  * **Superação do Caos com Inteligência de Parsing:** O ponto de virada técnico foi a implementação de uma lógica de parsing robusta com expressões regulares (`re`). Essa "inteligência" permitiu que o script `listarVideos.py` lesse textos de formato livre e os organizasse em uma hierarquia lógica de módulos e aulas, criando os sumários que são o principal entregável de valor do projeto.
+  * **Eficiência e Experiência do Usuário:** Em vez de uma abordagem simplista, o script de download foi projetado para ser eficiente. Ele verifica a existência e o tamanho dos arquivos antes de iniciar o download, economizando tempo e banda. A inclusão da biblioteca `tqdm` foi uma decisão consciente para melhorar a experiência do usuário em processos demorados, fornecendo feedback visual claro e profissional.
+  * **Arquitetura Modular:** A separação em três scripts distintos não só organiza o código, mas também permite a execução seletiva. O usuário pode apenas atualizar o mapa de cursos ou re-gerar um sumário sem precisar executar o fluxo completo, tornando a ferramenta flexível e ágil.
+
+#### 🌱 Pontos para Evolução Futura
+
+Embora a solução seja totalmente funcional para seu propósito inicial, existem caminhos claros para evolução:
+
+1.  **Interface Gráfica (UI):** Desenvolver uma interface de usuário simples (Web com Flask/Streamlit ou Desktop com PyQt) para eliminar a necessidade de executar scripts manualmente via terminal, tornando a ferramenta acessível a um público menos técnico.
+2.  **Busca Avançada:** Implementar uma funcionalidade de busca que permita ao usuário pesquisar por palavras-chave em todos os sumários gerados, ajudando a encontrar aulas específicas sobre um determinado tópico em toda a sua biblioteca de cursos.
+
+-----
+
+#### 🛠️ Pilha de Tecnologias (Tech Stack)
+
+| Componente | Tecnologia Utilizada | Papel na Arquitetura |
+| :--- | :--- | :--- |
+| **Linguagem Principal** | **Python 3.8+** | A base para toda a automação, orquestrando a lógica, a interação com APIs e a manipulação de arquivos. |
+| **Comunicação com API** | **Telethon** | Cliente assíncrono para interagir com a API do Telegram, permitindo buscar históricos e baixar mídias de forma robusta. |
+| **Interface de Usuário (CLI)** | **tqdm** | Fornece feedback visual com barras de progresso durante os downloads, melhorando significativamente a experiência do usuário. |
+| **Estruturação de Conteúdo** | **`re` (Expressões Regulares)** | O motor de inteligência para identificar padrões em texto não-estruturado e organizar as aulas em módulos nos sumários. |
+| **Manipulação de Dados** | **`json`** | Utilizado como o formato de intercâmbio de dados entre a etapa de mapeamento e a de indexação, garantindo um "contrato" claro. |
+| **Gestão do Sistema** | **`os`** | Essencial para interações com o sistema de arquivos, como criar diretórios para os cursos e verificar a existência de vídeos. |
+| **Programação Assíncrona** | **`asyncio`** | Usado implicitamente pelo Telethon para otimizar a comunicação de rede com a API do Telegram, tornando as operações mais rápidas. |
+
+-----
+
+#### 🗺️ Diagrama da Arquitetura
+
+```mermaid
+---
+config:
+  theme: default
+  look: handDrawn
+---
+flowchart LR
+    %% Usuário
+    subgraph U["👤 Usuário"]
+        style U fill:#FFF3E0,stroke:#FFB74D,stroke-width:2px
+        User[👨‍💻 Usuário]
+    end
+
+    %% Plataforma
+    subgraph T["☁️ Plataforma Telegram"]
+        style T fill:#E3F2FD,stroke:#64B5F6,stroke-width:2px
+        API[📱 Telegram API]
+    end
+
+    %% Ferramentas
+    subgraph F["⚙️ Telegram Course Tools"]
+        style F fill:#F3E5F5,stroke:#BA68C8,stroke-width:2px
+        S1["① listarGrupos.py"]
+        S2["② listarVideos.py"]
+        S3["③ downloadVideosById.py"]
+    end
+
+    %% Artefatos
+    subgraph A["📄 Artefatos Gerados"]
+        style A fill:#E8F5E9,stroke:#81C784,stroke-width:2px
+        J1["cursos-telegram.json"]
+        M2["Sumários .md"]
+        V["🎥 Vídeos Baixados"]
+    end
+
+    %% Fluxo principal
+    User -- executa --> S1
+    S1 -- "Busca diálogos" --> API
+    S1 -- "Gera" --> J1
+
+    User -- executa --> S2
+    S2 -- "Lê" --> J1
+    S2 -- "Busca histórico" --> API
+    S2 -- "Gera" --> M2
+
+    User -- "Analisa & decide com base nos" --> M2
+    User -- executa com ID --> S3
+    S3 -- "Baixa mídia" --> API
+    S3 -- "Salva em" --> V
+```
+
+---
+#### RESUMO TÉCNICO PARA EMBEDDING
+
+Este projeto implementa uma suíte de automação em Python para organizar conteúdo de cursos dispersos no Telegram. A arquitetura é modular e sequencial, composta por três scripts independentes. O primeiro (`listarGrupos.py`), usando a biblioteca `Telethon` e `asyncio`, conecta-se à API do Telegram para mapear os cursos do usuário, gerando um inventário em formato `JSON`. O segundo script (`listarVideos.py`) consome o `JSON`, extrai o histórico de mensagens e aplica expressões regulares (`re`) para fazer o parsing do conteúdo não-estruturado, identificando módulos e aulas para gerar sumários estruturados em `Markdown`. A etapa final (`downloadVideosById.py`) permite o download sob demanda dos vídeos, utilizando a biblioteca `tqdm` para exibir uma barra de progresso e o módulo `os` para gerenciar o sistema de arquivos, evitando downloads duplicados. A solução efetivamente transforma dados caóticos em uma biblioteca de aprendizado organizada, exemplificando um fluxo de ETL (Extract, Transform, Load) em pequena escala, focado em automação, parsing de dados e melhoria da experiência do usuário (UX) em uma interface de linha de comando (CLI).
+
+#### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
+
+| Categoria | Tecnologias e Conceitos |
+| :--- | :--- |
+| **AI & Machine Learning** | N/A |
+| **Software Development** | Python, Automação de Scripts, Programação Assíncrona (asyncio), Manipulação de Sistema de Arquivos (os), Expressões Regulares (re), Modularidade, CLI (Command-Line Interface) |
+| **Architecture**| Arquitetura Modular, Arquitetura de Solução, Fluxo de Dados (ETL), Design de Componentes Independentes |
+| **Cloud Computing** | Consumo de API de Plataforma (Telegram API) |
+| **API RESTFul development** | Consumo de API (Telethon) |
+| **Frontend Development** | CLI User Experience (tqdm) |
+| **Mobile Development** | N/A |
+| **Database** | N/A |
+| **Data Management** | Extração de Dados, Transformação de Dados (Parsing), JSON, Markdown, Dados Não-Estruturados |
+| **Content Management - CMS** | N/A |
+| **System Administration** | Gerenciamento de Arquivos e Diretórios |
+| **DevOps** | N/A |
+| **Leadership** | Arquitetura de Solução, Product Ownership, Tomada de Decisão Técnica |
+| **Coaching** | N/A |
+| **Agile Project Management** | Definição de Requisitos, Validação de Solução, Product Owner |
+
+***
+
 ### 🚀 SideProject:  Twin Quest: Desafio Full-Stack
 
 #### 🎯 Visão Geral e Arquitetura da Solução
@@ -729,3 +1156,95 @@ Desenvolvimento de uma aplicação web full-stack, "Twin Quest", a arquitetura d
 | **Leadership**               | Liderança Técnica (Idealizador e único desenvolvedor)                                                                 |
 | **Coaching**                 | N/A                                                                                                                   |
 | **Agile Project Management** | N/A                                                                                                                   |
+
+***
+
+### 🚀 SideProject:  Web3 React dApp Prototype
+
+#### 🎯 Visão Geral e Arquitetura da Solução
+
+A transição da Web2 para a Web3 pode ser um terreno intimidador, cheio de jargões e integrações complexas. O objetivo central deste projeto foi criar um *boilerplate* fundamental e limpo para aplicações descentralizadas (dApps). Ele resolve a dor inicial de configuração, entregando uma base robusta que demonstra as funcionalidades essenciais da Web3: conexão de carteira, leitura de dados *on-chain* e interação com *smart contracts* na rede de testes Sepolia.
+
+Do ponto de vista arquitetural, a solução foi desenhada para ser rápida e reativa. O usuário interage com uma interface moderna servida pelo Vite e construída em React. Quando o usuário clica em "Connect", a aplicação utiliza os *hooks* do Wagmi para se comunicar com a extensão de carteira do navegador (como o MetaMask). A partir daí, o Viem atua como o motor de comunicação com a blockchain Ethereum (Sepolia), permitindo ler a saudação pública de um contrato inteligente "Greeter" e enviar transações para alterá-la, tudo com um gerenciamento de estado elegante fornecido pelo React Query.
+
+#### 👨‍💻 Meu Papel no Projeto
+
+Neste projeto, atuei de ponta a ponta na construção do front-end descentralizado, assumindo os seguintes chapéus:
+
+* **Desenvolvedor Front-End Web3:** Responsável por estruturar a interface em React com TypeScript, garantindo uma tipagem estática segura e uma experiência de usuário fluida.
+* **Integrador de Blockchain:** Configurei os clientes do Wagmi e Viem para estabelecer a ponte de comunicação entre a interface web e a rede Sepolia, gerenciando as conexões via *injected providers* (MetaMask).
+* **Engenheiro de UX/UI para Web3:** Implementei o tratamento de estados de carregamento e confirmações de transações, transformando a latência natural da blockchain em uma experiência transparente para o usuário final.
+
+#### ✨ Pontos Fortes e Desafios Superados
+
+O grande ponto forte desta solução é a sua base tecnológica modernizada (Vite + Wagmi + Viem), que substitui bibliotecas legadas mais pesadas por uma abordagem reativa e otimizada para a experiência do desenvolvedor (DX).
+
+O principal desafio técnico enfrentado foi **o gerenciamento do estado assíncrono das transações na blockchain**. Na Web3, uma transação não é instantânea; ela precisa ser assinada, enviada para a rede e minerada, o que pode deixar a interface congelada ou confusa se não for bem tratado.
+**Como superamos:** Orquestramos um fluxo reativo utilizando os *hooks* `useContractWrite` e `useWaitForTransactionReceipt`. Em vez de fazer o usuário adivinhar o status da operação, a interface monitora ativamente o recibo da transação na blockchain. Assim que a rede confirma o bloco, o sistema dispara automaticamente uma nova leitura (`useContractRead`), atualizando a mensagem na tela em tempo real, sem a necessidade de *reloads* manuais, transformando um processo complexo em uma vitória de usabilidade.
+
+#### 🌱 Pontos para Evolução Futura
+
+* **Suporte a Múltiplas Carteiras:** Integrar o WalletConnect para permitir o acesso via carteiras mobile, expandindo a acessibilidade do dApp.
+* **Suporte Multichain:** Abstrair a configuração de rede para permitir que o usuário alterne fluidamente entre Sepolia, Mainnet, Arbitrum ou Optimism diretamente pela interface.
+
+---
+
+#### 🛠️ Pilha de Tecnologias (Tech Stack)
+
+| Componente | Tecnologia Utilizada | Papel na Arquitetura |
+| --- | --- | --- |
+| **Front-End / UI** | **React.js & Vite** | Responsável pela renderização da interface do usuário de forma reativa e pelo empacotamento ultrarrápido do código em ambiente de desenvolvimento. |
+| **Linguagem** | **TypeScript** | Adiciona tipagem estática ao projeto, prevenindo erros em tempo de execução e melhorando a integração com os ABIs dos contratos inteligentes. |
+| **Gerenciamento Web3** | **wagmi & React Query** | Fornece *hooks* React otimizados para interagir com contas, provedores e contratos, gerenciando o cache e o estado assíncrono das requisições com a blockchain. |
+| **Comunicação Blockchain** | **Viem** | Atua como a biblioteca de baixo nível para interagir com a Ethereum, substituindo o ethers.js com foco em performance e tamanho de *bundle* reduzido. |
+| **Carteira / Provedor** | **MetaMask (Injected)** | Gerencia as chaves privadas do usuário, injeta o provedor Web3 no navegador e assina as transações enviadas para a rede Sepolia. |
+
+---
+
+#### 🗺️ Diagrama da Arquitetura
+
+```mermaid
+graph TD
+    %% O diagrama gerado pela IA começa aqui %%
+    
+    %% Definindo os nós
+    User(("👤 Usuário"))
+    
+    subgraph "💻 Front-end (React + Vite)"
+        UI_Connect["🔘 Botão 'Connect Wallet'"]
+        UI_Display["📜 Exibição da Saudação"]
+        UI_Form["📝 Formulário 'Change Greeting'"]
+        
+        subgraph "⚛️ Wagmi Hooks & Estado"
+            Hook_Connect["useConnect()"]
+            Hook_Read["useContractRead()"]
+            Hook_Write["useContractWrite()"]
+            Hook_Wait["useWaitForTransactionReceipt()"]
+        end
+    end
+    
+    subgraph "🦊 Infraestrutura Web3 & Blockchain"
+        Wallet["MetaMask (Injected Provider)"]
+        Contract[/"📜 'Greeter' Smart Contract (Rede Sepolia)"/]
+    end
+
+    %% Fluxo de Conexão
+    User -->|Clica| UI_Connect
+    UI_Connect -->|Dispara| Hook_Connect
+    Hook_Connect -->|Solicita Permissão| Wallet
+    Wallet -->|Conexão Aprovada| Hook_Read
+    
+    %% Fluxo de Leitura (Read)
+    Hook_Read -->|Chama função greet| Contract
+    Contract -.->|Retorna texto atual| UI_Display
+    UI_Display -.->|Exibe para| User
+    
+    %% Fluxo de Escrita (Write)
+    User -->|Digita e Envia| UI_Form
+    UI_Form -->|Passa novo texto| Hook_Write
+    Hook_Write -->|Solicita Assinatura de Tx| Wallet
+    Wallet -->|Tx Aprovada e Enviada| Hook_Wait
+    Hook_Wait -->|Monitora status na rede| Contract
+    Contract -.->|Confirmação de Mineração| Hook_Read
+
+```

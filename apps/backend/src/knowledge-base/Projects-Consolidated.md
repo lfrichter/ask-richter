@@ -1,112 +1,3 @@
-### 🚀 Project:  Air Combat 3D - Um Estudo de Caso sobre Produtividade com IAs
-
-#### 🎯 Visão Geral e Arquitetura da Solução
-
-Este projeto nasceu de uma questão estratégica: qual o impacto real de ferramentas de IA generativa na produtividade de um desenvolvedor full-stack? Para responder a isso, conduzi um estudo de caso prático, desenvolvendo do zero um jogo 3D de combate aéreo multiplayer. O objetivo não era apenas criar um jogo, mas sim mensurar a aceleração no ciclo de vida do desenvolvimento.
-
-A solução é uma aplicação web onde jogadores podem entrar em uma arena e pilotar aviões de combate em tempo real. O frontend, construído com **Three.js**, é responsável por toda a renderização 3D, desde os modelos das aeronaves até o ambiente de batalha e os controles interativos. A comunicação em tempo real, coração da experiência multiplayer, é garantida por um backend robusto em **Node.js** e **Express**, utilizando **WebSockets** para sincronizar as ações dos jogadores com latência mínima. Toda a aplicação foi conteinerizada com **Docker**, garantindo a portabilidade e a consistência do ambiente, e implantada na nuvem através do **Render.com**.
-
-O resultado mais expressivo foi a validação da hipótese inicial: o uso de IDEs assistidas por IA (Cursor, Trae) resultou em uma **redução de aproximadamente 40% no tempo total de desenvolvimento**, desde a concepção até a entrega final.
-
-#### 👨‍💻 Meu Papel no Projeto
-
-Como único desenvolvedor e pesquisador neste estudo de caso, atuei de ponta a ponta, assumindo os seguintes papéis:
-
-  * **Arquiteto e Desenvolvedor Full-Stack:** Idealizei a arquitetura, desenvolvi o frontend interativo com Three.js, construí o servidor de backend em Node.js para a lógica de jogo e comunicação em tempo real via WebSockets.
-  * **Engenheiro DevOps:** Fui responsável por todo o ciclo de vida da infraestrutura, incluindo a conteinerização da aplicação com Docker e a automação do processo de deploy contínuo na plataforma Render.com.
-  * **Pesquisador de Fluxo de Trabalho:** Defini a metodologia para o estudo, integrei as ferramentas de IA generativa no meu fluxo de trabalho diário e mensurei ativamente o ganho de produtividade em comparação com métodos tradicionais.
-
-#### ✨ Pontos Fortes e Desafios Superados
-
-O principal ponto forte do projeto é a demonstração clara e quantificável do poder da IA como uma ferramenta de alavancagem para desenvolvedores. O jogo funcional é a prova de conceito que materializa essa conclusão.
-
-  * **Desafio Superado:** O maior desafio técnico foi garantir a **sincronização de estado em tempo real** entre múltiplos jogadores. Manter a posição e as ações de cada avião consistentes para todos os clientes, com baixa latência, é complexo. Superei isso implementando um loop de jogo eficiente no servidor Node.js que processa as entradas dos jogadores e transmite o estado atualizado do jogo de volta aos clientes através de uma conexão WebSocket estável.
-  * **Vitória Estratégica:** A maior vitória, no entanto, foi a **validação bem-sucedida do fluxo de trabalho assistido por IA**. Provar uma redução de 40% no tempo de desenvolvimento transformou uma crença intuitiva em um dado concreto, oferecendo um forte argumento para a adoção moderna de ferramentas no ciclo de desenvolvimento de software.
-
-#### 🌱 Pontos para Evolução Futura
-
-Embora o projeto tenha cumprido seu objetivo principal, ele possui um grande potencial para evolução. Como próximos passos, poderíamos implementar um sistema de **persistência de pontuação e ranking de jogadores**, utilizando um banco de dados como PostgreSQL ou Redis. Outra melhoria seria a criação de **salas de jogo privadas e diferentes modos de batalha** (como "Team Deathmatch"), enriquecendo a experiência multiplayer.
-
------
-
-#### 🛠️ Pilha de Tecnologias (Tech Stack)
-
-| Componente | Tecnologia Utilizada | Papel na Arquitetura |
-| :--- | :--- | :--- |
-| **Renderização e Interação 3D** | **Three.js** | Criação do ambiente 3D, renderização dos aviões e gerenciamento da câmera e controles do jogador no navegador. |
-| **Servidor de Aplicação** | **Node.js com Express** | Orquestra a lógica de negócio, gerencia o matchmaking e serve como a base para a comunicação em tempo real. |
-| **Comunicação em Tempo Real** | **WebSockets** | Estabelece um canal de comunicação bidirecional e de baixa latência entre o cliente e o servidor para sincronizar as ações. |
-| **Conteinerização** | **Docker** | Empacota a aplicação e suas dependências em um contêiner, garantindo consistência entre os ambientes de desenvolvimento e produção. |
-| **Hospedagem e Deploy** | **Render.com** | Plataforma de nuvem utilizada para hospedar a aplicação conteinerizada e disponibilizá-la publicamente online. |
-| **Aceleração de Código** | **IA Generativa (Cursor, Trae)** | Ferramentas integradas à IDE para acelerar a escrita de código, prototipagem de funcionalidades e resolução de problemas. |
-
------
-
-#### 🗺️ Diagrama da Arquitetura
-
-```mermaid
----
-config:
-  theme: default
-  look: handDrawn
----
-flowchart LR
-    %% Plataforma Render.com
-    subgraph Render["🌐 Plataforma Render.com"]
-        style Render fill:#E0F7FA,stroke:#00ACC1,stroke-width:2px
-        subgraph Docker["🐳 Contêiner Docker"]
-            style Docker fill:#B2EBF2,stroke:#00838F,stroke-width:2px
-            B[🚀 Servidor Node.js/Express]
-        end
-    end
-
-    %% Cliente (Browser)
-    subgraph Client["💻 Cliente (Browser)"]
-        style Client fill:#FFF3E0,stroke:#FFB300,stroke-width:2px
-        A[🎮 Aplicação Three.js]
-    end
-
-    %% Jogadores
-    P1[👨‍✈️ Jogador 1]
-    P2[👨‍✈️ Jogador 2]
-
-    %% Fluxos de interação
-    P1 -- "Interage com" --> A
-    P2 -- "Interage com" --> A
-
-    A -- "Conexão WebSocket em Tempo Real 🔌" --> B
-    B -- "Sincroniza Estado do Jogo 🔄" --> A
-    B -- "Lógica de Jogo e Matchmaking 🎲" --> B
-
-```
-
----
-#### RESUMO TÉCNICO PARA EMBEDDING
-
-Estudo de caso prático sobre o impacto de IA generativa na produtividade, materializado no desenvolvimento de um jogo 3D multiplayer de combate aéreo. A arquitetura da solução emprega um frontend em **Three.js** para renderização 3D e um backend em **Node.js** com **Express** para a lógica de jogo. O principal desafio técnico, a **sincronização de estado em tempo real** entre múltiplos jogadores, foi solucionado com **WebSockets** para comunicação de baixa latência. A aplicação foi conteinerizada com **Docker**, garantindo portabilidade e consistência, com o ciclo de **deploy contínuo** automatizado na plataforma de nuvem **Render.com**. O uso de IDEs assistidas por **IA generativa (Cursor, Trae)** validou uma redução de 40% no tempo de desenvolvimento. Evoluções futuras planejadas incluem a implementação de persistência de dados com **PostgreSQL** ou **Redis** para rankings e pontuações.
-
-#### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
-
-| Categoria | Tecnologias e Conceitos |
-| :--- | :--- |
-| **AI & Machine Learning** | IA Generativa, Cursor, Trae |
-| **Software Development** | Desenvolvedor Full-Stack, Loop de jogo, Prototipagem, Ciclo de vida do desenvolvimento |
-| **Architecture**| Arquitetura de aplicação web, Multiplayer em tempo real, Sincronização de estado, Matchmaking |
-| **Cloud Computing** | Render.com, Hospedagem em nuvem |
-| **API RESTFul development** | Node.js, Express |
-| **Frontend Development** | Three.js, Renderização 3D, Controles interativos |
-| **Mobile Development** | N/A |
-| **Database** | PostgreSQL, Redis |
-| **Data Management** | Persistência de pontuação |
-| **Content Management - CMS** | N/A |
-| **System Administration** | N/A |
-| **DevOps** | Docker, Conteinerização, Deploy Contínuo |
-| **Leadership** | N/A |
-| **Coaching** | N/A |
-| **Agile Project Management** | N/A |
-
-***
-
 ### 🚀 Project:  Ask Richter - Meu CV Interativo com IA
 
 #### 🎯 Visão Geral e Arquitetura da Solução
@@ -228,50 +119,41 @@ Este projeto, "Ask Richter", implementa um chatbot de CV interativo utilizando u
 
 ***
 
-### 🚀 Project:  Canaoaves - Plataforma Colaborativa para a Comunidade de Observadores de Aves
+### 🚀 Project:  Admin Canaoaves
 
 #### 🎯 Visão Geral e Arquitetura da Solução
 
-O Canaoaves nasceu de uma necessidade clara: a comunidade de observadores de aves no Brasil, embora vasta e apaixonada, era fragmentada. Faltava um ecossistema digital centralizado que conectasse entusiastas a guias, hospedagens e serviços validados pela própria comunidade. A solução foi construir o **Canaoaves**, uma plataforma colaborativa que funciona como o Cadastro Nacional de Observadores de Aves, transformando-se no ponto de encontro definitivo para este nicho. **O projeto está publicado e pode ser acessado em [www.canaoaves.com.br](http://www.canaoaves.com.br)**.
+O **Admin Canaoaves** não é apenas um painel administrativo; é o "cérebro" operacional e estratégico por trás da plataforma pública de observação de aves. O objetivo central era criar um ambiente seguro e robusto que permitisse à equipe interna ultrapassar as barreiras de segurança (RLS - *Row Level Security*) impostas aos usuários comuns, garantindo controle total sobre dados, moderação e usuários.
 
-A arquitetura foi projetada para ser ágil, escalável e de baixo custo inicial, utilizando uma stack moderna com **Supabase** como backend completo e **Vercel** para a hospedagem do frontend. Essa escolha permitiu um desenvolvimento acelerado, concentrando a lógica de negócio no banco de dados PostgreSQL do Supabase através de funções (RPCs) e gatilhos.
-
-O coração da plataforma é um sistema de perfis para Pessoas, Serviços e Cidades, enriquecido por um ciclo de gamificação que incentiva a colaboração. Usuários ganham pontos ao indicar novos serviços (hotéis, guias, restaurantes) e suas indicações ganham credibilidade quando outros membros as confirmam, fortalecendo a confiança da rede. A solução é totalmente mobile-first, garantindo uma experiência de usuário fluida e acessível em campo.
+A solução foi arquitetada como uma aplicação *server-side* moderna, utilizando a sinergia entre **Refine** e **Next.js**. A grande sacada arquitetural foi transformar o navegador em uma camada puramente de apresentação. Enquanto a aplicação pública restringe o acesso aos dados, este painel atua como um "bunker": todas as operações de leitura e escrita são interceptadas por **Server Actions**, que instanciam clientes Supabase privilegiados (`Service Role Key`) em um ambiente seguro, permitindo a gestão irrestrita da plataforma sem jamais expor credenciais críticas ao cliente.
 
 #### 👨‍💻 Meu Papel no Projeto
 
-Como **Arquiteto de Soluções e Desenvolvedor Principal**, minhas responsabilidades foram cruciais em todas as fases do projeto, desde a concepção até a implementação:
+Atuei como **Líder Técnico e Arquiteto Full Stack**, responsável por conduzir a evolução do produto da versão 1.0 para a 2.0. Minhas responsabilidades incluíram:
 
-  * **Definição da Arquitetura:** Estruturei a solução completa sobre a plataforma Supabase, integrando banco de dados, autenticação, storage e APIs em um único ecossistema coeso, com o frontend hospedado na Vercel para garantir performance e deploys contínuos.
-  * **Modelagem do Banco de Dados:** Desenhei o schema do banco de dados no PostgreSQL, tomando decisões estratégicas que garantiram a escalabilidade do sistema. Destaques incluem a implementação de uma **estrutura polimórfica** para interações (curtidas, comentários, fotos) e a criação de **categorias hierárquicas** para otimizar filtros e a agregação de dados estatísticos.
-  * **Desenvolvimento Backend:** Criei a lógica de negócio diretamente no banco de dados utilizando funções SQL (RPCs) e triggers para gerenciar o sistema de gamificação, validar dados em tempo real (como a verificação de e-mails duplicados) e garantir a integridade das contribuições dos usuários.
-  * **Liderança Técnica:** Traduzi os requisitos de negócio em decisões de arquitetura documentadas (ADRs), assegurando que a solução técnica estivesse sempre alinhada com os objetivos do produto e fosse robusta para o futuro.
+  * **Arquiteto de Soluções:** Desenhei o padrão de "RLS Bypass" via Server Actions e a estrutura de banco de dados para suportar a nova taxonomia e gamificação.
+  * **Desenvolvedor Front-End:** Implementei a interface utilizando **Refine** e **shadcn/ui**, focando na criação de componentes reutilizáveis (`UserProfileCard`, `CategoryManager`) e na responsividade (Mobile/Dark Mode).
+  * **Engenheiro de Back-End:** Otimizei a performance substituindo chamadas RPC lentas por queries diretas em Views do Postgres e criei a lógica de "Soft Deletes" e triggers de automação.
+  * **Gerente de Produto (DX):** Refinei a experiência do desenvolvedor (DX) com tipagem forte (`database.types.ts`) e hooks customizados (`useServerTable`) para padronizar listagens e filtros.
 
 #### ✨ Pontos Fortes e Desafios Superados
 
-A solução se destaca pela sua arquitetura inteligente e foco na experiência da comunidade.
+O projeto se destaca pela **segurança arquitetural** e pela **evolução da performance**.
 
-  * **Arquitetura Escalável com Associações Polimórficas:**
+  * **O Desafio do Acesso Seguro (RLS Bypass):** O maior desafio técnico foi permitir que administradores editassem dados de terceiros em um banco protegido por RLS, sem criar brechas de segurança.
 
-      * **O Desafio:** O sistema precisava de funcionalidades sociais como "curtir", "comentar" e "adicionar fotos" em diversas entidades (perfis, serviços, cidades, etc.). A abordagem tradicional de criar tabelas separadas para cada (`service_likes`, `profile_likes`) seria insustentável e levaria à duplicação de código e lógica.
-      * **A Superação:** Implementei uma **estrutura polimórfica**, criando tabelas genéricas como `likes` e `comments`. Essas tabelas utilizam colunas `target_id` e `target_type` para se associar a qualquer entidade do sistema. Essa decisão tornou a arquitetura extremamente limpa e escalável, permitindo adicionar essas interações a novas funcionalidades futuras com esforço mínimo.
+      * *Superação:* Implementamos um padrão onde o *client-side* usa apenas a chave pública para autenticação. Todas as mutações de dados são roteadas para o servidor Next.js, onde uma instância isolada do Supabase (com a `SERVICE_ROLE_KEY`) executa a ação. Isso garantiu poder total aos admins mantendo a integridade do banco.
 
-  * **Gamificação Flexível e Centralizada:**
+  * **O Gargalo de Performance na Moderação:** Na versão inicial, carregar listas de moderação envolvia múltiplas chamadas RPC (Remote Procedure Calls), tornando o painel lento.
 
-      * **O Desafio:** As regras de pontuação do sistema estavam fixas ("hardcoded") no código, tornando qualquer ajuste uma tarefa complexa que exigia um novo deploy.
-      * **A Superação:** Centralizei todas as regras em uma única tabela `gamification_rules` no banco de dados. Agora, os valores de pontuação podem ser ajustados dinamicamente com um simples comando, dando ao time de produto total flexibilidade para refinar o engajamento sem depender de ciclos de desenvolvimento.
+      * *Superação:* Refatorei o backend para utilizar **Views SQL** otimizadas (`view_admin_*`) e consolidei a lógica de busca em uma única Server Action (`data.ts`). Criamos o hook `useServerTable` que gerencia paginação e filtros via URL, resultando em um carregamento instantâneo e uma UX muito mais fluida.
 
-  * **Segurança e Usabilidade no Cadastro:**
-
-      * **O Desafio:** O fluxo de cadastro permitia que um e-mail já existente fosse usado para um novo registro, o que causava uma sobrescrita parcial de dados e uma grave falha de segurança.
-      * **A Superação:** Criei uma função no PostgreSQL (`email_exists`) que é chamada em tempo real pelo frontend. A validação ocorre antes mesmo do envio do formulário, bloqueando o cadastro, exibindo uma mensagem clara e prevenindo a inconsistência de dados, melhorando drasticamente a segurança e a experiência do usuário.
+  * **De "Fila de Tarefas" para "Gestão Inteligente":** Transformamos a moderação simples em um sistema rico. Agora, em vez de apenas aprovar/rejeitar, o admin pode **editar conteúdo** (textos de cidades, fotos) antes da publicação e visualizar o contexto do usuário (Score de Gamificação, Nível de Reputação) para tomar decisões mais rápidas e justas.
 
 #### 🌱 Pontos para Evolução Futura
 
-O projeto foi construído com uma base sólida, pronta para crescer. Os próximos passos naturais incluem:
-
-  * **Construção do Painel Administrativo:** Desenvolver a área de moderação para gerenciar o conteúdo colaborativo (descrições de cidades/estados) e as denúncias de usuários, garantindo a qualidade e segurança da plataforma.
-  * **Expansão das Funcionalidades de Comunidade:** Implementar recursos de engajamento previstos na visão de crescimento, como feed de atividades, sistema de seguidores e organização de eventos para fortalecer ainda mais os laços da comunidade.
+1.  **Dashboard Analítico Avançado:** Aproveitar os dados centralizados para criar gráficos de tendências de novos usuários e engajamento por região geográfica.
+2.  **Moderação Assistida por IA:** Implementar uma camada de pré-análise em textos e imagens para sugerir automaticamente a aprovação ou rejeição de denúncias simples, acelerando o trabalho humano.
 
 -----
 
@@ -279,10 +161,12 @@ O projeto foi construído com uma base sólida, pronta para crescer. Os próximo
 
 | Componente | Tecnologia Utilizada | Papel na Arquitetura |
 | :--- | :--- | :--- |
-| **Backend-as-a-Service** | **Supabase** | Orquestra toda a infraestrutura de backend, incluindo banco de dados, autenticação de usuários, APIs e armazenamento de arquivos. |
-| **Banco de Dados** | **PostgreSQL** | Persiste todos os dados da aplicação. A lógica de negócio, como gamificação e validações, é executada diretamente no banco através de RPCs e Triggers. |
-| **Hosting do Frontend** | **Vercel** | Responsável pela hospedagem e pelo deploy contínuo da aplicação frontend, garantindo alta performance e disponibilidade global. |
-| **Framework Frontend** | **Next.js / React** | Utilizado para construir a interface de usuário reativa e otimizada para SEO, com foco principal em uma experiência mobile-first. |
+| **Framework Web** | **Next.js 15.3.1** | Estrutura principal da aplicação, responsável pelo roteamento, renderização híbrida e execução segura das Server Actions. |
+| **Framework Admin** | **Refine 5.0.1** | Acelerador de desenvolvimento para aplicações internas, gerenciando estado de formulários, tabelas e provedores de dados. |
+| **Backend & DB** | **Supabase (PostgreSQL)** | Banco de dados relacional, autenticação de usuários e triggers (Automação de perfis e roles). |
+| **Interface (UI)** | **shadcn/ui + Tailwind CSS** | Biblioteca de componentes visuais modernos e sistema de estilização para criar o tema "Naturebirds" e responsividade. |
+| **Linguagem** | **TypeScript** | Garante a tipagem estática e segurança do código, integrado aos tipos gerados automaticamente pelo banco de dados. |
+| **Infra & DevOps** | **Vercel** | Hospedagem da aplicação com CI/CD contínuo integrado ao GitHub. |
 
 -----
 
@@ -296,75 +180,437 @@ config:
 ---
 flowchart TD
 
-    %% === Usuário ===
-    subgraph U["👤 Usuário"]
-        U1["🦉 Observador / Guia / Serviço"]
-    end
-    style U fill:#fff3cd,stroke:#f0ad4e,stroke-width:2px
+    %% =========================
+    %% Atores
+    %% =========================
+    AdminNode["👤 Admin"]
 
-    %% === Frontend ===
-    subgraph F["🎨 Frontend Layer"]
-        F1["🌐 Aplicação Web <br>(Next.js + React + TypeScript)<br><b>Hospedada na Vercel</b>"]
-        F2["🎯 TanStack Query / React Hook Form<br>Validação com Zod"]
-        F3["💅 Tailwind CSS + shadcn/ui"]
+    %% =========================
+    %% Cliente
+    %% =========================
+    subgraph ClientSide["🖥️ Cliente – Navegador / React"]
+        UI["Interface Refine + Shadcn UI"]
+        AuthClient["Supabase Auth Client"]
+        ClientKey["Usa ANON_KEY"]
     end
-    style F fill:#cce5ff,stroke:#004085,stroke-width:2px
 
-    %% === Backend / Supabase ===
-    subgraph B["⚙️ Backend Layer (Supabase)"]
-        A["🔑 Auth <br>(Gerencia Login e Cadastro via Magic Links)"]
-        API["⚡ API Gateway (PostgREST) <br>Permissões via RLS"]
-        DB["🐘 Banco de Dados (PostgreSQL)<br>• Perfis<br>• Serviços<br>• Tabelas Polimórficas<br>• Regras de Gamificação<br>• Funções RPC"]
-        S["🗂️ Storage <br>(Armazena Fotos e Avatares)"]
-        FN["🧩 Functions (PL/pgSQL)<br>• handle_new_confirmation()<br>• update_location_stats()"]
+    %% =========================
+    %% Servidor
+    %% =========================
+    subgraph ServerSide["⚙️ Servidor – Next.js"]
+        ServerAction["Server Actions"]
+        AuthGuard["Middleware de Segurança"]
+        SupabaseAdmin["Supabase Admin Client"]
+        ServerKey["Usa SERVICE_ROLE"]
     end
-    style B fill:#d4edda,stroke:#155724,stroke-width:2px
 
-    %% === Integrações ===
-    subgraph I["🔗 Integrações Externas"]
-        IBGE["🏛️ API do IBGE<br>Estados e Cidades"]
-        VERCEL["☁️ Vercel Hosting<br>Frontend Deploy"]
-        MAPS["🗺️ Google Maps / Links de Localização"]
+    %% =========================
+    %% Infraestrutura
+    %% =========================
+    subgraph Infra["☁️ Supabase"]
+        AuthService["Serviço de Auth"]
+        PostgresDB["PostgreSQL"]
+        TriggersViews["Triggers e Views"]
     end
-    style I fill:#f8d7da,stroke:#721c24,stroke-width:2px
 
-    %% === Conexões ===
-    U1 -->|"Navega e interage"| F1
-    F1 -->|"Autenticação e Ações"| A
-    F1 -->|"Requisições API"| API
-    API -->|"Lê e escreve dados"| DB
-    API -->|"Gerencia usuários"| A
-    API -->|"Acessa arquivos"| S
-    DB -->|"Executa funções lógicas"| FN
-    F1 -->|"Consulta dados geográficos"| IBGE
-    F1 -->|"Redireciona e exibe mapas"| MAPS
-    F1 -.->|"Implantação contínua"| VERCEL
+    %% =========================
+    %% Fluxos
+    %% =========================
+    AdminNode -->|"Login"| UI
+    UI -->|"Autenticação"| AuthClient
+    AuthClient <-->|"JWT"| AuthService
+
+    UI -->|"CRUD / Moderação"| ServerAction
+    ServerAction -->|"Valida Role"| AuthGuard
+    AuthGuard -.->|"Aprovado"| SupabaseAdmin
+
+    SupabaseAdmin -->|"Query / Mutation<br>Bypass RLS"| PostgresDB
+    PostgresDB -->|"Triggers"| TriggersViews
+    TriggersViews -->|"Views Otimizadas"| SupabaseAdmin
+
+    SupabaseAdmin -->|"JSON"| ServerAction
+    ServerAction -->|"Atualiza Estado"| UI
+
+    %% =========================
+    %% Estilos
+    %% =========================
+    classDef actor fill:#ede7f6,stroke:#4527a0,stroke-width:2px;
+    classDef client fill:#e3f2fd,stroke:#0d47a1,stroke-width:2px;
+    classDef server fill:#e8f5e9,stroke:#1b5e20,stroke-width:2px;
+    classDef infra fill:#fff3e0,stroke:#e65100,stroke-width:2px;
+    classDef sensitive fill:#ffebee,stroke:#b71c1c,stroke-width:2px;
+
+    class AdminNode actor
+    class UI,AuthClient,ClientKey client
+    class ServerAction,AuthGuard,ServerKey server
+    class SupabaseAdmin sensitive
+    class AuthService,PostgresDB,TriggersViews infra
+
 ```
 
+***
+
+### 🚀 Project:  Canaoaves - Plataforma Colaborativa para a Comunidade de Observadores de Aves
+
+#### 🎯 Visão Geral e Arquitetura da Solução
+
+O **Canaoaves** nasceu para solucionar um problema histórico na comunidade de observadores de aves no Brasil: a fragmentação de informações e a falta de centralização de serviços de apoio validados (como guias, hospedagens e locais de observação). A plataforma funciona como o Cadastro Nacional de Observadores de Aves, um ecossistema colaborativo onde os próprios membros constroem e validam a base de dados. O projeto está publicado e operacional em **[www.canaoaves.com.br](http://www.canaoaves.com.br)**.
+
+A arquitetura do sistema evoluiu de um modelo SPA tradicional para um **Monolito Modular (Vertical Slice Architecture)** de alta coesão e baixo acoplamento. A aplicação frontend é construída em **React**, **Vite** e **TypeScript**, hospedada na infraestrutura global da **Vercel**. O backend é sustentado pelo **Supabase**, utilizando o **PostgreSQL** como motor central de persistência e executando lógicas complexas de negócio através de funções em PL/pgSQL (RPCs), gatilhos (triggers) e **Edge Functions (Deno)**.
+
+A fundação do código frontend está estruturada sob o diretório `src/modules/`, organizada em 11 módulos funcionais independentes (`auth`, `statistics`, `events`, `library`, `alavai`, `search`, `location`, `services`, `profile`, `home`, `legal`). Cada módulo encapsula rigorosamente suas próprias telas (`pages/`), componentes de UI (`components/`), hooks de estado (`hooks/`), definições de tipos (`types/`) e uma camada isolada de acesso a dados (`services/*Service.ts`), seguindo o padrão em camadas **`Page ➔ Hook ➔ Service ➔ Supabase`**.
+
+#### 👨‍💻 Meu Papel no Projeto
+
+Como **Arquiteto de Soluções e Desenvolvedor Principal (Tech Lead)**, liderei a concepção técnica, a modelagem de dados e a reestruturação arquitetural completa da plataforma:
+
+  * 🏛️ **Evolução Arquitetural para Monolito Modular:** Planejei e executei a transição de um frontend legado com chamadas diretas ao banco de dados espalhadas na UI para uma **Vertical Slice Architecture** estruturada por fatias de domínio (`src/modules/`). Essa refatoração reorganizou a base de código inteira em 11 módulos autônomos sem causar qualquer regressão ou interrupção de serviço (0% downtime / 0% regressão).
+  * 🐘 **Modelagem e Engenharia de Banco de Dados (PostgreSQL):** Projetei o schema relacional no Supabase, implementando **estruturas polimórficas** para interações sociais (curtidas, comentários e fotos), categorias hierárquicas, procedimentos armazenados (PL/pgSQL) e regras rigorosas de segurança via **Row Level Security (RLS)**.
+  * ⚙️ **Desenvolvimento Backend & Serverless:** Criei RPCs para cálculo de estatísticas e gamificação, além de desenvolver **Edge Functions em Deno** conectadas a **Database Webhooks** para tarefas assíncronas, como geocoding automático de cidades e disparo de notificações por e-mail via **Resend**.
+  * 🧪 **Qualidade e Engenharia de Testes (E2E):** Implementei uma suíte automatizada de testes E2E com **Cypress**, incluindo travas de segurança de ambiente e rotinas automáticas de limpeza de dados (teardown), assegurando a resiliência dos fluxos críticos de cadastro, buscas e gerenciamento de perfis.
+
+#### ✨ Pontos Fortes e Desafios Superados
+
+  * 📦 **Refatoração para Monolito Modular por Fatias Verticais (Vertical Slice Architecture):**
+      * **O Desafio:** A aplicação cresceu rapidamente com múltiplos recursos (Biblioteca, Agenda, Alertas de Raridades ALAVAI, Estatísticas, Perfis). Os componentes de interface realizavam consultas diretas ao cliente do Supabase, misturando regras de negócio, chamadas assíncronas e renderização visual, o que dificultava os testes e a manutenção.
+      * **A Superação:** Migrei 100% da aplicação para um Monolito Modular sob `src/modules/`, encapsulando cada funcionalidade em seu próprio módulo de domínio. Criei a camada de serviço (`*Service.ts`) para cada módulo, isolando as queries do Supabase e chamadas de APIs externas. A migração foi executada de forma incremental, mantendo compatibilidade com shims e eliminando completamente a pasta antiga `src/pages/` após atingir 100% de sucesso nos checadores de tipos TypeScript e testes Cypress E2E.
+
+  * 🔗 **Arquitetura Social Limpa com Associações Polimórficas:**
+      * **O Desafio:** O sistema exigia recursos de interação social (curtidas, comentários, fotos) em diversas entidades diferentes (perfis de observadores, pousadas, guias, cidades, artigos da biblioteca). A abordagem tradicional de criar tabelas duplicadas (`service_likes`, `profile_likes`) inflaria o schema e duplicaria a lógica de backend.
+      * **A Superação:** Implementei uma **estrutura polimórfica** no PostgreSQL utilizando tabelas genéricas `likes` e `comments` com chaves compostas `target_id` e `target_type`. Essa abstração permitiu estender recursos sociais a novas fatias do sistema com esforço zero de banco de dados.
+
+  * 🎮 **Gamificação Centralizada e Dinâmica no Banco de Dados:**
+      * **O Desafio:** As pontuações e regras de nivelamento da comunidade (Ovo, Pinguim, Ema, etc.) mudavam conforme o engajamento crescia. Manter esses valores codificados no frontend exigiria deploys frequentes para simples ajustes de parâmetros.
+      * **A Superação:** Centralizei o motor de pontuação na tabela `gamification_rules` e criei triggers automáticos no PostgreSQL. A lógica atribui pontos por indicações prestadas e confirmações recebidas, permitindo que a equipe de produto ajuste regras em tempo real diretamente no banco.
+
+  * ⚡ **Processamento Assíncrono com Edge Functions & Webhooks (Zero Latência na UI):**
+      * **O Desafio:** Quando um usuário cadastrasse uma cidade inédita, o sistema precisava obter as coordenadas geográficas (Lat/Lng) via API externa para atualizar o Mapa da Comunidade. Fazer essa consulta síncrona no fluxo de cadastro travava a tela do usuário em caso de instabilidade na API externa.
+      * **A Superação:** Projetei um fluxo assíncrono baseado em **Database Webhooks** (`AFTER INSERT` na tabela `cities`). O banco dispara um evento para uma **Edge Function (Deno)** que busca as coordenadas em background e atualiza o registro na base de dados, garantindo resposta instantânea na interface do usuário.
+
+  * 🛡️ **Resiliência e Tolerância a Falhas em Tempo de Execução:**
+      * **O Desafio:** Evitar falhas silenciosas na aplicação client-side que pudessem comprometer a experiência dos usuários em campo.
+      * **A Superação:** Configurei um monitoramento global de exceções integrando `ErrorBoundary` com um listener assíncrono que captura erros não tratados e os persiste na tabela `client_errors` do Supabase com o contexto técnico completo (stack trace, user agent e rota).
+
+#### 🌱 Pontos para Evolução Futura
+
+  * 🎛️ **Painel Administrativo Desacoplado:** Evoluir o gerenciamento de moderação de conteúdo (revisão de descrições colaborativas de cidades e denúncias) para um dashboard dedicado desacoplado com controle RBAC avançado.
+  * 🤖 **Inteligência Artificial & Visão Computacional:** Integrar modelos de visão computacional para pré-identificação automática de espécies de aves nas fotos enviadas pelos observadores na Biblioteca e no feed ALAVAI.
+
+---
+
+#### 🛠️ Pilha de Tecnologias (Tech Stack)
+
+| Componente | Tecnologia Utilizada | Papel na Arquitetura |
+| :--- | :--- | :--- |
+| **Arquitetura Frontend** | **Monolito Modular (Vertical Slice)** | Estrutura sob `src/modules/` em 11 domínios funcionais isolados com o padrão `Page ➔ Hook ➔ Service ➔ Supabase`. |
+| **Framework & Build** | **React 18 + Vite + TypeScript** | Construção da Single Page Application (SPA) reativa, fortemente tipada e com compilação ultra-rápida. |
+| **Estilização & UI** | **Tailwind CSS + shadcn/ui** | Design system modular, responsivo e mobile-first com componentes acessíveis. |
+| **Gerenciamento de Estado** | **TanStack Query (React Query)** | Cache inteligente, revalidação e sincronização assíncrona dos dados do Supabase. |
+| **Formulários & Validação** | **React Hook Form + Zod** | Gerenciamento de formulários com validação estrita de esquemas no client-side. |
+| **Backend-as-a-Service** | **Supabase** | Backend unificado fornecendo banco PostgreSQL, autenticação, PostgREST API e armazenamento de arquivos (Storage). |
+| **Banco de Dados** | **PostgreSQL** | Banco relacional executando regras de negócio em PL/pgSQL, tabelas polimórficas, triggers e Row Level Security (RLS). |
+| **Serverless & Webhooks** | **Supabase Edge Functions (Deno)** | Execução de rotinas de backend com privilégios elevados, geocoding assíncrono e e-mails via API **Resend**. |
+| **Hospedagem & CI/CD** | **Vercel** | Hospedagem de alta performance com entrega via CDN Global e integração contínua ligada ao repositório Git. |
+| **Testes Automatizados** | **Cypress (E2E)** | Suíte de testes ponta a ponta que valida fluxos de autenticação, cadastros, buscas e resiliência de dados. |
+
+---
+
+#### 🗺️ Diagrama da Arquitetura
+
+```mermaid
+---
+config:
+  theme: default
+  look: handDrawn
+---
+flowchart TD
+
+    %% === Usuário ===
+    subgraph Client["👤 Camada de Usuário & Cliente"]
+        U["🦉 Observador / Guia / Serviço"]
+    end
+    style Client fill:#fff3cd,stroke:#f0ad4e,stroke-width:2px
+
+    %% === Frontend Modular ===
+    subgraph Frontend["🎨 Frontend Layer (Vercel CDN)"]
+        direction TB
+        SPA["🌐 React + Vite + TypeScript SPA<br><b>Hospedado na Vercel</b>"]
+        
+        subgraph Modules["📦 Monolito Modular (src/modules/)"]
+            M1["🔑 auth"]
+            M2["📚 library"]
+            M3["📅 events"]
+            M4["🚨 alavai"]
+            M5["📊 statistics"]
+            M6["🔍 search"]
+            M7["📍 location"]
+            M8["🏨 services"]
+            M9["👤 profile"]
+            M10["🏠 home"]
+            M11["⚖️ legal"]
+        end
+        
+        PATTERN["📐 Pattern por Módulo:<br>Page ➔ Hook/Component ➔ Service (*Service.ts)"]
+        UI_STATE["🎯 TanStack Query + React Hook Form (Zod)"]
+        LINT["🛡️ ErrorBoundary + client_errors Listener"]
+    end
+    style Frontend fill:#cce5ff,stroke:#004085,stroke-width:2px
+
+    %% === Backend & Supabase ===
+    subgraph Backend["⚙️ Backend Layer (Supabase BaaS)"]
+        AUTH["🔑 Supabase Auth<br>(Magic Links & OAuth)"]
+        API["⚡ PostgREST API Gateway<br>(Segurança granular via RLS)"]
+        
+        subgraph DB["🐘 PostgreSQL Engine"]
+            TABLES["📊 Tabelas de Domínio & Polimórficas<br>(likes, comments, profiles, services)"]
+            PLPGSQL["🧩 Lógica em Banco (PL/pgSQL)<br>• Gamificação (gamification_rules)<br>• RPCs (get_statistics, email_exists)"]
+            TRIGGERS["⚡ Triggers & Webhooks"]
+        end
+        
+        STORAGE["🗂️ Storage Buckets<br>(Avatares, Fotos de Serviços)"]
+        EDGE["⚡ Deno Edge Functions<br>• notify-comment<br>• send-contact-email<br>• geocoding-handler"]
+    end
+    style Backend fill:#d4edda,stroke:#155724,stroke-width:2px
+
+    %% === Serviços Externos & Testes ===
+    subgraph Integrations["🔗 Integrações Externas & QA"]
+        RESEND["📧 Resend API<br>(E-mails Transacionais)"]
+        IBGE["🏛️ API IBGE / Nominatim<br>(Geocoding Lat/Lng)"]
+        CYPRESS["🧪 Cypress E2E Suite<br>(Testes Automatizados & Teardown)"]
+    end
+    style Integrations fill:#f8d7da,stroke:#721c24,stroke-width:2px
+
+    %% === Fluxos e Conexões ===
+    U -->|"Acessa a plataforma"| SPA
+    SPA -->|"Navega pelos módulos"| Modules
+    Modules -->|"Executa o padrão"| PATTERN
+    PATTERN -->|"Gerencia estado client-side"| UI_STATE
+    UI_STATE -->|"Requisições autenticadas"| API
+    UI_STATE -->|"Autentica usuários"| AUTH
+    UI_STATE -->|"Uploads de mídia"| STORAGE
+    
+    API -->|"Políticas RLS & Operações CRUD"| TABLES
+    TABLES -->|"Executa procedimentos"| PLPGSQL
+    TABLES -->|"Dispara eventos"| TRIGGERS
+    
+    TRIGGERS -.-|"Database Webhook (Async)"| EDGE
+    EDGE -->|"Dispara e-mails"| RESEND
+    EDGE -->|"Consulta coordenadas GPS"| IBGE
+    IBGE -.->|"Atualiza Lat/Lng em background"| DB
+    
+    LINT -.-|"Reporta exceções em runtime"| TABLES
+    CYPRESS -.->|"Valida fluxos críticos E2E"| SPA
+```
+
+***
 
 #### RESUMO TÉCNICO PARA EMBEDDING
 
-A arquitetura do projeto Canaoaves, uma Single-Page Application (SPA) colaborativa, foi definida pela Architectural Decision Record (ADR) 011, adotando uma stack end-to-end baseada em Supabase e Vercel para otimizar a agilidade de desenvolvimento, escalabilidade e custo-efetividade. A decisão centraliza a camada de dados no Supabase, utilizando-o como um Backend-as-a-Service (BaaS) que provê um banco de dados PostgreSQL, autenticação, storage de arquivos e APIs REST auto-geradas via PostgREST. A segurança de acesso a dados é granularmente controlada com políticas de Row Level Security (RLS). Para lógicas de negócio complexas, a solução utiliza VIEWS e funções PostgreSQL. O frontend, desenvolvido em React/Vite, é hospedado na Vercel, que gerencia o build, deploy e a entrega via CDN global. A integração contínua e a entrega contínua (CI/CD) são automatizadas através da integração com Git, e a Vercel também provê capacidade de computação via Serverless Functions. Esta combinação mitiga a necessidade de um backend customizado (e.g., Node.js + Express), embora introduza uma dependência de fornecedores (vendor lock-in), parcialmente atenuada pelo uso de PostgreSQL open-source.
+A arquitetura da plataforma colaborativa **Canaoaves** (Single-Page Application) é fundamentada na Architectural Decision Record (ADR) 011 e na refatoração completa para um **Monolito Modular (Vertical Slice Architecture)** sob o diretório `src/modules/`. O frontend é construído com React 18, Vite e TypeScript, estilizado com Tailwind CSS e shadcn/ui, hospedado na infraestrutura global da Vercel com CI/CD contínuo acoplado ao Git. A comunicação client-side segue o padrão `Page ➔ Hook/Component ➔ Service ➔ Supabase`, isolando as queries e mutações em arquivos `*Service.ts` por módulo. O backend opera sobre a plataforma Supabase (Backend-as-a-Service), utilizando o PostgreSQL como motor relacional, com controle de acesso refinado via Row Level Security (RLS) e regras de negócio encapsuladas em procedimentos armazenados PL/pgSQL (RPCs) e tabelas com associações polimórficas. Tarefas assíncronas e integrações externas (geocoding e notificações por e-mail) são processadas desacopladas através de Database Webhooks e Supabase Edge Functions (Deno) com a API do Resend. A qualidade e integridade do software são mantidas com uma suíte de testes E2E em Cypress com rotinas automáticas de teardown, aliadas a um sistema de captura global de exceções gravado na tabela `client_errors`.
 
 #### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
 
 | Categoria | Tecnologias e Conceitos |
 | :--- | :--- |
 | **AI & Machine Learning** | N/A |
-| **Software Development** | Autenticação, CRUD, Git, Serverless Functions, Open-source, Funções PostgreSQL, Row Level Security (RLS), Node.js, Express, Experiência do Desenvolvedor (DX) |
-| **Architecture**| Backend-as-a-Service (BaaS), SPA (Single-Page Application), Escalabilidade, Serverless Functions, Vendor Lock-in, Custo-Efetividade |
-| **Cloud Computing** | Supabase, Vercel, Hosting com CDN Global, Serverless Functions, Storage |
-| **API RESTFul development** | PostgREST |
-| **Frontend Development** | Vercel, SPA (Single-Page Application), React/Vite |
-| **Mobile Development** | N/A |
-| **Database** | PostgreSQL, Supabase, PostgREST, Row Level Security (RLS), VIEWS, Funções PostgreSQL |
-| **Data Management** | PostgreSQL, Storage, Row Level Security (RLS) |
-| **Content Management - CMS** | N/A |
-| **System Administration** | CDN Global |
-| **DevOps** | Vercel, Integração com Git (CI/CD) |
-| **Leadership** | N/A |
+| **Software Development** | Monolito Modular, Vertical Slice Architecture, Autenticação, CRUD, Git, Serverless Functions, Open-source, Funções PostgreSQL (PL/pgSQL), Row Level Security (RLS), TypeScript, DX (Developer Experience), Padrão Service Layer |
+| **Architecture** | Backend-as-a-Service (BaaS), SPA (Single-Page Application), Vertical Slice Architecture, Monolito Modular, Serverless Functions, Event-Driven Webhooks, Polimorfismo no Banco de Dados, Resiliência & Error Boundaries |
+| **Cloud Computing** | Supabase, Vercel, Hosting CDN Global, Edge Functions (Deno), Storage Buckets |
+| **API RESTFul development** | PostgREST API Gateway |
+| **Frontend Development** | React, Vite, TypeScript, Tailwind CSS, shadcn/ui, TanStack Query, React Hook Form, Zod, React Router DOM, React Helmet Async |
+| **Mobile Development** | Mobile-First Responsive Design |
+| **Database** | PostgreSQL, Supabase, PostgREST, Row Level Security (RLS), PL/pgSQL, RPCs, Triggers, Tabelas Polimórficas |
+| **Data Management** | PostgreSQL, Storage Buckets, Row Level Security (RLS), Backup/Restore (psql), Session Replication Role |
+| **Content Management - CMS** | Conteúdo Colaborativo com Moderação de Cidades e Estados |
+| **System Administration** | CDN Global (Vercel) |
+| **DevOps** | Vercel, Supabase CLI, Integração com Git (CI/CD), Typegen Supabase |
+| **Quality & Security** | Cypress (Testes E2E com Teardown Automático), ErrorBoundary Global, Captura de Erros Client-Side (`client_errors`) |
+| **Leadership** | Arquitetura de Software, Refatoração Sem Downtime, Liderança Técnica |
 | **Coaching** | N/A |
-| **Agile Project Management** | Agilidade no desenvolvimento |
+| **Agile Project Management** | Desenvolvimento Incremental por Módulos (Vertical Slices), Validação por Suíte de Testes |
+
+---
+
+## 🇺🇸 English Version
+
+### 🚀 Canaoaves - Collaborative Platform for the Birdwatching Community in Brazil
+
+#### 🎯 Overview and Solution Architecture
+
+**Canaoaves** was created to solve a historical problem in the birdwatching community in Brazil: information fragmentation and the lack of centralized, validated support services (such as guides, lodges, and birding spots). The platform functions as the National Registry of Birdwatchers, a collaborative ecosystem where members build and validate the database themselves. The project is live and operational at **[www.canaoaves.com.br](http://www.canaoaves.com.br)**.
+
+The system architecture evolved from a traditional SPA model to a **Modular Monolith (Vertical Slice Architecture)** with high cohesion and low coupling. The frontend application is built in **React**, **Vite**, and **TypeScript**, hosted on **Vercel**'s global infrastructure. The backend is sustained by **Supabase**, using **PostgreSQL** as the core persistence engine and executing complex business logic through PL/pgSQL functions (RPCs), triggers, and **Edge Functions (Deno)**.
+
+The frontend codebase is structured under the `src/modules/` directory, organized into 11 independent functional modules (`auth`, `statistics`, `events`, `library`, `alavai`, `search`, `location`, `services`, `profile`, `home`, `legal`). Each module strictly encapsulates its own screens (`pages/`), UI components (`components/`), state hooks (`hooks/`), type definitions (`types/`), and an isolated data access layer (`services/*Service.ts`), following the layered pattern **`Page ➔ Hook ➔ Service ➔ Supabase`**.
+
+#### 👨‍💻 My Role in the Project
+
+As **Solutions Architect and Lead Developer (Tech Lead)**, I led the technical design, data modeling, and complete architectural restructuring of the platform:
+
+  * 🏛️ **Architectural Evolution to Modular Monolith:** Planned and executed the transition from a legacy frontend with direct database calls scattered across the UI to a **Vertical Slice Architecture** structured by domain slices (`src/modules/`). This refactoring reorganized the entire codebase into 11 autonomous modules without introducing any regressions or downtime (0% downtime / 0% regression).
+  * 🐘 **Database Modeling & Engineering (PostgreSQL):** Designed the relational schema in Supabase, implementing **polymorphic structures** for social interactions (likes, comments, and photos), hierarchical categories, stored procedures (PL/pgSQL), and strict security rules via **Row Level Security (RLS)**.
+  * ⚙️ **Backend & Serverless Development:** Created RPCs for statistics calculation and gamification, alongside **Edge Functions in Deno** connected to **Database Webhooks** for asynchronous tasks, such as automatic city geocoding and transactional email delivery via **Resend**.
+  * 🧪 **Quality & Test Engineering (E2E):** Implemented an automated E2E test suite using **Cypress**, including environment safety guards and automatic data cleanup routines (teardown), ensuring the resilience of critical registration, search, and profile management flows.
+
+#### ✨ Key Strengths and Challenges Overcome
+
+  * 📦 **Refactoring to Modular Monolith via Vertical Slices (Vertical Slice Architecture):**
+      * **The Challenge:** The application grew rapidly with multiple features (Library, Agenda, ALAVAI Rarity Alerts, Statistics, Profiles). UI components performed direct queries to the Supabase client, mixing business rules, async calls, and visual rendering, making testing and maintenance difficult.
+      * **Overcoming It:** Migrated 100% of the application to a Modular Monolith under `src/modules/`, encapsulating each feature into its own domain module. Created the service layer (`*Service.ts`) for each module, isolating Supabase queries and external API calls. The migration was executed incrementally, maintaining compatibility with shims and completely eliminating the old `src/pages/` directory after reaching 100% success in TypeScript type checkers and Cypress E2E tests.
+
+  * 🔗 **Clean Social Architecture with Polymorphic Associations:**
+      * **The Challenge:** The system required social interaction features (likes, comments, photos) across multiple entities (observer profiles, lodges, guides, cities, library articles). The traditional approach of creating duplicated tables (`service_likes`, `profile_likes`) would bloat the schema and duplicate backend logic.
+      * **Overcoming It:** Implemented a **polymorphic structure** in PostgreSQL using generic `likes` and `comments` tables with composite keys `target_id` and `target_type`. This abstraction made extending social features to new domain slices effortless with zero database duplication.
+
+  * 🎮 **Centralized Dynamic Gamification in the Database:**
+      * **The Challenge:** Community scores and tier rules (Egg, Penguin, Emu, etc.) evolved as engagement grew. Keeping these values hardcoded in the frontend would require frequent deployments for simple parameter tweaks.
+      * **Overcoming It:** Centralized the scoring engine in the `gamification_rules` table and created automatic PostgreSQL triggers. The logic awards points for recommendations provided and confirmations received, allowing the product team to adjust rules in real time directly in the database.
+
+  * ⚡ **Asynchronous Processing with Edge Functions & Webhooks (Zero UI Latency):**
+      * **The Challenge:** When a user registered a new city, the system needed to fetch geographic coordinates (Lat/Lng) via an external API to update the Community Map. Running this query synchronously during city creation froze the user interface when external APIs experienced latency.
+      * **Overcoming It:** Designed an event-driven async flow using **Database Webhooks** (`AFTER INSERT` on `cities`). The database fires an event to a **Deno Edge Function** that fetches coordinates in the background and updates the database record, ensuring instantaneous UI feedback.
+
+  * 🛡️ **Runtime Resilience and Fault Tolerance:**
+      * **The Challenge:** Preventing silent client-side errors that could compromise user experience in the field.
+      * **Overcoming It:** Configured global exception monitoring integrating `ErrorBoundary` with an async listener that captures unhandled runtime errors and persists them to Supabase's `client_errors` table with full technical context (stack trace, user agent, and route).
+
+#### 🌱 Points for Future Evolution
+
+  * 🎛️ **Decoupled Admin Dashboard:** Evolve content moderation management (collaborative city description reviews and reports) into a dedicated admin dashboard with advanced RBAC control.
+  * 🤖 **Artificial Intelligence & Computer Vision:** Integrate computer vision models for automatic bird species pre-identification on photos uploaded by observers in the Library and ALAVAI feed.
+
+---
+
+#### 🛠️ Tech Stack
+
+| Component | Technology | Role in Architecture |
+| :--- | :--- | :--- |
+| **Frontend Architecture** | **Modular Monolith (Vertical Slice)** | Structured under `src/modules/` into 11 isolated functional domains following `Page ➔ Hook ➔ Service ➔ Supabase`. |
+| **Framework & Build** | **React 18 + Vite + TypeScript** | Reactive Single Page Application (SPA), strongly typed with ultra-fast build execution. |
+| **Styling & UI** | **Tailwind CSS + shadcn/ui** | Modular, responsive, mobile-first design system with accessible primitives. |
+| **State Management** | **TanStack Query (React Query)** | Intelligent caching, revalidation, and asynchronous data sync with Supabase. |
+| **Forms & Validation** | **React Hook Form + Zod** | Form management with strict client-side schema validation. |
+| **Backend-as-a-Service** | **Supabase** | Unified backend offering PostgreSQL database, authentication, PostgREST API, and file storage. |
+| **Database** | **PostgreSQL** | Relational engine executing business rules in PL/pgSQL, polymorphic tables, triggers, and Row Level Security (RLS). |
+| **Serverless & Webhooks** | **Supabase Edge Functions (Deno)** | High-privilege backend routine execution, async geocoding, and transactional emails via **Resend** API. |
+| **Hosting & CI/CD** | **Vercel** | High-performance hosting with Global CDN delivery and continuous Git integration. |
+| **Automated Testing** | **Cypress (E2E)** | End-to-end test suite validating auth flows, registrations, searches, and data resilience. |
+
+---
+
+#### 🗺️ Architecture Diagram
+
+```mermaid
+---
+config:
+  theme: default
+  look: handDrawn
+---
+flowchart TD
+
+    %% === User Layer ===
+    subgraph Client["👤 User & Client Layer"]
+        U["🦉 Observer / Guide / Service Provider"]
+    end
+    style Client fill:#fff3cd,stroke:#f0ad4e,stroke-width:2px
+
+    %% === Modular Frontend ===
+    subgraph Frontend["🎨 Frontend Layer (Vercel CDN)"]
+        direction TB
+        SPA["🌐 React + Vite + TypeScript SPA<br><b>Hosted on Vercel</b>"]
+        
+        subgraph Modules["📦 Modular Monolith (src/modules/)"]
+            M1["🔑 auth"]
+            M2["📚 library"]
+            M3["📅 events"]
+            M4["🚨 alavai"]
+            M5["📊 statistics"]
+            M6["🔍 search"]
+            M7["📍 location"]
+            M8["🏨 services"]
+            M9["👤 profile"]
+            M10["🏠 home"]
+            M11["⚖️ legal"]
+        end
+        
+        PATTERN["📐 Pattern per Module:<br>Page ➔ Hook/Component ➔ Service (*Service.ts)"]
+        UI_STATE["🎯 TanStack Query + React Hook Form (Zod)"]
+        LINT["🛡️ ErrorBoundary + client_errors Listener"]
+    end
+    style Frontend fill:#cce5ff,stroke:#004085,stroke-width:2px
+
+    %% === Backend & Supabase ===
+    subgraph Backend["⚙️ Backend Layer (Supabase BaaS)"]
+        AUTH["🔑 Supabase Auth<br>(Magic Links & OAuth)"]
+        API["⚡ PostgREST API Gateway<br>(Granular security via RLS)"]
+        
+        subgraph DB["🐘 PostgreSQL Engine"]
+            TABLES["📊 Domain & Polymorphic Tables<br>(likes, comments, profiles, services)"]
+            PLPGSQL["🧩 Database Logic (PL/pgSQL)<br>• Gamification (gamification_rules)<br>• RPCs (get_statistics, email_exists)"]
+            TRIGGERS["⚡ Triggers & Webhooks"]
+        end
+        
+        STORAGE["🗂️ Storage Buckets<br>(Avatars, Service Photos)"]
+        EDGE["⚡ Deno Edge Functions<br>• notify-comment<br>• send-contact-email<br>• geocoding-handler"]
+    end
+    style Backend fill:#d4edda,stroke:#155724,stroke-width:2px
+
+    %% === External Integrations & Testing ===
+    subgraph Integrations["🔗 External Integrations & QA"]
+        RESEND["📧 Resend API<br>(Transactional Emails)"]
+        IBGE["🏛️ IBGE / Nominatim API<br>(Lat/Lng Geocoding)"]
+        CYPRESS["🧪 Cypress E2E Suite<br>(Automated Tests & Teardown)"]
+    end
+    style Integrations fill:#f8d7da,stroke:#721c24,stroke-width:2px
+
+    %% === Flows & Connections ===
+    U -->|"Accesses platform"| SPA
+    SPA -->|"Navigates modules"| Modules
+    Modules -->|"Executes pattern"| PATTERN
+    PATTERN -->|"Manages client-side state"| UI_STATE
+    UI_STATE -->|"Authenticated requests"| API
+    UI_STATE -->|"Authenticates users"| AUTH
+    UI_STATE -->|"Media uploads"| STORAGE
+    
+    API -->|"RLS Policies & CRUD Operations"| TABLES
+    TABLES -->|"Executes stored procedures"| PLPGSQL
+    TABLES -->|"Triggers events"| TRIGGERS
+    
+    TRIGGERS -.-|"Database Webhook (Async)"| EDGE
+    EDGE -->|"Triggers emails"| RESEND
+    EDGE -->|"Queries GPS coordinates"| IBGE
+    IBGE -.->|"Updates Lat/Lng in background"| DB
+    
+    LINT -.-|"Reports runtime exceptions"| TABLES
+    CYPRESS -.->|"Validates critical E2E flows"| SPA
+```
+
+***
+
+#### TECHNICAL EMBEDDING SUMMARY (EN)
+
+The architecture of the **Canaoaves** collaborative platform (Single-Page Application) is built on Architectural Decision Record (ADR) 011 and a complete refactoring into a **Modular Monolith (Vertical Slice Architecture)** under `src/modules/`. The frontend is built with React 18, Vite, and TypeScript, styled with Tailwind CSS and shadcn/ui, and hosted on Vercel's global CDN with continuous Git-driven CI/CD. Client-side communication follows the `Page ➔ Hook/Component ➔ Service ➔ Supabase` pattern, isolating queries and mutations into module-specific `*Service.ts` files. The backend operates on Supabase (Backend-as-a-Service), using PostgreSQL as the relational engine with fine-grained access control via Row Level Security (RLS) and business logic encapsulated in PL/pgSQL stored procedures (RPCs) and polymorphic tables. Asynchronous tasks and external integrations (geocoding and email notifications) are decoupled via Database Webhooks and Supabase Edge Functions (Deno) with the Resend API. Software quality is ensured by a Cypress E2E test suite with automated teardown routines, paired with a global exception listener logging client runtime errors to the `client_errors` database table.
+
+#### TECHNOLOGY & CONCEPT CLASSIFICATION (EN)
+
+| Category | Technologies and Concepts |
+| :--- | :--- |
+| **AI & Machine Learning** | N/A |
+| **Software Development** | Modular Monolith, Vertical Slice Architecture, Authentication, CRUD, Git, Serverless Functions, Open-source, PostgreSQL Functions (PL/pgSQL), Row Level Security (RLS), TypeScript, DX (Developer Experience), Service Layer Pattern |
+| **Architecture** | Backend-as-a-Service (BaaS), SPA (Single-Page Application), Vertical Slice Architecture, Modular Monolith, Serverless Functions, Event-Driven Webhooks, Database Polymorphism, Resilience & Error Boundaries |
+| **Cloud Computing** | Supabase, Vercel, Global CDN Hosting, Edge Functions (Deno), Storage Buckets |
+| **API RESTFul development** | PostgREST API Gateway |
+| **Frontend Development** | React, Vite, TypeScript, Tailwind CSS, shadcn/ui, TanStack Query, React Hook Form, Zod, React Router DOM, React Helmet Async |
+| **Mobile Development** | Mobile-First Responsive Design |
+| **Database** | PostgreSQL, Supabase, PostgREST, Row Level Security (RLS), PL/pgSQL, RPCs, Triggers, Polymorphic Tables |
+| **Data Management** | PostgreSQL, Storage Buckets, Row Level Security (RLS), Backup/Restore (psql), Session Replication Role |
+| **Content Management - CMS** | Collaborative Content with City and State Moderation |
+| **System Administration** | Global CDN (Vercel) |
+| **DevOps** | Vercel, Supabase CLI, Git Integration (CI/CD), Supabase Typegen |
+| **Quality & Security** | Cypress (E2E Testing with Automated Teardown), Global ErrorBoundary, Client-Side Error Logging (`client_errors`) |
+| **Leadership** | Software Architecture, Zero-Downtime Refactoring, Technical Leadership |
+| **Coaching** | N/A |
+| **Agile Project Management** | Incremental Development by Modules (Vertical Slices), Test Suite Validation |
 
 ***
 
@@ -1014,7 +1260,7 @@ O projeto consistiu na otimização de performance e implementação de um escud
 
 O projeto Sisporta nasceu de um desafio clássico no mundo do software: a necessidade de modernizar sem poder tocar no legado. Uma empresa especialista em portões de garagem precisava de um sistema ágil para gerar orçamentos personalizados, mas seus dados vitais (produtos, revendedores) residiam em um ERP com um banco de dados SQL Server intocável.
 
-A solução foi arquitetar um **pipeline de dados desacoplado e resiliente**. O coração da operação é um script Python que atua como um agente de extração, lendo os dados do SQL Server e os enviando em formato JSON para uma API na nova aplicação Laravel. Para não sobrecarregar nenhum dos sistemas, a API não processa os dados imediatamente; ela os enfileira usando o **Laravel Horizon**. Essa abordagem assíncrona permite que *workers* em segundo plano processem as informações em lotes, garantindo alto desempenho e escalabilidade. O resultado é um fluxo de dados contínuo e eficiente, que alimenta o novo sistema de orçamentos com informações sempre atualizadas, sem comprometer a performance do ERP legado.
+A solução foi arquitetar um **pipeline de dados desacoplado e resiliente**. O coração da operação é um script Python que atua como um agente de extração, lendo os dados do SQL Server e os enviando em formato JSON para uma API na nova aplicação Laravel. Para não sobrecarregar nenhum dos sistemas, a API não processa os dados imediatamente; ela os enfileira usando o **Laravel Horizon**. Essa abordagem assíncrona permite que *workers* em segundo plano processem as informações em lotes. O resultado é um fluxo de dados contínuo e eficiente, que alimenta o novo sistema de orçamentos com **um espelho de dados sempre atualizado** do ERP, sem comprometer a performance do legado.
 
 #### 👨‍💻 Meu Papel no Projeto
 
@@ -1031,7 +1277,7 @@ Neste projeto, atuei como a principal força de engenharia, combinando as funç�
 O maior desafio era a restrição de não poder modificar o sistema ERP. A superação veio com a **arquitetura de processamento assíncrono**, que transformou essa limitação em um ponto forte. A solução se destaca por:
 
   * **Alto Desempenho e Resiliência:** A utilização de filas (Laravel Horizon) evita gargalos. Se a aplicação de destino ficasse offline, os dados simplesmente aguardariam na fila para serem processados, sem perdas.
-  * **Consistência de Dados Inteligente:** Um dos triunfos do projeto foi a criação de um job de "limpeza". Ele remove automaticamente registros que não existem mais no sistema de origem, garantindo que o sistema de orçamentos seja um espelho fiel do ERP, sem acumular dados obsoletos.
+  * **Consistência de Dados Inteligente (Espelhamento):** A solução implementa um **espelhamento completo (full refresh)** com uma estratégia de **"delete-by-absence"** (exclusão por ausência). Em vez de uma sincronização incremental complexa, o sistema extrai o conjunto completo de dados *ativos* do ERP. Após os *workers* processarem todos os registros (inserindo novos e atualizando existentes), um job de "limpeza" é executado. Este job **remove automaticamente quaisquer registros do destino que não vieram na carga atual**, garantindo que o sistema de orçamentos seja um espelho fiel do ERP, sem acumular dados órfãos ou obsoletos.
   * **Automação e Qualidade:** Com testes automatizados e um pipeline de CI/CD no Bitbucket, o processo de manutenção e evolução tornou-se seguro e ágil.
 
 #### 🌱 Pontos para Evolução Futura
@@ -1078,21 +1324,22 @@ graph TD
         CICD["🔧 Bitbucket Pipelines (CI/CD)"]
     end
 
-    ERP -- "1\. Extrai dados em modo leitura" --> Script
+    ERP -- "1\. Extrai dados ativos (Full Refresh)" --> Script
     Script -- "2\. Envia dados formatados (JSON)" --> API
     API -- "3\. Enfileira job com os dados" --> Horizon
     Horizon -- "4\. Despacha jobs para workers" --> Workers
-    Workers -- "5\. Processa em lotes e persiste" --> DB
-    Workers -- "6\. Executa rotina de limpeza" --> DB
+    Workers -- "5\. Processa (Insert/Update) e persiste" --> DB
+    Workers -- "6\. Executa limpeza (Delete-by-Absence)" --> DB
 
     Script -- "Testes e Deploy" --> CICD
     DB -- "Testes e Deploy" --> CICD
 ```
 
----
+-----
+
 #### RESUMO TÉCNICO PARA EMBEDDING
 
-O projeto implementa um pipeline de dados desacoplado para integração entre um sistema ERP legado com banco de dados SQL Server e uma aplicação moderna em Laravel (PHP) com MySQL, ambos hospedados em nuvem. A solução resolve o desafio da sincronização de dados sem acesso para modificação do ERP. Um script Python atua como agente de ETL, extraindo dados, formatando-os em JSON e enviando para um endpoint de API RESTful na aplicação Laravel. Para garantir alta performance e evitar gargalos, a ingestão é assíncrona, utilizando Laravel Horizon para enfileirar e gerenciar jobs de processamento. Esses jobs processam os dados em lotes (batches), otimizando a persistência no MySQL. A consistência de dados é mantida através de uma rotina de limpeza que remove registros obsoletos. Todo o ciclo de desenvolvimento é automatizado por um pipeline de CI/CD no Bitbucket Pipelines, que executa testes unitários e de integração para garantir a qualidade e a resiliência da arquitetura.
+O projeto implementa um pipeline de dados desacoplado para integração entre um sistema ERP legado com banco de dados SQL Server e uma aplicação moderna em Laravel (PHP) com MySQL, ambos hospedados em nuvem. A solução resolve o desafio da sincronização de dados sem acesso para modificação do ERP. Um script Python atua como agente de ETL, extraindo dados, formatando-os em JSON e enviando para um endpoint de API RESTful na aplicação Laravel. Para garantir alta performance e evitar gargalos, a ingestão é assíncrona, utilizando Laravel Horizon para enfileirar e gerenciar jobs de processamento. A consistência de dados é mantida através de uma estratégia de **sincronização completa (full refresh) com "delete-by-absence"**: após a ingestão em lote, uma rotina de limpeza remove registros do destino que não estavam presentes na extração atual, garantindo um espelhamento fiel do ERP. Todo o ciclo de desenvolvimento é automatizado por um pipeline de CI/CD no Bitbucket Pipelines.
 
 #### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
 
@@ -1106,7 +1353,7 @@ O projeto implementa um pipeline de dados desacoplado para integração entre um
 | **Frontend Development** | N/A |
 | **Mobile Development** | N/A |
 | **Database** | SQL Server, MySQL |
-| **Data Management** | ETL (Extração, Transformação e Carga), Sincronização de Dados, Integridade de Dados, Consistência de Dados, Limpeza de Dados (Data Cleansing) |
+| **Data Management** | ETL (Extração, Transformação e Carga), Sincronização de Dados (**Full Refresh**, **Delete-by-Absence**), Espelhamento de Dados (Data Mirroring), Integridade de Dados, Consistência de Dados, Limpeza de Dados (Data Cleansing) |
 | **Content Management - CMS** | N/A |
 | **System Administration** | N/A |
 | **DevOps** | Bitbucket Pipelines, CI/CD (Integração Contínua, Implantação Contínua), Laravel Horizon, Background Workers, Gerenciamento de Filas (Queueing), Automação de Deploy |
@@ -1506,140 +1753,6 @@ Desenvolvimento e arquitetura do "Spider", um hub de integração de e-commerce 
 
 ***
 
-### 🚀 Project:  Telegram Course Tools
-
-#### 🎯 Visão Geral e Arquitetura da Solução
-
-Em um cenário onde o Telegram se tornou um vasto repositório de conhecimento, o projeto **Telegram Course Tools** emerge como uma solução estratégica para um desafio comum: a desorganização. A plataforma, embora excelente para comunicação, não foi projetada para e-learning, transformando o acompanhamento de múltiplos cursos em uma tarefa frustrante.
-
-Para resolver isso, projetei uma suíte de automação modular em Python, que transforma coleções dispersas de mensagens em uma biblioteca de aprendizado pessoal, organizada e pronta para consumo. A arquitetura foi pensada em um fluxo de trabalho de três etapas independentes e sequenciais, garantindo clareza e manutenibilidade:
-
-1.  **Descoberta e Mapeamento (`listarGrupos.py`):** A primeira etapa atua como um radar, conectando-se à API do Telegram para catalogar todos os cursos em que o usuário está inscrito. O resultado é um "mapa" em formato JSON (`cursos-telegram.json`), que serve como a fonte da verdade para o restante do processo.
-2.  **Indexação e Estruturação (`listarVideos.py`):** O coração da solução. Este módulo consome o mapa gerado e, para cada curso, extrai meticulosamente o histórico de mensagens. Usando expressões regulares para identificar padrões como "Módulo" e "Aula", ele estrutura o conteúdo bruto e o converte em sumários elegantes em formato Markdown, um para cada curso.
-3.  **Consumo e Download (`downloadVideosById.py`):** Com os sumários em mãos, o usuário pode tomar decisões estratégicas sobre o que estudar. Esta etapa final permite o download sob demanda de todo o conteúdo de vídeo de um curso específico, de forma otimizada para evitar duplicatas e com uma barra de progresso (`tqdm`) para uma experiência de usuário aprimorada.
-
-O resultado final é o empoderamento do usuário, que agora possui uma biblioteca de aprendizado curada, acessível e pronta para consumo offline.
-
-#### 👨‍💻 Meu Papel no Projeto
-
-Como idealizador e único desenvolvedor deste projeto, minhas responsabilidades abrangeram todo o ciclo de vida da solução:
-
-  * **Arquiteto da Solução:** Defini a arquitetura modular em três etapas, garantindo que cada componente tivesse uma responsabilidade única e que o fluxo de dados entre eles fosse limpo e eficiente.
-  * **Desenvolvedor Python:** Escrevi todo o código para os scripts de automação, desde a interação com a API do Telegram usando a biblioteca `Telethon` até a lógica de parsing com expressões regulares e a manipulação do sistema de arquivos.
-  * **Engenheiro de Dados (em pequena escala):** Modelei o fluxo de dados, definindo como as informações seriam extraídas (dados brutos), armazenadas temporariamente (JSON) e transformadas em um produto final de valor (sumários em Markdown).
-  * **Product Owner:** Identifiquei a dor inicial (minha própria necessidade), defini os objetivos e requisitos do projeto e validei que a solução final atendia efetivamente ao problema proposto.
-
-#### ✨ Pontos Fortes e Desafios Superados
-
-A principal força do projeto reside em sua capacidade de **transformar caos em clareza**. O maior desafio era lidar com conteúdo valioso, porém totalmente não estruturado, dentro do Telegram.
-
-  * **Superação do Caos com Inteligência de Parsing:** O ponto de virada técnico foi a implementação de uma lógica de parsing robusta com expressões regulares (`re`). Essa "inteligência" permitiu que o script `listarVideos.py` lesse textos de formato livre e os organizasse em uma hierarquia lógica de módulos e aulas, criando os sumários que são o principal entregável de valor do projeto.
-  * **Eficiência e Experiência do Usuário:** Em vez de uma abordagem simplista, o script de download foi projetado para ser eficiente. Ele verifica a existência e o tamanho dos arquivos antes de iniciar o download, economizando tempo e banda. A inclusão da biblioteca `tqdm` foi uma decisão consciente para melhorar a experiência do usuário em processos demorados, fornecendo feedback visual claro e profissional.
-  * **Arquitetura Modular:** A separação em três scripts distintos não só organiza o código, mas também permite a execução seletiva. O usuário pode apenas atualizar o mapa de cursos ou re-gerar um sumário sem precisar executar o fluxo completo, tornando a ferramenta flexível e ágil.
-
-#### 🌱 Pontos para Evolução Futura
-
-Embora a solução seja totalmente funcional para seu propósito inicial, existem caminhos claros para evolução:
-
-1.  **Interface Gráfica (UI):** Desenvolver uma interface de usuário simples (Web com Flask/Streamlit ou Desktop com PyQt) para eliminar a necessidade de executar scripts manualmente via terminal, tornando a ferramenta acessível a um público menos técnico.
-2.  **Busca Avançada:** Implementar uma funcionalidade de busca que permita ao usuário pesquisar por palavras-chave em todos os sumários gerados, ajudando a encontrar aulas específicas sobre um determinado tópico em toda a sua biblioteca de cursos.
-
------
-
-#### 🛠️ Pilha de Tecnologias (Tech Stack)
-
-| Componente | Tecnologia Utilizada | Papel na Arquitetura |
-| :--- | :--- | :--- |
-| **Linguagem Principal** | **Python 3.8+** | A base para toda a automação, orquestrando a lógica, a interação com APIs e a manipulação de arquivos. |
-| **Comunicação com API** | **Telethon** | Cliente assíncrono para interagir com a API do Telegram, permitindo buscar históricos e baixar mídias de forma robusta. |
-| **Interface de Usuário (CLI)** | **tqdm** | Fornece feedback visual com barras de progresso durante os downloads, melhorando significativamente a experiência do usuário. |
-| **Estruturação de Conteúdo** | **`re` (Expressões Regulares)** | O motor de inteligência para identificar padrões em texto não-estruturado e organizar as aulas em módulos nos sumários. |
-| **Manipulação de Dados** | **`json`** | Utilizado como o formato de intercâmbio de dados entre a etapa de mapeamento e a de indexação, garantindo um "contrato" claro. |
-| **Gestão do Sistema** | **`os`** | Essencial para interações com o sistema de arquivos, como criar diretórios para os cursos e verificar a existência de vídeos. |
-| **Programação Assíncrona** | **`asyncio`** | Usado implicitamente pelo Telethon para otimizar a comunicação de rede com a API do Telegram, tornando as operações mais rápidas. |
-
------
-
-#### 🗺️ Diagrama da Arquitetura
-
-```mermaid
----
-config:
-  theme: default
-  look: handDrawn
----
-flowchart LR
-    %% Usuário
-    subgraph U["👤 Usuário"]
-        style U fill:#FFF3E0,stroke:#FFB74D,stroke-width:2px
-        User[👨‍💻 Usuário]
-    end
-
-    %% Plataforma
-    subgraph T["☁️ Plataforma Telegram"]
-        style T fill:#E3F2FD,stroke:#64B5F6,stroke-width:2px
-        API[📱 Telegram API]
-    end
-
-    %% Ferramentas
-    subgraph F["⚙️ Telegram Course Tools"]
-        style F fill:#F3E5F5,stroke:#BA68C8,stroke-width:2px
-        S1["① listarGrupos.py"]
-        S2["② listarVideos.py"]
-        S3["③ downloadVideosById.py"]
-    end
-
-    %% Artefatos
-    subgraph A["📄 Artefatos Gerados"]
-        style A fill:#E8F5E9,stroke:#81C784,stroke-width:2px
-        J1["cursos-telegram.json"]
-        M2["Sumários .md"]
-        V["🎥 Vídeos Baixados"]
-    end
-
-    %% Fluxo principal
-    User -- executa --> S1
-    S1 -- "Busca diálogos" --> API
-    S1 -- "Gera" --> J1
-
-    User -- executa --> S2
-    S2 -- "Lê" --> J1
-    S2 -- "Busca histórico" --> API
-    S2 -- "Gera" --> M2
-
-    User -- "Analisa & decide com base nos" --> M2
-    User -- executa com ID --> S3
-    S3 -- "Baixa mídia" --> API
-    S3 -- "Salva em" --> V
-```
-
----
-#### RESUMO TÉCNICO PARA EMBEDDING
-
-Este projeto implementa uma suíte de automação em Python para organizar conteúdo de cursos dispersos no Telegram. A arquitetura é modular e sequencial, composta por três scripts independentes. O primeiro (`listarGrupos.py`), usando a biblioteca `Telethon` e `asyncio`, conecta-se à API do Telegram para mapear os cursos do usuário, gerando um inventário em formato `JSON`. O segundo script (`listarVideos.py`) consome o `JSON`, extrai o histórico de mensagens e aplica expressões regulares (`re`) para fazer o parsing do conteúdo não-estruturado, identificando módulos e aulas para gerar sumários estruturados em `Markdown`. A etapa final (`downloadVideosById.py`) permite o download sob demanda dos vídeos, utilizando a biblioteca `tqdm` para exibir uma barra de progresso e o módulo `os` para gerenciar o sistema de arquivos, evitando downloads duplicados. A solução efetivamente transforma dados caóticos em uma biblioteca de aprendizado organizada, exemplificando um fluxo de ETL (Extract, Transform, Load) em pequena escala, focado em automação, parsing de dados e melhoria da experiência do usuário (UX) em uma interface de linha de comando (CLI).
-
-#### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
-
-| Categoria | Tecnologias e Conceitos |
-| :--- | :--- |
-| **AI & Machine Learning** | N/A |
-| **Software Development** | Python, Automação de Scripts, Programação Assíncrona (asyncio), Manipulação de Sistema de Arquivos (os), Expressões Regulares (re), Modularidade, CLI (Command-Line Interface) |
-| **Architecture**| Arquitetura Modular, Arquitetura de Solução, Fluxo de Dados (ETL), Design de Componentes Independentes |
-| **Cloud Computing** | Consumo de API de Plataforma (Telegram API) |
-| **API RESTFul development** | Consumo de API (Telethon) |
-| **Frontend Development** | CLI User Experience (tqdm) |
-| **Mobile Development** | N/A |
-| **Database** | N/A |
-| **Data Management** | Extração de Dados, Transformação de Dados (Parsing), JSON, Markdown, Dados Não-Estruturados |
-| **Content Management - CMS** | N/A |
-| **System Administration** | Gerenciamento de Arquivos e Diretórios |
-| **DevOps** | N/A |
-| **Leadership** | Arquitetura de Solução, Product Ownership, Tomada de Decisão Técnica |
-| **Coaching** | N/A |
-| **Agile Project Management** | Definição de Requisitos, Validação de Solução, Product Owner |
-
-***
-
 ### 🚀 Project:  Toot - Resiliência no Processamento de Jornadas Longas
 
 #### 🎯 Visão Geral e Arquitetura da Solução
@@ -1903,216 +2016,225 @@ Desenvolvimento de uma API backend em Laravel e MySQL para uma plataforma de Mar
 
 ***
 
-### 🚀 Project:  Fábrica de Vídeos Automatizada para YouTube
+### 🚀 Project:  Fábrica de Vídeos Automatizada para YouTube (Video Factory)
 
 #### 🎯 Visão Geral e Arquitetura da Solução
 
-Em um cenário onde a criação de conteúdo em vídeo é um processo manual, demorado e caro, este projeto surge como uma solução de automação de ponta a ponta. O objetivo é uma "Fábrica de Vídeos" completa, capaz de gerar conteúdo para o YouTube, tanto em formato curto quanto longo, com intervenção humana mínima.
+Em um cenário onde a criação de conteúdo em vídeo é um processo manual, demorado e custoso, este projeto surge como uma solução de automação de ponta a ponta. O objetivo é uma "Fábrica de Vídeos" autônoma, capaz de gerar e publicar vídeos curtos (Shorts) e vídeos longos para o YouTube com intervenção humana mínima.
 
-A arquitetura foi desenhada como um orquestrador em Python que segue um pipeline robusto e flexível:
+A solução evoluiu de um script com manipulação de arquivos planos para uma arquitetura robusta de **Monolito Modular** em Python 3.11, organizada em módulos independentes com estrita separação de responsabilidades (SoC - *Separation of Concerns*). Essa estrutura permite que a aplicação opere tanto como uma ferramenta CLI de alta performance para produção em lote quanto como um **Microserviço REST API em Flask**.
 
-1.  **Ingestão de Conteúdo**: O fluxo inicia com a leitura de um roteiro ou frase de um banco de dados central em formato `content.json`. Este arquivo gerencia o ciclo de vida de cada vídeo, desde "Pendente" até "Publicado".
-2.  **Geração de Mídia**: O sistema se conecta a um ecossistema de APIs e modelos locais para criar os componentes do vídeo. A narração é gerada com vozes de alta qualidade via **ElevenLabs API** ou uma instância local de **Coqui TTS** para personalização total. O visual é criado por modelos de IA como **SDXL (via Replicate)** ou buscado em bancos de imagem como **Pixabay** para maior flexibilidade de custo. Uma trilha sonora é automaticamente adicionada através da **API do Jamendo**.
-3.  **Montagem e Finalização**: Com todos os recursos prontos, as legendas são geradas com precisão por uma instância local do **OpenAI Whisper**. A montagem final é orquestrada pelo **FFmpeg**, que combina imagem, narração, música de fundo e legendas, aplicando animações dinâmicas.
-4.  **Publicação**: Opcionalmente, o vídeo finalizado é enviado diretamente para o YouTube através da API oficial, completando o ciclo de automação.
+O pipeline de automação segue um fluxo orquestrado e flexível:
 
-Adicionalmente, o projeto expõe suas funcionalidades de geração de mídia através de uma **API REST com Flask**, permitindo que outros sistemas solicitem a criação de narrações ou legendas como um microserviço desacoplado.
+1. **Ingestão e Gestão de Dados (SQLite)**: O ciclo de vida do conteúdo é gerenciado por um banco de dados relacional centralizado (`content.db`) com suporte a migrações evolutivas (SQLite 3.45). O `content_manager.py` controla os roteiros e jobs de renderização (`render_jobs`) com status como `PENDING`, `RENDERED` e `PUBLISHED`. Os arquivos de mídia gerados são organizados transparentemente em lotes de pastas (`content/000xx/`, `content/001xx/`).
+2. **Síntese de Voz (TTS Multi-Provider)**: O sistema converte os roteiros textuais em narração de alta qualidade utilizando a **ElevenLabs API** (gerenciada em nuvem) ou um motor local de **Coqui TTS**, que permite clonagem de voz a partir de áudios de referência (`.wav`) de forma 100% offline.
+3. **Geração e Seleção Visual (Multi-Source)**: Para a camada visual, o sistema suporta geração sintética via **Replicate API (SDXL)**, busca de mídia gratuita em alta definição via **Pixabay API**, automação de navegação web com **Playwright** ou a concatenação programática de clipes de vídeo reais (`.mp4`).
+4. **Ambientação Sonora (Jamendo API)**: Integração automatizada com a plataforma **Jamendo** para busca e download de trilhas sonoras de fundo licenciadas para uso comercial, ajustando o clima sonoro sem violar direitos autorais.
+5. **Transcrição e Legendas (OpenAI Whisper Local)**: O áudio narrado é processado pela biblioteca **OpenAI Whisper** localmente, gerando arquivos de legenda no formato `.srt` com marcações de tempo (*timestamps*) precisas por palavra/frase.
+6. **Montagem e Transcodificação de Vídeo em Duas Etapas (FFmpeg)**: A montagem final orquestrada pelo **FFmpeg** utiliza um processo em duas etapas para garantir estabilidade visual e eliminação de tremores. Permite o controle dinâmico de enquadramento (`vertical_offset`) e movimentos de câmera (`movement`: zoom, panorâmica) configuráveis por segmento no banco de dados.
+7. **Publicação e Agendamento Autônomo**: Envio automatizado dos vídeos para o canal através da **YouTube Data API v3**, integrado ao gerenciador de serviços nativo do macOS (`launchd`) para agendamento de publicações recorrentes sem dependência de terminal aberto.
+8. **Microserviço REST API (Flask)**: Exposição de endpoints HTTP (`/generate-audio`, `/generate-subtitles`, `/assemble-video`) permitindo que aplicações externas consumam a inteligência de criação de mídia de forma desacoplada.
+
+---
 
 #### 👨‍💻 Meu Papel no Projeto
 
-Como **Arquiteto de Soluções e Desenvolvedor Principal**, minhas responsabilidades foram abrangentes, cobrindo todo o ciclo de vida do projeto:
+Como **Arquiteto de Soluções e Desenvolvedor Principal**, fui responsável pelo design arquitetural, decisões de engenharia e implementação end-to-end do sistema:
 
-  * **Desenvolvimento End-to-End**: Projetei e implementei o fluxo de automação completo, desde a concepção da ideia até a publicação final no YouTube.
-  * **Arquitetura de Software**: Defini a arquitetura modular baseada em "passos" e "utilitários", garantindo a manutenibilidade e escalabilidade do sistema. Criei um gerenciador de conteúdo central (`ContentManager`) para abstrair o acesso aos dados e estruturei o projeto para suportar múltiplos provedores de IA.
-  * **Resolução de Desafios Técnicos Complexos**: Investiguei e solucionei problemas críticos de baixo nível, como instabilidade em motores de TTS, e artefatos visuais (tremor e centralização) em vídeos renderizados com FFmpeg.
-  * **Integração de APIs**: Orquestrei a integração de diversas APIs externas e modelos locais, incluindo OpenAI, ElevenLabs, Coqui TTS, Replicate, Pixabay, Jamendo e YouTube.
-  * **Desenvolvimento de API**: Construí um microserviço com Flask para expor a lógica de geração de mídia, desacoplando as funcionalidades de IA para serem reutilizadas por outras aplicações.
-  * **Qualidade e Documentação**: Estabeleci padrões de código, criei testes automatizados com Pytest e documentei extensivamente o projeto, incluindo guias de contribuição e planos de implementação detalhados.
+* **Desenvolvimento End-to-End**: Idealizei, arquitetei e programei todo o ecossistema do projeto, construindo desde o pipeline de renderização CLI até os serviços de API REST.
+* **Design da Arquitetura de Monolito Modular**: Estruturei o código em camadas limpas e desacopladas (`api/`, `services/`, `steps/`, `models/`, `utils/`), separando a lógica de negócio dos conectores de APIs e dos utilitários de mídia.
+* **Refatoração e Migração de Dados (JSON para SQLite)**: Projetei e executei o plano de migração evolutivo que unificou arquivos JSON isolados em um banco de dados SQLite (`content.db`), implementando ORMs e scripts de migração automatizados.
+* **Engenharia de Mídia e Processamento FFmpeg**: Desenvolvi o algoritmo de renderização em duas etapas para eliminar artefatos visuais (*judder/jitter*) e criei o gerador de filtros dinâmicos de enquadramento.
+* **Integração de Modelos de IA (Nuvem e Local)**: Orquestrei a comunicação com múltiplos provedores (OpenAI, ElevenLabs, Coqui TTS, Whisper, Replicate, Pixabay, Jamendo, YouTube API).
+* **Construção do Microserviço REST**: Desenvolvi o servidor Flask desacoplado que expõe as capacidades do sistema como serviços reutilizáveis de geração de mídia.
+* **Automação de DevOps e Qualidade**: Implementei testes automatizados com Pytest, suíte de verificação de ambiente (`health_check.py`) e scripts de automação via `launchd` no macOS.
+
+---
 
 #### ✨ Pontos Fortes e Desafios Superados
 
-A força deste projeto reside em sua **flexibilidade e robustez**. A capacidade de alternar entre provedores de IA (ex: Replicate vs. Pixabay, ElevenLabs vs. Coqui TTS) permite um controle fino sobre custos e qualidade. A arquitetura modular e a API de microserviço tornam o sistema não apenas uma ferramenta, mas uma plataforma de geração de mídia.
+A principal virtude da solução é sua **resiliência, flexibilidade de custos e arquitetura plug-and-play**. A capacidade de alternar instantaneamente entre provedores em nuvem (ElevenLabs, Replicate) e motores locais gratuitos (Coqui TTS, Whisper, Pixabay) dá controle total sobre os custos de API e independência operacional.
 
-Durante o desenvolvimento, enfrentei desafios técnicos significativos que foram transformados em vitórias de engenharia:
+Durante a evolução do projeto, desafios técnicos de grande complexidade foram solucionados:
 
-  * **Desafio 1: Tremor (Judder) na Animação de Vídeo:** O uso inicial do filtro `zoompan` do FFmpeg causava um tremor visual irritante nas animações.
+* **Desafio 1: Tremor (*Judder/Jitter*) na Animação de Vídeo via FFmpeg**
+  * *Problema*: O uso direto de filtros de animação (como `zoompan`) no FFmpeg gerava micro-tremores visuais na imagem e dessincronização com o áudio.
+  * *Solução*: Refatoração da renderização em um **processo de duas etapas**. Na primeira etapa, o sistema renderiza um vídeo mudo aplicando a combinação dos filtros `scale` e `crop` de forma estável. Na segunda etapa, realiza o *muxing* unindo o vídeo pré-animado, a narração, a trilha sonora e as legendas. Isso isolou a animação da sincronização de áudio, eliminando 100% dos tremores.
 
-      * **Superação:** Após uma investigação metódica documentada no plano de ação, a solução foi refatorar a montagem de vídeo em um **processo de duas etapas**. Primeiro, um clipe de vídeo mudo e perfeitamente estável é renderizado usando a combinação dos filtros `scale` e `crop`. Somente depois, em uma segunda etapa, o áudio e as legendas são mesclados (mux). Isso isolou a complexidade da animação da sincronização de áudio, eliminando completamente o tremor.
+* **Desafio 2: Falha na Centralização da Animação e Controle Dinâmico por Banco**
+  * *Problema*: Os efeitos de zoom tendiam a se deslocar para o canto superior esquerdo da tela devido ao cálculo estático de coordenadas no FFmpeg.
+  * *Solução*: Implementação da classe `MovementFilterGenerator` com uma fórmula de centralização robusta (`x='(iw-out_w)/2'`). Além disso, o sistema passou a ler as colunas `movement` (ex: `zoom_in_center`, `pan_vertical`) e `vertical_offset` (foco vertical de 0.0 a 1.0) diretamente da tabela `segments` do SQLite, dando controle preciso por cena.
 
-  * **Desafio 2: Falha na Centralização da Animação:** O efeito de zoom e panorâmica estava sempre se deslocando para o canto superior esquerdo da imagem, em vez de focar no centro.
+* **Desafio 3: Instabilidade do Motor TTS Local (Coqui TTS)**
+  * *Problema*: O Coqui TTS apresentava erros de compatibilidade com versões recentes da biblioteca `transformers` e travamentos de I/O ao salvar áudios em disco.
+  * *Solução*: Estabilização da aplicação através do **pinning de dependências** (`transformers==4.36.2`) e otimização do fluxo de áudio para ser processado diretamente em memória RAM (usando NumPy e Pydub), evitando *deadlocks* no disco rígido.
 
-      * **Superação:** O problema foi diagnosticado como uma falha do FFmpeg em avaliar dinamicamente as coordenadas de corte. A solução foi implementar uma **fórmula de centralização robusta** (`x='(iw-out_w)/2'`) que utiliza variáveis explícitas de saída. Essa lógica foi encapsulada em uma classe `MovementFilterGenerator` para garantir que todas as animações fossem consistentes e fáceis de manter.
+* **Desafio 4: Evolução Arquitetural de Arquivos JSON para Monolito Modular em SQLite**
+  * *Problema*: O uso de arquivos planos `content.json` limitava a concorrência, dificultava buscas relacionais e tornava o código acoplado.
+  * *Solução*: Criação de um plano de migração estruturado (`JsonToSqLiteMigrationPlan`), migrando o storage para SQLite 3.45 (`content.db`) com abstração via `ContentManager` e criação de um utilitário de resolução de arquivos em lotes (`file_helpers.py` com navegação por pastas `000xx/`).
 
-  * **Desafio 3: Instabilidade do Motor TTS Local:** A integração com o Coqui TTS apresentava falhas de compatibilidade com suas dependências (especialmente a biblioteca `transformers`), resultando em travamentos.
+* **Desafio 5: Arquitetura Plug-and-Play para Provedores de IA**
+  * *Problema*: A dependência exclusiva de APIs pagas poderia inviabilizar o projeto em momentos de alto volume.
+  * *Solução*: Estruturação de contratos de serviço desacoplados na pasta `services/`. A narração pode alternar entre ElevenLabs (nuvem) e Coqui TTS (local); as imagens entre Replicate SDXL (IA) e Pixabay (banco gratuito); e a trilha entre Jamendo API e arquivos locais, tudo configurável via `.env` ou flags de linha de comando.
 
-      * [cite\_start]**Superação:** A estabilidade foi alcançada ao **travar a versão da biblioteca `transformers`** para uma versão anterior e comprovadamente compatível (`4.36.2`). [cite: 1] Além disso, o processo foi otimizado para gerar o áudio em memória (com NumPy) e carregá-lo diretamente no `pydub`, evitando um deadlock de I/O no disco que causava o travamento do script.
+* **Desafio 6: Exposição da Solução como Microserviço (API Flask)**
+  * *Problema*: Necessidade de reutilizar a inteligência de mídia gerada em outros projetos e sistemas sem duplicar código.
+  * *Solução*: Criação da pasta `api/` utilizando o padrão *Application Factory* (`create_app`), disponibilizando uma API RESTful completa com endpoints para síntese de áudio, geração de legendas SRT e montagem de vídeos curtos.
 
-- **Desafio 4: Flexibilidade de Provedores (Plug-and-Play)**: Você não apenas integrou serviços, mas criou uma arquitetura que permite escolher entre diferentes provedores para a mesma função. Isso é um diferencial imenso.
-	  * **Síntese de Voz**: Mencione que o sistema suporta tanto a **API da ElevenLabs (nuvem)** quanto uma instância local de **Coqui TTS**, permitindo alternar entre uma solução gerenciada e uma solução offline com clonagem de voz personalizada.
-	  * **Geração Visual**: Destaque que, além da **Replicate API (SDXL)**, você integrou a **Pixabay API** como uma alternativa gratuita, oferecendo controle de custos e resiliência.
-	  * **Trilha Sonora**: Adicione a integração com a **Jamendo API** para buscar e adicionar música de fundo automaticamente, resolvendo a questão dos direitos autorais de forma programática.
+---
 
-- **Desafio 5: API como Microserviço (Reutilização)**: Um dos pontos mais fortes do seu projeto é a API Flask. Isso transforma a solução de um simples script para uma plataforma reutilizável.
+#### 📊 Resultados e Impacto Quantificável
 
-    * Adicione um parágrafo mencionando que o projeto também expõe suas capacidades de IA (geração de áudio, legendas e montagem de vídeo) através de uma **API REST com Flask**. Isso demonstra sua habilidade de pensar em termos de serviços desacoplados e reutilizáveis, permitindo que qualquer outra aplicação consuma essas funcionalidades.
+* **Redução Drástica no Tempo de Produção**: O tempo de criação manual por vídeo (que exigia edição no Premiere/CapCut, gravação de voz e digitação de legendas) caiu de **2 a 3 horas** para menos de **5 minutos** em um fluxo 100% autônomo.
+* **Escalabilidade e Operação Sem Mãos (*Hands-Free*)**: Capacidade de agendar dezenas de vídeos em lote via CLI (`vid_schedule_all`) integrando ao `launchd` do macOS para publicação automática nos horários de maior audiência.
+* **Economia de Custos de API**: O uso de alternativas locais (Coqui TTS, Whisper local) e APIs gratuitas (Pixabay, Jamendo) reduziu em até **85% os custos operacionais** comparados a pipelines baseados exclusivamente em APIs proprietárias na nuvem.
 
-- **Desafio 6: Evolução da Arquitetura (Refatoração Estratégica)**: O texto atual menciona os gerenciadores `frases_manager.py` e `reflexao_manager.py`. No entanto, os planos de migração mostram que você evoluiu o projeto.
-
-    * Mencione a refatoração que unificou múltiplos arquivos (`frases.json`, `reflexao.json`) em um único `content.json` gerenciado por um `ContentManager` centralizado. Isso demonstra sua capacidade de identificar débitos técnicos e melhorar a manutenibilidade e a coesão do sistema ao longo do tempo.
-
-
-#### Resultados e Impacto Quantificável
-
-  * **Redução Drástica do Tempo de Produção**: Automatizou um processo que levaria de **2 a 3 horas** de trabalho manual por vídeo para menos de **5 minutos** de processamento autônomo.
-  * **Escalabilidade de Conteúdo**: Capacitou a produção e agendamento de dezenas de vídeos em lote, permitindo uma frequência de publicação diária que seria insustentável manualmente. O projeto inclui scripts para agendamento automático no macOS (`launchd`).
-  * **Otimização de Custos**: A implementação de provedores alternativos e gratuitos (Coqui TTS, Pixabay) e a otimização de chamadas de API reduziram significativamente os custos operacionais de geração de conteúdo.
+---
 
 #### 🌱 Pontos para Evolução Futura
 
-Apesar de sua automação completa, o projeto tem potencial para crescer ainda mais:
+1. **Painel de Controle Web (Dashboard Administrative)**: Construção de um frontend moderno em React/Vite integrado à API Flask para acompanhamento em tempo real dos `render_jobs`, pré-visualização de mídias e gestão de agendamentos.
+2. **Distribuição Multi-Plataforma**: Expansão dos conectores de publicação para suporte nativo ao Instagram Reels, TikTok e Shorts simultaneamente.
 
-1.  **Interface de Gerenciamento Web**: Desenvolver uma interface de usuário simples (com Flask ou FastAPI) para gerenciar o `content.json`, permitindo adicionar, editar e agendar vídeos sem interagir diretamente com o arquivo JSON.
-2.  **Expansão para Outras Plataformas**: Adaptar o formato de saída do vídeo (ex: 1:1 para Instagram, 16:9 padrão) e criar módulos de upload para outras plataformas como Instagram Reels ou TikTok.
+---
 
------
+---
 
 #### 🛠️ Pilha de Tecnologias (Tech Stack)
 
-| Componente                   | Tecnologia Utilizada                          | Papel na Arquitetura                                                                                                                                                                                                    |
-| :--------------------------- | :-------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Backend e Orquestração**   | **Python**, **Flask**                         | Linguagem principal do projeto e framework para a API de microserviço.                                                                                                                                                  |
-| **Geração de Conteúdo e IA** | **OpenAI API (GPT)**, **Replicate (SDXL)**    | Geração de roteiros e imagens de fundo a partir de prompts.                                                                                                                                                             |
-| **Síntese de Voz (TTS)**     | **ElevenLabs API**, **Coqui TTS**             | Converte texto em narração de áudio, oferecendo opções de nuvem ou local.                                                                                                                                               |
-| **Transcrição e Legendas**   | **OpenAI Whisper (Local)**                    | Gera legendas com timestamps precisos a partir do áudio da narração.                                                                                                                                                    |
-| **Mídia e Recursos**         | **Pixabay API**, **Jamendo API**              | Fontes alternativas e gratuitas para imagens de fundo e trilhas sonoras.                                                                                                                                                |
-| **Manipulação de Mídia**     | **FFmpeg**, **Pydub**, **Pillow**, **OpenCV** | Ferramentas essenciais para montagem de vídeo, manipulação de áudio e processamento de imagem.                                                                                                                          |
-| **Automação Web**            | **Playwright**, **Selenium**                  | Utilizados para automação de navegador em scripts de coleta de dados ou imagens.                                                                                                                                        |
-| **Testes e Ambiente**        | **Pytest**, **python-dotenv**                 | Framework de testes para garantir a qualidade do código e gerenciamento de variáveis de ambiente.                                                                                                                       |
-| **Publicação**               | **YouTube Data API v3**                       | Conclui o fluxo fazendo o upload do vídeo finalizado para um canal específico, incluindo metadados (título, descrição, tags) gerenciados programaticamente.                                                             |
+| Componente | Tecnologia Utilizada | Papel na Arquitetura |
+| :--- | :--- | :--- |
+| **Linguagem & Framework** | **Python 3.11**, **Flask 3.0** | Linguagem principal do projeto e framework REST para o microserviço de mídia. |
+| **Banco de Dados** | **SQLite 3.45**, **Migrations** | Armazenamento relacional dos roteiros, segmentos, mídias e status dos jobs. |
+| **Geração de Conteúdo (LLM)** | **OpenAI API (GPT-4/GPT-3.5)** | Geração automática de roteiros e frases motivacionais com base em temas. |
+| **Síntese de Voz (TTS)** | **ElevenLabs API**, **Coqui TTS** | Conversão de texto em voz neural de alta fidelidade (nuvem ou local com clonagem). |
+| **Geração/Seleção Visual** | **Replicate (SDXL)**, **Pixabay API** | Criação de imagens por IA generativa ou busca em repositório gratuito. |
+| **Trilha Sonora** | **Jamendo API** | Busca e download de músicas de fundo licenciadas por gênero e duração. |
+| **Transcrição & Legendas** | **OpenAI Whisper (Local)** | Transcrição precisa do áudio gerando arquivos `.srt` com timestamps. |
+| **Processamento de Mídia** | **FFmpeg**, **Pydub**, **NumPy**, **OpenCV** | Animação, filtros de escala/corte, mixagem de áudio e transcodificação final. |
+| **Automação Web** | **Playwright** | Navegação autônoma em navegadores para scraping e download de assets. |
+| **Agendamento & Sistema** | **macOS launchd**, **Shell Scripting** | Agendamento autônomo de tarefas no sistema operacional e atalhos CLI (`aliases.sh`). |
+| **Testes e Qualidade** | **Pytest**, **python-dotenv** | Suíte de testes automatizados e gestão de configurações de ambiente. |
+| **Publicação** | **YouTube Data API v3** | Upload de vídeos finalizados com título, descrição, tags e agendamento. |
 
+---
 
------
+---
 
 #### 🗺️ Diagrama da Arquitetura
 
+##### Arquitetura do Monolito Modular e Pipeline de Produção
+
 ```mermaid
 graph TD
-    subgraph "Orquestrador Principal (main.py)"
-        A["▶️ Início do Fluxo"] --> B{Ler próximo job de 'content.json'};
-        B --> C["🤖 Gerar Roteiro (OpenAI API)"];
-        C --> D["🗣️ Gerar Narração <br>(ElevenLabs ou Coqui TTS)"];
-        D --> E["🖼️ Gerar Imagem de Fundo <br>(Replicate ou Pixabay)"];
-        D --> F["🎵 Buscar Música de Fundo <br>(Jamendo API)"];
-        subgraph "Processamento de Áudio"
-            D -- Narração --> G["🎤 Mixar Áudio (Pydub)"];
-            F -- Música --> G;
-        end
-        G -- Áudio Final --> H["✍️ Gerar Legendas (Whisper)"];
-        subgraph "Montagem Final"
-            E -- Imagem --> I["🎬 Montar Vídeo (FFmpeg)"];
-            G -- Áudio Final --> I;
-            H -- Legendas --> I;
-        end
-        I --> J{"☁️ Fazer Upload? (YouTube API)"};
-        J -- Sim --> K["✅ Publicado"];
-        J -- Não --> L["🏁 Concluído"];
+    subgraph "Camada de Dados & Persistência"
+        DB[(📄 content.db SQLite)]
+        Storage[📂 content/000xx/ Storage por Lote]
     end
 
-    style K fill:#d4edda,stroke:#155724
-    style L fill:#e2e3e5,stroke:#383d41
+    subgraph "Entradas do Sistema"
+        CLI["💻 CLI Execution (main.py)"]
+        API["🌐 REST API (api.py - Flask)"]
+    end
+
+    subgraph "Pipeline de Mídia (steps/ & services/)"
+        A["🤖 Script Generator (OpenAI API)"] --> DB
+        DB --> B["🎙️ TTS Service (ElevenLabs / Coqui TTS)"]
+        B --> C["🖼️ Image Service (Replicate SDXL / Pixabay)"]
+        B --> D["🎵 Music Service (Jamendo API)"]
+        B --> E["✍️ Subtitle Service (OpenAI Whisper Local)"]
+        
+        B -- Audio WAV/MP3 --> F["🎛️ Audio Mixer (Pydub/NumPy)"]
+        D -- Background Music --> F
+        
+        C -- Images/Videos --> G["🎬 Video Assembler (FFmpeg 2-Etapas)"]
+        F -- Mixed Audio --> G
+        E -- SRT Subtitles --> G
+    end
+
+    subgraph "Saídas e Publicação"
+        G --> Storage
+        G --> H{"☁️ Upload YouTube? (YouTube API)"}
+        H -- Sim --> I["✅ YouTube Channel"]
+        H -- Não --> J["📦 Local Video Saved"]
+    end
+
+    CLI --> DB
+    API --> DB
+
+    style DB fill:#07405E,color:#fff
+    style CLI fill:#3776AB,color:#fff
+    style API fill:#000000,color:#fff
+    style G fill:#007800,color:#fff
+    style I fill:#FF0000,color:#fff
 ```
 
-#### Diagrama da API
+##### Diagrama do Microserviço (API Flask)
 
 ```mermaid
----
-config:
-  theme: default
-  look: handDrawn
----
 flowchart TB
- subgraph subGraph0["Microserviço (API Flask)"]
-        N{"API REST"}
-        M["Cliente"]
-        O["Lógica de Geração de Áudio"]
-        P["Lógica de Geração de Legendas"]
-        Q["Lógica de Montagem de Vídeo"]
-  end
-    M --> N
-    N -- "/generate-audio" --> O
-    N -- "/generate-subtitles" --> P
-    N -- "/assemble-video" --> Q
-    M@{ shape: terminal}
-    O@{ shape: card}
-    P@{ shape: card}
-    Q@{ shape: card}
-    style N fill:#FFD600
-    style M color:#000000
+    subgraph ClientLayer["Aplicações Clientes (Outros Sistemas / CLI)"]
+        Client["💻 Cliente HTTP"]
+    end
 
+    subgraph FlaskApp["Microserviço REST API (api/app.py)"]
+        Router{"🌐 Flask Router"}
+        AudioEp["/generate-audio"]
+        SubEp["/generate-subtitles"]
+        VideoEp["/assemble-video"]
+    end
+
+    subgraph ServicesLayer["Serviços de IA & Mídia (services/)"]
+        TTS["🎙️ TTSService (Coqui / ElevenLabs)"]
+        Whisper["✍️ TranscriptionService (Whisper)"]
+        FFmpeg["🎬 VideoService (FFmpeg)"]
+    end
+
+    Client --> Router
+    Router --> AudioEp --> TTS --> Client
+    Router --> SubEp --> Whisper --> Client
+    Router --> VideoEp --> FFmpeg --> Client
+
+    style Router fill:#FFD600,color:#000
+    style TTS fill:#000000,color:#fff
+    style Whisper fill:#412991,color:#fff
+    style FFmpeg fill:#007800,color:#fff
 ```
 
-#### Diagrama de Fluxo da geração de vídeo
+##### Diagrama de Sequência da Renderização em Duas Etapas (FFmpeg)
 
 ```mermaid
----
-config:
-  theme: default
-  look: handDrawn
----
-flowchart TD
- subgraph subGraph0["A. Geração de Conteúdo"]
-        A["🤖 1. Gerar Roteiro<br>(OpenAI API)"]
-        B@{ label: "📝 Salvar em 'content.json'" }
-  end
- subgraph subGraph1["B. Criação de Mídia"]
-        C["🔊 2. Gerar Narração<br>(ElevenLabs ou Coqui TTS)"]
-        D["🖼️ 3. Gerar Imagem<br>(Replicate ou Pixabay)"]
-        E["🎵 4. Adicionar Música de Fundo<br>(Jamendo)"]
-        F["✍️ 5. Gerar Legendas<br>(Local Whisper)"]
-  end
- subgraph subGraph2["C. Finalização e Publicação"]
-        G["🎬 6. Montar Vídeo<br>(FFmpeg)"]
-        H["☁️ 7. Upload para YouTube<br>(YouTube API)"]
-  end
-    A --> B
-    B --> C
-    C --> D
-    D --> E
-    E --> F
-    F --> G
-    G --> H
-    B@{ shape: cyl}
-    style subGraph0 fill:#FFD600
-    style subGraph1 fill:#FFE0B2
-    style subGraph2 fill:#C8E6C9
-```
+sequenceDiagram
+    autonumber
+    participant Step as ⚙️ Step Video Creation
+    participant FFmpeg1 as 🎬 FFmpeg (Etapa 1: Animação)
+    participant FFmpeg2 as 🎬 FFmpeg (Etapa 2: Muxing)
+    participant Out as 📹 Vídeo MP4 Final
 
+    Step->>FFmpeg1: Executa scale + crop (MovementFilterGenerator) na Imagem
+    FFmpeg1-->>Step: Retorna vídeo mudo animado (video_no_audio.mp4) sem tremores
+    Step->>FFmpeg2: Combina video_no_audio.mp4 + audio_mix.wav + legendas.srt
+    FFmpeg2-->>Out: Gera vídeo final estabilizado e sincronizado (final.mp4)
+```
 
 ---
 
 #### RESUMO TÉCNICO PARA EMBEDDING
 
-Este projeto é uma fábrica de automação de vídeo end-to-end desenvolvida em Python, orquestrando um pipeline que abrange desde a ingestão de conteúdo via `content.json` até a publicação no YouTube. A arquitetura modular suporta múltiplos provedores de IA em um modelo plug-and-play, utilizando ElevenLabs API ou Coqui TTS local para síntese de voz, e Replicate (SDXL) ou Pixabay API para geração de imagens. A solução supera desafios técnicos complexos de manipulação de mídia, como a eliminação de tremor (judder) em animações FFmpeg através de um processo de renderização estável em duas etapas com filtros `scale`/`crop`, e a correção de centralização com fórmulas de coordenadas robustas (`(iw-out_w)/2`). A estabilidade do motor Coqui TTS foi alcançada travando a versão da biblioteca `transformers` (`4.36.2`) e otimizando o processamento de áudio em memória com NumPy e Pydub para evitar deadlocks de I/O. O sistema também inclui transcrição de áudio via OpenAI Whisper local, adição de trilha sonora pela Jamendo API, e expõe suas funcionalidades de IA como um microserviço desacoplado através de uma API RESTful construída com Flask. A gestão de configuração é feita via `python-dotenv` e testes automatizados com Pytest garantem a qualidade do código.
+Este projeto é uma fábrica autônoma de automação de vídeos para YouTube (Shorts e vídeos longos) desenvolvida em Python 3.11, baseada em uma arquitetura de Monolito Modular e exposta também como um Microserviço RESTful com Flask 3.0. A persistência e o gerenciamento de estados dos render jobs são realizados em um banco de dados SQLite 3.45 (content.db) com migrações evolutivas e armazenamento transparente de arquivos em lotes de diretórios (content/000xx/). O pipeline utiliza síntese de voz (TTS) via ElevenLabs API ou Coqui TTS local com clonagem de voz, geração e seleção visual via Replicate API (SDXL), Pixabay API, automação Playwright ou composição de vídeos MP4. A ambientação sonora é realizada por busca automatizada de trilhas na Jamendo API, e as legendas SRT com timestamps precisos são transcritas localmente pelo OpenAI Whisper. A montagem de vídeo no FFmpeg adota um processo estabilizado em duas etapas (Etapa 1: renderização de vídeo mudo animado via scale/crop sem tremores; Etapa 2: muxing final com áudio e legendas), controlado por parâmetros de enquadramento (vertical_offset) e movimentos de câmera (movement) armazenados na tabela segments do banco de dados. O projeto inclui publicação automatizada via YouTube Data API v3, agendamento no macOS via launchd, testes automatizados com Pytest e endpoints HTTP desacoplados para geração de áudio, legendas e vídeo.
 
 #### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
 
-| Categoria                    | Tecnologias e Conceitos                                                                                                                                                            |
-| :--------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **AI & Machine Learning**    | OpenAI API (GPT), Replicate (SDXL), Coqui TTS, OpenAI Whisper, `transformers`, NumPy                                                                                            |
-| **Software Development**     | Python, `subprocess`, Pydub, Pillow, OpenCV, `python-dotenv`, Pytest, SOLID, Clean Code                                                                                         |
-| **Architecture**             | Arquitetura Modular, Microserviços, Plug-and-Play (Provedores de IA), `ContentManager` (Repositório Central), Renderização em Duas Etapas, `MovementFilterGenerator` (Factory) |
-| **Cloud Computing**          | ElevenLabs API, Replicate API, Pixabay API, Jamendo API, YouTube Data API v3, OpenAI API                                                                                        |
-| **API RESTFul development**  | Flask, Integração de APIs REST                                                                                                                                                  |
-| **Frontend Development**     | N/A                                                                                                                                                                                |
-| **Mobile Development**       | N/A                                                                                                                                                                                |
-| **Database**                 | JSON (utilizado como banco de dados de arquivos)                                                                                                                               |
-| **Data Management**          | `ContentManager` (Abstração de Dados), Gerenciamento de JSON                                                                                                                    |
-| **Content Management - CMS** | N/A                                                                                                                                                                                |
-| **System Administration**    | `launchd` (Agendamento de tarefas no macOS)                                                                                                                                     |
-| **DevOps**                   | Gerenciamento de Ambiente (venv), Gerenciamento de Dependências (`requirements.txt`), Testes Automatizados (Pytest), Agendamento de Publicação                                  |
-| **Leadership**               | Arquiteto de Soluções, Desenvolvedor Principal, Documentação Técnica                                                                                                         |
-| **Coaching**                 | N/A                                                                                                                                                                                |
-| **Agile Project Management** | Desenvolvimento Incremental, Refatoração Estratégica, Resolução de Débito Técnico                                                                                               |
+| Categoria | Tecnologias e Conceitos |
+| :--- | :--- |
+| **AI & Machine Learning** | OpenAI API (GPT-4/3.5), Replicate API (SDXL), Coqui TTS (Voice Cloning), OpenAI Whisper, `transformers`, NumPy |
+| **Software Development** | Python 3.11, `subprocess`, Pydub, Pillow, OpenCV, `python-dotenv`, Pytest, SOLID, Clean Code |
+| **Architecture** | Monolito Modular, Microserviços REST, Provider Pattern (Plug-and-Play), Renderização FFmpeg em Duas Etapas, `MovementFilterGenerator` (Factory) |
+| **Cloud Computing & APIs** | ElevenLabs API, Replicate API, Pixabay API, Jamendo API, YouTube Data API v3, OpenAI API |
+| **API RESTful Development** | Flask 3.0, Application Factory Pattern, JSON/Multipart APIs |
+| **Database & Storage** | SQLite 3.45, Migrações de Banco de Dados, Relational Data Modeling, Batch File Storage Strategy |
+| **System Administration & DevOps** | macOS `launchd` Scheduling, Shell Scripting (`aliases.sh`), Environment Isolation (`pyenv`/`venv`), Automated Testing (Pytest) |
+| **Leadership & Engineering** | Arquiteto de Soluções, Desenvolvedor Principal, Refatoração Estratégica de Débito Técnico, Documentação Técnica |
 
 ***
 
