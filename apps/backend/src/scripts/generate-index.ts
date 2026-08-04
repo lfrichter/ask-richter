@@ -192,10 +192,10 @@ function parseTechnologiesFromChunk(relevantContent: string): string[] {
       // --- CORREÇÃO 3: Remove emojis e símbolos ANTES da validação ---
       .map(t => t.replace(/[^\p{L}\p{N}\s.\-+#/]/gu, '')) // Remove qualquer coisa que não seja Letra, Número, espaço ou (.-+#/)
       // --------------------------------------------------
-      .map(t => t.split(':')[0])
-      .map(t => t.split('<')[0])
-      .map(t => t.replace(/^[-\* ]+|[.$]$/g, ''))
-      .map(t => t.trim())
+      .map(t => (t ? (t.split(':')[0] ?? '') : ''))
+      .map(t => (t ? (t.split('<')[0] ?? '') : ''))
+      .map(t => (t ? t.replace(/^[-\* ]+|[.$]$/g, '') : ''))
+      .map(t => (t ? t.trim() : ''))
       .filter(t => /^[a-zA-Z0-9.\-+#/ ]+$/.test(t)) // Validação (agora vai passar)
       .filter(t => t.length > 1 && t.length < 30)
       .filter(t => !t.match(/^\d+$/))
@@ -236,13 +236,15 @@ function parseTechnologiesFromChunk(relevantContent: string): string[] {
       if (isTechTable || isClassificationTable) { // Processa AMBAS as tabelas
           for (const line of tableLines) {
               const columns = line.split('|').map(col => col.trim());
-              if (columns.length < 3 || columns[1].includes('---')) continue;
+              const col1 = columns[1];
+              const col2 = columns[2];
+              if (columns.length < 3 || !col1 || col1.includes('---')) continue;
 
               if (isTechTable) {
-                addCleanedTech(columns[1]); // Coluna do Componente
-                addCleanedTech(columns[2]); // Coluna da Tecnologia
+                if (col1) addCleanedTech(col1); // Coluna do Componente
+                if (col2) addCleanedTech(col2); // Coluna da Tecnologia
               } else if (isClassificationTable) {
-                addCleanedTech(columns[2]); // Apenas a coluna de tecnologias
+                if (col2) addCleanedTech(col2); // Apenas a coluna de tecnologias
               }
           }
       }

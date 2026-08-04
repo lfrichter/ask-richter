@@ -145,12 +145,13 @@ function decomposeQuery(query: string): QueryPlan {
   let foundTechnology: string | null = null;
   for (let i = 0; i < knownTechnologies.length; i++) {
     const tech = knownTechnologies[i];
-    const techRegex = new RegExp(`\b${tech.replace('.', '\\.')}\b`, 'i');
+    if (!tech) continue;
+    const techRegex = new RegExp(`\\b${tech.replace('.', '\\.')}\\b`, 'i');
     if (techRegex.test(lowerCaseQuery)) {
       if (tech === 'vue') {
         foundTechnology = 'vue.js';
       } else {
-        foundTechnology = knownTechnologiesOriginal[i];
+        foundTechnology = knownTechnologiesOriginal[i] ?? null;
       }
       console.log(`[QueryPlan] Tecnologia encontrada: ${foundTechnology}`);
       break;
@@ -193,7 +194,7 @@ async function smartSearch(queryPlan: QueryPlan): Promise<[Document, number][]> 
         1,
         { source: 'synthetic_project_list' }
       );
-      return results.map(doc => [doc, 1.0]);
+      return results.map((doc: any) => [doc, 1.0]);
 
     case 'PROJECT_TECHNOLOGY_SEARCH':
       const technology = queryPlan.payload.technology;
