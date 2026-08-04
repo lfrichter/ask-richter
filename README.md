@@ -388,3 +388,5 @@ Este é um projeto pessoal, mas estou aberto a sugestões e melhorias. Para gara
 ## 📄 Licença
 
 Este projeto está sob a licença MIT. Veja o arquivo `LICENSE` para mais detalhes.
+
+
