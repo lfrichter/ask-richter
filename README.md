@@ -47,7 +47,7 @@ graph TD
     end
 
     subgraph "Serviços de IA (Produção)"
-        HF_API["🤗 Hugging Face API<br>(LLM)"]
+        HF_API["🌐 OpenRouter / Hugging Face API<br>(LLM)"]
     end
 
     User -- "1\. Interage com a UI" --> Frontend
@@ -104,16 +104,16 @@ O Supabase é utilizado para hospedar o banco de dados PostgreSQL e, crucialment
 |                               | Express.js           | Framework minimalista para a construção da nossa API RESTful, incluindo as rotas `/api/chat` e `/api/health`.                                           |
 |                               | TypeScript           | Linguagem principal do backend, garantindo segurança de tipos e um código mais robusto e manutenível.                                                   |
 |                               | tsx                  | Executor de TypeScript moderno e de alta performance, usado para rodar os scripts e o servidor em modo de desenvolvimento.                              |
-| **⚛️ Frontend**                | Next.js (App Router) | Framework React para a construção da interface de usuário reativa, otimizada para performance e SEO.                                                    |
-|                               | React (`useState`)   | Gerenciamento de estado manual e explícito para a interface do chat, garantindo controle total sobre o fluxo de dados.                                  |
+| **⚛️ Frontend**                | Next.js 15 (App Router) | Framework React 19 para a construção da interface de usuário reativa, otimizada para performance e SEO.                                                    |
+|                               | React 19 (`useState`)| Gerenciamento de estado manual e explícito para a interface do chat, garantindo controle total sobre o fluxo de dados.                                  |
 |                               | Tailwind CSS         | Framework de CSS utility-first para a estilização rápida e responsiva de toda a interface.                                                              |
 |                               | Shadcn/ui            | Coleção de componentes de UI modernos, acessíveis e customizáveis, utilizados para construir o layout do chat.                                          |
 |                               | markdown-to-jsx      | Biblioteca utilizada para renderizar com segurança as respostas da IA, convertendo o texto Markdown em componentes React.                               |
 | **🧠 IA & Dados**              | FAISS (`faiss-node`) | Banco de dados vetorial em-memória para buscas por similaridade semântica de alta velocidade no contexto do CV.                                         |
 |                               | OpenAI Embeddings    | Modelo `text-embedding-3-small` utilizado para converter os textos do CV em vetores numéricos (embeddings).                                             |
 |                               | LangChain.js         | Utilizada para orquestrar o carregamento e a manipulação do índice vetorial FAISS.                                                                      |
-|                               | Ollama               | Provedor de LLM padrão para o ambiente de desenvolvimento, rodando modelos como `mistral:7b` localmente.                                                |
-|                               | Hugging Face API     | Provedor de LLM alternativo para o ambiente de produção, permitindo o uso de modelos como o `Llama-3.1`.                                                |
+|                               | Ollama               | Provedor de LLM padrão para o ambiente de desenvolvimento local, rodando modelos como `mistral:7b`.                                                     |
+|                               | OpenRouter / HF API  | Provedor de LLM para o ambiente de produção, permitindo o uso de modelos ultrarrápidos como `gemma-4-26b` e `llama-3.1`.                                  |
 | **☁️ Nuvem & DevOps**          | Vercel               | Plataforma de CI/CD e hospedagem para o deploy do frontend Next.js, com builds automáticos a cada `git push`.                                           |
 |                               | Render.com           | Plataforma de CI/CD e hospedagem para o deploy do backend Node.js, configurado via `render.yaml` (Infrastructure as Code).                              |
 |                               | Supabase Storage     | Serviço de armazenamento de objetos (S3-compatível) utilizado para persistir o índice FAISS na nuvem, garantindo que ele não se perca entre os deploys. |
@@ -248,9 +248,11 @@ O conteúdo do `.env.local` já deve estar correto para o ambiente local:
 NEXT_PUBLIC_API_BASE_URL=http://localhost:3001
 ```
 
-#### 4. Geração do Banco Vetorial
+#### 4. Geração do Banco Vetorial (Opcional)
 
-Antes de iniciar a aplicação, você precisa gerar o índice vetorial FAISS que alimenta a busca semântica. O processo pode ser feito de duas maneiras:
+O repositório já vem com o índice vetorial FAISS pré-construído e pronto para uso no diretório `apps/backend/faiss_index`. Portanto, para rodar a aplicação localmente, **não é necessário** rodar a reindexação a menos que você altere os documentos Markdown em `apps/backend/src/knowledge-base`.
+
+Caso deseje recriar o índice a partir da base de conhecimento:
 
 **Modo 1: Geração Apenas Local (Padrão)**
 
