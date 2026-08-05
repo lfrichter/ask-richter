@@ -9,9 +9,13 @@ import fs from 'fs';
 import { DirectoryLoader } from 'langchain/document_loaders/fs/directory';
 import { TextLoader } from 'langchain/document_loaders/fs/text';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import { callHuggingFaceAPI } from './core/huggingface.js';
 import { HybridRetriever } from './core/hybrid-retriever.js';
 import { callOllamaAPI } from './core/ollama.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 interface QueryPlan {
   type: 'SIMPLE_SEARCH' | 'PROJECT_TECHNOLOGY_SEARCH' | 'MULTI_PROJECT_SEARCH' | 'LIST_PROJECTS'; // Add more types as needed
@@ -43,25 +47,55 @@ const FAISS_INDEX_PATH = path.join('/tmp', 'faiss_index');
 // --- Funções Auxiliares ---
 async function downloadIndexFromSupabase() {
   if (fs.existsSync(FAISS_INDEX_PATH) && fs.readdirSync(FAISS_INDEX_PATH).length > 0) {
-    console.log('[INIT] Índice FAISS já existe localmente. Pulando download.');
+    console.log('[INIT] Índice FAISS já existe localmente em /tmp. Pulando download.');
     return;
   }
 
-  console.log(`[INIT] Iniciando download do bucket: ${SUPABASE_BUCKET_NAME}...`);
-  fs.mkdirSync(FAISS_INDEX_PATH, { recursive: true });
+  // Verifica se existe o índice salvo localmente no repositório como fallback
+  const localFallbackDirs = [
+    path.join(process.cwd(), 'faiss_index'),
+    path.join(process.cwd(), 'src/faiss_index'),
+    path.join(__dirname, '../faiss_index'),
+    path.join(__dirname, './faiss_index')
+  ];
 
-  const { data: files, error } = await supabase.storage.from(SUPABASE_BUCKET_NAME).list();
-  if (error) throw new Error(`[INIT] Não foi possível listar arquivos: ${error.message}`);
-  if (!files || files.length === 0) {
-    throw new Error(`[INIT] Nenhum arquivo encontrado no bucket '${SUPABASE_BUCKET_NAME}'.`);
+  for (const fallbackDir of localFallbackDirs) {
+    if (fs.existsSync(fallbackDir) && fs.readdirSync(fallbackDir).length > 0) {
+      console.log(`[INIT] Encontrado índice FAISS local em: ${fallbackDir}. Copiando para ${FAISS_INDEX_PATH}...`);
+      fs.mkdirSync(FAISS_INDEX_PATH, { recursive: true });
+      for (const file of fs.readdirSync(fallbackDir)) {
+        const srcFile = path.join(fallbackDir, file);
+        if (fs.statSync(srcFile).isFile()) {
+          fs.copyFileSync(srcFile, path.join(FAISS_INDEX_PATH, file));
+        }
+      }
+      console.log('[INIT] ✓ Índice FAISS local copiado com sucesso.');
+      return;
+    }
   }
 
-  for (const file of files) {
-    const { data: blob, error: downloadError } = await supabase.storage.from(SUPABASE_BUCKET_NAME).download(file.name);
-    if (downloadError) throw new Error(`[INIT] Erro no download de ${file.name}: ${downloadError.message}`);
-    if (blob) {
-      fs.writeFileSync(path.join(FAISS_INDEX_PATH, file.name), Buffer.from(await blob.arrayBuffer()));
-      console.log(`[INIT] ✓ Arquivo salvo: ${file.name}`);
+  console.log(`[INIT] Tentando download do bucket Supabase: ${SUPABASE_BUCKET_NAME}...`);
+  fs.mkdirSync(FAISS_INDEX_PATH, { recursive: true });
+
+  try {
+    const { data: files, error } = await supabase.storage.from(SUPABASE_BUCKET_NAME).list();
+    if (error) throw new Error(`Não foi possível listar arquivos: ${error.message}`);
+    if (!files || files.length === 0) {
+      throw new Error(`Nenhum arquivo encontrado no bucket '${SUPABASE_BUCKET_NAME}'.`);
+    }
+
+    for (const file of files) {
+      const { data: blob, error: downloadError } = await supabase.storage.from(SUPABASE_BUCKET_NAME).download(file.name);
+      if (downloadError) throw new Error(`Erro no download de ${file.name}: ${downloadError.message}`);
+      if (blob) {
+        fs.writeFileSync(path.join(FAISS_INDEX_PATH, file.name), Buffer.from(await blob.arrayBuffer()));
+        console.log(`[INIT] ✓ Arquivo salvo: ${file.name}`);
+      }
+    }
+  } catch (err: any) {
+    console.warn(`[INIT] Falha no download do Supabase: ${err.message}`);
+    if (!fs.existsSync(FAISS_INDEX_PATH) || fs.readdirSync(FAISS_INDEX_PATH).length === 0) {
+      throw new Error(`[INIT] Não foi possível carregar o índice FAISS do Supabase e nenhum índice local foi encontrado.`);
     }
   }
 }
@@ -307,10 +341,19 @@ function assembleStructuredContext(retrievedChunks: [Document, number][]): strin
 
   app.post('/api/chat', async (req: Request, res: Response) => {
     try {
-      const { messages } = req.body;
-      const question = messages[messages.length - 1].content;
+      const { messages, message, question: bodyQuestion } = req.body;
+      let question: string | undefined;
 
-      if (!question) {
+      if (Array.isArray(messages) && messages.length > 0) {
+        const last = messages[messages.length - 1];
+        question = typeof last === 'string' ? last : (last?.content || last?.message);
+      } else if (typeof message === 'string') {
+        question = message;
+      } else if (typeof bodyQuestion === 'string') {
+        question = bodyQuestion;
+      }
+
+      if (!question || !question.trim()) {
         return res.status(400).json({ error: 'A pergunta está vazia.' });
       }
 
