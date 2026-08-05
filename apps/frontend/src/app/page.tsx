@@ -78,9 +78,8 @@ export default function Chat() {
   return (
     <div className="relative w-full min-h-screen">
       <BackgroundPaths />
-        <div className="relative z-10 flex justify-center items-start min-h-screen p-4 pt-8 sm:pt-12 md:pt-16">
-        {/* <div className="flex justify-center items-start min-h-screen bg-gray-50 p-4"> */}
-          <Card className="w-full max-w-3xl shadow-lg">
+      <div className="relative z-10 flex justify-center items-start min-h-screen p-4 pt-8 sm:pt-12 md:pt-16">
+        <Card className="w-full max-w-3xl shadow-2xl bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md border border-gray-200/80 dark:border-zinc-800 relative z-20">
             {/* --- SEU CABEÇALHO COM A IMAGEM RESTAURADO --- */}
             <CardHeader className="text-center">
               <div className="flex justify-center items-center">
