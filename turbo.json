@@ -1,5 +1,5 @@
 {
-  "$schema": "https://turborepo.com/schema.json",
+  "$schema": "https://turbo.build/schema.json",
   "ui": "tui",
   "tasks": {
     "build": {
@@ -12,6 +12,9 @@
     },
     "check-types": {
       "dependsOn": ["^check-types"]
+    },
+    "jidoka": {
+      "dependsOn": ["check-types", "lint", "build"]
     },
     "dev": {
       "cache": false,
