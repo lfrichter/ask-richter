@@ -1,62 +1,34 @@
 "use client";
 
-import { useMemo } from "react";
-import { motion } from "framer-motion";
-
-function FloatingPaths({ position }: { position: number }) {
-  const paths = useMemo(() => {
-    return Array.from({ length: 36 }, (_, i) => ({
-      id: i,
-      d: `M-${380 - i * 5 * position} -${189 + i * 6}C-${
-        380 - i * 5 * position
-      } -${189 + i * 6} -${312 - i * 5 * position} ${216 - i * 6} ${
-        152 - i * 5 * position
-      } ${343 - i * 6}C${616 - i * 5 * position} ${470 - i * 6} ${
-        684 - i * 5 * position
-      } ${875 - i * 6} ${684 - i * 5 * position} ${875 - i * 6}`,
-      width: 0.5 + i * 0.03,
-      duration: 40 + ((i * 7) % 20),
-    }));
-  }, [position]);
-
-  return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden">
-      <svg
-        className="w-full h-full text-slate-950 dark:text-white"
-        viewBox="0 0 696 316"
-        fill="none"
-      >
-        <title>Background Paths</title>
-        {paths.map((path) => (
-          <motion.path
-            key={path.id}
-            d={path.d}
-            stroke="currentColor"
-            strokeWidth={path.width}
-            strokeOpacity={0.02 + path.id * 0.02}
-            initial={{ pathLength: 0.3, opacity: 0.6 }}
-            animate={{
-              pathLength: 1,
-              opacity: [0.1, 0.4, 0.1],
-              pathOffset: [0, 1, 0],
-            }}
-            transition={{
-              duration: path.duration,
-              repeat: Number.POSITIVE_INFINITY,
-              ease: "linear",
-            }}
-          />
-        ))}
-      </svg>
-    </div>
-  );
-}
+import React from "react";
 
 export function BackgroundPaths() {
   return (
-    <div className="fixed inset-0 min-h-screen w-full overflow-hidden bg-white dark:bg-neutral-950 -z-10 pointer-events-none">
-      <FloatingPaths position={1} />
-      <FloatingPaths position={-1} />
+    <div className="fixed inset-0 min-h-screen w-full overflow-hidden bg-slate-50 dark:bg-neutral-950 -z-10 pointer-events-none select-none">
+      {/* Esferas de iluminação suave em gradiente CSS */}
+      <div className="absolute -top-40 -left-40 w-96 h-96 bg-blue-500/10 dark:bg-blue-600/15 rounded-full blur-3xl" />
+      <div className="absolute top-1/3 -right-40 w-96 h-96 bg-indigo-500/10 dark:bg-purple-600/15 rounded-full blur-3xl" />
+      <div className="absolute -bottom-40 left-1/3 w-96 h-96 bg-sky-500/10 dark:bg-blue-800/15 rounded-full blur-3xl" />
+
+      {/* Grid SVG estático com gradiente radial de transparência */}
+      <svg
+        className="absolute inset-0 w-full h-full stroke-slate-200 dark:stroke-neutral-800/50 [mask-image:radial-gradient(100%_100%_at_top_center,white,transparent)]"
+        aria-hidden="true"
+      >
+        <defs>
+          <pattern
+            id="background-grid-pattern"
+            width={32}
+            height={32}
+            patternUnits="userSpaceOnUse"
+            x="-1"
+            y="-1"
+          >
+            <path d="M.5 32V.5H32" fill="none" strokeDasharray="0" />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" strokeWidth={0} fill="url(#background-grid-pattern)" />
+      </svg>
     </div>
   );
 }
