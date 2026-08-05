@@ -12,9 +12,9 @@ export async function callOllamaAPI(model: string, prompt: string): Promise<stri
   try {
     // Parâmetros para reduzir a criatividade e alucinações
     const conservativeOptions = {
-      temperature: 0.1,  // Reduz drasticamente a criatividade
-      top_p: 0.3,          // Limita a diversidade de tokens
-      num_predict: 2048     // Limita o tamanho da resposta
+      temperature: 0.1,
+      top_p: 0.3,
+      num_predict: 512
     };
 
     const response = await fetch(OLLAMA_URL, {

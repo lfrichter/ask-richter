@@ -13,6 +13,7 @@ import { fileURLToPath } from 'url';
 import { callHuggingFaceAPI } from './core/huggingface.js';
 import { HybridRetriever } from './core/hybrid-retriever.js';
 import { callOllamaAPI } from './core/ollama.js';
+import { callOpenRouterAPI } from './core/openrouter.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -39,6 +40,7 @@ let hybridRetriever: HybridRetriever;
 const embeddings = new OpenAIEmbeddings({
     openAIApiKey: OPENAI_API_KEY as string,
     modelName: 'text-embedding-3-small',
+    maxRetries: 0,
     configuration: { baseURL: "https://api.openai.com/v1" }
 });
 
@@ -372,11 +374,11 @@ function assembleStructuredContext(retrievedChunks: [Document, number][]): strin
       let topResults;
 
       if (queryPlan.type === 'LIST_PROJECTS') {
-        console.log('[API] Plano LIST_PROJECTS: Usando todos os resultados da busca (sem slice).');
-        topResults = searchResults;
+        console.log('[API] Plano LIST_PROJECTS: Limitando resultados a Top-K=5 para resposta rápida.');
+        topResults = searchResults.slice(0, 5);
       } else {
-        console.log(`[API] Plano ${queryPlan.type}: Aplicando re-ranking e limitando a Top-K=15.`);
-        topResults = searchResults.sort((a, b) => b[1] - a[1]).slice(0, 15);
+        console.log(`[API] Plano ${queryPlan.type}: Aplicando re-ranking e limitando a Top-K=4.`);
+        topResults = searchResults.sort((a, b) => b[1] - a[1]).slice(0, 4);
       }
 
       const structuredContext = assembleStructuredContext(topResults);
@@ -392,17 +394,33 @@ function assembleStructuredContext(retrievedChunks: [Document, number][]): strin
       const finalPrompt = `${systemPrompt}\n\nCONTEXTO:\n${structuredContext}\n\nPERGUNTA:\n${question}\n\nRESPOSTA (seguindo rigorosamente as regras acima):\n`;
 
       let responseText: string;
-      const provider = process.env.AI_PROVIDER || 'ollama';
+      const provider = (process.env.AI_PROVIDER || (process.env.NODE_ENV === 'production' ? 'openrouter' : 'ollama')).toLowerCase();
       console.log(`[API] Roteando para o provedor: ${provider}`);
 
-      if (provider === 'ollama') {
-        const model = (process.env.OLLAMA_MODEL as string) || 'mistral:7b';
-        responseText = await callOllamaAPI(model, finalPrompt);
+      if (provider === 'openrouter') {
+        const model = process.env.OPENROUTER_MODEL || 'google/gemma-4-26b-a4b-it:free';
+        responseText = await callOpenRouterAPI(model, finalPrompt);
+      } else if (provider === 'ollama') {
+        try {
+          const model = (process.env.OLLAMA_MODEL as string) || 'mistral:7b';
+          responseText = await callOllamaAPI(model, finalPrompt);
+        } catch (ollamaErr: any) {
+          console.warn(`[API] Falha/Timeout no Ollama local (${ollamaErr.message}). Tentando fallback via OpenRouter...`);
+          if (process.env.OPENROUTER_API_KEY) {
+            responseText = await callOpenRouterAPI('google/gemma-4-26b-a4b-it:free', finalPrompt);
+          } else {
+            throw ollamaErr;
+          }
+        }
       } else if (provider === 'huggingface') {
         const model = process.env.HUGGINGFACE_MODEL || 'meta-llama/Llama-3.1-8B-Instruct:novita';
         responseText = await callHuggingFaceAPI(model, finalPrompt);
       } else {
-        throw new Error(`Provedor de IA '${provider}' não implementado.`);
+        if (process.env.OPENROUTER_API_KEY) {
+          responseText = await callOpenRouterAPI('google/gemma-4-26b-a4b-it:free', finalPrompt);
+        } else {
+          throw new Error(`Provedor de IA '${provider}' não implementado.`);
+        }
       }
 
       console.log(`[API] Resposta recebida do ${provider} com sucesso.`);
