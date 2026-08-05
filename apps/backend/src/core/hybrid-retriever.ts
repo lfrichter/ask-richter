@@ -18,8 +18,12 @@ export class HybridRetriever {
   }
 
   public async search(query: string, k: number = 5): Promise<[Document, number][]> {
-    // Vector search
-    const vectorResults = await this.vectorStore.similaritySearchWithScore(query, k);
+    let vectorResults: [Document, number][] = [];
+    try {
+      vectorResults = await this.vectorStore.similaritySearchWithScore(query, k);
+    } catch (err: any) {
+      console.warn(`[HybridRetriever] Busca vetorial indisponível (${err.message}). Utilizando apenas busca por palavra-chave (BM25).`);
+    }
 
     // BM25 search
     const bm25Results = this.bm25.getClassifications(query)
@@ -27,7 +31,12 @@ export class HybridRetriever {
       .map(classification => {
         const docIndex = parseInt(classification.label, 10);
         return [this.documents[docIndex], classification.value] as [Document, number];
-      });
+      })
+      .filter(([doc]) => Boolean(doc));
+
+    if (vectorResults.length === 0) {
+      return bm25Results;
+    }
 
     // Combine and re-rank (simple approach: add scores)
     const combinedResults: { [key: string]: { doc: Document, score: number } } = {};

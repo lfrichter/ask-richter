@@ -216,19 +216,23 @@ function decomposeQuery(query: string): QueryPlan {
  */
 async function smartSearch(queryPlan: QueryPlan): Promise<[Document, number][]> {
   console.log(`[SMART SEARCH] Executando plano de consulta: ${queryPlan.type}`);
-  const originalQuery = queryPlan.payload.originalQuery;
+  const originalQuery = queryPlan.payload.originalQuery || '';
   let results: any;
 
   switch (queryPlan.type) {
     case 'LIST_PROJECTS':
       console.log('[SMART SEARCH] Buscando lista de projetos...');
-
-      results = await vectorStore.similaritySearch(
-        originalQuery,
-        1,
-        { source: 'synthetic_project_list' }
-      );
-      return results.map((doc: any) => [doc, 1.0]);
+      try {
+        results = await vectorStore.similaritySearch(
+          originalQuery,
+          1,
+          { source: 'synthetic_project_list' }
+        );
+        return results.map((doc: any) => [doc, 1.0]);
+      } catch (err: any) {
+        console.warn(`[SMART SEARCH] Busca por vetores para LIST_PROJECTS falhou (${err.message}). Utilizando busca híbrida.`);
+        return await hybridRetriever.search(originalQuery, 10);
+      }
 
     case 'PROJECT_TECHNOLOGY_SEARCH':
       const technology = queryPlan.payload.technology;
@@ -241,21 +245,22 @@ async function smartSearch(queryPlan: QueryPlan): Promise<[Document, number][]> 
         }
 
         const match = technologies.some((t: string) => t.toLowerCase() === technology.toLowerCase());
-
         console.log(`[Filter] Chunk: ${doc.metadata.project_name || doc.metadata.source} | Tecnologias: [${technologies.join(', ')}] | Busca por: ${technology} | Match: ${match}`);
-
         return match;
       };
 
-      results = await vectorStore.similaritySearch(
-        `projetos com ${technology}`,
-        30, // Aumentado para garantir que todos os chunks relevantes sejam considerados
-        filterFunction
-      );
-      console.log(`[SMART SEARCH] Filtro por metadados para '${technology}' encontrou ${results.length} chunks.`);
-
-      console.log(`[SMART SEARCH] Retornando todos os ${results.length} chunks filtrados.`);
-      return results.map((doc: Document) => [doc, 1.0]); // Retorna com score 1.0
+      try {
+        results = await vectorStore.similaritySearch(
+          `projetos com ${technology}`,
+          30,
+          filterFunction
+        );
+        console.log(`[SMART SEARCH] Filtro por metadados para '${technology}' encontrou ${results.length} chunks.`);
+        return results.map((doc: Document) => [doc, 1.0]);
+      } catch (err: any) {
+        console.warn(`[SMART SEARCH] Busca por metadados para '${technology}' falhou (${err.message}). Utilizando busca híbrida.`);
+        return await hybridRetriever.search(`projetos ${technology}`, 10);
+      }
 
     case 'SIMPLE_SEARCH':
     default:
