@@ -274,10 +274,10 @@ async function smartSearch(queryPlan: QueryPlan): Promise<[Document, number][]> 
           return results.map((doc: Document) => [doc, 1.0]);
         }
         console.warn(`[SMART SEARCH] Busca por metadados retornou 0 resultados. Tentando busca híbrida como fallback...`);
-        return await hybridRetriever.search(originalQuery || `projetos ${targetTechnologies.join(' ')}`, 10);
+        return await hybridRetriever.search(originalQuery || `projetos ${targetTechnologies.join(' ')}`, 20);
       } catch (err: any) {
         console.warn(`[SMART SEARCH] Busca por metadados para '${targetTechnologies.join(', ')}' falhou (${err.message}). Utilizando busca híbrida.`);
-        return await hybridRetriever.search(originalQuery || `projetos ${targetTechnologies.join(' ')}`, 10);
+        return await hybridRetriever.search(originalQuery || `projetos ${targetTechnologies.join(' ')}`, 20);
       }
 
     case 'SIMPLE_SEARCH':
@@ -389,6 +389,72 @@ function pruneChunksToTokenBudget(
   return pruned;
 }
 
+/**
+ * Filtro de Diversidade (Post-Retrieval Deduplication)
+ * Previne o "Monopólio de Chunks" agrupando por `metadata.project_name`
+ * e limitando a quantidade de chunks por projeto, priorizando resumos técnicos.
+ *
+ * @param chunks Tuplas de [Document, number] retornadas da busca.
+ * @param maxUniqueProjects Número máximo de projetos únicos no resultado (padrão: 6).
+ * @param maxChunksPerProject Máximo de chunks por projeto (padrão: 2).
+ * @returns Array de chunks filtrados por diversidade de projetos.
+ */
+function applyDiversityFilter(
+  chunks: [Document, number][],
+  maxUniqueProjects: number = 6,
+  maxChunksPerProject: number = 2
+): [Document, number][] {
+  const projectGroups = new Map<string, [Document, number][]>();
+
+  for (const item of chunks) {
+    const doc = item[0];
+    const projectName = doc.metadata?.project_name || 'Outros';
+    if (!projectGroups.has(projectName)) {
+      projectGroups.set(projectName, []);
+    }
+    projectGroups.get(projectName)!.push(item);
+  }
+
+  const selectedChunks: [Document, number][] = [];
+  let uniqueProjectsCount = 0;
+
+  for (const [projectName, projectChunks] of projectGroups.entries()) {
+    if (uniqueProjectsCount >= maxUniqueProjects) {
+      break;
+    }
+
+    // Ordenar chunks do mesmo projeto dando prioridade para RESUMO TÉCNICO ou cabeçalhos principais
+    const sortedProjectChunks = [...projectChunks].sort((a, b) => {
+      const headerA = (a[0].metadata?.section_header || '').toUpperCase();
+      const contentA = a[0].pageContent.toUpperCase();
+      const headerB = (b[0].metadata?.section_header || '').toUpperCase();
+      const contentB = b[0].pageContent.toUpperCase();
+
+      const isPriorityA =
+        headerA.includes('RESUMO TÉCNICO') ||
+        contentA.includes('RESUMO TÉCNICO') ||
+        headerA.includes('RESUMO') ||
+        headerA.includes('VISÃO GERAL');
+      const isPriorityB =
+        headerB.includes('RESUMO TÉCNICO') ||
+        contentB.includes('RESUMO TÉCNICO') ||
+        headerB.includes('RESUMO') ||
+        headerB.includes('VISÃO GERAL');
+
+      if (isPriorityA && !isPriorityB) return -1;
+      if (!isPriorityA && isPriorityB) return 1;
+
+      return b[1] - a[1];
+    });
+
+    const chunksToTake = sortedProjectChunks.slice(0, maxChunksPerProject);
+    selectedChunks.push(...chunksToTake);
+    uniqueProjectsCount++;
+  }
+
+  return selectedChunks;
+}
+
   app.post('/api/chat', async (req: Request, res: Response) => {
     try {
       const { messages, message, question: bodyQuestion } = req.body;
@@ -420,8 +486,10 @@ function pruneChunksToTokenBudget(
         console.log('[API] Plano LIST_PROJECTS: Retornando apenas o chunk sintético oficial (Top-K=1).');
         topResults = searchResults.slice(0, 1);
       } else if (queryPlan.type === 'PROJECT_TECHNOLOGY_SEARCH') {
-        console.log('[API] Plano PROJECT_TECHNOLOGY_SEARCH: Retornando até Top-K=6 chunks mais relevantes.');
-        topResults = searchResults.sort((a, b) => b[1] - a[1]).slice(0, 6);
+        console.log('[API] Plano PROJECT_TECHNOLOGY_SEARCH: Aplicando Filtro de Diversidade (Post-Retrieval Deduplication)...');
+        const sortedChunks = searchResults.sort((a, b) => b[1] - a[1]);
+        topResults = applyDiversityFilter(sortedChunks, 6, 2);
+        console.log(`[API] Filtro de diversidade selecionou ${topResults.length} chunks de projetos variados.`);
       } else {
         console.log(`[API] Plano ${queryPlan.type}: Aplicando re-ranking e limitando a Top-K=5.`);
         topResults = searchResults.sort((a, b) => b[1] - a[1]).slice(0, 5);
