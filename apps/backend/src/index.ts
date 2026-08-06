@@ -336,7 +336,7 @@ function assembleStructuredContext(retrievedChunks: [Document, number][]): strin
       const sectionHeader = doc.metadata.section_header || 'Seção Desconhecida';
       const source = doc.metadata.source?.split('/').pop() || 'Fonte desconhecida';
 
-      structuredOutput += `  - ${sectionHeader} 
+      structuredOutput += `  - ${sectionHeader}
 `;
       structuredOutput += `    ${doc.pageContent.trim()}\n\n`;
     }
@@ -388,10 +388,30 @@ function assembleStructuredContext(retrievedChunks: [Document, number][]): strin
       console.log(structuredContext);
       console.log("=======================================================================");
 
-      const systemPrompt = `Você é um assistente especialista na carreira de Luis Fernando Richter e responde EXCLUSIVamente baseado no contexto fornecido.\n\nREGRAS OBRIGATÓRIAS:\n1.  Use APENAS o contexto abaixo. NÃO use seu conhecimento prévio.\n2.  Se a resposta não estiver no contexto, diga \"Com base nas informações que tenho, não consigo responder a essa pergunta.\" NÃO invente.\n3.  NÃO faça inferências, suposições ou cálculos (como \"X anos de experiência\").\n4.  Ao listar projetos, SEMPRE use o formato de bullet point: \"* Projeto: [Nome Completo do Projeto]\".\n\nCONTEXTO:\n{context}\n\nPERGUNTA:\n{query}\n\nRESPOSTA (seguindo rigorosamente as regras acima):\n`;
+      // const systemPrompt = `Você é um assistente especialista na carreira de Luis Fernando Richter e responde EXCLUSIVamente baseado no contexto fornecido.\n\nREGRAS OBRIGATÓRIAS:\n1.  Use APENAS o contexto abaixo. NÃO use seu conhecimento prévio.\n2.  Se a resposta não estiver no contexto, diga \"Com base nas informações que tenho, não consigo responder a essa pergunta.\" NÃO invente.\n3.  NÃO faça inferências, suposições ou cálculos (como \"X anos de experiência\").\n4.  Ao listar projetos, SEMPRE use o formato de bullet point: \"* Projeto: [Nome Completo do Projeto]\".\n\nCONTEXTO:\n{context}\n\nPERGUNTA:\n{query}\n\nRESPOSTA (seguindo rigorosamente as regras acima):\n`;
 
+      // 1. O System Prompt é APENAS para regras de comportamento.
+      const systemPrompt = `Você é um assistente especialista na carreira de Luis Fernando Richter.
 
-      const finalPrompt = `${systemPrompt}\n\nCONTEXTO:\n${structuredContext}\n\nPERGUNTA:\n${question}\n\nRESPOSTA (seguindo rigorosamente as regras acima):\n`;
+      REGRAS OBRIGATÓRIAS E INEGOCIÁVEIS:
+      1. IDIOMA: Responda SEMPRE em Português do Brasil, independentemente do idioma do contexto.
+      2. FONTE DA VERDADE: Use APENAS o contexto fornecido pelo usuário na mensagem dele. NUNCA use seu conhecimento prévio. NUNCA faça inferências.
+      3. DESAMBIGUAÇÃO CRÍTICA: Quando questionado sobre "projetos", refira-se ESTRITAMENTE a "Projetos de Software" (sistemas, aplicações desenvolvidas). Cursos, Treinamentos e Certificações NÃO SÃO projetos de software e NUNCA devem ser listados.
+      4. AUSÊNCIA DE DADOS: Se a resposta não estiver no contexto exato, diga: "Com base nas informações que recuperei no momento, não tenho os detalhes para responder a essa pergunta." NÃO invente.
+      5. FORMATAÇÃO: Ao listar projetos, SEMPRE use o formato: "* Projeto: [Nome] - [Descrição/Tecnologias]".`;
+
+      // 2. O Contexto e a Pergunta vão na mensagem do Usuário.
+      const userMessage = `CONTEXTO RECUPERADO DO BANCO DE DADOS:
+      ${structuredContext}
+
+      PERGUNTA DO USUÁRIO:
+      ${question}
+
+      RESPOSTA (seguindo rigorosamente as regras do sistema):`;
+
+      console.log("=== CONTEXTO RECUPERADO DO FAISS ===");
+      console.log(structuredContext);
+      console.log("====================================");
 
       let responseText: string;
       const provider = (process.env.AI_PROVIDER || (process.env.NODE_ENV === 'production' ? 'openrouter' : 'ollama')).toLowerCase();
@@ -399,25 +419,27 @@ function assembleStructuredContext(retrievedChunks: [Document, number][]): strin
 
       if (provider === 'openrouter') {
         const model = process.env.OPENROUTER_MODEL || 'google/gemma-4-26b-a4b-it:free';
-        responseText = await callOpenRouterAPI(model, finalPrompt);
+        // IMPORTANTE: Você também precisará atualizar a função callOpenRouterAPI para aceitar (model, systemPrompt, userMessage) e usar a Chat API deles.
+        responseText = await callOpenRouterAPI(model, systemPrompt, userMessage);
       } else if (provider === 'ollama') {
         try {
           const model = (process.env.OLLAMA_MODEL as string) || 'mistral:7b';
-          responseText = await callOllamaAPI(model, finalPrompt);
+          // Nova assinatura da função
+          responseText = await callOllamaAPI(model, systemPrompt, userMessage);
         } catch (ollamaErr: any) {
           console.warn(`[API] Falha/Timeout no Ollama local (${ollamaErr.message}). Tentando fallback via OpenRouter...`);
           if (process.env.OPENROUTER_API_KEY) {
-            responseText = await callOpenRouterAPI('google/gemma-4-26b-a4b-it:free', finalPrompt);
+            responseText = await callOpenRouterAPI('google/gemma-4-26b-a4b-it:free', systemPrompt, userMessage);
           } else {
             throw ollamaErr;
           }
         }
       } else if (provider === 'huggingface') {
         const model = process.env.HUGGINGFACE_MODEL || 'meta-llama/Llama-3.1-8B-Instruct:novita';
-        responseText = await callHuggingFaceAPI(model, finalPrompt);
+        responseText = await callHuggingFaceAPI(model, `${systemPrompt}\n\n${userMessage}`);
       } else {
         if (process.env.OPENROUTER_API_KEY) {
-          responseText = await callOpenRouterAPI('google/gemma-4-26b-a4b-it:free', finalPrompt);
+          responseText = await callOpenRouterAPI('google/gemma-4-26b-a4b-it:free', systemPrompt, userMessage);
         } else {
           throw new Error(`Provedor de IA '${provider}' não implementado.`);
         }

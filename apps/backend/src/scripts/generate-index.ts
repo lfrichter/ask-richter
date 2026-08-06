@@ -7,6 +7,7 @@ import fs from 'fs';
 import { DirectoryLoader } from 'langchain/document_loaders/fs/directory';
 import { TextLoader } from 'langchain/document_loaders/fs/text';
 import path from 'path';
+import readline from 'readline';
 
 if (!process.env.OPENAI_API_KEY) { throw new Error('OPENAI_API_KEY não definida.'); }
 
@@ -95,9 +96,22 @@ function customMarkdownSplitter(markdownContent: string, source: string): Docume
       if (projectTechnologies.length > 0) {
         metadata.technologies = projectTechnologies;
       }
+      // Montagem do texto enriquecido para o LLM não se perder
+      let enrichedContent = chunkData.originalContent;
+
+      if (projectData.projectName) {
+        enrichedContent = `[Contexto - Projeto: ${projectData.projectName}]\n` + enrichedContent;
+      } else {
+        enrichedContent = `[Contexto - Histórico/Formação/Certificações]\n` + enrichedContent;
+      }
+
+      if (projectTechnologies.length > 0) {
+        enrichedContent = `[Tecnologias do Projeto: ${projectTechnologies.join(', ')}]\n` + enrichedContent;
+      }
+
       finalDocuments.push(new Document({
-        pageContent: chunkData.originalContent,
-        metadata: metadata,
+        pageContent: enrichedContent, // Agora o FAISS busca e o LLM lê TUDO
+        metadata: metadata, // Mantém os metadados para filtros hard-coded, se usar no backend
       }));
     }
   }
@@ -260,8 +274,45 @@ function parseTechnologiesFromChunk(relevantContent: string): string[] {
   return Array.from(techSet);
 }
 
+async function confirmIndexing(): Promise<boolean> {
+  const hasYesFlag = process.argv.includes('--yes') || process.argv.includes('-y');
+  if (hasYesFlag) {
+    return true;
+  }
+
+  console.log('\n======================================================================');
+  console.log('⚠️  ALERTA DE CUSTO: A cada reindexação, são geradas chamadas à API da OpenAI.');
+  console.log('   Isso consome tokens e gera cobrança financeira.');
+  console.log('   Por favor, execute a reindexação APENAS quando estritamente necessário');
+  console.log('   (ex: após alterar arquivos na base de conhecimento).');
+  console.log('======================================================================\n');
+
+  if (!process.stdin.isTTY) {
+    return true;
+  }
+
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+
+  return new Promise((resolve) => {
+    rl.question('Deseja realmente prosseguir com a reindexação? (s/N): ', (answer) => {
+      rl.close();
+      const normalized = answer.trim().toLowerCase();
+      resolve(normalized === 's' || normalized === 'sim' || normalized === 'y' || normalized === 'yes');
+    });
+  });
+}
+
 async function run() {
   try {
+    const confirmed = await confirmIndexing();
+    if (!confirmed) {
+      console.log('❌ Indexação cancelada pelo usuário.');
+      process.exit(0);
+    }
+
     console.log(`[LIMPEZA] Verificando e limpando o diretório de índice antigo em: ${FAISS_INDEX_PATH}...`);
     if (fs.existsSync(FAISS_INDEX_PATH)) {
         fs.rmSync(FAISS_INDEX_PATH, { recursive: true, force: true });
