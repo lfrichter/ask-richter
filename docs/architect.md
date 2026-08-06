@@ -39,6 +39,9 @@ Todas as decisões arquiteturais e mudanças estruturais no projeto são registr
 | Registro | Título | Data | Status |
 | :--- | :--- | :--- | :--- |
 | [ADR-0001](file:///Users/master/projects/chatbot/ask-richter/docs/adr/0001-meta-spec-e-governanca-de-arquitetura.md) | Definição da Meta Spec, Isolamento WSCI e Protocolo Jidoka | 2026-08-05 | Aprovado |
+| [ADR-0002](file:///Users/master/projects/chatbot/ask-richter/docs/adr/0002-recuperacao-deterministica-de-chunks-sinteticos.md) | Recuperação Determinística de Chunks Sintéticos via Docstore | 2026-08-05 | Aprovado |
+| [ADR-0003](file:///Users/master/projects/chatbot/ask-richter/docs/adr/0003-roteamento-de-intencoes-e-extracao-multi-tecnologia.md) | Roteamento de Intenções por Tecnologia e Extração Multi-Tecnologia | 2026-08-05 | Aprovado |
+| [ADR-0004](file:///Users/master/projects/chatbot/ask-richter/docs/adr/0004-isolamento-de-escopo-de-metadados-em-ingestao.md) | Isolamento de Escopo de Metadados de Tecnologia na Ingestão | 2026-08-05 | Aprovado |
 
 ---
 

@@ -83,30 +83,30 @@ function customMarkdownSplitter(markdownContent: string, source: string): Docume
   const finalDocuments: Document[] = [];
   for (const [projectKey, projectData] of projectsMap.entries()) {
 
-    const projectTechnologies = parseTechnologiesFromChunk(projectData.techRelevantContent);
+    const isSoftwareProject = Boolean(projectData.projectName);
+    const projectTechnologies = isSoftwareProject ? parseTechnologiesFromChunk(projectData.techRelevantContent) : [];
 
     for (const chunkData of projectData.chunks) {
       const metadata: Record<string, any> = {
         source: source,
         section_header: chunkData.sectionHeader,
       };
-      if (projectData.projectName) {
-        metadata.project_name = projectData.projectName;
-      }
-      if (projectTechnologies.length > 0) {
-        metadata.technologies = projectTechnologies;
-      }
-      // Montagem do texto enriquecido para o LLM não se perder
+
       let enrichedContent = chunkData.originalContent;
 
-      if (projectData.projectName) {
+      if (isSoftwareProject) {
+        metadata.project_name = projectData.projectName;
+        if (projectTechnologies.length > 0) {
+          metadata.technologies = projectTechnologies;
+        }
+
         enrichedContent = `[Contexto - Projeto: ${projectData.projectName}]\n` + enrichedContent;
+        if (projectTechnologies.length > 0) {
+          enrichedContent = `[Tecnologias do Projeto: ${projectTechnologies.join(', ')}]\n` + enrichedContent;
+        }
       } else {
         enrichedContent = `[Contexto - Histórico/Formação/Certificações]\n` + enrichedContent;
-      }
-
-      if (projectTechnologies.length > 0) {
-        enrichedContent = `[Tecnologias do Projeto: ${projectTechnologies.join(', ')}]\n` + enrichedContent;
+        // Não adicionamos metadata.technologies nem [Tecnologias do Projeto: ...] para evitar poluição de escopo
       }
 
       finalDocuments.push(new Document({
@@ -152,19 +152,19 @@ function createProjectListDocument(allDocs: Document[]): Document | null {
 
   const projectListString = projectNames.join(', ');
 
-  // NOVO CONTEÚDO APRIMORADO
-  const enhancedContent = `
+  // NOVO CONTEÚDO APRIMORADO COM CABEÇALHO GLOBAL EXPLÍCITO
+  const enhancedContent = `[RESUMO GLOBAL] Lista completa de todos os ${projectNames.length} projetos, portfólio e trabalhos desenvolvidos por Luis Fernando Richter:
 Título: Lista Completa de Todos os ${projectNames.length} Projetos.
 Resumo: Este documento é o índice sintético oficial que lista o nome de todos os ${projectNames.length} projetos documentados na base de conhecimento.
-Palavras-chave: todos os projetos, lista completa, índice de projetos, quantos projetos, listagem total.
+Palavras-chave: todos os projetos, lista completa, índice de projetos, quantos projetos, listagem total, portfólio.
 Projetos: ${projectListString}
-    `;
+`;
 
   // Crie o Document usando o conteúdo aprimorado
   const doc = new Document({
     pageContent: enhancedContent,
     metadata: {
-      source: 'synthetic:project_list',
+      source: 'synthetic_project_list',
     },
   });
 
@@ -345,6 +345,16 @@ async function run() {
 
     await vectorStore.save(FAISS_INDEX_PATH);
     console.log(`Índice FAISS salvo localmente em: ${FAISS_INDEX_PATH}`);
+
+    const localIndexPaths = [
+      path.join(process.cwd(), 'faiss_index'),
+      path.join(process.cwd(), 'src/faiss_index'),
+    ];
+
+    for (const localPath of localIndexPaths) {
+      await vectorStore.save(localPath);
+      console.log(`Índice FAISS sincronizado na pasta do projeto: ${localPath}`);
+    }
 
     const shouldUpload = process.argv.includes('--upload');
 

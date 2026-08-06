@@ -169,37 +169,53 @@ const knownTechnologiesOriginal = [
 ];
 const knownTechnologies = knownTechnologiesOriginal.map(tech => tech.toLowerCase()); // Converte para minúsculas para comparação
 
+function findSyntheticProjectListDoc(store: FaissStore): Document | null {
+  try {
+    const docstore = store.docstore as any;
+    if (docstore && docstore._docs && docstore._docs instanceof Map) {
+      for (const doc of docstore._docs.values()) {
+        if (doc?.metadata?.source === 'synthetic_project_list') {
+          return doc;
+        }
+      }
+    }
+  } catch (err: any) {
+    console.warn(`[findSyntheticProjectListDoc] Erro ao buscar no docstore: ${err.message}`);
+  }
+  return null;
+}
+
 function decomposeQuery(query: string): QueryPlan {
   const lowerCaseQuery = query.toLowerCase();
 
-  const listTriggers = ['todos os projetos', 'lista completa', 'quantos projetos', 'liste os projetos'];
-  if (listTriggers.some(trigger => lowerCaseQuery.includes(trigger))) {
-    console.log("[QueryPlan] Intenção 'LIST_PROJECTS' detectada.");
-    return { type: 'LIST_PROJECTS', payload: { originalQuery: query } };
-  }
-
-  let foundTechnology: string | null = null;
+  // 1. Extrai TODAS as tecnologias presentes na query
+  const foundTechnologies: string[] = [];
   for (let i = 0; i < knownTechnologies.length; i++) {
     const tech = knownTechnologies[i];
     if (!tech) continue;
     const techRegex = new RegExp(`\\b${tech.replace('.', '\\.')}\\b`, 'i');
     if (techRegex.test(lowerCaseQuery)) {
-      if (tech === 'vue') {
-        foundTechnology = 'vue.js';
-      } else {
-        foundTechnology = knownTechnologiesOriginal[i] ?? null;
+      const canonicalTech = tech === 'vue' ? 'vue.js' : (knownTechnologiesOriginal[i] ?? tech);
+      if (!foundTechnologies.some(t => t.toLowerCase() === canonicalTech.toLowerCase())) {
+        foundTechnologies.push(canonicalTech);
       }
-      console.log(`[QueryPlan] Tecnologia encontrada: ${foundTechnology}`);
-      break;
     }
   }
 
-  if (foundTechnology) {
-    console.log(`[QueryPlan] Intenção 'PROJECT_TECHNOLOGY_SEARCH' detectada para: ${foundTechnology}`);
+  // Se alguma tecnologia for encontrada, a busca é direcionada para PROJECT_TECHNOLOGY_SEARCH
+  if (foundTechnologies.length > 0) {
+    console.log(`[QueryPlan] Intenção 'PROJECT_TECHNOLOGY_SEARCH' detectada para tecnologias: [${foundTechnologies.join(', ')}]`);
     return {
       type: 'PROJECT_TECHNOLOGY_SEARCH',
-      payload: { technology: foundTechnology }
+      payload: { technologies: foundTechnologies, technology: foundTechnologies[0], originalQuery: query }
     };
+  }
+
+  // 2. Apenas se NENHUMA tecnologia for encontrada, verifica triggers de listagem genérica de projetos
+  const listTriggers = ['todos os projetos', 'lista completa', 'quantos projetos', 'liste os projetos', 'projetos disponíveis'];
+  if (listTriggers.some(trigger => lowerCaseQuery.includes(trigger))) {
+    console.log("[QueryPlan] Intenção 'LIST_PROJECTS' detectada.");
+    return { type: 'LIST_PROJECTS', payload: { originalQuery: query } };
   }
 
   console.log(`[QueryPlan] Fallback para 'SIMPLE_SEARCH'. Query: "${lowerCaseQuery}"`);
@@ -208,8 +224,6 @@ function decomposeQuery(query: string): QueryPlan {
     payload: { originalQuery: query }
   };
 }
-
-
 
 /**
  * Realiza uma busca inteligente, decidindo entre a busca normal e a busca pelo documento sintético.
@@ -223,45 +237,47 @@ async function smartSearch(queryPlan: QueryPlan): Promise<[Document, number][]> 
 
   switch (queryPlan.type) {
     case 'LIST_PROJECTS':
-      console.log('[SMART SEARCH] Buscando lista de projetos...');
-      try {
-        results = await vectorStore.similaritySearch(
-          originalQuery,
-          1,
-          { source: 'synthetic_project_list' }
-        );
-        return results.map((doc: any) => [doc, 1.0]);
-      } catch (err: any) {
-        console.warn(`[SMART SEARCH] Busca por vetores para LIST_PROJECTS falhou (${err.message}). Utilizando busca híbrida.`);
-        return await hybridRetriever.search(originalQuery, 10);
+      console.log('[SMART SEARCH] Buscando lista de projetos sintética determinística...');
+      const syntheticDoc = findSyntheticProjectListDoc(vectorStore);
+      if (syntheticDoc) {
+        console.log('[SMART SEARCH] ✓ Chunk sintético oficial de projetos encontrado no docstore.');
+        return [[syntheticDoc, 1.0]];
       }
+      console.warn('[SMART SEARCH] Chunk sintético não encontrado no docstore. Recorrendo à busca híbrida.');
+      return await hybridRetriever.search(originalQuery, 10);
 
     case 'PROJECT_TECHNOLOGY_SEARCH':
-      const technology = queryPlan.payload.technology;
-      console.log(`[SMART SEARCH] Executando busca por METADATOS para tecnologia: ${technology}`);
+      const targetTechnologies: string[] = queryPlan.payload.technologies || (queryPlan.payload.technology ? [queryPlan.payload.technology] : []);
+      console.log(`[SMART SEARCH] Executando busca por METADATOS para tecnologias: [${targetTechnologies.join(', ')}]`);
 
       const filterFunction = (doc: Document) => {
-        const technologies = doc.metadata.technologies;
-        if (!technologies || !Array.isArray(technologies)) {
+        const docTechs = doc.metadata?.technologies;
+        if (!docTechs || !Array.isArray(docTechs)) {
           return false;
         }
 
-        const match = technologies.some((t: string) => t.toLowerCase() === technology.toLowerCase());
-        console.log(`[Filter] Chunk: ${doc.metadata.project_name || doc.metadata.source} | Tecnologias: [${technologies.join(', ')}] | Busca por: ${technology} | Match: ${match}`);
+        const match = targetTechnologies.some(target =>
+          docTechs.some((t: string) => t.toLowerCase() === target.toLowerCase())
+        );
+        console.log(`[Filter] Chunk: ${doc.metadata?.project_name || doc.metadata?.source} | Tecnologias: [${docTechs.join(', ')}] | Busca por: [${targetTechnologies.join(', ')}] | Match: ${match}`);
         return match;
       };
 
       try {
         results = await vectorStore.similaritySearch(
-          `projetos com ${technology}`,
+          `projetos com ${targetTechnologies.join(' ')}`,
           30,
           filterFunction
         );
-        console.log(`[SMART SEARCH] Filtro por metadados para '${technology}' encontrou ${results.length} chunks.`);
-        return results.map((doc: Document) => [doc, 1.0]);
+        console.log(`[SMART SEARCH] Filtro por metadados para [${targetTechnologies.join(', ')}] encontrou ${results.length} chunks.`);
+        if (results.length > 0) {
+          return results.map((doc: Document) => [doc, 1.0]);
+        }
+        console.warn(`[SMART SEARCH] Busca por metadados retornou 0 resultados. Tentando busca híbrida como fallback...`);
+        return await hybridRetriever.search(originalQuery || `projetos ${targetTechnologies.join(' ')}`, 10);
       } catch (err: any) {
-        console.warn(`[SMART SEARCH] Busca por metadados para '${technology}' falhou (${err.message}). Utilizando busca híbrida.`);
-        return await hybridRetriever.search(`projetos ${technology}`, 10);
+        console.warn(`[SMART SEARCH] Busca por metadados para '${targetTechnologies.join(', ')}' falhou (${err.message}). Utilizando busca híbrida.`);
+        return await hybridRetriever.search(originalQuery || `projetos ${targetTechnologies.join(' ')}`, 10);
       }
 
     case 'SIMPLE_SEARCH':
@@ -346,6 +362,33 @@ function assembleStructuredContext(retrievedChunks: [Document, number][]): strin
   return structuredOutput.trim();
 }
 
+/**
+ * Garante que o total acumulado de tokens nos chunks não exceda o orçamento máximo.
+ * Estima a contagem de tokens dividindo o número total de caracteres por 4 (~4 chars/token).
+ */
+function pruneChunksToTokenBudget(
+  chunks: [Document, number][],
+  maxTokens: number = 2800
+): [Document, number][] {
+  let estimatedTokens = 0;
+  const pruned: [Document, number][] = [];
+
+  for (const item of chunks) {
+    const doc = item[0];
+    const chunkTokens = Math.ceil(doc.pageContent.length / 4);
+    if (estimatedTokens + chunkTokens > maxTokens && pruned.length > 0) {
+      console.warn(
+        `[TOKEN BUDGET] Orçamento de ${maxTokens} tokens atingido (${estimatedTokens} est.). Injetando ${pruned.length} de ${chunks.length} chunks.`
+      );
+      break;
+    }
+    estimatedTokens += chunkTokens;
+    pruned.push(item);
+  }
+
+  return pruned;
+}
+
   app.post('/api/chat', async (req: Request, res: Response) => {
     try {
       const { messages, message, question: bodyQuestion } = req.body;
@@ -371,15 +414,21 @@ function assembleStructuredContext(retrievedChunks: [Document, number][]): strin
 
       const searchResults = await smartSearch(queryPlan);
 
-      let topResults;
+      let topResults: [Document, number][];
 
       if (queryPlan.type === 'LIST_PROJECTS') {
-        console.log('[API] Plano LIST_PROJECTS: Limitando resultados a Top-K=5 para resposta rápida.');
-        topResults = searchResults.slice(0, 5);
+        console.log('[API] Plano LIST_PROJECTS: Retornando apenas o chunk sintético oficial (Top-K=1).');
+        topResults = searchResults.slice(0, 1);
+      } else if (queryPlan.type === 'PROJECT_TECHNOLOGY_SEARCH') {
+        console.log('[API] Plano PROJECT_TECHNOLOGY_SEARCH: Retornando até Top-K=6 chunks mais relevantes.');
+        topResults = searchResults.sort((a, b) => b[1] - a[1]).slice(0, 6);
       } else {
-        console.log(`[API] Plano ${queryPlan.type}: Aplicando re-ranking e limitando a Top-K=4.`);
-        topResults = searchResults.sort((a, b) => b[1] - a[1]).slice(0, 4);
+        console.log(`[API] Plano ${queryPlan.type}: Aplicando re-ranking e limitando a Top-K=5.`);
+        topResults = searchResults.sort((a, b) => b[1] - a[1]).slice(0, 5);
       }
+
+      // Aplica a guarda de orçamento defensivo de tokens (~2800 tokens max)
+      topResults = pruneChunksToTokenBudget(topResults, 2800);
 
       const structuredContext = assembleStructuredContext(topResults);
 
