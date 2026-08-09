@@ -248,7 +248,7 @@ async function smartSearch(queryPlan: QueryPlan): Promise<[Document, number][]> 
 
     case 'PROJECT_TECHNOLOGY_SEARCH':
       const targetTechnologies: string[] = queryPlan.payload.technologies || (queryPlan.payload.technology ? [queryPlan.payload.technology] : []);
-      console.log(`[SMART SEARCH] Executando busca por METADATOS para tecnologias: [${targetTechnologies.join(', ')}]`);
+      console.log(`[SMART SEARCH] Executando busca por METADATOS / VETORIAL para tecnologias: [${targetTechnologies.join(', ')}]`);
 
       const filterFunction = (doc: Document) => {
         const docTechs = doc.metadata?.technologies;
@@ -257,7 +257,7 @@ async function smartSearch(queryPlan: QueryPlan): Promise<[Document, number][]> 
         }
 
         const match = targetTechnologies.some(target =>
-          docTechs.some((t: string) => t.toLowerCase() === target.toLowerCase())
+          docTechs.some((t: string) => typeof t === 'string' && t.toLowerCase() === target.toLowerCase())
         );
         console.log(`[Filter] Chunk: ${doc.metadata?.project_name || doc.metadata?.source} | Tecnologias: [${docTechs.join(', ')}] | Busca por: [${targetTechnologies.join(', ')}] | Match: ${match}`);
         return match;
@@ -488,7 +488,7 @@ function applyDiversityFilter(
       } else if (queryPlan.type === 'PROJECT_TECHNOLOGY_SEARCH') {
         console.log('[API] Plano PROJECT_TECHNOLOGY_SEARCH: Aplicando Filtro de Diversidade (Post-Retrieval Deduplication)...');
         const sortedChunks = searchResults.sort((a, b) => b[1] - a[1]);
-        topResults = applyDiversityFilter(sortedChunks, 6, 2);
+        topResults = applyDiversityFilter(sortedChunks, 6, 1);
         console.log(`[API] Filtro de diversidade selecionou ${topResults.length} chunks de projetos variados.`);
       } else {
         console.log(`[API] Plano ${queryPlan.type}: Aplicando re-ranking e limitando a Top-K=5.`);
