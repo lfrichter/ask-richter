@@ -2,16 +2,26 @@ import { FaissStore } from '@langchain/community/vectorstores/faiss';
 import { Document } from '@langchain/core/documents';
 import { OpenAIEmbeddings } from '@langchain/openai';
 import { createClient } from '@supabase/supabase-js';
-import 'dotenv/config';
+import dotenv from 'dotenv';
 import fs from 'fs';
 import { DirectoryLoader } from 'langchain/document_loaders/fs/directory';
 import { TextLoader } from 'langchain/document_loaders/fs/text';
 import path from 'path';
 import readline from 'readline';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+dotenv.config();
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
 if (!process.env.OPENAI_API_KEY) { throw new Error('OPENAI_API_KEY não definida.'); }
 
-const KNOWLEDGE_BASE_PATH = path.join(process.cwd(), 'src/knowledge-base');
+const KNOWLEDGE_BASE_PATH = fs.existsSync(path.join(process.cwd(), 'src/knowledge-base'))
+  ? path.join(process.cwd(), 'src/knowledge-base')
+  : path.resolve(__dirname, '../knowledge-base');
+
 const FAISS_INDEX_PATH = path.join('/tmp', 'faiss_index');
 
 /**
@@ -346,10 +356,12 @@ async function run() {
     await vectorStore.save(FAISS_INDEX_PATH);
     console.log(`Índice FAISS salvo localmente em: ${FAISS_INDEX_PATH}`);
 
-    const localIndexPaths = [
+    const localIndexPaths = new Set([
       path.join(process.cwd(), 'faiss_index'),
       path.join(process.cwd(), 'src/faiss_index'),
-    ];
+      path.resolve(__dirname, '../../faiss_index'),
+      path.resolve(__dirname, '../faiss_index'),
+    ]);
 
     for (const localPath of localIndexPaths) {
       await vectorStore.save(localPath);
