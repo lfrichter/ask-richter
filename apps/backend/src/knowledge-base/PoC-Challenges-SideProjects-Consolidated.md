@@ -350,6 +350,68 @@ Este projeto implementa um robô de atendimento por voz multi-tenant para restau
 
 ***
 
+### 🚀 Challenge:  Cat Guardian
+
+#### 🎯 Visão Geral e Arquitetura da Solução
+
+Viver com sete gatos — cada um com sua personalidade e rotina — traz uma preocupação constante: o que aconteceria se um deles escapasse? Registros de saúde em papel se perdem facilmente, e as tradicionais coleiras de identificação expõem dados sensíveis do dono (como telefone e endereço) para qualquer pessoa na rua.
+
+O **Cat Guardian** nasceu dessa dor real e evoluiu para um passaporte digital de segurança felina. A plataforma combina um gerador de perfis de identificação via IA, medalhas dinâmicas de QR Code e um engenhoso sistema de "Blind Contact Relay". Do ponto de vista arquitetural, o sistema opera sob o princípio de *Privacy-First*. Quando um gato se perde e o dono ativa o "Lost Mode", a plataforma gera um alerta público. Se alguém encontra o animal e escaneia a coleira, a aplicação renderiza um passaporte de resgate público que omite os contatos do dono. A comunicação ocorre por meio de uma interface segura onde a mensagem de quem encontrou o gato é roteada pelo back-end diretamente para o e-mail do dono, garantindo anonimato e rapidez no reencontro.
+
+#### 👨‍💻 Meu Papel no Projeto
+
+* **Engenheiro de Software Full-Stack:** Liderança no desenvolvimento de ponta a ponta utilizando React 19, Vite e TypeScript, garantindo uma interface responsiva baseada em Glassmorphism e alta performance no lado do cliente.
+* **Arquiteto de Soluções & Banco de Dados:** Modelagem do banco de dados relacional no Supabase (PostgreSQL), focando em esquemas multilingues nativos via `JSONB` e na aplicação rigorosa de políticas de segurança em nível de linha (RLS).
+* **Integrador de IA:** Implementação de prompts estruturados conectando a aplicação à API do Gemini 2.0 Flash para gerar descrições físicas precisas com base nas características visuais dos felinos.
+
+#### ✨ Pontos Fortes e Desafios Superados
+
+O principal triunfo técnico do Cat Guardian é a forma como ele equilibra utilidade pública com extrema privacidade. O maior desafio inicial foi desenhar um fluxo onde quem encontra o animal pudesse contatar o dono sem que números de telefone fossem expostos no front-end ou inspecionáveis via código. Superamos isso desenvolvendo o **Blind Contact Relay**: integramos a API do Resend no back-end e configuramos o Supabase para que a tabela de `sightings` (avistamentos) acionasse notificações seguras via servidor, sem que o cliente tivesse acesso aos dados do proprietário.
+
+Outro desafio importante foi manter a consistência e a rastreabilidade do banco de dados em um ambiente de prototipagem ágil. Estabelecemos uma cultura estrita de engenharia de dados onde nunca atualizamos migrações existentes no Supabase; em vez disso, sempre criamos novas migrações (*forward-only*), garantindo um histórico seguro e reproduzível. Além disso, a barreira do idioma foi superada ao adotar uma arquitetura `JSONB` que armazena perfis gerados por IA nativamente tanto em inglês quanto em português (pt-BR).
+
+#### 🌱 Pontos para Evolução Futura
+
+* Integração com coleiras IoT para rastreamento de localização GPS ativo e delimitação de cercas virtuais (Geofencing).
+* Expansão das funcionalidades de saúde preventiva para permitir upload e extração de dados via OCR de exames e carteiras de vacinação físicas.
+
+---
+
+#### 🛠️ Pilha de Tecnologias (Tech Stack)
+
+| Componente | Tecnologia Utilizada | Papel na Arquitetura |
+| --- | --- | --- |
+| **Front-End Core** | **React 19 & Vite 6** | Responsável pela interface interativa, renderização do dashboard de segurança e geração do QR Code dinâmico do passaporte. |
+| **Banco de Dados & Autenticação** | **Supabase (PostgreSQL)** | Armazena registros médicos, perfis multilingues (`JSONB`) e gerencia sessões de usuários com forte controle de acesso via RLS (Row Level Security). |
+| **Motor de Inteligência Artificial** | **Google Gemini 2.0 Flash** | Processa características inseridas pelo usuário para gerar perfis de identificação visual estruturados e guias de saúde preventiva. |
+| **Mensageria Segura** | **Resend API** | Atua como o motor do *Blind Contact Relay*, disparando e-mails seguros de quem encontrou o pet para o dono, sem expor dados pessoais. |
+| **Qualidade & Testes** | **Vitest & TypeScript 5.7** | Garante a tipagem estrita de todos os esquemas de dados e executa a suíte de testes automatizados nas regras de negócios essenciais (Jidoka Gate). |
+
+---
+
+#### 🗺️ Diagrama da Arquitetura
+
+```mermaid
+---
+config:
+  theme: default
+  look: handDrawn
+---
+%%{init: {'sequence': {'messageFontMaxSize': 14, 'wrap': true, 'diagramWidth': 600}}}%%
+flowchart TD
+    Owner["👤 Dono do Gato"] -->|Cadastra gato e gerencia passaporte| App["📱 Frontend React 19"]
+    App -->|Solicita descrição estruturada| AI["🧠 API do Gemini 2\.0"]
+    Finder["🔍 Pessoa que encontrou o pet"] -->|Escaneia QR Code público| App
+    App -->|Valida sessão ✅| Auth["✅ Supabase Auth"]
+    App -->|Persiste dados JSONB via RLS| DB["🗄️ Supabase PostgreSQL"]
+    Finder -->|Preenche relato de avistamento| App
+    App -->|Aciona relay de comunicação| Relay["✉️ Resend API Relay"]
+    Relay -->|Notifica anonimamente ✅| Owner
+
+```
+
+***
+
 ### 🚀 Challenge:  Gerenciador de Tarefas Conversacional via E-mail 📥 Postmark Challenge
 
 #### 🎯 Visão Geral e Arquitetura da Solução
