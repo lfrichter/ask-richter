@@ -1,0 +1,8 @@
+{
+  "timestamp": "2026-08-17T18:23:20.887Z",
+  "embeddingModel": "text-embedding-3-small",
+  "sourceDocumentsCount": 4,
+  "totalChunks": 401,
+  "uploadedToSupabase": true,
+  "bucketName": "faiss-index"
+}

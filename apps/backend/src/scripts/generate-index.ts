@@ -356,6 +356,18 @@ async function run() {
     await vectorStore.save(FAISS_INDEX_PATH);
     console.log(`Índice FAISS salvo localmente em: ${FAISS_INDEX_PATH}`);
 
+    const shouldUpload = process.argv.includes('--upload');
+
+    const manifest = {
+      timestamp: new Date().toISOString(),
+      embeddingModel: 'text-embedding-3-small',
+      sourceDocumentsCount: docs.length,
+      totalChunks: splitDocs.length,
+      uploadedToSupabase: shouldUpload,
+      bucketName: process.env.SUPABASE_BUCKET_NAME || 'faiss-index'
+    };
+    fs.writeFileSync(path.join(FAISS_INDEX_PATH, 'manifest.json'), JSON.stringify(manifest, null, 2));
+
     const localIndexPaths = new Set([
       path.join(process.cwd(), 'faiss_index'),
       path.join(process.cwd(), 'src/faiss_index'),
@@ -364,17 +376,20 @@ async function run() {
     ]);
 
     for (const localPath of localIndexPaths) {
-      await vectorStore.save(localPath);
-      console.log(`Índice FAISS sincronizado na pasta do projeto: ${localPath}`);
+      if (fs.existsSync(path.dirname(localPath))) {
+        await vectorStore.save(localPath);
+        fs.writeFileSync(path.join(localPath, 'manifest.json'), JSON.stringify(manifest, null, 2));
+        console.log(`Índice FAISS e manifest sincronizados na pasta: ${localPath}`);
+      }
     }
-
-    const shouldUpload = process.argv.includes('--upload');
 
     if (shouldUpload) {
       await uploadIndexToSupabase(FAISS_INDEX_PATH);
     } else {
       console.log('\n[AVISO] Upload para o Supabase não solicitado. Use a flag --upload para fazer o upload.');
     }
+
+    updateIndexingLog(docs.length, splitDocs.length, shouldUpload);
 
   } catch (error) {
     console.error('Ocorreu um erro durante o processo de indexação e upload:', error);
@@ -433,6 +448,35 @@ async function uploadIndexToSupabase(directoryPath: string) {
     }
   }
   console.log('\n🎉 Todos os uploads concluídos com sucesso!');
+}
+
+function updateIndexingLog(docsCount: number, chunksCount: number, uploaded: boolean) {
+  const logPath = path.resolve(__dirname, '../../../../docs/INDEXING_LOG.md');
+  if (!fs.existsSync(logPath)) return;
+
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+  const timeStr = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+  const entry = `\n### 🚀 ${dateStr} - ${timeStr} BRT
+
+- **Executado por**: Script Automatizado (\`generate-index.ts\`)
+- **Comando**: \`npx tsx apps/backend/src/scripts/generate-index.ts ${process.argv.slice(2).join(' ')}\`
+- **Modelo de Embedding**: OpenAI \`text-embedding-3-small\`
+- **Documentos Fonte**: ${docsCount} arquivos Markdown
+- **Total de Chunks Semânticos**: ${chunksCount} chunks
+- **Bucket Supabase**: \`${process.env.SUPABASE_BUCKET_NAME || 'faiss-index'}\`
+- **Status do Upload Supabase**: ${uploaded ? '✅ **Sucesso**' : '⚠️ **Não solicitado (Apenas Local)**'}
+
+---
+`;
+
+  try {
+    fs.appendFileSync(logPath, entry, 'utf-8');
+    console.log(`[LOG] Histórico de reindexação atualizado em: ${logPath}`);
+  } catch (err: any) {
+    console.warn(`[LOG] Não foi possível atualizar ${logPath}: ${err.message}`);
+  }
 }
 
 run();

@@ -38,3 +38,4 @@ yarn-error.log*
 *.pem
 
 dev_logs.txt
+/faiss_index
