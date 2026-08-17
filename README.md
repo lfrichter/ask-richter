@@ -166,6 +166,19 @@ Para rodar apenas o frontend com filtro WSCI:
 npm run dev --workspace=frontend
 ```
 
+### 5. Reindexação de Dados & Sincronização com o Supabase
+
+Caso necessite gerar novamente os vetores FAISS da base de conhecimento Markdown e sincronizar com o Supabase Storage:
+
+```bash
+cd apps/backend
+npm run build-index -- --yes --upload
+```
+
+> [!IMPORTANT]
+> **Aviso sobre o Projeto no Supabase**:
+> Projetos no plano gratuito do Supabase entram em estado *paused* (congelados) após um período de inatividade. **Antes de executar a atualização dos índices e o upload para o Supabase (`--upload`), é necessário acessar o painel do Supabase e descongelar/ativar o projeto manualmente**, caso contrário o upload falhará com erro de conexão (`fetch failed` / `NXDOMAIN`).
+
 ---
 
 ## 🧪 Validação Jidoka (Andon Cord)
