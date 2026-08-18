@@ -1,9 +1,5 @@
 const API_URL = "https://api-inference.huggingface.co/models/";
 
-if (!process.env.HUGGINGFACE_API_KEY) {
-  throw new Error('A variável de ambiente HUGGINGFACE_API_KEY não está definida.');
-}
-
 /**
  * Faz uma chamada para a API de Inferência da Hugging Face com parâmetros conservadores.
  * @param model - O nome do modelo a ser usado.
@@ -11,6 +7,10 @@ if (!process.env.HUGGINGFACE_API_KEY) {
  * @returns O texto gerado pelo modelo.
  */
 export async function callHuggingFaceAPI(model: string, prompt: string): Promise<string> {
+  if (!process.env.HUGGINGFACE_API_KEY) {
+    throw new Error('A variável de ambiente HUGGINGFACE_API_KEY não está definida.');
+  }
+
   try {
     // Parâmetros para reduzir a criatividade e alucinações
     const conservativeParams = {

@@ -36,9 +36,44 @@ O desenvolvimento do AskRichter segue regras estritas de governança estruturada
 
 - **Interface de Chat Conversacional:** UI moderna e reativa em Next.js 15 com Tailwind CSS, Radix UI e Framer Motion.
 - **Respostas Contextuais com RAG Híbrido:** Utiliza a técnica de Retrieval-Augmented Generation combinando **FAISS** em memória (`faiss-node`) e **HybridRetriever** para máxima precisão semântica.
-- **Suporte Multi-Provedor de LLM:** Integração transparente com **OpenRouter** e **Hugging Face** em produção, e **Ollama** (Llama 3 / Mistral) para desenvolvimento local offline.
-- **Persistência Vetorial na Nuvem:** Sincronização do índice FAISS no startup da aplicação via **Supabase Storage**.
+- **Arquitetura Provider-Agnostic de IA:** Abstração completa de provedores (`ProviderFactory`) suportando **Gemini** (padrão), **Ollama** (dev local), **OpenRouter** e **Hugging Face**.
+- **Persistência Vetorial na Nuvem:** Sincronização do índice FAISS no startup da aplicação via **Supabase Storage** com validação estrita de manifest (`provider`, `model`, `dimension`).
 - **Monorepo com Turborepo 2.x:** Pipeline otimizada de compilação, linting, checagem de tipos e validação Jidoka.
+
+---
+
+## 🤖 Arquitetura de Provedores de IA (AI Provider Layer)
+
+```text
+                    AI Provider Layer
+                           │
+             ┌─────────────┴─────────────┐
+             │                           │
+        LLM Provider              Embedding Provider
+             │                           │
+   ┌─────────┼─────────┬─────────┐       │
+   │         │         │         │       │
+Gemini    Ollama   OpenRouter HuggingFace Gemini
+```
+
+### Provedores Suportados e Impacto Financeiro (Custos)
+
+> [!IMPORTANT]
+> A escolha dos provedores via variáveis de ambiente altera diretamente os custos da aplicação:
+
+| Componente | Provedor | Modelo Padrão | Status | Custos / Impacto Financeiro |
+| :--- | :--- | :--- | :--- | :--- |
+| **LLM** | **Gemini** | `gemini-3.6-flash` | **Ativo (Padrão)** | Gratuito dentro das quotas do Google AI Free Tier (Retentativa atômica + Fallback). |
+| **LLM** | **Ollama** | `mistral:7b` | **Opção (Dev / Fallback)** | Zero custo (executado localmente no hardware da máquina). |
+| **LLM** | **OpenRouter** | `google/gemma-4-26b-a4b-it:free` | **Opção (Fallback 1)** | Variável conforme modelo selecionado no OpenRouter. |
+| **LLM** | **Hugging Face** | `meta-llama/Llama-3.1-8B-Instruct:novita` | **Opção (Fallback 2)** | Sujeito a cobrança conforme plano/créditos na Hugging Face. |
+| **LLM** | **Groq** | - | *Fase 2 (Planejado)* | Futuro provedor de alta velocidade. |
+| **Embedding** | **Gemini** | `gemini-embedding-2` (768 dim) | **Ativo (Padrão)** | Gratuito dentro do Free Tier. |
+| **Embedding** | **OpenAI** | `text-embedding-3-small` | **Inativo (Legacy)** | Desativado no runtime para evitar custos de API. |
+
+> [!TIP]
+> **Resiliência e Cadeia de Fallback (`AI_FALLBACK_PROVIDERS`)**:
+> O backend conta com retentativa exponencial no Gemini para falhas transitórias (`429`, `503`) e transição automática em cadeia (`gemini` -> `openrouter` -> `huggingface` -> `ollama`). Se a API principal falhar, o serviço transiciona transparentemente sem erro HTTP 500.
 
 ---
 
@@ -62,16 +97,16 @@ graph TD
         SupabaseDB["📦 Supabase Storage<br>(Índice FAISS)"]
     end
 
-    subgraph "Serviços de IA (Produção / Dev)"
-        HF_API["🌐 OpenRouter / Hugging Face / Ollama<br>(LLM Provider)"]
+    subgraph "Serviços de IA (Provider-Agnostic)"
+        AI_API["🌐 Gemini API / Ollama / OpenRouter / HF<br>(ProviderFactory)"]
     end
 
     User -- "1. Interage com a UI" --> Frontend
     Frontend -- "2. Requisição REST API" --> Backend
-    Backend -- "3. Download do Índice (no Startup)" --> SupabaseDB
+    Backend -- "3. Download do Índice & Valid. Manifest" --> SupabaseDB
     Backend -- "4. Hybrid Search (FAISS + BM25)" --> faiss((FAISS))
-    Backend -- "5. Envia Prompt com Contexto RAG" --> HF_API
-    HF_API -- "6. Retorna Resposta Gerada" --> Backend
+    Backend -- "5. Envia Prompt com Contexto RAG" --> AI_API
+    AI_API -- "6. Retorna Resposta Gerada" --> Backend
     Backend -- "7. Resposta JSON para o Frontend" --> Frontend
     Frontend -- "8. Exibe Resposta com Markdown" --> User
 
@@ -79,7 +114,7 @@ graph TD
     style Frontend fill:#E8DAEF
     style Backend fill:#D5F5E3
     style SupabaseDB fill:#FEF9E7
-    style HF_API fill:#FDEDEC
+    style AI_API fill:#FDEDEC
 ```
 
 ---
@@ -94,9 +129,9 @@ graph TD
 | **⚙️ Backend** | Node.js (ESM) + Express.js | API RESTful com rotas `/api/chat` e `/api/health`. |
 | | TypeScript 5.8 | Tipagem estática rigorosa em todo o backend. |
 | | LangChain 0.3 | Framework de orquestração de RAG e retrievers. |
-| | FAISS (`faiss-node`) | Banco vetorial em memória para busca de similaridade semântica. |
-| | OpenAI Embeddings | Modelo `text-embedding-3-small` para conversão vetorial. |
-| | OpenRouter / Hugging Face / Ollama | Roteamento dinâmico entre LLMs em nuvem e modelo local. |
+| | FAISS (`faiss-node`) | Banco vetorial em memória para busca de similaridade semântica (dim: 768). |
+| | ProviderFactory | Camada de abstração desacoplada de IA (`Gemini`, `Ollama`, `OpenRouter`, `HuggingFace`). |
+| | Gemini Embeddings | Modelo `gemini-embedding-2` (768 dimensões). |
 | **⚛️ Frontend** | Next.js 15 (App Router) | Interface reativa otimizada para SEO e performance. |
 | | React 19 | Componentização reativa moderna. |
 | | Tailwind CSS + Framer Motion | Estilização responsiva e micro-animações. |

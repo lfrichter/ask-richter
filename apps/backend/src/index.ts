@@ -1,6 +1,5 @@
 import { FaissStore } from '@langchain/community/vectorstores/faiss';
 import { Document } from '@langchain/core/documents';
-import { OpenAIEmbeddings } from '@langchain/openai';
 import { createClient } from '@supabase/supabase-js';
 import cors from 'cors';
 import 'dotenv/config';
@@ -10,10 +9,8 @@ import { DirectoryLoader } from 'langchain/document_loaders/fs/directory';
 import { TextLoader } from 'langchain/document_loaders/fs/text';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { callHuggingFaceAPI } from './core/huggingface.js';
+import { ProviderFactory } from './core/factory/provider-factory.js';
 import { HybridRetriever } from './core/hybrid-retriever.js';
-import { callOllamaAPI } from './core/ollama.js';
-import { callOpenRouterAPI } from './core/openrouter.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -27,22 +24,15 @@ interface QueryPlan {
 const SUPABASE_URL = process.env.SUPABASE_URL as string;
 const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY as string;
 const SUPABASE_BUCKET_NAME = process.env.SUPABASE_BUCKET_NAME as string;
-const OPENAI_API_KEY = process.env.OPENAI_API_KEY as string;
-if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY || !SUPABASE_BUCKET_NAME || !OPENAI_API_KEY) {
-  throw new Error('Uma ou mais variáveis de ambiente essenciais não estão definidas.');
+
+if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY || !SUPABASE_BUCKET_NAME) {
+  throw new Error('Uma ou mais variáveis de ambiente essenciais (Supabase) não estão definidas.');
 }
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
 // --- Variáveis Globais ---
 let vectorStore: FaissStore;
 let hybridRetriever: HybridRetriever;
-
-const embeddings = new OpenAIEmbeddings({
-    openAIApiKey: OPENAI_API_KEY as string,
-    modelName: 'text-embedding-3-small',
-    maxRetries: 0,
-    configuration: { baseURL: "https://api.openai.com/v1" }
-});
 
 const FAISS_INDEX_PATH = path.join('/tmp', 'faiss_index');
 
@@ -304,11 +294,58 @@ async function smartSearch(queryPlan: QueryPlan): Promise<[Document, number][]> 
   }
 }
 
+function validateFaissManifest(manifestPath: string, activeEmbeddingProvider: any) {
+  if (!fs.existsSync(manifestPath)) {
+    console.warn(`[INIT] manifest.json não encontrado em ${manifestPath}. Ignorando validação estrita.`);
+    return;
+  }
+  try {
+    const rawContent = fs.readFileSync(manifestPath, 'utf-8');
+    const manifest = JSON.parse(rawContent);
+    const embeddingInfo = manifest.embedding;
+
+    if (embeddingInfo) {
+      const { provider, model, dimension } = embeddingInfo;
+      if (
+        provider !== activeEmbeddingProvider.name ||
+        dimension !== activeEmbeddingProvider.dimension
+      ) {
+        throw new Error(
+          `\n======================================================================\n` +
+          `❌ FAISS embedding configuration mismatch!\n\n` +
+          `Index manifest:\n` +
+          `  provider:  ${provider}\n` +
+          `  model:     ${model}\n` +
+          `  dimension: ${dimension}\n\n` +
+          `Current active provider:\n` +
+          `  provider:  ${activeEmbeddingProvider.name}\n` +
+          `  model:     ${activeEmbeddingProvider.modelName}\n` +
+          `  dimension: ${activeEmbeddingProvider.dimension}\n\n` +
+          `Rebuild the FAISS index before starting the application:\n` +
+          `  npm run build-index -- --yes\n` +
+          `======================================================================\n`
+        );
+      }
+      console.log(`[INIT] ✓ Manifest do índice FAISS validado com sucesso (Provider: ${provider}, Model: ${model}, Dim: ${dimension}).`);
+    }
+  } catch (err: any) {
+    if (err.message.includes('FAISS embedding configuration mismatch')) {
+      throw err;
+    }
+    console.warn(`[INIT] Aviso ao ler manifest.json: ${err.message}`);
+  }
+}
+
 // --- Função Principal de Inicialização ---
 async function main() {
   await downloadIndexFromSupabase();
-  console.log('[INIT] Carregando índice FAISS para a memória...');
-  vectorStore = await FaissStore.load(FAISS_INDEX_PATH, embeddings);
+
+  const embeddingProvider = ProviderFactory.getEmbeddingProvider();
+  const manifestPath = path.join(FAISS_INDEX_PATH, 'manifest.json');
+  validateFaissManifest(manifestPath, embeddingProvider);
+
+  console.log(`[INIT] Carregando índice FAISS para a memória com o provedor '${embeddingProvider.name}'...`);
+  vectorStore = await FaissStore.load(FAISS_INDEX_PATH, embeddingProvider.getLangChainEmbeddings());
   console.log('[INIT] Índice FAISS carregado com sucesso.');
 
   console.log('[INIT] Carregando documentos para o retriever híbrido...');
@@ -531,43 +568,23 @@ REGRAS OBRIGATÓRIAS E INEGOCIÁVEIS:
       console.log(structuredContext);
       console.log("====================================");
 
-      let responseText: string;
-      const provider = (process.env.AI_PROVIDER || (process.env.NODE_ENV === 'production' ? 'openrouter' : 'ollama')).toLowerCase();
-      console.log(`[API] Roteando para o provedor: ${provider}`);
+      const llmProvider = ProviderFactory.getLLMProvider();
+      console.log(`[API] Roteando para o provedor de IA: ${llmProvider.name}`);
 
-      if (provider === 'openrouter') {
-        const model = process.env.OPENROUTER_MODEL || 'google/gemma-4-26b-a4b-it:free';
-        // IMPORTANTE: Você também precisará atualizar a função callOpenRouterAPI para aceitar (model, systemPrompt, userMessage) e usar a Chat API deles.
-        responseText = await callOpenRouterAPI(model, systemPrompt, userMessage);
-      } else if (provider === 'ollama') {
-        try {
-          const model = (process.env.OLLAMA_MODEL as string) || 'mistral:7b';
-          // Nova assinatura da função
-          responseText = await callOllamaAPI(model, systemPrompt, userMessage);
-        } catch (ollamaErr: any) {
-          console.warn(`[API] Falha/Timeout no Ollama local (${ollamaErr.message}). Tentando fallback via OpenRouter...`);
-          if (process.env.OPENROUTER_API_KEY) {
-            responseText = await callOpenRouterAPI('google/gemma-4-26b-a4b-it:free', systemPrompt, userMessage);
-          } else {
-            throw ollamaErr;
-          }
-        }
-      } else if (provider === 'huggingface') {
-        const model = process.env.HUGGINGFACE_MODEL || 'meta-llama/Llama-3.1-8B-Instruct:novita';
-        responseText = await callHuggingFaceAPI(model, `${systemPrompt}\n\n${userMessage}`);
-      } else {
-        if (process.env.OPENROUTER_API_KEY) {
-          responseText = await callOpenRouterAPI('google/gemma-4-26b-a4b-it:free', systemPrompt, userMessage);
-        } else {
-          throw new Error(`Provedor de IA '${provider}' não implementado.`);
-        }
-      }
+      const responseText = await llmProvider.generate(systemPrompt, userMessage);
 
-      console.log(`[API] Resposta recebida do ${provider} com sucesso.`);
+      console.log(`[API] Resposta recebida do ${llmProvider.name} com sucesso.`);
       res.json({ answer: responseText });
 
     } catch (error: any) {
-      console.error('[ERRO DETALHADO]', error.message);
+      console.error('[ERRO DETALHADO]', error.message || error);
+      const is503 = error?.status === 503 || error?.code === 'SERVICE_UNAVAILABLE' || error?.code === 'ALL_PROVIDERS_FAILED';
+      if (is503) {
+        return res.status(503).json({
+          error: 'AI service temporarily unavailable. Please try again.',
+          code: 'SERVICE_UNAVAILABLE'
+        });
+      }
       res.status(500).json({ error: 'Ocorreu um erro interno no servidor.' });
     }
   });

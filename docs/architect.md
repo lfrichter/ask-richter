@@ -14,7 +14,7 @@ graph LR
     SubGraphFrontend["App Frontend (Next.js 15)"] -- REST API --> SubGraphBackend["App Backend (Express + LangChain)"]
     SubGraphBackend -- Leitura do Índice --> FAISS["Índice FAISS em /tmp"]
     SubGraphBackend -- Startup Sync --> Supabase["Supabase Storage (faiss-index)"]
-    SubGraphBackend -- Inferencia LLM --> OpenRouter["OpenRouter / HF / Ollama API"]
+    SubGraphBackend -- ProviderFactory --> AI_API["Gemini / Ollama / OpenRouter / HF"]
 ```
 
 ---
@@ -22,7 +22,7 @@ graph LR
 ## 2. Taxonomia de Componentes
 
 ### 2.1 Apps (`/apps`)
-- **[`backend`](file:///Users/master/projects/chatbot/ask-richter/apps/backend/package.json):** API REST em Express, RAG Pipeline com FAISS e LangChain, roteamento multi-provedor de LLMs.
+- **[`backend`](file:///Users/master/projects/chatbot/ask-richter/apps/backend/package.json):** API REST em Express, RAG Pipeline com FAISS e LangChain, roteamento Provider-Agnostic via `ProviderFactory`.
 - **[`frontend`](file:///Users/master/projects/chatbot/ask-richter/apps/frontend/package.json):** Interface de usuário reativa em Next.js 15, i18n, componentes Tailwind CSS/Framer Motion.
 
 ### 2.2 Infraestrutura & Configurações Globais
@@ -42,6 +42,8 @@ Todas as decisões arquiteturais e mudanças estruturais no projeto são registr
 | [ADR-0002](file:///Users/master/projects/chatbot/ask-richter/docs/adr/0002-recuperacao-deterministica-de-chunks-sinteticos.md) | Recuperação Determinística de Chunks Sintéticos via Docstore | 2026-08-05 | Aprovado |
 | [ADR-0003](file:///Users/master/projects/chatbot/ask-richter/docs/adr/0003-roteamento-de-intencoes-e-extracao-multi-tecnologia.md) | Roteamento de Intenções por Tecnologia e Extração Multi-Tecnologia | 2026-08-05 | Aprovado |
 | [ADR-0004](file:///Users/master/projects/chatbot/ask-richter/docs/adr/0004-isolamento-de-escopo-de-metadados-em-ingestao.md) | Isolamento de Escopo de Metadados de Tecnologia na Ingestão | 2026-08-05 | Aprovado |
+| [ADR-0005](file:///Users/master/projects/chatbot/ask-richter/docs/adr/0005-provider-agnostic-ai-architecture.md) | Arquitetura de IA Provider-Agnostic e Migração de Embeddings para Gemini | 2026-08-18 | Aprovado |
+| [ADR-0006](file:///Users/master/projects/chatbot/ask-richter/docs/adr/0006-llm-provider-resilience-and-fallback.md) | Resiliência de LLM com Retentativa Bounded e Cadeia de Fallback Abstrata | 2026-08-18 | Aprovado |
 
 ---
 

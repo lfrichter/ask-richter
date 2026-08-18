@@ -1,6 +1,5 @@
 import { FaissStore } from '@langchain/community/vectorstores/faiss';
 import { Document } from '@langchain/core/documents';
-import { OpenAIEmbeddings } from '@langchain/openai';
 import { createClient } from '@supabase/supabase-js';
 import dotenv from 'dotenv';
 import fs from 'fs';
@@ -9,6 +8,7 @@ import { TextLoader } from 'langchain/document_loaders/fs/text';
 import path from 'path';
 import readline from 'readline';
 import { fileURLToPath } from 'url';
+import { ProviderFactory } from '../core/factory/provider-factory.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -16,13 +16,12 @@ const __dirname = path.dirname(__filename);
 dotenv.config();
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
-if (!process.env.OPENAI_API_KEY) { throw new Error('OPENAI_API_KEY não definida.'); }
-
 const KNOWLEDGE_BASE_PATH = fs.existsSync(path.join(process.cwd(), 'src/knowledge-base'))
   ? path.join(process.cwd(), 'src/knowledge-base')
   : path.resolve(__dirname, '../knowledge-base');
 
 const FAISS_INDEX_PATH = path.join('/tmp', 'faiss_index');
+const FAISS_STAGING_PATH = path.join('/tmp', 'faiss_index_staging');
 
 /**
  * Função de chunking semântico customizada para Markdown.
@@ -316,6 +315,7 @@ async function confirmIndexing(): Promise<boolean> {
 }
 
 async function run() {
+  let stagingCreated = false;
   try {
     const confirmed = await confirmIndexing();
     if (!confirmed) {
@@ -323,12 +323,12 @@ async function run() {
       process.exit(0);
     }
 
-    console.log(`[LIMPEZA] Verificando e limpando o diretório de índice antigo em: ${FAISS_INDEX_PATH}...`);
-    if (fs.existsSync(FAISS_INDEX_PATH)) {
-        fs.rmSync(FAISS_INDEX_PATH, { recursive: true, force: true });
-        console.log('[LIMPEZA] Diretório antigo removido com sucesso.');
+    console.log(`[STAGING] Criando ambiente temporário de compilação em: ${FAISS_STAGING_PATH}...`);
+    if (fs.existsSync(FAISS_STAGING_PATH)) {
+      fs.rmSync(FAISS_STAGING_PATH, { recursive: true, force: true });
     }
-    fs.mkdirSync(FAISS_INDEX_PATH, { recursive: true });
+    fs.mkdirSync(FAISS_STAGING_PATH, { recursive: true });
+    stagingCreated = true;
 
     console.log('Iniciando indexação com a função de chunking customizada...');
 
@@ -350,24 +350,53 @@ async function run() {
       console.log(`[SINTÉTICO] Documento de lista de projetos criado e adicionado. Total de chunks agora: ${splitDocs.length}`);
     }
 
-    const embeddings = new OpenAIEmbeddings({ openAIApiKey: process.env.OPENAI_API_KEY, modelName: 'text-embedding-3-small' });
-    const vectorStore = await FaissStore.fromDocuments(splitDocs, embeddings);
+    const embeddingProvider = ProviderFactory.getEmbeddingProvider();
+    console.log(`[INDEXING] Gerando embeddings com o provedor '${embeddingProvider.name}' (modelo: ${embeddingProvider.modelName}, dimensão: ${embeddingProvider.dimension})...`);
+    const vectorStore = await FaissStore.fromDocuments(splitDocs, embeddingProvider.getLangChainEmbeddings());
 
-    await vectorStore.save(FAISS_INDEX_PATH);
-    console.log(`Índice FAISS salvo localmente em: ${FAISS_INDEX_PATH}`);
+    // Salva o novo índice no diretório de staging (preserva o índice ativo em FAISS_INDEX_PATH se existir!)
+    await vectorStore.save(FAISS_STAGING_PATH);
+    console.log(`[STAGING] ✓ Novo índice FAISS gerado e salvo na área de staging: ${FAISS_STAGING_PATH}`);
 
     const shouldUpload = process.argv.includes('--upload');
 
     const manifest = {
+      schemaVersion: 1,
+      indexVersion: 2,
       timestamp: new Date().toISOString(),
-      embeddingModel: 'text-embedding-3-small',
+      embedding: {
+        provider: embeddingProvider.name,
+        model: embeddingProvider.modelName,
+        dimension: embeddingProvider.dimension
+      },
       sourceDocumentsCount: docs.length,
       totalChunks: splitDocs.length,
       uploadedToSupabase: shouldUpload,
       bucketName: process.env.SUPABASE_BUCKET_NAME || 'faiss-index'
     };
-    fs.writeFileSync(path.join(FAISS_INDEX_PATH, 'manifest.json'), JSON.stringify(manifest, null, 2));
+    fs.writeFileSync(path.join(FAISS_STAGING_PATH, 'manifest.json'), JSON.stringify(manifest, null, 2));
 
+    // Validação de integridade do staging
+    const requiredFiles = ['docstore.json', 'faiss.index', 'manifest.json'];
+    for (const file of requiredFiles) {
+      if (!fs.existsSync(path.join(FAISS_STAGING_PATH, file))) {
+        throw new Error(`[VALIÇÃO STAGING] Arquivo essencial '${file}' ausente no staging.`);
+      }
+    }
+
+    // ATOMIC REPLACE: Promove o índice de staging para o diretório ativo apenas após sucesso 100%
+    console.log(`[ATOMIC REPLACE] Promovendo novo índice validado para o caminho ativo: ${FAISS_INDEX_PATH}...`);
+    if (fs.existsSync(FAISS_INDEX_PATH)) {
+      fs.rmSync(FAISS_INDEX_PATH, { recursive: true, force: true });
+    }
+    fs.mkdirSync(FAISS_INDEX_PATH, { recursive: true });
+
+    for (const file of fs.readdirSync(FAISS_STAGING_PATH)) {
+      fs.copyFileSync(path.join(FAISS_STAGING_PATH, file), path.join(FAISS_INDEX_PATH, file));
+    }
+    console.log(`[ATOMIC REPLACE] ✓ Índice FAISS ativo atualizado com sucesso.`);
+
+    // Sincronização com pastas locais do repositório
     const localIndexPaths = new Set([
       path.join(process.cwd(), 'faiss_index'),
       path.join(process.cwd(), 'src/faiss_index'),
@@ -391,8 +420,21 @@ async function run() {
 
     updateIndexingLog(docs.length, splitDocs.length, shouldUpload);
 
+    // Limpeza da pasta de staging
+    if (fs.existsSync(FAISS_STAGING_PATH)) {
+      fs.rmSync(FAISS_STAGING_PATH, { recursive: true, force: true });
+    }
+
   } catch (error) {
-    console.error('Ocorreu um erro durante o processo de indexação e upload:', error);
+    console.error('\n======================================================================');
+    console.error('❌ Ocorreu um erro durante a indexação. O índice ativo anterior foi PRESERVADO INTACTO.');
+    console.error('Detalhe do erro:', error);
+    console.error('======================================================================\n');
+    if (stagingCreated && fs.existsSync(FAISS_STAGING_PATH)) {
+      try {
+        fs.rmSync(FAISS_STAGING_PATH, { recursive: true, force: true });
+      } catch (cleanErr) {}
+    }
     process.exit(1);
   }
 }
@@ -462,7 +504,7 @@ function updateIndexingLog(docsCount: number, chunksCount: number, uploaded: boo
 
 - **Executado por**: Script Automatizado (\`generate-index.ts\`)
 - **Comando**: \`npx tsx apps/backend/src/scripts/generate-index.ts ${process.argv.slice(2).join(' ')}\`
-- **Modelo de Embedding**: OpenAI \`text-embedding-3-small\`
+- **Modelo de Embedding**: Provedor \`${process.env.EMBEDDING_PROVIDER || 'gemini'}\`
 - **Documentos Fonte**: ${docsCount} arquivos Markdown
 - **Total de Chunks Semânticos**: ${chunksCount} chunks
 - **Bucket Supabase**: \`${process.env.SUPABASE_BUCKET_NAME || 'faiss-index'}\`

@@ -41,3 +41,15 @@ Este documento atua como o registro oficial auditável das reindexações da bas
 - **Status do Upload Supabase**: ✅ **Sucesso**
 
 ---
+
+### 🚀 18 de agosto de 2026 - 11:57:14 BRT
+
+- **Executado por**: Script Automatizado (`generate-index.ts`)
+- **Comando**: `npx tsx apps/backend/src/scripts/generate-index.ts -- --yes --upload`
+- **Modelo de Embedding**: Provedor `gemini`
+- **Documentos Fonte**: 4 arquivos Markdown
+- **Total de Chunks Semânticos**: 401 chunks
+- **Bucket Supabase**: `faiss-index`
+- **Status do Upload Supabase**: ✅ **Sucesso**
+
+---
