@@ -64,7 +64,7 @@ Gemini    Ollama   OpenRouter HuggingFace Gemini
 | Componente | Provedor | Modelo Padrão | Status | Custos / Impacto Financeiro |
 | :--- | :--- | :--- | :--- | :--- |
 | **LLM** | **Gemini** | `gemini-3.6-flash` | **Ativo (Padrão)** | Gratuito dentro das quotas do Google AI Free Tier (Retentativa atômica + Fallback). |
-| **LLM** | **Ollama** | `mistral:7b` | **Opção (Dev / Fallback)** | Zero custo (executado localmente no hardware da máquina). |
+| **LLM** | **Ollama** | `deepseek-r1:8b` | **Opção (Dev / Fallback)** | Zero custo (executado localmente no hardware da máquina). |
 | **LLM** | **OpenRouter** | `google/gemma-4-26b-a4b-it:free` | **Opção (Fallback 1)** | Variável conforme modelo selecionado no OpenRouter. |
 | **LLM** | **Hugging Face** | `meta-llama/Llama-3.1-8B-Instruct:novita` | **Opção (Fallback 2)** | Sujeito a cobrança conforme plano/créditos na Hugging Face. |
 | **LLM** | **Groq** | - | *Fase 2 (Planejado)* | Futuro provedor de alta velocidade. |
@@ -149,7 +149,7 @@ graph TD
 - **npm:** Versão 11.x ou superior.
 - **Ollama (Opcional para dev local):** Instale o [Ollama](https://ollama.com/) e baixe o modelo padrão:
   ```bash
-  ollama pull mistral:7b
+  ollama pull deepseek-r1:8b
   ```
 
 ### 2. Instalação
@@ -171,7 +171,7 @@ Preencha as chaves no arquivo `.env`:
 ```env
 OPENAI_API_KEY="sk-..."
 AI_PROVIDER="ollama"
-OLLAMA_MODEL="mistral:7b"
+OLLAMA_MODEL="deepseek-r1:8b"
 OLLAMA_BASE_URL="http://localhost:11434"
 SUPABASE_URL="https://[SEU-PROJETO].supabase.co"
 SUPABASE_SERVICE_ROLE_KEY="sua-chave-secreta"

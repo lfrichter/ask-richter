@@ -6,7 +6,7 @@ export class OllamaLLMProvider implements LLMProvider {
   private model: string;
 
   constructor(model?: string) {
-    this.model = model || process.env.OLLAMA_MODEL || 'mistral:7b';
+    this.model = model || process.env.OLLAMA_MODEL || 'deepseek-r1:8b';
   }
 
   async generate(systemPrompt: string, userMessage: string): Promise<string> {
