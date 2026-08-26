@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import dotenv from 'dotenv';
 import path from 'path';
 import fs from 'fs';
+import { classifySupabaseStatus } from '@/lib/supabase/status-classifier';
 
 export async function GET() {
   try {
@@ -27,10 +28,16 @@ export async function GET() {
     }
 
     if (!supabaseUrl || !supabaseKey) {
+      const result = classifySupabaseStatus({
+        errorMessage: 'Variáveis de ambiente do Supabase não encontradas.',
+      });
       return NextResponse.json({
-        isPaused: false,
+        state: result.state,
         status: 'ok',
-        reason: 'SUPABASE_ENV_MISSING'
+        isReady: result.isReady,
+        isPaused: result.isPaused,
+        reason: 'SUPABASE_ENV_MISSING',
+        checkedAt: result.checkedAt,
       });
     }
 
@@ -44,19 +51,56 @@ export async function GET() {
       });
       clearTimeout(timeoutId);
 
-      if (res.status === 503 || res.status === 504 || res.status === 502) {
-        return NextResponse.json({ isPaused: true, status: 'paused', statusCode: res.status });
+      let bodyData: any = null;
+      try {
+        bodyData = await res.json();
+      } catch {
+        // Ignora erro de parse de JSON caso a resposta seja texto ou vazia
       }
 
-      return NextResponse.json({ isPaused: false, status: 'ok', statusCode: res.status });
+      const result = classifySupabaseStatus({
+        statusCode: res.status,
+        responseBody: bodyData,
+      });
+
+      return NextResponse.json({
+        state: result.state,
+        status: result.isReady ? 'ok' : (result.isPaused ? 'paused' : result.state.toLowerCase()),
+        isReady: result.isReady,
+        isPaused: result.isPaused,
+        statusCode: res.status,
+        reason: result.reason,
+        checkedAt: result.checkedAt,
+      });
     } catch (fetchErr: any) {
       clearTimeout(timeoutId);
-      if (fetchErr.name === 'AbortError') {
-        return NextResponse.json({ isPaused: true, status: 'paused', reason: 'TIMEOUT' });
-      }
-      return NextResponse.json({ isPaused: true, status: 'paused', reason: fetchErr.message });
+
+      const result = classifySupabaseStatus({
+        errorName: fetchErr.name,
+        errorMessage: fetchErr.message,
+      });
+
+      return NextResponse.json({
+        state: result.state,
+        status: result.isPaused ? 'paused' : result.state.toLowerCase(),
+        isReady: result.isReady,
+        isPaused: result.isPaused,
+        reason: result.reason,
+        checkedAt: result.checkedAt,
+      });
     }
   } catch (err: any) {
-    return NextResponse.json({ isPaused: false, status: 'error', error: err?.message || String(err) });
+    const result = classifySupabaseStatus({
+      errorMessage: err?.message || String(err),
+    });
+
+    return NextResponse.json({
+      state: result.state,
+      status: 'error',
+      isReady: false,
+      isPaused: false,
+      error: err?.message || String(err),
+      checkedAt: result.checkedAt,
+    });
   }
 }
