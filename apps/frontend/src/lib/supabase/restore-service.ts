@@ -30,6 +30,13 @@ export interface RestoreResult {
   checkedAt: string;
 }
 
+export interface ManagementProjectDetails {
+  success: boolean;
+  projectRef?: string;
+  managementStatus?: string; // Ex: 'ACTIVE_HEALTHY', 'INACTIVE', 'RESTORING', 'GOING_DOWN'
+  message: string;
+}
+
 // Trava de idempotência em memória e controle de promessas em voo
 const inFlightRestorePromises = new Map<string, Promise<RestoreResult>>();
 const lastRestoreTimestamps = new Map<string, number>();
@@ -87,7 +94,55 @@ export function resetRestoreIdempotencyLock() {
 }
 
 /**
- * Executa a solicitação de restauração server-side junto à Management API do Supabase.
+ * Consulta o status oficial do projeto via Supabase Management API (GET /v1/projects/{ref}).
+ */
+export async function getSupabaseManagementProjectStatus(options: RestoreOptions = {}): Promise<ManagementProjectDetails> {
+  const { managementToken, projectRef } = resolveServerSecrets(options);
+  const fetchFn = options.fetchImpl || fetch;
+
+  if (!managementToken || !projectRef) {
+    return {
+      success: false,
+      projectRef: projectRef || undefined,
+      message: 'SUPABASE_MANAGEMENT_TOKEN ou projectRef não configurado.',
+    };
+  }
+
+  try {
+    const response = await fetchFn(`https://api.supabase.com/v1/projects/${projectRef}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${managementToken}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (!response.ok) {
+      return {
+        success: false,
+        projectRef,
+        message: `Management API retornou status HTTP ${response.status}`,
+      };
+    }
+
+    const data: any = await response.json();
+    return {
+      success: true,
+      projectRef,
+      managementStatus: data.status || 'UNKNOWN',
+      message: `Status oficial do projeto: ${data.status || 'UNKNOWN'}`,
+    };
+  } catch (err: any) {
+    return {
+      success: false,
+      projectRef,
+      message: `Falha ao consultar status na Management API: ${err?.message || String(err)}`,
+    };
+  }
+}
+
+/**
+ * Executa a solicitação de restauração server-side junto à Management API do Supabase (POST /v1/projects/{ref}/restore).
  */
 export async function executeSupabaseRestore(options: RestoreOptions = {}): Promise<RestoreResult> {
   const checkedAt = new Date().toISOString();
@@ -204,7 +259,7 @@ export async function executeSupabaseRestore(options: RestoreOptions = {}): Prom
           state: 'AUTH_ERROR',
           status: 'error',
           projectRef,
-          message: `SUPABASE_MANAGEMENT_TOKEN inválido ou sem permissão (${response.status}).`,
+          message: `SUPABASE_MANAGEMENT_TOKEN inválido ou sem permissão (${response.status}). Exige escopo project_admin_write.`,
           checkedAt,
         };
       }

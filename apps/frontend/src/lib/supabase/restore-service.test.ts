@@ -1,6 +1,6 @@
 import { describe, it, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
-import { executeSupabaseRestore, resetRestoreIdempotencyLock } from './restore-service.js';
+import { executeSupabaseRestore, getSupabaseManagementProjectStatus, resetRestoreIdempotencyLock } from './restore-service.js';
 
 describe('Supabase Restore Service (M11 Specification)', () => {
   beforeEach(() => {
@@ -175,5 +175,22 @@ describe('Supabase Restore Service (M11 Specification)', () => {
     assert.equal(result.success, false);
     assert.equal(result.state, 'CONFIG_MISSING');
     assert.equal(result.status, 'error');
+  });
+
+  // 11. Consulta de status via Management API (GET /v1/projects/{ref})
+  it('Cenário 11: Deve consultar status do projeto via Management API (GET /v1/projects/{ref})', async () => {
+    const mockFetch = async (url: string) => {
+      assert.ok(url.includes('/v1/projects/mock-project-ref'));
+      return new Response(JSON.stringify({ id: '1', ref: 'mock-project-ref', status: 'ACTIVE_HEALTHY' }), { status: 200 });
+    };
+
+    const details = await getSupabaseManagementProjectStatus({
+      managementToken: 'mock-token',
+      projectRef: 'mock-project-ref',
+      fetchImpl: mockFetch as any,
+    });
+
+    assert.equal(details.success, true);
+    assert.equal(details.managementStatus, 'ACTIVE_HEALTHY');
   });
 });
