@@ -4,8 +4,9 @@ import React from 'react';
 import { AIChatInput } from "@/components/ui/ai-chat-input";
 import { BackgroundPaths } from "@/components/ui/background-paths";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { SupabaseUnfreezeModal } from "@/components/ui/supabase-unfreeze-modal";
 import Markdown from 'markdown-to-jsx';
-import Image from 'next/image'; // Adicionado import da imagem
+import Image from 'next/image';
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import myAdjustedOk from '../../public/images/AvatarCircle.png';
@@ -27,18 +28,39 @@ export default function Chat() {
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isUnfreezeModalOpen, setIsUnfreezeModalOpen] = useState(false);
+  const [lastFailedMessage, setLastFailedMessage] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   const scrollToBottom = () => { messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); };
   useEffect(() => { scrollToBottom(); }, [messages]);
 
+  // Checagem proativa inicial do status do Supabase
+  useEffect(() => {
+    const checkSupabaseHealth = async () => {
+      try {
+        const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001';
+        const res = await fetch(`${apiBaseUrl.replace(/\/$/, '')}/api/supabase/status`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.isPaused) {
+            console.warn('[SUPABASE CHECK] Projeto Supabase detectado como pausado na inicialização.');
+            setIsUnfreezeModalOpen(true);
+          }
+        }
+      } catch (err) {
+        console.warn('[SUPABASE CHECK] Não foi possível verificar o status do Supabase no startup:', err);
+      }
+    };
+    checkSupabaseHealth();
+  }, []);
+
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => { setInput(e.target.value); };
 
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    if (!input.trim() || isLoading) return;
+  const sendMessage = async (queryText: string) => {
+    if (!queryText.trim() || isLoading) return;
 
-    const userMessage: Message = { id: Date.now().toString(), role: 'user', content: input };
+    const userMessage: Message = { id: Date.now().toString(), role: 'user', content: queryText };
     setMessages(prev => [...prev, userMessage]);
     setInput('');
     setIsLoading(true);
@@ -51,13 +73,26 @@ export default function Chat() {
         body: JSON.stringify({ messages: [...messages, userMessage] }),
       });
 
-      if (!response.ok) { throw new Error(`Erro na API: ${response.statusText}`); }
+      if (!response.ok) {
+        let errData: any = {};
+        try {
+          errData = await response.json();
+        } catch {}
+
+        const errMsg = errData.error || response.statusText;
+        const isPaused = errData.isSupabasePaused || errData.code === 'SUPABASE_PAUSED' || (typeof errMsg === 'string' && (errMsg.toLowerCase().includes('supabase') || errMsg.toLowerCase().includes('fetch failed')));
+
+        if (isPaused) {
+          setLastFailedMessage(queryText);
+          setIsUnfreezeModalOpen(true);
+          throw new Error('Supabase project is paused or unavailable.');
+        }
+
+        throw new Error(`Erro na API: ${errMsg}`);
+      }
 
       const data = await response.json();
-
-      // --- LOG DE DEPURAÇÃO FINAL ---
       console.log("RESPOSTA COMPLETA RECEBIDA DO BACKEND:", data);
-      console.log("TEXTO EXTRAÍDO DA RESPOSTA:", data.answer);
 
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
@@ -66,22 +101,51 @@ export default function Chat() {
       };
 
       setMessages(prev => [...prev, assistantMessage]);
+      setLastFailedMessage(null);
 
-    } catch (error) {
+    } catch (error: any) {
       console.error("Erro ao chamar ou processar a API:", error);
-      const errorMessage: Message = { id: (Date.now() + 2).toString(), role: 'assistant', content: "Desculpe, ocorreu um erro." };
+      const isPausedError = error?.message?.includes('paused');
+      const errorMessageContent = isPausedError
+        ? "⚠️ O banco de dados do Supabase está temporariamente pausado. Use a janela de descongelamento para reativar o projeto."
+        : "Desculpe, ocorreu um erro ao processar sua pergunta. Tente novamente em instantes.";
+
+      const errorMessage: Message = { id: (Date.now() + 2).toString(), role: 'assistant', content: errorMessageContent };
       setMessages(prev => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    await sendMessage(input);
   }
+
+  const handleRestored = () => {
+    if (lastFailedMessage) {
+      console.log("[RESTORED] Supabase ativo novamente! Reenviando última pergunta:", lastFailedMessage);
+      const retryQuery = lastFailedMessage;
+      setLastFailedMessage(null);
+      setTimeout(() => {
+        sendMessage(retryQuery);
+      }, 1000);
+    }
+  };
 
   return (
     <div className="relative w-full min-h-screen">
       <BackgroundPaths />
+
+      {/* Modal de Descongelamento do Supabase */}
+      <SupabaseUnfreezeModal
+        isOpen={isUnfreezeModalOpen}
+        onClose={() => setIsUnfreezeModalOpen(false)}
+        onRestored={handleRestored}
+      />
+
       <div className="relative z-10 flex justify-center items-start min-h-screen p-4 pt-8 sm:pt-12 md:pt-16">
         <Card className="w-full max-w-3xl shadow-2xl bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md border border-gray-200/80 dark:border-zinc-800 relative z-20">
-            {/* --- SEU CABEÇALHO COM A IMAGEM RESTAURADO --- */}
             <CardHeader className="text-center">
               <div className="flex justify-center items-center">
                 <Image src={myAdjustedOk} alt="Luis Fernando Richter" width={50} height={50} className="rounded-full mr-4" />
@@ -97,17 +161,11 @@ export default function Chat() {
                   <div key={m.id} className={`flex gap-3 text-sm ${m.role === 'user' ? 'justify-end' : ''}`}>
                     {m.role === 'assistant' && <span className="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-full items-center justify-center bg-gray-800 text-white font-bold">AI</span>}
                     <div className={`rounded-lg p-3 prose prose-sm max-w-none ${m.role === 'user' ? 'bg-blue-500 text-white prose-invert' : 'bg-gray-100'}`}>
-                      {/* <Markdown options={{ overrides: { code: { component: CodeBlock } } }}>
-                        {m.content}
-                      </Markdown> */}
                       <Markdown
                         options={{
                           overrides: {
                             code: ({ children, className }) => <CodeBlock className={className}>{children}</CodeBlock>,
-                            // Adicione este override para a tag <p>
                             p: ({ children }) => {
-                              // Verifica se o filho é um CodeBlock (que renderiza como um div)
-                              // Se for, renderiza sem a tag <p> para evitar aninhamento inválido.
                               if (
                                 React.isValidElement(children) &&
                                 (children.type as any).name === 'CodeBlock'
@@ -137,10 +195,6 @@ export default function Chat() {
                   />
                 </form>
               </div>
-              {/* <form onSubmit={handleSubmit} className="flex gap-2">
-                <Input value={input} placeholder="Pergunte sobre otimização de performance..." onChange={handleInputChange} disabled={isLoading} />
-                <Button type="submit" disabled={isLoading}><SendHorizonal className="h-4 w-4" /></Button>
-              </form> */}
             </CardContent>
           </Card>
         </div>

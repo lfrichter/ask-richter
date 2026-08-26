@@ -359,7 +359,99 @@ async function main() {
   app.use(cors());
   app.use(express.json());
 
-  app.get('/api/health', (req: Request, res: Response) => { res.status(200).json({ status: 'ok' }); });
+  app.get('/api/health', async (req: Request, res: Response) => {
+    let isSupabasePaused = false;
+    try {
+      const { error } = await supabase.storage.from(SUPABASE_BUCKET_NAME).list('', { limit: 1 });
+      if (error) {
+        const errMsg = error.message.toLowerCase();
+        isSupabasePaused = errMsg.includes('fetch failed') || errMsg.includes('nxdomain') || errMsg.includes('enotfound') || errMsg.includes('paused');
+      }
+    } catch {
+      isSupabasePaused = true;
+    }
+    res.status(200).json({ status: 'ok', isSupabasePaused });
+  });
+
+  app.get('/api/supabase/status', async (req: Request, res: Response) => {
+    try {
+      const { error } = await supabase.storage.from(SUPABASE_BUCKET_NAME).list('', { limit: 1 });
+      if (error) {
+        const errMsg = error.message.toLowerCase();
+        const isPaused = errMsg.includes('fetch failed') || errMsg.includes('nxdomain') || errMsg.includes('enotfound') || errMsg.includes('paused') || errMsg.includes('500') || errMsg.includes('503');
+        return res.status(200).json({
+          status: isPaused ? 'paused' : 'error',
+          isPaused,
+          error: error.message,
+          supabaseUrl: SUPABASE_URL
+        });
+      }
+      return res.status(200).json({ status: 'ok', isPaused: false });
+    } catch (err: any) {
+      const errMsg = (err?.message || '').toLowerCase();
+      const isPaused = errMsg.includes('fetch failed') || errMsg.includes('nxdomain') || errMsg.includes('enotfound') || errMsg.includes('paused') || errMsg.includes('500') || errMsg.includes('503');
+      return res.status(200).json({
+        status: isPaused ? 'paused' : 'error',
+        isPaused: true,
+        error: err?.message || 'Falha de conexão com o Supabase'
+      });
+    }
+  });
+
+  app.post('/api/supabase/restore', async (req: Request, res: Response) => {
+    const projectRef = process.env.SUPABASE_PROJECT_REF || (SUPABASE_URL ? SUPABASE_URL.replace(/^https?:\/\//, '').split('.')[0] : '');
+    const managementToken = process.env.SUPABASE_MANAGEMENT_TOKEN;
+
+    if (!managementToken || !projectRef) {
+      return res.status(200).json({
+        success: false,
+        status: 'manual_required',
+        projectRef,
+        dashboardUrl: projectRef ? `https://supabase.com/dashboard/project/${projectRef}` : 'https://supabase.com/dashboard',
+        message: 'Token de gerenciamento do Supabase (SUPABASE_MANAGEMENT_TOKEN) não configurado no backend. Acesse o Dashboard para descongelar manualmente.'
+      });
+    }
+
+    try {
+      console.log(`[SUPABASE RESTORE] Solicitando restauração do projeto ref: ${projectRef} via Management API...`);
+      const response = await fetch(`https://api.supabase.com/v1/projects/${projectRef}/restore`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${managementToken}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.ok || response.status === 201 || response.status === 202) {
+        console.log(`[SUPABASE RESTORE] ✓ Restauração solicitada com sucesso para o projeto ${projectRef}.`);
+        return res.status(200).json({
+          success: true,
+          status: 'restoring',
+          projectRef,
+          message: 'Restauração do Supabase disparada com sucesso! Aguarde cerca de 60-90 segundos.'
+        });
+      }
+
+      const errText = await response.text();
+      console.warn(`[SUPABASE RESTORE] Erro da Management API (${response.status}): ${errText}`);
+      return res.status(200).json({
+        success: false,
+        status: 'manual_required',
+        projectRef,
+        dashboardUrl: `https://supabase.com/dashboard/project/${projectRef}`,
+        message: `A API do Supabase retornou erro (${response.status}). Acesse o Dashboard para descongelar manualmente.`
+      });
+    } catch (err: any) {
+      console.error(`[SUPABASE RESTORE] Falha na requisição para Management API:`, err);
+      return res.status(200).json({
+        success: false,
+        status: 'manual_required',
+        projectRef,
+        dashboardUrl: `https://supabase.com/dashboard/project/${projectRef}`,
+        message: `Falha de rede ao chamar a Management API do Supabase. Acesse o Dashboard para descongelar manualmente.`
+      });
+    }
+  });
 
   /**
  * Agrupa e formata os chunks recuperados em um contexto estruturado por projeto.
