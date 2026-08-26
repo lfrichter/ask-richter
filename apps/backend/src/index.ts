@@ -36,11 +36,29 @@ let hybridRetriever: HybridRetriever;
 
 const FAISS_INDEX_PATH = path.join('/tmp', 'faiss_index');
 
+function withTimeout<T>(promise: Promise<T>, timeoutMs: number, fallbackErrorMsg: string): Promise<T> {
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => {
+      reject(new Error(fallbackErrorMsg));
+    }, timeoutMs);
+
+    promise
+      .then(res => {
+        clearTimeout(timer);
+        resolve(res);
+      })
+      .catch(err => {
+        clearTimeout(timer);
+        reject(err);
+      });
+  });
+}
+
 // --- Funções Auxiliares ---
-async function downloadIndexFromSupabase() {
+async function downloadIndexFromSupabase(): Promise<boolean> {
   if (fs.existsSync(FAISS_INDEX_PATH) && fs.readdirSync(FAISS_INDEX_PATH).length > 0) {
     console.log('[INIT] Índice FAISS já existe localmente em /tmp. Pulando download.');
-    return;
+    return true;
   }
 
   // Verifica se existe o índice salvo localmente no repositório como fallback
@@ -62,7 +80,7 @@ async function downloadIndexFromSupabase() {
         }
       }
       console.log('[INIT] ✓ Índice FAISS local copiado com sucesso.');
-      return;
+      return true;
     }
   }
 
@@ -70,25 +88,26 @@ async function downloadIndexFromSupabase() {
   fs.mkdirSync(FAISS_INDEX_PATH, { recursive: true });
 
   try {
-    const { data: files, error } = await supabase.storage.from(SUPABASE_BUCKET_NAME).list();
+    const listPromise = supabase.storage.from(SUPABASE_BUCKET_NAME).list();
+    const { data: files, error } = await withTimeout(listPromise, 3500, 'Timeout ao conectar com Supabase Storage (3.5s)');
     if (error) throw new Error(`Não foi possível listar arquivos: ${error.message}`);
     if (!files || files.length === 0) {
       throw new Error(`Nenhum arquivo encontrado no bucket '${SUPABASE_BUCKET_NAME}'.`);
     }
 
     for (const file of files) {
-      const { data: blob, error: downloadError } = await supabase.storage.from(SUPABASE_BUCKET_NAME).download(file.name);
+      const downloadPromise = supabase.storage.from(SUPABASE_BUCKET_NAME).download(file.name);
+      const { data: blob, error: downloadError } = await withTimeout(downloadPromise, 3500, `Timeout no download de ${file.name}`);
       if (downloadError) throw new Error(`Erro no download de ${file.name}: ${downloadError.message}`);
       if (blob) {
         fs.writeFileSync(path.join(FAISS_INDEX_PATH, file.name), Buffer.from(await blob.arrayBuffer()));
         console.log(`[INIT] ✓ Arquivo salvo: ${file.name}`);
       }
     }
+    return true;
   } catch (err: any) {
-    console.warn(`[INIT] Falha no download do Supabase: ${err.message}`);
-    if (!fs.existsSync(FAISS_INDEX_PATH) || fs.readdirSync(FAISS_INDEX_PATH).length === 0) {
-      throw new Error(`[INIT] Não foi possível carregar o índice FAISS do Supabase e nenhum índice local foi encontrado.`);
-    }
+    console.warn(`[INIT] Falha ou timeout no download do Supabase: ${err.message}`);
+    return false;
   }
 }
 
@@ -337,32 +356,62 @@ function validateFaissManifest(manifestPath: string, activeEmbeddingProvider: an
 }
 
 // --- Função Principal de Inicialização ---
+let isIndexLoaded = false;
+
+async function loadIndexAndRetriever(): Promise<boolean> {
+  if (isIndexLoaded) return true;
+  try {
+    const downloaded = await downloadIndexFromSupabase();
+    if (!downloaded && (!fs.existsSync(FAISS_INDEX_PATH) || fs.readdirSync(FAISS_INDEX_PATH).length === 0)) {
+      console.warn('[INIT] Não foi possível carregar o índice FAISS do Supabase e nenhum índice local existe.');
+      isIndexLoaded = false;
+      return false;
+    }
+
+    const embeddingProvider = ProviderFactory.getEmbeddingProvider();
+    const manifestPath = path.join(FAISS_INDEX_PATH, 'manifest.json');
+    validateFaissManifest(manifestPath, embeddingProvider);
+
+    console.log(`[INIT] Carregando índice FAISS para a memória com o provedor '${embeddingProvider.name}'...`);
+    vectorStore = await FaissStore.load(FAISS_INDEX_PATH, embeddingProvider.getLangChainEmbeddings());
+    console.log('[INIT] Índice FAISS carregado com sucesso.');
+
+    console.log('[INIT] Carregando documentos para o retriever híbrido...');
+    const loader = new DirectoryLoader(path.join(process.cwd(), 'src/knowledge-base'), { '.md': (p: string) => new TextLoader(p) });
+    const docs = await loader.load();
+    hybridRetriever = new HybridRetriever(vectorStore, docs);
+    console.log('[INIT] Retriever híbrido inicializado com sucesso.');
+    isIndexLoaded = true;
+    return true;
+  } catch (err: any) {
+    console.warn(`[INIT] Erro ao carregar o índice FAISS / Retriever: ${err.message}`);
+    isIndexLoaded = false;
+    return false;
+  }
+}
+
+// --- Função Principal de Inicialização ---
 async function main() {
-  await downloadIndexFromSupabase();
-
-  const embeddingProvider = ProviderFactory.getEmbeddingProvider();
-  const manifestPath = path.join(FAISS_INDEX_PATH, 'manifest.json');
-  validateFaissManifest(manifestPath, embeddingProvider);
-
-  console.log(`[INIT] Carregando índice FAISS para a memória com o provedor '${embeddingProvider.name}'...`);
-  vectorStore = await FaissStore.load(FAISS_INDEX_PATH, embeddingProvider.getLangChainEmbeddings());
-  console.log('[INIT] Índice FAISS carregado com sucesso.');
-
-  console.log('[INIT] Carregando documentos para o retriever híbrido...');
-  const loader = new DirectoryLoader(path.join(process.cwd(), 'src/knowledge-base'), { '.md': (p: string) => new TextLoader(p) });
-  const docs = await loader.load();
-  hybridRetriever = new HybridRetriever(vectorStore, docs);
-  console.log('[INIT] Retriever híbrido inicializado com sucesso.');
-
   const app = express();
-  const port = 3001;
+  const port = Number(process.env.PORT) || 3001;
   app.use(cors());
   app.use(express.json());
+
+  // Inicia o servidor HTTP IMEDIATAMENTE para que Render e Vercel recebam resposta na porta sem estagnar
+  app.listen(port, '0.0.0.0', () => {
+    console.log(`[server]: Backend rodando em http://0.0.0.0:${port}`);
+  });
+
+  // Tenta carregar o índice em segundo plano sem bloquear a porta 3001
+  loadIndexAndRetriever().catch(err => {
+    console.warn('[INIT] Aviso no carregamento assíncrono do índice:', err.message);
+  });
 
   app.get('/api/health', async (req: Request, res: Response) => {
     let isSupabasePaused = false;
     try {
-      const { error } = await supabase.storage.from(SUPABASE_BUCKET_NAME).list('', { limit: 1 });
+      const listPromise = supabase.storage.from(SUPABASE_BUCKET_NAME).list('', { limit: 1 });
+      const { error } = await withTimeout(listPromise, 2500, 'Supabase health timeout (2.5s)');
       if (error) {
         const errMsg = error.message.toLowerCase();
         isSupabasePaused = errMsg.includes('fetch failed') || errMsg.includes('nxdomain') || errMsg.includes('enotfound') || errMsg.includes('paused');
@@ -370,29 +419,32 @@ async function main() {
     } catch {
       isSupabasePaused = true;
     }
-    res.status(200).json({ status: 'ok', isSupabasePaused });
+    res.status(200).json({ status: 'ok', isSupabasePaused, isIndexLoaded });
   });
 
   app.get('/api/supabase/status', async (req: Request, res: Response) => {
     try {
-      const { error } = await supabase.storage.from(SUPABASE_BUCKET_NAME).list('', { limit: 1 });
+      const listPromise = supabase.storage.from(SUPABASE_BUCKET_NAME).list('', { limit: 1 });
+      const { error } = await withTimeout(listPromise, 2500, 'Supabase status timeout (2.5s)');
       if (error) {
         const errMsg = error.message.toLowerCase();
-        const isPaused = errMsg.includes('fetch failed') || errMsg.includes('nxdomain') || errMsg.includes('enotfound') || errMsg.includes('paused') || errMsg.includes('500') || errMsg.includes('503');
+        const isPaused = errMsg.includes('fetch failed') || errMsg.includes('nxdomain') || errMsg.includes('enotfound') || errMsg.includes('paused') || errMsg.includes('500') || errMsg.includes('503') || errMsg.includes('timeout');
         return res.status(200).json({
           status: isPaused ? 'paused' : 'error',
           isPaused,
+          isIndexLoaded,
           error: error.message,
           supabaseUrl: SUPABASE_URL
         });
       }
-      return res.status(200).json({ status: 'ok', isPaused: false });
+      return res.status(200).json({ status: 'ok', isPaused: false, isIndexLoaded });
     } catch (err: any) {
       const errMsg = (err?.message || '').toLowerCase();
-      const isPaused = errMsg.includes('fetch failed') || errMsg.includes('nxdomain') || errMsg.includes('enotfound') || errMsg.includes('paused') || errMsg.includes('500') || errMsg.includes('503');
+      const isPaused = errMsg.includes('fetch failed') || errMsg.includes('nxdomain') || errMsg.includes('enotfound') || errMsg.includes('paused') || errMsg.includes('500') || errMsg.includes('503') || errMsg.includes('timeout');
       return res.status(200).json({
         status: isPaused ? 'paused' : 'error',
         isPaused: true,
+        isIndexLoaded,
         error: err?.message || 'Falha de conexão com o Supabase'
       });
     }
@@ -586,6 +638,18 @@ function applyDiversityFilter(
 
   app.post('/api/chat', async (req: Request, res: Response) => {
     try {
+      if (!isIndexLoaded) {
+        console.log('[API] Índice não carregado em memória. Tentando carregar em runtime...');
+        const loaded = await loadIndexAndRetriever();
+        if (!loaded) {
+          return res.status(503).json({
+            error: 'O banco de dados / armazenamento no Supabase está temporariamente pausado.',
+            code: 'SUPABASE_PAUSED',
+            isSupabasePaused: true
+          });
+        }
+      }
+
       const { messages, message, question: bodyQuestion } = req.body;
       let question: string | undefined;
 
@@ -629,14 +693,10 @@ function applyDiversityFilter(
 
       const structuredContext = assembleStructuredContext(topResults);
 
-
       console.log(`================ CONTEXTO ESTRUTURADO PARA A IA (TOP ${topResults.length}) ================\n`);
       console.log(structuredContext);
       console.log("=======================================================================");
 
-      // const systemPrompt = `Você é um assistente especialista na carreira de Luis Fernando Richter e responde EXCLUSIVamente baseado no contexto fornecido.\n\nREGRAS OBRIGATÓRIAS:\n1.  Use APENAS o contexto abaixo. NÃO use seu conhecimento prévio.\n2.  Se a resposta não estiver no contexto, diga \"Com base nas informações que tenho, não consigo responder a essa pergunta.\" NÃO invente.\n3.  NÃO faça inferências, suposições ou cálculos (como \"X anos de experiência\").\n4.  Ao listar projetos, SEMPRE use o formato de bullet point: \"* Projeto: [Nome Completo do Projeto]\".\n\nCONTEXTO:\n{context}\n\nPERGUNTA:\n{query}\n\nRESPOSTA (seguindo rigorosamente as regras acima):\n`;
-
-      // 1. O System Prompt é APENAS para regras de comportamento.
       const systemPrompt = `Você é um assistente especialista na carreira de Luis Fernando Richter e atua de forma direta, profissional e precisa.
 
 REGRAS OBRIGATÓRIAS E INEGOCIÁVEIS:
@@ -647,7 +707,6 @@ REGRAS OBRIGATÓRIAS E INEGOCIÁVEIS:
 5. FORMATAÇÃO: Ao listar projetos, SEMPRE use o formato: "* Projeto: [Nome] - [Descrição/Tecnologias]".
 6. LIMITE DE CARGA COGNITIVA (PAGINAÇÃO): Se o contexto retornar uma lista longa (mais de 7 projetos), NUNCA liste todos de uma vez. Escolha e liste apenas os 7 mais relevantes. Ao final da lista, adicione OBRIGATORIAMENTE uma frase convidando o usuário a explorar o restante (ex: "Tenho mais projetos documentados no meu portfólio. Gostaria de focar em alguma tecnologia específica, como Laravel, React ou IA?").`;
 
-      // 2. O Contexto e a Pergunta vão na mensagem do Usuário.
       const userMessage = `CONTEXTO RECUPERADO DO BANCO DE DADOS:
       ${structuredContext}
 
@@ -670,19 +729,16 @@ REGRAS OBRIGATÓRIAS E INEGOCIÁVEIS:
 
     } catch (error: any) {
       console.error('[ERRO DETALHADO]', error.message || error);
-      const is503 = error?.status === 503 || error?.code === 'SERVICE_UNAVAILABLE' || error?.code === 'ALL_PROVIDERS_FAILED';
+      const is503 = error?.status === 503 || error?.code === 'SERVICE_UNAVAILABLE' || error?.code === 'ALL_PROVIDERS_FAILED' || error?.code === 'SUPABASE_PAUSED';
       if (is503) {
         return res.status(503).json({
-          error: 'AI service temporarily unavailable. Please try again.',
-          code: 'SERVICE_UNAVAILABLE'
+          error: 'AI service or database temporarily unavailable. Please try again.',
+          code: 'SUPABASE_PAUSED',
+          isSupabasePaused: true
         });
       }
       res.status(500).json({ error: 'Ocorreu um erro interno no servidor.' });
     }
-  });
-
-  app.listen(port, '0.0.0.0', () => {
-    console.log(`[server]: Backend rodando em http://localhost:${port}`);
   });
 }
 

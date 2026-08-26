@@ -64,9 +64,12 @@ export function SupabaseUnfreezeModal({
   useEffect(() => {
     if (status === 'restoring') {
       const checkStatus = async () => {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 4000);
         try {
           setIsPolling(true);
-          const res = await fetch(`${cleanApiUrl}/api/supabase/status`);
+          const res = await fetch(`${cleanApiUrl}/api/supabase/status`, { signal: controller.signal });
+          clearTimeout(timeoutId);
           if (res.ok) {
             const data = await res.json();
             if (data.status === 'ok' || data.isPaused === false) {
@@ -80,6 +83,7 @@ export function SupabaseUnfreezeModal({
             }
           }
         } catch (err) {
+          clearTimeout(timeoutId);
           console.warn('[UNFREEZE POLLING] Tentativa de conexão pendente...', err);
         } finally {
           setIsPolling(false);

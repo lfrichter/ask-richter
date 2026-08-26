@@ -38,9 +38,12 @@ export default function Chat() {
   // Checagem proativa inicial do status do Supabase
   useEffect(() => {
     const checkSupabaseHealth = async () => {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 4000);
       try {
         const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001';
-        const res = await fetch(`${apiBaseUrl.replace(/\/$/, '')}/api/supabase/status`);
+        const res = await fetch(`${apiBaseUrl.replace(/\/$/, '')}/api/supabase/status`, { signal: controller.signal });
+        clearTimeout(timeoutId);
         if (res.ok) {
           const data = await res.json();
           if (data.isPaused) {
@@ -48,8 +51,9 @@ export default function Chat() {
             setIsUnfreezeModalOpen(true);
           }
         }
-      } catch (err) {
-        console.warn('[SUPABASE CHECK] Não foi possível verificar o status do Supabase no startup:', err);
+      } catch (err: any) {
+        clearTimeout(timeoutId);
+        console.warn('[SUPABASE CHECK] Não foi possível verificar o status do Supabase no startup:', err?.message || err);
       }
     };
     checkSupabaseHealth();
@@ -65,13 +69,19 @@ export default function Chat() {
     setInput('');
     setIsLoading(true);
 
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 6000);
+
     try {
       const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001';
       const response = await fetch(`${apiBaseUrl.replace(/\/$/, '')}/api/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ messages: [...messages, userMessage] }),
+        signal: controller.signal
       });
+
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         let errData: any = {};
@@ -104,8 +114,17 @@ export default function Chat() {
       setLastFailedMessage(null);
 
     } catch (error: any) {
+      clearTimeout(timeoutId);
       console.error("Erro ao chamar ou processar a API:", error);
-      const isPausedError = error?.message?.includes('paused');
+
+      const isAbortError = error?.name === 'AbortError' || error?.message?.includes('aborted');
+      const isPausedError = isAbortError || error?.message?.includes('paused') || error?.message?.includes('Supabase');
+
+      if (isPausedError) {
+        setLastFailedMessage(queryText);
+        setIsUnfreezeModalOpen(true);
+      }
+
       const errorMessageContent = isPausedError
         ? "⚠️ O banco de dados do Supabase está temporariamente pausado. Use a janela de descongelamento para reativar o projeto."
         : "Desculpe, ocorreu um erro ao processar sua pergunta. Tente novamente em instantes.";
