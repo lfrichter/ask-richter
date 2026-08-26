@@ -53,8 +53,12 @@ function resolveServerSecrets(options: RestoreOptions) {
   // Fallback de desenvolvimento local em ambiente Node
   if ((!managementToken || !projectRef) && typeof process !== 'undefined' && process.cwd) {
     const candidatePaths = [
+      path.join(process.cwd(), 'apps/frontend/.env.local'),
+      path.join(process.cwd(), 'apps/frontend/.env'),
       path.join(process.cwd(), 'apps/backend/.env'),
+      path.join(process.cwd(), '.env.local'),
       path.join(process.cwd(), '.env'),
+      path.join(process.cwd(), '../frontend/.env.local'),
       path.join(process.cwd(), '../backend/.env')
     ];
 
