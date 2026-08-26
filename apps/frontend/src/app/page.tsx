@@ -41,8 +41,8 @@ export default function Chat() {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 4000);
       try {
-        const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001';
-        const res = await fetch(`${apiBaseUrl.replace(/\/$/, '')}/api/supabase/status`, { signal: controller.signal });
+        const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL ? process.env.NEXT_PUBLIC_API_BASE_URL.replace(/\/$/, '') : '';
+        const res = await fetch(`${apiBaseUrl}/api/supabase/status`, { signal: controller.signal });
         clearTimeout(timeoutId);
         if (res.ok) {
           const data = await res.json();
