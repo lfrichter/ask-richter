@@ -21,13 +21,15 @@ Mais do que um portfólio, o projeto opera sob o **Framework de Engenharia de So
 
 O desenvolvimento do AskRichter segue regras estritas de governança estruturada e Zero-Trust:
 
-1. **Meta Spec como Lei Constitucional ([`.askrichter-spec.md`](file:///.askrichter-spec.md)):**  
+1. **Meta Spec como Lei Constitucional ([`.askrichter-spec.md`](.askrichter-spec.md)):**  
    Fonte absoluta da verdade para decisões de arquitetura, contratos de API, fluxo RAG e regras de infraestrutura.
-2. **Engenharia de Contexto WSCI (World-Scope Context Isolation):**  
+2. **Fonte da Verdade Operacional ([`docs/Rules.md`](docs/Rules.md)):**  
+   Regras operacionais, diretrizes de conduta e procedimentos de reindexação auditável.
+3. **Engenharia de Contexto WSCI (World-Scope Context Isolation):**  
    Separação estrita por escopos (Frontend, Backend, Infraestrutura). Operações no dia a dia utilizam filtros de workspace (ex: `npm run dev --workspace=frontend`) e refatorações estruturais utilizam `git worktree`.
-3. **Governança por ADRs ([`docs/architect.md`](file:///docs/architect.md) & [`docs/adr/`](file:///docs/adr/)):**  
-   Todas as decisões arquiteturais geram registros imutáveis numerados no diretório `docs/adr/` (ex: [`ADR-0001`](file:///docs/adr/0001-meta-spec-e-governanca-de-arquitetura.md)).
-4. **Protocolo Jidoka / Andon Cord Unificado (`npm run jidoka`):**  
+4. **Governança por ADRs ([`docs/architect.md`](docs/architect.md) & [`docs/adr/`](docs/adr/)):**  
+   Todas as decisões arquiteturais geram registros imutáveis numerados no diretório [`docs/adr/`](docs/adr/) (ex: [`ADR-0001`](docs/adr/0001-meta-spec-e-governanca-de-arquitetura.md) a [`ADR-0006`](docs/adr/0006-llm-provider-resilience-and-fallback.md)).
+5. **Protocolo Jidoka / Andon Cord Unificado (`npm run jidoka`):**  
    Comando único no Turborepo que executa `check-types`, `lint` e `build` em paralelo com grafo de dependências. Se houver falha (exit code != 0), o ciclo é interrompido imediatamente para Reset Limpo e correção na origem.
 
 ---
@@ -37,7 +39,7 @@ O desenvolvimento do AskRichter segue regras estritas de governança estruturada
 - **Interface de Chat Conversacional:** UI moderna e reativa em Next.js 15 com Tailwind CSS, Radix UI e Framer Motion.
 - **Respostas Contextuais com RAG Híbrido:** Utiliza a técnica de Retrieval-Augmented Generation combinando **FAISS** em memória (`faiss-node`) e **HybridRetriever** para máxima precisão semântica.
 - **Arquitetura Provider-Agnostic de IA:** Abstração completa de provedores (`ProviderFactory`) suportando **Gemini** (padrão), **Ollama** (dev local), **OpenRouter** e **Hugging Face**.
-- **Persistência Vetorial na Nuvem:** Sincronização do índice FAISS no startup da aplicação via **Supabase Storage** com validação estrita de manifest (`provider`, `model`, `dimension`).
+- **Persistência Vetorial na Nuvem:** Sincronização do índice FAISS no startup da aplicação via **Supabase Storage** com validação estrita de manifest (`provider`, `model`, `dimension`) e registro em [`docs/INDEXING_LOG.md`](docs/INDEXING_LOG.md).
 - **Monorepo com Turborepo 2.x:** Pipeline otimizada de compilação, linting, checagem de tipos e validação Jidoka.
 
 ---
@@ -123,22 +125,23 @@ graph TD
 
 | Camada | Tecnologia | Descrição |
 | :--- | :--- | :--- |
-| **🏗️ Governança & Estrutura** | Meta Spec (`.askrichter-spec.md`) | Constituição primária e regras de RAG/infraestrutura. |
-| | Turborepo 2.x | Orquestração de tarefas (`build`, `lint`, `check-types`, `jidoka`). |
-| | npm Workspaces | Gerenciamento de dependências e workspaces (`apps/*`, `packages/*`). |
-| **⚙️ Backend** | Node.js (ESM) + Express.js | API RESTful com rotas `/api/chat` e `/api/health`. |
+| **🏗️ Governança & Estrutura** | Meta Spec ([`.askrichter-spec.md`](.askrichter-spec.md)) | Constituição primária e regras de RAG/infraestrutura. |
+| | Regras Operacionais ([`docs/Rules.md`](docs/Rules.md)) | Fonte da verdade para processos e reindexação auditável. |
+| | Turborepo 2.x ([`turbo.json`](turbo.json)) | Orquestração de tarefas (`build`, `lint`, `check-types`, `jidoka`). |
+| | npm Workspaces ([`package.json`](package.json)) | Gerenciamento de dependências e workspaces (`apps/*`, `packages/*`). |
+| **⚙️ Backend** | Node.js (ESM) + Express.js ([`apps/backend`](apps/backend)) | API RESTful com rotas `/api/chat` e `/api/health`. |
 | | TypeScript 5.8 | Tipagem estática rigorosa em todo o backend. |
 | | LangChain 0.3 | Framework de orquestração de RAG e retrievers. |
 | | FAISS (`faiss-node`) | Banco vetorial em memória para busca de similaridade semântica (dim: 768). |
 | | ProviderFactory | Camada de abstração desacoplada de IA (`Gemini`, `Ollama`, `OpenRouter`, `HuggingFace`). |
 | | Gemini Embeddings | Modelo `gemini-embedding-2` (768 dimensões). |
-| **⚛️ Frontend** | Next.js 15 (App Router) | Interface reativa otimizada para SEO e performance. |
+| **⚛️ Frontend** | Next.js 15 (App Router) ([`apps/frontend`](apps/frontend)) | Interface reativa otimizada para SEO e performance. |
 | | React 19 | Componentização reativa moderna. |
 | | Tailwind CSS + Framer Motion | Estilização responsiva e micro-animações. |
 | | markdown-to-jsx + SyntaxHighlighter | Renderização de respostas da IA com destaque de sintaxe. |
-| **☁️ Nuvem & DevOps** | Vercel | Deploy contínuo do frontend Next.js. |
-| | Render.com | Deploy contínuo do backend Node.js (`render.yaml`). |
-| | Supabase Storage | Bucket para persistência remota do índice FAISS. |
+| **☁️ Nuvem & DevOps** | Vercel ([`vercel.json`](vercel.json)) | Deploy contínuo do frontend Next.js. |
+| | Render.com ([`render.yaml`](render.yaml)) | Deploy contínuo do backend Node.js. |
+| | Supabase Storage | Bucket para persistência remota do índice FAISS com log auditável em [`docs/INDEXING_LOG.md`](docs/INDEXING_LOG.md). |
 
 ---
 
@@ -162,12 +165,12 @@ npm install
 
 ### 3. Variáveis de Ambiente
 
-**Backend (`apps/backend/.env`):**
+**Backend ([`apps/backend/.env`](apps/backend/.env.example)):**
 ```bash
 cd apps/backend
 cp .env.example .env
 ```
-Preencha as chaves no arquivo `.env`:
+Preencha as chaves no arquivo `.env` (consulte [`apps/backend/.env.example`](apps/backend/.env.example)):
 ```env
 OPENAI_API_KEY="sk-..."
 AI_PROVIDER="ollama"
@@ -178,12 +181,12 @@ SUPABASE_SERVICE_ROLE_KEY="sua-chave-secreta"
 SUPABASE_BUCKET_NAME="faiss-index"
 ```
 
-**Frontend (`apps/frontend/.env.local`):**
+**Frontend ([`apps/frontend/.env.local`](apps/frontend/.env.example)):**
 ```bash
 cd apps/frontend
 cp .env.example .env.local
 ```
-Garantir a URL da API do backend:
+Garantir a URL da API do backend (consulte [`apps/frontend/.env.example`](apps/frontend/.env.example)):
 ```env
 NEXT_PUBLIC_API_BASE_URL=http://localhost:3001
 ```
@@ -230,10 +233,10 @@ Este comando executa a pipeline unificada do Turborepo (`check-types`, `lint` e 
 
 ## 🤝 Contribuição e Governança
 
-Para contribuir, siga as diretrizes estabelecidas no [Guia de Contribuição](file:///docs/CONTRIBUTING.md) e certifique-se de que todas as decisões de arquitetura sejam registradas via ADR em [`docs/adr/`](file:///docs/adr/).
+Para contribuir, siga as diretrizes estabelecidas no [Guia de Contribuição](docs/CONTRIBUTING.md) e certifique-se de que todas as decisões de arquitetura sejam registradas via ADR no diretório [`docs/adr/`](docs/adr/).
 
 ---
 
 ## 📄 Licença
 
-Este projeto está sob a licença MIT. Veja o arquivo `LICENSE` para mais detalhes.
+Este projeto está sob a licença MIT. Veja o arquivo [`LICENSE`](LICENSE) para mais detalhes.

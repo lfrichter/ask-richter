@@ -24,7 +24,7 @@ Sem uma constituição técnica unificada e diretrizes claras de governança, o 
 Decidimos instituir o **Framework de Engenharia de Software Guiado por IA v2.0 Master**, estabelecendo três pilares primários de governança:
 
 1. **Adoção da META SPEC como Lei Constitucional (`.askrichter-spec.md`):**
-   - O documento [`.askrichter-spec.md`](file:///Users/master/projects/chatbot/ask-richter/.askrichter-spec.md) passa a ser a referência absoluta e imutável sobre a arquitetura do projeto, stack tecnológica, fluxo RAG e regras de infraestrutura.
+   - O documento [`.askrichter-spec.md`](../../.askrichter-spec.md) passa a ser a referência absoluta e imutável sobre a arquitetura do projeto, stack tecnológica, fluxo RAG e regras de infraestrutura.
 
 2. **Engenharia de Contexto WSCI (World-Scope Context Isolation):**
    - As tarefas devem ser estritamente classificadas em escopos (Frontend, Backend ou Infraestrutura).
@@ -32,8 +32,8 @@ Decidimos instituir o **Framework de Engenharia de Software Guiado por IA v2.0 M
 
 3. **Governança por ADRs Individuais e Índice `docs/architect.md`:**
    - Nenhuma decisão arquitetural deve ser registrada em logs monolíticos.
-   - Cada decisão gerará um novo arquivo numerado no diretório [`docs/adr/`](file:///Users/master/projects/chatbot/ask-richter/docs/adr/).
-   - O arquivo [`docs/architect.md`](file:///Users/master/projects/chatbot/ask-richter/docs/architect.md) será mantido como mapa mental de alto nível e índice das ADRs.
+   - Cada decisão gerará um novo arquivo numerado no diretório [`docs/adr/`](./).
+   - O arquivo [`docs/architect.md`](../architect.md) será mantido como mapa mental de alto nível e índice das ADRs.
 
 4. **Protocolo Jidoka (Andon Cord & Zero-Trust):**
    - Estabelecida a política de que nenhum código é válido até passar nos checkpoints automatizados de lint (`npm run lint`), checagem de tipos (`npm run check-types`) e build limpo do Turborepo (`npm run build`).
