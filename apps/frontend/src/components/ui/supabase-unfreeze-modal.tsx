@@ -10,6 +10,8 @@ interface SupabaseUnfreezeModalProps {
   apiBaseUrl?: string;
 }
 
+const TOTAL_RESTORE_TIMEOUT_SEC = 300; // 300 segundos (5 minutos) — SLA real do Supabase em produção
+
 export function SupabaseUnfreezeModal({
   isOpen,
   onClose,
@@ -19,7 +21,7 @@ export function SupabaseUnfreezeModal({
   const [status, setStatus] = useState<'idle' | 'restoring' | 'success' | 'manual_required' | 'timeout' | 'error'>('idle');
   const [message, setMessage] = useState<string>('');
   const [dashboardUrl, setDashboardUrl] = useState<string>('https://supabase.com/dashboard');
-  const [timeLeft, setTimeLeft] = useState<number>(90); // 90 segundos
+  const [timeLeft, setTimeLeft] = useState<number>(TOTAL_RESTORE_TIMEOUT_SEC); // 300 segundos (5 min)
   const [isPolling, setIsPolling] = useState<boolean>(false);
   const [pollingStep, setPollingStep] = useState<number>(0);
 
@@ -50,7 +52,7 @@ export function SupabaseUnfreezeModal({
   useEffect(() => {
     if (isOpen) {
       setStatus('idle');
-      setTimeLeft(90);
+      setTimeLeft(TOTAL_RESTORE_TIMEOUT_SEC);
       setMessage('');
       setPollingStep(0);
     } else {
@@ -58,7 +60,7 @@ export function SupabaseUnfreezeModal({
     }
   }, [isOpen, stopAllAsyncTasks]);
 
-  // Efeito do Timer Regressivo de 90s
+  // Efeito do Timer Regressivo de 300s (5 min SLA Real)
   useEffect(() => {
     if (status === 'restoring' && timeLeft > 0) {
       countdownTimerRef.current = setInterval(() => {
@@ -67,7 +69,9 @@ export function SupabaseUnfreezeModal({
             if (countdownTimerRef.current) clearInterval(countdownTimerRef.current);
             stopAllAsyncTasks();
             setStatus('timeout');
-            setMessage('O tempo limite de restauração (90s) foi excedido. O projeto pode estar demorando a responder.');
+            setMessage(
+              'O tempo limite de restauração (5 min) foi atingido. A restauração no Supabase pode estar demorando mais que o habitual.'
+            );
             return 0;
           }
           return prev - 1;
@@ -101,52 +105,45 @@ export function SupabaseUnfreezeModal({
 
       try {
         const res = await fetch(`${cleanApiUrl}/api/supabase/status`, {
-          signal: controller.signal
+          signal: controller.signal,
+          headers: { 'Cache-Control': 'no-cache' }
         });
         clearTimeout(timeoutId);
 
-        if (res.ok) {
-          const data = await res.json();
+        let data: any = null;
+        try {
+          data = await res.json();
+        } catch {
+          // Ignora erro de JSON parse
+        }
 
-          // Se a verificação retornar READY ou isReady=true
-          if (data.state === 'READY' || data.isReady === true || data.status === 'ok' || data.isPaused === false) {
-            stopAllAsyncTasks();
-            setStatus('success');
-            setMessage('Projeto Supabase ativo e pronto para uso!');
-            setTimeout(() => {
-              onClose();
-              if (onRestored) onRestored();
-            }, 2000);
-            return;
-          }
+        // Se o Supabase já respondeu READY (200 / isReady)
+        if (res.ok && data && (data.isReady || data.state === 'READY')) {
+          stopAllAsyncTasks();
+          setStatus('success');
+          setMessage('Supabase ativado e operacional! Carregando aplicação...');
 
-          // Se a verificação indicar que o projeto ainda está restaurando (WAKING) ou pausado (PAUSED)
-          if (data.state === 'WAKING') {
-            setMessage('Contêineres do Supabase inicializando...');
-          } else if (data.state === 'PAUSED') {
-            setMessage('Aguardando resposta dos serviços do Supabase...');
-          } else if (data.state === 'TIMEOUT') {
-            setMessage('Sonda de verificação expirou. Tentando novamente em breve...');
-          } else if (data.state === 'AUTH_ERROR' || data.state === 'CONFIG_MISSING') {
-            stopAllAsyncTasks();
-            setStatus('manual_required');
-            setMessage(data.reason || 'Falha de autenticação ou configuração do Supabase.');
-            return;
-          }
+          setTimeout(() => {
+            onClose();
+            if (onRestored) onRestored();
+          }, 1500);
+          return;
+        }
+
+        // Se o Supabase Management reportar restauração em andamento
+        if (data && data.state === 'WAKING') {
+          setMessage('O Supabase está inicializando os contêineres e o banco de dados. Aguarde...');
         }
       } catch (err: any) {
         clearTimeout(timeoutId);
-        if (err.name !== 'AbortError') {
-          console.warn('[UNFREEZE POLLING Probe] Exceção na verificação:', err);
-        }
-      } finally {
-        setIsPolling(false);
-        activeAbortControllerRef.current = null;
+        // Exceções transitórias de rede/timeout durante o polling são tratadas com resiliência
+        // e NÃO interrompem a tentativa nem disparam estado de falha definitivo
       }
 
+      // Se a flag de loop foi desativada durante a execução da requisição
       if (!isPollingLoopActiveRef.current) break;
 
-      // Recuo progressivo antes da próxima tentativa
+      // Aguarda o intervalo de recuo progressivo antes da próxima probe
       const delay = getBackoffDelay(step);
       await new Promise(resolve => setTimeout(resolve, delay));
       step++;
@@ -158,7 +155,7 @@ export function SupabaseUnfreezeModal({
   // Dispara o comando de restauração server-side
   const handleTriggerRestore = async () => {
     setStatus('restoring');
-    setTimeLeft(90);
+    setTimeLeft(TOTAL_RESTORE_TIMEOUT_SEC);
     setMessage('Disparando comando de restauração no Supabase...');
 
     try {
@@ -215,7 +212,7 @@ export function SupabaseUnfreezeModal({
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const progressPercentage = Math.max(0, Math.min(100, ((90 - timeLeft) / 90) * 100));
+  const progressPercentage = Math.max(0, Math.min(100, ((TOTAL_RESTORE_TIMEOUT_SEC - timeLeft) / TOTAL_RESTORE_TIMEOUT_SEC) * 100));
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
@@ -254,7 +251,7 @@ export function SupabaseUnfreezeModal({
             </p>
             <div className="p-3 bg-amber-50 dark:bg-amber-950/30 border border-amber-200/60 dark:border-amber-900/40 rounded-xl text-xs text-amber-800 dark:text-amber-300 flex items-start gap-2">
               <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
-              <span>Clique no botão abaixo para disparar o descongelamento. O processo costuma levar de 60 a 90 segundos.</span>
+              <span>Clique no botão abaixo para disparar o descongelamento. A inicialização completa dos contêineres e do banco leva em média até 5 minutos.</span>
             </div>
 
             <div className="flex gap-2 pt-2">
@@ -278,45 +275,60 @@ export function SupabaseUnfreezeModal({
         {status === 'restoring' && (
           <div className="space-y-4 text-center py-2">
             <div className="relative flex items-center justify-center my-4">
-              <div className="text-4xl font-extrabold font-mono tracking-wider text-amber-600 dark:text-amber-400">
-                {formatTime(timeLeft)}
-              </div>
+              <RefreshCw className="w-10 h-10 text-amber-500 animate-spin" />
+            </div>
+
+            <div className="space-y-1">
+              <p className="text-sm font-medium text-zinc-800 dark:text-zinc-200">
+                {message || 'Descongelando projeto no Supabase...'}
+              </p>
+
+              {timeLeft <= 180 && (
+                <p className="text-xs text-amber-700 dark:text-amber-400 font-medium animate-pulse mt-1">
+                  Os contêineres estão em processo de inicialização. Aguarde a conclusão...
+                </p>
+              )}
+
+              <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                Probe #{pollingStep} | Tempo restante aproximado: <span className="font-semibold text-amber-600 dark:text-amber-400">{formatTime(timeLeft)}</span>
+              </p>
             </div>
 
             {/* Barra de Progresso */}
             <div className="w-full bg-zinc-100 dark:bg-zinc-800 rounded-full h-2 overflow-hidden">
               <div
-                className="bg-gradient-to-r from-orange-500 to-amber-500 h-full transition-all duration-1000 ease-linear"
+                className="bg-gradient-to-r from-amber-500 to-orange-500 h-full transition-all duration-1000 ease-linear rounded-full"
                 style={{ width: `${progressPercentage}%` }}
               />
             </div>
 
-            <p className="text-xs text-zinc-500 dark:text-zinc-400 flex items-center justify-center gap-1.5 min-h-[20px]">
-              {isPolling && <RefreshCw className="w-3.5 h-3.5 animate-spin text-amber-500 shrink-0" />}
-              <span>{message || 'Aguardando inicialização dos contêineres do Supabase...'}</span>
-            </p>
-
-            <p className="text-[11px] text-zinc-400 dark:text-zinc-500 italic">
-              {pollingStep > 0 ? `Sonda de verificação #${pollingStep} ativa.` : 'Inicializando verificações sequenciais...'}
-            </p>
-
-            <button
-              onClick={() => { stopAllAsyncTasks(); onClose(); }}
-              className="mt-2 text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 underline"
-            >
-              Cancelar e aguardar em segundo plano
-            </button>
+            <div className="pt-2">
+              <button
+                onClick={() => {
+                  stopAllAsyncTasks();
+                  onClose();
+                }}
+                className="text-xs text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200 transition-colors underline underline-offset-4"
+              >
+                Cancelar e fechar janela
+              </button>
+            </div>
           </div>
         )}
 
         {status === 'success' && (
-          <div className="space-y-3 text-center py-4">
-            <div className="text-emerald-500 font-semibold text-base">
-              {message}
+          <div className="space-y-4 text-center py-2">
+            <div className="p-3 bg-emerald-100 dark:bg-emerald-950/60 rounded-full w-14 h-14 mx-auto flex items-center justify-center text-emerald-600">
+              <CheckCircle2 className="w-8 h-8" />
             </div>
-            <p className="text-xs text-zinc-500">
-              Retomando sua pergunta automaticamente...
-            </p>
+            <div className="space-y-1">
+              <h4 className="text-base font-semibold text-emerald-700 dark:text-emerald-400">
+                Supabase Descongelado com Sucesso!
+              </h4>
+              <p className="text-xs text-zinc-600 dark:text-zinc-300">
+                O banco de dados vetorial está ativo. A janela será fechada automaticamente em instantes.
+              </p>
+            </div>
           </div>
         )}
 
@@ -326,28 +338,26 @@ export function SupabaseUnfreezeModal({
               {message}
             </p>
 
-            <div className="p-3 bg-amber-50 dark:bg-amber-950/30 border border-amber-200/60 dark:border-amber-900/40 rounded-xl text-xs text-amber-800 dark:text-amber-300 flex items-start gap-2">
-              <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
-              <span>O Supabase pode levar até 2 minutos para aquecer completamente. Você pode tentar novamente ou verificar no Dashboard.</span>
+            <div className="p-3 bg-orange-50 dark:bg-orange-950/30 border border-orange-200/60 dark:border-orange-900/40 rounded-xl text-xs text-orange-800 dark:text-orange-300">
+              Caso o descongelamento automático esteja demorando, você pode acessar diretamente o painel do Supabase para verificar a inicialização.
             </div>
 
             <div className="flex gap-2 pt-2">
-              <button
-                onClick={handleTriggerRestore}
-                className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white font-medium rounded-xl shadow-lg shadow-orange-500/20 transition-all text-sm"
-              >
-                <RefreshCw className="w-4 h-4" />
-                Tentar Novamente
-              </button>
               <a
                 href={dashboardUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-3 py-2.5 border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-xl text-sm font-medium transition-colors flex items-center gap-1.5"
+                className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-amber-600 hover:bg-amber-700 text-white font-medium rounded-xl transition-all text-sm shadow-md"
               >
-                <ExternalLink className="w-3.5 h-3.5" />
-                Dashboard
+                <ExternalLink className="w-4 h-4" />
+                Abrir Dashboard Supabase
               </a>
+              <button
+                onClick={onClose}
+                className="px-3 py-2.5 border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-xl text-sm font-medium transition-colors"
+              >
+                Fechar
+              </button>
             </div>
           </div>
         )}
@@ -358,13 +368,9 @@ export function SupabaseUnfreezeModal({
               {message}
             </p>
 
-            <div className="p-3 bg-zinc-100 dark:bg-zinc-800/60 rounded-xl text-xs text-zinc-600 dark:text-zinc-300 space-y-1">
-              <p className="font-semibold">Instruções para descongelar manualmente:</p>
-              <ol className="list-decimal list-inside space-y-0.5 text-zinc-500 dark:text-zinc-400">
-                <li>Abra o Dashboard do Supabase pelo botão abaixo.</li>
-                <li>Clique em <strong>&quot;Restore Project&quot;</strong> no aviso principal.</li>
-                <li>Aguarde cerca de 1 minuto até o status mudar para <em>Active</em>.</li>
-              </ol>
+            <div className="p-3 bg-amber-50 dark:bg-amber-950/30 border border-amber-200/60 dark:border-amber-900/40 rounded-xl text-xs text-amber-800 dark:text-amber-300 flex items-start gap-2">
+              <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+              <span>Instruções: Acesse o Dashboard do Supabase, selecione o projeto e clique no botão &quot;Restore project&quot;.</span>
             </div>
 
             <div className="flex gap-2 pt-2">
@@ -372,10 +378,10 @@ export function SupabaseUnfreezeModal({
                 href={dashboardUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl shadow-lg shadow-blue-600/20 transition-all text-sm"
+                className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-amber-600 hover:bg-amber-700 text-white font-medium rounded-xl transition-all text-sm shadow-md"
               >
                 <ExternalLink className="w-4 h-4" />
-                Abrir Supabase Dashboard
+                Ir para o Dashboard Supabase
               </a>
               <button
                 onClick={onClose}

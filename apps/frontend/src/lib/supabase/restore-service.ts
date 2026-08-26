@@ -46,12 +46,12 @@ const IDEMPOTENCY_WINDOW_MS = 10000; // 10 segundos
  * Resolve as variáveis de ambiente estritamente no server-side.
  */
 function resolveServerSecrets(options: RestoreOptions) {
-  let managementToken = options.managementToken || process.env.SUPABASE_MANAGEMENT_TOKEN;
-  let supabaseUrl = options.supabaseUrl || process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
-  let projectRef = options.projectRef || process.env.SUPABASE_PROJECT_REF;
+  let managementToken = options.managementToken !== undefined ? options.managementToken : process.env.SUPABASE_MANAGEMENT_TOKEN;
+  let supabaseUrl = options.supabaseUrl !== undefined ? options.supabaseUrl : (process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL);
+  let projectRef = options.projectRef !== undefined ? options.projectRef : process.env.SUPABASE_PROJECT_REF;
 
-  // Fallback de desenvolvimento local em ambiente Node
-  if ((!managementToken || !projectRef) && typeof process !== 'undefined' && process.cwd) {
+  // Fallback de desenvolvimento local em ambiente Node (apenas se as opções não forem fornecidas explicitamente)
+  if (options.managementToken === undefined && options.projectRef === undefined && typeof process !== 'undefined' && process.cwd) {
     const candidatePaths = [
       path.join(process.cwd(), 'apps/frontend/.env.local'),
       path.join(process.cwd(), 'apps/frontend/.env'),
