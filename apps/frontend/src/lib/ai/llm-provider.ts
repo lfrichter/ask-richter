@@ -1,8 +1,34 @@
 import { GoogleGenAI } from '@google/genai';
+import dotenv from 'dotenv';
+import path from 'path';
+import fs from 'fs';
 
 export interface LLMProvider {
   name: string;
   generate(systemPrompt: string, userMessage: string): Promise<string>;
+}
+
+function resolveGeminiApiKey(passedKey?: string): string {
+  let key = passedKey || process.env.GEMINI_API_KEY;
+  if (key) return key;
+
+  // Fallback de desenvolvimento local
+  const candidatePaths = [
+    path.join(process.cwd(), 'apps/backend/.env'),
+    path.join(process.cwd(), '.env'),
+    path.join(process.cwd(), '../backend/.env')
+  ];
+
+  for (const envPath of candidatePaths) {
+    if (fs.existsSync(envPath)) {
+      const envConfig = dotenv.parse(fs.readFileSync(envPath));
+      if (envConfig.GEMINI_API_KEY) {
+        return envConfig.GEMINI_API_KEY;
+      }
+    }
+  }
+
+  throw new Error('[GeminiProvider] A variável GEMINI_API_KEY não está definida no ambiente.');
 }
 
 export class GeminiLLMProvider implements LLMProvider {
@@ -11,12 +37,9 @@ export class GeminiLLMProvider implements LLMProvider {
   private model: string;
 
   constructor(apiKey?: string, model?: string) {
-    const key = apiKey || process.env.GEMINI_API_KEY;
-    if (!key) {
-      throw new Error('[GeminiLLMProvider] A variável GEMINI_API_KEY não está definida.');
-    }
+    const key = resolveGeminiApiKey(apiKey);
     this.ai = new GoogleGenAI({ apiKey: key });
-    this.model = model || process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+    this.model = model || process.env.GEMINI_MODEL || 'gemini-3.6-flash';
   }
 
   async generate(systemPrompt: string, userMessage: string): Promise<string> {
@@ -65,10 +88,7 @@ export class GeminiEmbeddingService {
   private dimension: number;
 
   constructor(apiKey?: string) {
-    const key = apiKey || process.env.GEMINI_API_KEY;
-    if (!key) {
-      throw new Error('[GeminiEmbeddingService] GEMINI_API_KEY ausente.');
-    }
+    const key = resolveGeminiApiKey(apiKey);
     this.ai = new GoogleGenAI({ apiKey: key });
     this.modelName = process.env.EMBEDDING_MODEL || 'gemini-embedding-2';
     this.dimension = parseInt(process.env.EMBEDDING_DIMENSION || '768', 10);
