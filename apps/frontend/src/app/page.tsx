@@ -71,7 +71,7 @@ export default function Chat() {
     setIsLoading(true);
 
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 6000);
+    const timeoutId = setTimeout(() => controller.abort(), 30000);
 
       try {
         const rawUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '';
