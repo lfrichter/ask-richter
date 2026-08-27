@@ -41,12 +41,13 @@ export default function Chat() {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 4000);
       try {
-        const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL ? process.env.NEXT_PUBLIC_API_BASE_URL.replace(/\/$/, '') : '';
+        const rawUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '';
+        const apiBaseUrl = rawUrl.includes('onrender.com') ? '' : rawUrl.replace(/\/$/, '');
         const res = await fetch(`${apiBaseUrl}/api/supabase/status`, { signal: controller.signal });
         clearTimeout(timeoutId);
         if (res.ok) {
           const data = await res.json();
-          if (data.isPaused) {
+          if (data.isPaused || data.state === 'PAUSED') {
             console.warn('[SUPABASE CHECK] Projeto Supabase detectado como pausado na inicialização.');
             setIsUnfreezeModalOpen(true);
           }
@@ -73,7 +74,8 @@ export default function Chat() {
     const timeoutId = setTimeout(() => controller.abort(), 6000);
 
       try {
-        const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL ? process.env.NEXT_PUBLIC_API_BASE_URL.replace(/\/$/, '') : '';
+        const rawUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '';
+        const apiBaseUrl = rawUrl.includes('onrender.com') ? '' : rawUrl.replace(/\/$/, '');
         const response = await fetch(`${apiBaseUrl}/api/chat`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -90,12 +92,12 @@ export default function Chat() {
         } catch {}
 
         const errMsg = errData.error || response.statusText;
-        const isPaused = errData.isSupabasePaused || errData.code === 'SUPABASE_PAUSED' || (typeof errMsg === 'string' && (errMsg.toLowerCase().includes('supabase') || errMsg.toLowerCase().includes('fetch failed')));
+        const isExplicitlyPaused = errData.isPaused === true || errData.isSupabasePaused === true || errData.code === 'SUPABASE_PAUSED' || errData.state === 'PAUSED' || (typeof errMsg === 'string' && (errMsg.toLowerCase().includes('project is paused') || errMsg.toLowerCase().includes('project_paused')));
 
-        if (isPaused) {
+        if (isExplicitlyPaused) {
           setLastFailedMessage(queryText);
           setIsUnfreezeModalOpen(true);
-          throw new Error('Supabase project is paused or unavailable.');
+          throw new Error('Supabase project is paused.');
         }
 
         throw new Error(`Erro na API: ${errMsg}`);
@@ -117,15 +119,14 @@ export default function Chat() {
       clearTimeout(timeoutId);
       console.error("Erro ao chamar ou processar a API:", error);
 
-      const isAbortError = error?.name === 'AbortError' || error?.message?.includes('aborted');
-      const isPausedError = isAbortError || error?.message?.includes('paused') || error?.message?.includes('Supabase');
+      const isExplicitlyPaused = error?.message?.includes('project is paused') || error?.message?.includes('project_paused');
 
-      if (isPausedError) {
+      if (isExplicitlyPaused) {
         setLastFailedMessage(queryText);
         setIsUnfreezeModalOpen(true);
       }
 
-      const errorMessageContent = isPausedError
+      const errorMessageContent = isExplicitlyPaused
         ? "⚠️ O banco de dados do Supabase está temporariamente pausado. Use a janela de descongelamento para reativar o projeto."
         : "Desculpe, ocorreu um erro ao processar sua pergunta. Tente novamente em instantes.";
 

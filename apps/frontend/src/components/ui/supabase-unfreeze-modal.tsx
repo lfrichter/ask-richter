@@ -29,7 +29,7 @@ export function SupabaseUnfreezeModal({
   const activeAbortControllerRef = useRef<AbortController | null>(null);
   const isPollingLoopActiveRef = useRef<boolean>(false);
 
-  const cleanApiUrl = apiBaseUrl ? apiBaseUrl.replace(/\/$/, '') : '';
+  const cleanApiUrl = apiBaseUrl && !apiBaseUrl.includes('onrender.com') ? apiBaseUrl.replace(/\/$/, '') : '';
 
   // Cancela todas as tarefas assíncronas e requisições em voo
   const stopAllAsyncTasks = useCallback(() => {
