@@ -33,8 +33,9 @@ O desenvolvimento do AskRichter segue regras estritas de governança estruturada
 
 ## 🚀 Principais Features & Inovações Recentes
 
+- **Alinhamento Multilíngue de Respostas (M15 / Multilingual RAG):** Suporte inteligente a múltiplos idiomas (Inglês, Português, Espanhol). A IA identifica a língua da pergunta do usuário e gera a resposta no mesmo idioma, priorizando a mensagem do usuário sobre a língua do contexto factual recuperado do banco de dados.
 - **RAG 100% Serverless V2 (Next.js App Router):** Motor de RAG executando em funções Serverless no Vercel (ADR-0007/ADR-0008), eliminando a necessidade de contêineres ou servidores dedicados 24/7.
-- **Motor Vetorial & Léxico em TS Puro:** Implementação de busca de similaridade por cosseno (`TSVectorStore`) e busca pontuada por frequência de termos (`SimpleTfIdf`) sem dependências nativas C++ (`faiss-node`).
+- **Invariantes de Roteamento de Produção (Zero Render Fallback):** Sanitização automática de URLs em tempo de execução que elimina qualquer desvio para o Render legado em produção, forçando o uso de rotas relativas nativas Vercel (`/api/chat`, `/api/supabase/status`, `/api/supabase/restore`, `/api/ready`).
 - **Resiliência do Supabase & Máquina de Estados Operacional (ADR-0009):** Sistema robusto de detecção de disponibilidade e descongelamento automático do Supabase com 7 estados operacionais estritos (`READY`, `PAUSED`, `WAKING`, `UNAVAILABLE`, `TIMEOUT`, `AUTH_ERROR`, `UNKNOWN`).
 - **Regra de Ouro da Não-Inferência de Pausa:** Garantia por software de que falhas de rede (`fetch failed`), estouros de tempo (`AbortError`) ou falhas de chave API nunca são falsamente marcados como "Supabase Pausado".
 - **Descongelamento Server-Side Seguro (`POST /api/supabase/restore`):** Comunicação com a Supabase Management API realizada exclusivamente via rotas de servidor Next.js, mantendo tokens de administração (`SUPABASE_MANAGEMENT_TOKEN`) 100% isolados do navegador.
@@ -85,7 +86,7 @@ graph TD
         Frontend["⚛️ UI & App Router<br>ask-richter.vercel.app"]
         StatusApi["🔍 /api/supabase/status<br>(Status Classifier)"]
         RestoreApi["⚡ /api/supabase/restore<br>(Server-side Recovery)"]
-        ChatApi["🤖 /api/chat<br>(Serverless RAG Engine)"]
+        ChatApi["🤖 /api/chat<br>(Serverless RAG Engine + Multilingual M15)"]
     end
 
     subgraph "Nuvem Supabase"
@@ -97,9 +98,9 @@ graph TD
         GeminiAPI["🌐 Google GenAI API<br>(gemini-3.6-flash)"]
     end
 
-    User -- "1. Pergunta em linguagem natural" --> Frontend
+    User -- "1. Pergunta em linguagem natural (PT/EN/ES)" --> Frontend
     Frontend -- "2. Verifica disponibilidade" --> StatusApi
-    StatusApi -- "3. Ping de saúde (REST)" --> SupabaseREST
+    StatusApi -- "3. Ping de saúde (REST + Mgmt)" --> SupabaseREST
 
     Frontend -. "4. Se pausado: solicita descongelamento" .-> RestoreApi
     RestoreApi -- "5. Dispara Restore (Secret Server-side)" --> SupabaseMgmt
@@ -107,8 +108,8 @@ graph TD
 
     Frontend -- "7. Consulta com RAG Híbrido" --> ChatApi
     ChatApi -- "8. Busca vetorial & léxica" --> SupabaseREST
-    ChatApi -- "9. Gera resposta fundamentada" --> GeminiAPI
-    ChatApi -- "10. Retorna resposta JSON" --> User
+    ChatApi -- "9. Gera resposta alinhada ao idioma" --> GeminiAPI
+    ChatApi -- "10. Retorna resposta JSON no idioma do usuário" --> User
 
     style User fill:#D6EAF8
     style Frontend fill:#E8DAEF
@@ -135,13 +136,14 @@ graph TD
 | | `TSVectorStore` | Busca vetorial por similaridade de cosseno em TypeScript puro (dim: 768). |
 | | `SimpleTfIdf` | Busca léxica TF-IDF em TypeScript puro sem dependências C++. |
 | | `@google/genai` | SDK oficial do Google GenAI para `gemini-3.6-flash` e `gemini-embedding-2`. |
+| | Multilingual RAG (M15) | Geração de resposta no idioma exato da pergunta (PT/EN/ES). |
 | | Status Classifier ([`status-classifier.ts`](file:///Users/master/projects/chatbot/ask-richter/apps/frontend/src/lib/supabase/status-classifier.ts)) | Classificação estrita de disponibilidade com 7 estados operacionais (ADR-0009). |
 | | Server-side Restore ([`restore-service.ts`](file:///Users/master/projects/chatbot/ask-richter/apps/frontend/src/lib/supabase/restore-service.ts)) | Restauração server-side via Supabase Management API com idempotência. |
 | **⚛️ Frontend UX** | React 19 + Next.js 15 | Interface reativa moderna e componetizada. |
 | | Tailwind CSS + Framer Motion | Estilização responsiva, glassmorphism e micro-animações. |
 | | `SupabaseUnfreezeModal` | Modal de descongelamento com polling sequencial e progressive backoff. |
 | | markdown-to-jsx + SyntaxHighlighter | Renderização de respostas da IA com destaque de sintaxe. |
-| **☁️ Nuvem & DevOps** | Vercel ([`vercel.json`](vercel.json)) | Deploy Serverless do frontend e APIs RAG. |
+| **☁️ Nuvem & DevOps** | Vercel ([`vercel.json`](vercel.json)) | Deploy Serverless do frontend e APIs RAG com rotas relativas. |
 | | Supabase Storage & Management API | Armazenamento de vetores e gerenciamento de ciclo de vida do projeto. |
 
 ---
@@ -192,8 +194,8 @@ npm run dev
 
 ## 🧪 Suíte de Testes Automatizados & Protocolo Jidoka
 
-### 1. Testes Unitários de Resiliência & RAG
-Para executar a suíte de testes de paridade vetorial, classificação de status e resiliência:
+### 1. Testes Unitários de Resiliência, Roteamento & Multilíngue
+Para executar a suíte completa com **65 testes automatizados** divididos em 8 módulos (paridade vetorial, classificação de status, resiliência, invariantes de roteamento em produção e alinhamento multilíngue M15):
 
 ```bash
 cd apps/frontend
