@@ -9,6 +9,7 @@ import Markdown from 'markdown-to-jsx';
 import Image from 'next/image';
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
+import { ExternalLink } from 'lucide-react';
 import myAdjustedOk from '../../public/images/AvatarCircle.png';
 
 const CodeBlock = dynamic(
@@ -24,7 +25,7 @@ interface Message {
 
 export default function Chat() {
   const [messages, setMessages] = useState<Message[]>([
-    { id: 'initial', role: 'assistant', content: 'Olá! Sou o **Ask Richter**...' },
+    { id: 'initial', role: 'assistant', content: "Hello! I'm **Ask Richter**..." },
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -168,10 +169,41 @@ export default function Chat() {
         <Card className="w-full max-w-3xl shadow-2xl bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md border border-gray-200/80 dark:border-zinc-800 relative z-20">
             <CardHeader className="text-center">
               <div className="flex justify-center items-center">
-                <Image src={myAdjustedOk} alt="Luis Fernando Richter" width={50} height={50} className="rounded-full mr-4" />
-                <div>
-                  <CardTitle className="text-2xl font-bold">Ask Richter</CardTitle>
-                  <p className="text-sm text-gray-500">My Interactive CV with AI</p>
+                <div className="relative group inline-flex items-center">
+                  <a
+                    href="https://richter.dev.br/#"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-4 p-2 rounded-2xl transition-all duration-200 hover:bg-zinc-100/80 dark:hover:bg-zinc-800/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 cursor-pointer"
+                    title="To learn more about this project, visit my website."
+                    aria-label="To learn more about this project, visit my website."
+                  >
+                    <div className="relative flex-shrink-0">
+                      <Image
+                        src={myAdjustedOk}
+                        alt="Luis Fernando Richter"
+                        width={50}
+                        height={50}
+                        className="rounded-full transition-transform duration-300 group-hover:scale-105 ring-2 ring-transparent group-hover:ring-blue-500/40"
+                      />
+                    </div>
+                    <div className="text-left">
+                      <CardTitle className="text-2xl font-bold transition-colors duration-200 group-hover:text-blue-600 dark:group-hover:text-blue-400 flex items-center gap-1.5">
+                        Ask Richter
+                        <ExternalLink className="w-4 h-4 opacity-0 -translate-x-1 group-hover:opacity-70 group-hover:translate-x-0 transition-all duration-200 text-blue-600 dark:text-blue-400" />
+                      </CardTitle>
+                      <p className="text-sm text-gray-500">My Interactive CV with AI</p>
+                    </div>
+                  </a>
+
+                  {/* Tooltip */}
+                  <div
+                    role="tooltip"
+                    className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-all duration-200 translate-y-1 group-hover:translate-y-0 group-focus-within:translate-y-0 z-50 whitespace-normal sm:whitespace-nowrap max-w-[280px] sm:max-w-none text-center rounded-lg bg-zinc-900 px-3 py-1.5 text-xs font-medium text-white shadow-xl dark:bg-zinc-100 dark:text-zinc-900 border border-zinc-700/50 dark:border-zinc-300 select-none"
+                  >
+                    To learn more about this project, visit my website.
+                    <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-zinc-900 dark:border-t-zinc-100" />
+                  </div>
                 </div>
               </div>
             </CardHeader>
