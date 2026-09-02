@@ -39,3 +39,4 @@ yarn-error.log*
 
 dev_logs.txt
 /faiss_index
+.gemini/
