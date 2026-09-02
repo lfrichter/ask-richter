@@ -10,23 +10,27 @@
 
 Este projeto transforma um currículo tradicional em uma experiência de diálogo interativo. O **Ask Richter** é um chatbot especialista na trajetória profissional de Luiz F. Richter, permitindo que recrutadores e lideranças técnicas façam perguntas em linguagem natural e recebam respostas precisas, fundamentadas e contextuais.
 
-Mais do que um portfólio, o projeto opera sob o **Framework de Engenharia de Software Guiado por IA v2.0 Master**, servindo como demonstração prática de arquitetura RAG Serverless moderna, desenvolvimento full-stack em monorepo, resiliência de infraestrutura e governança automatizada.
+Mais do que um portfólio, o projeto opera sob o **AI Engineering Framework v2.1**, servindo como demonstração prática de arquitetura RAG Serverless moderna, desenvolvimento full-stack em monorepo, resiliência de infraestrutura e governança automatizada.
 
 ---
 
-## 🛡️ Governança de Software & Arquitetura (IA v2.0 Master)
+## 🛡️ Governança de Software & Arquitetura (AI Engineering Framework v2.1)
 
 O desenvolvimento do AskRichter segue regras estritas de governança estruturada e Zero-Trust:
 
-1. **Meta Spec como Lei Constitucional ([`.askrichter-spec.md`](.askrichter-spec.md)):**  
-   Fonte absoluta da verdade para decisões de arquitetura, contratos de API, fluxo RAG e regras de infraestrutura.
-2. **Fonte da Verdade Operacional ([`docs/Rules.md`](docs/Rules.md)):**  
+1. **Meta Spec Canônica ([`META_SPEC.md`](META_SPEC.md) e [`docs/pt-br/META_SPEC.md`](docs/pt-br/META_SPEC.md)):**  
+   Fonte absoluta da verdade para identidade, decisões de arquitetura, contratos de API, fluxo RAG e regras de infraestrutura.
+2. **Constituição dos Agentes ([`AGENTS.md`](AGENTS.md) e [`docs/pt-br/AGENTS.md`](docs/pt-br/AGENTS.md)):**  
+   Constituição operacional e limites de conduta ética e técnica para os Agentes de IA (Zero-Trust, Jidoka, Surgical Changes).
+3. **Contexto & Setup do Projeto ([`.ai/setup/project-context.md`](.ai/setup/project-context.md)):**  
+   Visão consolidada da topologia atual, componentes críticos, variáveis de ambiente e comandos auditados.
+4. **Fonte da Verdade Operacional ([`docs/Rules.md`](docs/Rules.md)):**  
    Regras operacionais, diretrizes de conduta e procedimentos de reindexação auditável.
-3. **Engenharia de Contexto WSCI (World-Scope Context Isolation):**  
+5. **Engenharia de Contexto WSCI (World-Scope Context Isolation):**  
    Separação estrita por escopos (Frontend, Backend, Infraestrutura). Operações no dia a dia utilizam filtros de workspace (ex: `npm run dev --workspace=frontend`) e refatorações estruturais utilizam `git worktree`.
-4. **Governança por ADRs ([`docs/architect.md`](docs/architect.md) & [`docs/adr/`](docs/adr/)):**  
-   Todas as decisões arquiteturais geram registros imutáveis numerados no diretório [`docs/adr/`](docs/adr/) (ex: [`ADR-0001`](docs/adr/0001-meta-spec-e-governanca-de-arquitetura.md) a [`ADR-0009`](docs/adr/adr-0009-supabase-resilience-and-state-machine.md)).
-5. **Protocolo Jidoka / Andon Cord Unificado (`npm run jidoka`):**  
+6. **Governança por ADRs ([`docs/architect.md`](docs/architect.md) & [`docs/adr/`](docs/adr/)):**  
+   Todas as decisões arquiteturais geram registros imutáveis numerados no diretório [`docs/adr/`](docs/adr/) (ex: [`ADR-0001`](docs/adr/0001-meta-spec-e-governanca-de-arquitetura.md) a [`ADR-0009`](docs/adr/0009-supabase-resilience-and-state-machine.md)).
+7. **Protocolo Jidoka / Andon Cord Unificado (`npm run jidoka`):**  
    Comando único no Turborepo que executa `check-types`, `lint` e `build` em paralelo com grafo de dependências. Se houver falha (exit code != 0), o ciclo é interrompido imediatamente para Reset Limpo e correção na origem.
 
 ---
@@ -127,7 +131,8 @@ graph TD
 
 | Camada | Tecnologia | Descrição |
 | :--- | :--- | :--- |
-| **🏗️ Governança & Estrutura** | Meta Spec ([`.askrichter-spec.md`](.askrichter-spec.md)) | Constituição primária e regras de RAG/infraestrutura. |
+| **🏗️ Governança & Estrutura** | Meta Spec ([`META_SPEC.md`](META_SPEC.md)) | Constituição primária e regras de RAG/infraestrutura. |
+| | Constituição de Agentes ([`AGENTS.md`](AGENTS.md)) | Regras operacionais Zero-Trust e protocolo Jidoka. |
 | | Regras Operacionais ([`docs/Rules.md`](docs/Rules.md)) | Fonte da verdade para processos e reindexação auditável. |
 | | Decisões de Arquitetura ([`docs/adr/`](docs/adr/)) | Registros formais ADR-0001 a ADR-0009. |
 | | Turborepo 2.x ([`turbo.json`](turbo.json)) | Orquestração de tarefas (`build`, `lint`, `check-types`, `jidoka`). |
