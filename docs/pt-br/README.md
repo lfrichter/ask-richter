@@ -16,6 +16,9 @@
 | [`adr/`](./adr/) | `../../docs/adr/` | Registros de Decisões Arquiteturais (ADRs) |
 | [`prd/`](./prd/) | `../../docs/prd/` | Requisitos e especificações de produto (PRDs) |
 | [`architecture/`](./architecture/) | `../../docs/architecture/` | Diagramas e detalhamentos arquiteturais |
+| [`tasks/`](./tasks/) | `../../docs/tasks/` | Especificações de tarefas de engenharia (TASK-NNN) |
+| [`Plans/`](./Plans/) | `../../docs/Plans/` | Planos de implementação auditáveis e históricos |
+| — | `../../.ai/workflows/` | Protocolo operacional em 2 fases (TASK → Gate Humano → Jidoka) e templates |
 
 ---
 

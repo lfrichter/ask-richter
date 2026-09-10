@@ -32,6 +32,44 @@ O desenvolvimento do AskRichter segue regras estritas de governança estruturada
    Todas as decisões arquiteturais geram registros imutáveis numerados no diretório [`docs/adr/`](docs/adr/) (ex: [`ADR-0001`](docs/adr/0001-meta-spec-e-governanca-de-arquitetura.md) a [`ADR-0009`](docs/adr/0009-supabase-resilience-and-state-machine.md)).
 7. **Protocolo Jidoka / Andon Cord Unificado (`npm run jidoka`):**  
    Comando único no Turborepo que executa `check-types`, `lint` e `build` em paralelo com grafo de dependências. Se houver falha (exit code != 0), o ciclo é interrompido imediatamente para Reset Limpo e correção na origem.
+8. **Fluxo de Trabalho em Duas Fases ([`.ai/workflows/development-workflow.md`](.ai/workflows/development-workflow.md)):**  
+   Ciclo operacional estrito dividido em *Fase 1: Preparação & Planejamento (Plan Mode)* com parada obrigatória no *Gate Humano*, seguido da *Fase 2: Construção & Validação (Execution Mode)* com execução cirúrgica e *Clean Reset* de memória.
+
+### 🔄 Fluxo Operacional em Duas Fases (Two-Phase Workflow)
+
+Todo ciclo de evolução e correção de bugs no repositório segue estritamente o protocolo documentado em [`.ai/workflows/development-workflow.md`](.ai/workflows/development-workflow.md), garantindo previsibilidade, rastreabilidade e intervenção humana antes de qualquer linha de código ser alterada:
+
+```text
+[Demanda / Prompt do Desenvolvedor]
+                 │
+                 ▼
+┌────────────────────────────────────────────────────────┐
+│ FASE 1: PREPARAÇÃO & PLANEJAMENTO (Plan Mode Estrito)  │
+│ 1. Especificação da TASK (docs/tasks/TASK-NNN.md)      │
+│ 2. Avaliação de ADR (docs/adr/ - se estrutural)        │
+│ 3. Elaboração do PLAN (docs/Plans/Plan-DATE--NNN.md)   │
+│    (com espelho ativo em .ai/memory/current_plan.md)   │
+└────────────────────────┬───────────────────────────────┘
+                         │
+                         ▼
+        🛑 GATE OBRIGATÓRIO DE REVISÃO HUMANA
+        Agente para e aguarda aprovação explícita
+                         │
+           [Aprovação: "Pode executar"]
+                         │
+                         ▼
+┌────────────────────────────────────────────────────────┐
+│ FASE 2: CONSTRUÇÃO & VALIDAÇÃO (Execution Mode)        │
+│ 4. Execução Cirúrgica Passo a Passo (Surgical Changes) │
+│ 5. Verificação & Quality Gates (Testes, Lint, Build)   │
+│ 6. Protocolo Jidoka / Andon Cord (Parada imediata)     │
+│ 7. DoD & Clean Reset da Memória de Trabalho            │
+└────────────────────────────────────────────────────────┘
+```
+
+- **[`docs/tasks/`](docs/tasks/):** Especificações de tarefas com escopo delimitado (*In Scope* vs *Out of Scope*) e critérios de aceitação mensuráveis baseados no template [`TASK.template.md`](.ai/workflows/TASK.template.md).
+- **[`docs/Plans/`](docs/Plans/):** Planos cirúrgicos versionados por data (`Plan-YYYY-MM-DD--NNN.md`) com passos atômicos, riscos e verificação imediata baseados no template [`PLAN.template.md`](.ai/workflows/PLAN.template.md).
+- **`.ai/memory/current_plan.md`:** Memória de trabalho volátil e ativa do agente durante a execução, resetada ao final de cada tarefa (*Clean Reset Protocol*) para prevenir *Context Poisoning*.
 
 ---
 
@@ -134,6 +172,7 @@ graph TD
 | **🏗️ Governança & Estrutura** | Meta Spec ([`META_SPEC.md`](META_SPEC.md)) | Constituição primária e regras de RAG/infraestrutura. |
 | | Constituição de Agentes ([`AGENTS.md`](AGENTS.md)) | Regras operacionais Zero-Trust e protocolo Jidoka. |
 | | Regras Operacionais ([`docs/Rules.md`](docs/Rules.md)) | Fonte da verdade para processos e reindexação auditável. |
+| | Workflow de Desenvolvimento ([`.ai/workflows/`](.ai/workflows/development-workflow.md)) | Protocolo de 2 fases com Gate Humano, templates e Clean Reset. |
 | | Decisões de Arquitetura ([`docs/adr/`](docs/adr/)) | Registros formais ADR-0001 a ADR-0009. |
 | | Turborepo 2.x ([`turbo.json`](turbo.json)) | Orquestração de tarefas (`build`, `lint`, `check-types`, `jidoka`). |
 | | npm Workspaces ([`package.json`](package.json)) | Gerenciamento de dependências e workspaces (`apps/*`, `packages/*`). |
