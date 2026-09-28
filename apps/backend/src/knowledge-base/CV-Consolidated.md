@@ -1,4 +1,3 @@
-
 ## Basic CV
 
 **Luis Fernando Richter**
@@ -15,15 +14,15 @@ Self-taught full-stack developer with over 15 years of experience in software de
 
 **Skills & Technologies**
 
-*   **Languages & Frameworks:** PHP, Laravel (Dusk, Horizon), Lumen, Vue.js, React, JavaScript, TypeScript, Python, TDD, GraphQL, Gitflow, Jest.
-*   **Databases:** MySQL, SQLite, SQL Server, MongoDB, PL/SQL, SaaS.
-*   **Deployment & DevOps:** CI/CD, AWS, GCP, Bitbucket Pipelines, GitHub Actions, Docker, Dockerize, Kubernetes.
-*   **Other Competencies:** Technical leadership, System architecture, Performance optimization, Application security, Automated testing, Code refactoring.
-*   **Artificial Intelligence & Tools:**
-    *   AI-assisted development (GitHub Copilot, Cursor, Trae, Gemini Code Assist).
-    *   Implementation of generative AI solutions in commercial and personal projects.
-    *   Optimization of development workflows using AI tools.
-    *   Integration of AI into team development processes.
+- **Languages & Frameworks:** PHP, Laravel (Dusk, Horizon), Lumen, Vue.js, React, JavaScript, TypeScript, Python, TDD, GraphQL, Gitflow, Jest.
+- **Databases:** MySQL, SQLite, SQL Server, MongoDB, PL/SQL, SaaS.
+- **Deployment & DevOps:** CI/CD, AWS, GCP, Bitbucket Pipelines, GitHub Actions, Docker, Dockerize, Kubernetes.
+- **Other Competencies:** Technical leadership, System architecture, Performance optimization, Application security, Automated testing, Code refactoring.
+- **Artificial Intelligence & Tools:**
+    - AI-assisted development (GitHub Copilot, Cursor, Trae, Gemini Code Assist).
+    - Implementation of generative AI solutions in commercial and personal projects.
+    - Optimization of development workflows using AI tools.
+    - Integration of AI into team development processes.
 
 ---
 
@@ -45,75 +44,75 @@ Principais Conquistas e Responsabilidades:
 - DevOps e Arquitetura: Projetou e implementou estratégias de integração contínua, incorporando frameworks de automação diretamente aos pipelines de CI/CD para otimizar o ciclo de vida de entrega de software.
 - Integração de IA e Liderança Técnica: Orientou equipes de engenharia sobre arquitetura moderna de automação e liderou a adoção de ferramentas de Inteligência Artificial (IA) para otimizar fluxos de trabalho e acelerar os ciclos de entrega.
 
-#### **Engenheiro de Software Líder**  
+#### **Engenheiro de Software Líder**
 **Turno (anteriormente TurnoverBnB)** — Remoto (Honolulu, Havaí, EUA)  
 **Nov 2022 – Mar 2025**  
-*   Liderou uma equipe de 6 desenvolvedores, assumindo a liderança técnica em domínios críticos do sistema (Contas, Propriedades, Checklists), garantindo escalabilidade, confiabilidade e elevando o desempenho do sistema e a satisfação do usuário.  
-*   Arquitetou e implementou a iniciativa estratégica **“Mid-Stay Projects”**, que **aumentou em 30% a retenção de usuários**, aprimorou significativamente a experiência do cliente e agregou valor ao produto.  
-*   Corrigiu vulnerabilidades críticas identificadas em testes de penetração de terceiros, reforçando a segurança de autenticação e o gerenciamento de sessões simultâneas contra ameaças cibernéticas.  
-*   **Reduziu em 40% o tempo de resposta de endpoints** por meio de refatoração estratégica de código e otimização de consultas ao banco de dados, minimizando dívida técnica e melhorando a eficiência geral do sistema.  
-*   Refatorou e corrigiu mais de **100 testes automatizados falhos**, aumentando a confiabilidade do pipeline de CI/CD (Jenkins) e reduzindo significativamente o tempo de execução dos testes.  
-*   Utilizou **New Relic** para identificar e resolver gargalos de desempenho e **Bugsnag** para monitoramento de erros em tempo real.  
-*   Integrou ferramentas de IA (como **GitHub Copilot**) ao fluxo de trabalho da equipe, aumentando a eficiência no desenvolvimento, testes e documentação.
+- Liderou uma equipe de 6 desenvolvedores, assumindo a liderança técnica em domínios críticos do sistema (Contas, Propriedades, Checklists), garantindo escalabilidade, confiabilidade e elevando o desempenho do sistema e a satisfação do usuário.  
+- Arquitetou e implementou a iniciativa estratégica **“Mid-Stay Projects”**, que **aumentou em 30% a retenção de usuários**, aprimorou significativamente a experiência do cliente e agregou valor ao produto.  
+- Corrigiu vulnerabilidades críticas identificadas em testes de penetração de terceiros, reforçando a segurança de autenticação e o gerenciamento de sessões simultâneas contra ameaças cibernéticas.  
+- **Reduziu em 40% o tempo de resposta de endpoints** por meio de refatoração estratégica de código e otimização de consultas ao banco de dados, minimizando dívida técnica e melhorando a eficiência geral do sistema.  
+- Refatorou e corrigiu mais de **100 testes automatizados falhos**, aumentando a confiabilidade do pipeline de CI/CD (Jenkins) e reduzindo significativamente o tempo de execução dos testes.  
+- Utilizou **New Relic** para identificar e resolver gargalos de desempenho e **Bugsnag** para monitoramento de erros em tempo real.  
+- Integrou ferramentas de IA (como **GitHub Copilot**) ao fluxo de trabalho da equipe, aumentando a eficiência no desenvolvimento, testes e documentação.
 
 ---
 
-#### **Head de Desenvolvimento Full-Stack**  
+#### **Head de Desenvolvimento Full-Stack**
 **Full Comms / Keaze** — Remoto (Manchester, Reino Unido)  
 **Abr 2021 – Nov 2022**  
-*   Desenvolveu aplicações CMS com **Laravel**, otimizando processos internos de gestão de conteúdo.  
-*   Criou um aplicativo baseado em **Vue.js** para gerenciamento de widgets, melhorando a experiência do usuário final.  
-*   Construiu e manteve um sistema de **API escalável com Lumen**, garantindo alto desempenho e estabilidade.  
-*   Colaborou com uma pequena equipe na implementação do novo **módulo de Pós-Venda para o Kpro**.  
-*   Gerenciou atualizações de versões de **PHP e Laravel**, assegurando compatibilidade, segurança e longevidade do sistema.  
-*   Implementou testes automatizados com **Laravel Dusk** (navegadores headless via Selenium), aumentando a confiabilidade das entregas.  
-*   Utilizou **DeployHQ, Vercel e Laravel Forge** para implantação contínua e pipelines de entrega ágeis.  
+- Desenvolveu aplicações CMS com **Laravel**, otimizando processos internos de gestão de conteúdo.  
+- Criou um aplicativo baseado em **Vue.js** para gerenciamento de widgets, melhorando a experiência do usuário final.  
+- Construiu e manteve um sistema de **API escalável com Lumen**, garantindo alto desempenho e estabilidade.  
+- Colaborou com uma pequena equipe na implementação do novo **módulo de Pós-Venda para o Kpro**.  
+- Gerenciou atualizações de versões de **PHP e Laravel**, assegurando compatibilidade, segurança e longevidade do sistema.  
+- Implementou testes automatizados com **Laravel Dusk** (navegadores headless via Selenium), aumentando a confiabilidade das entregas.  
+- Utilizou **DeployHQ, Vercel e Laravel Forge** para implantação contínua e pipelines de entrega ágeis.  
 
 **Principais Projetos:**  
-*   **Kpro AfterSales:** Desenvolveu uma API backend para otimizar processos imobiliários de pós-venda, integrando checklists, artigos, documentos e gestão de eletrodomésticos.  
-*   **Shosales Website Revamp:** Melhorou o desempenho das páginas em **10x**, paralelizou testes automatizados entre navegadores e otimizou consultas para reduzir tempos de resposta.
+- **Kpro AfterSales:** Desenvolveu uma API backend para otimizar processos imobiliários de pós-venda, integrando checklists, artigos, documentos e gestão de eletrodomésticos.  
+- **Shosales Website Revamp:** Melhorou o desempenho das páginas em **10x**, paralelizou testes automatizados entre navegadores e otimizou consultas para reduzir tempos de resposta.
 
 ---
 
-#### **Head de Desenvolvimento de Software**  
+#### **Head de Desenvolvimento de Software**
 **Evoke Mobile** — Remoto (Liverpool, Reino Unido)  
 **Mar 2019 – Abr 2021**  
-*   Liderou uma pequena equipe no desenvolvimento de **dashboards administrativos internos com React**, resolvendo um gargalo crítico de renderização de mapas com mais de **200 mil registros geoespaciais** — **melhoria de até 30x no tempo de carregamento** com uso de Superfetch.  
-*   Atuou no desenvolvimento full-stack de **CMS e APIs backend** para aplicativos móveis (iOS/Android).  
-*   Aprimorou drasticamente o desempenho do sistema com uso de filas (**Laravel Horizon**), alcançando **processamento até 500x mais rápido** em serviços de compartilhamento de viagens.  
-*   Projetou e manteve **APIs escaláveis** consumidas por plataformas web e móveis.  
-*   Integrou diversos serviços de terceiros, incluindo **Firebase, Google Geocoding, Overpass API, OPTA e Mailgun**.  
+- Liderou uma pequena equipe no desenvolvimento de **dashboards administrativos internos com React**, resolvendo um gargalo crítico de renderização de mapas com mais de **200 mil registros geoespaciais** — **melhoria de até 30x no tempo de carregamento** com uso de Superfetch.  
+- Atuou no desenvolvimento full-stack de **CMS e APIs backend** para aplicativos móveis (iOS/Android).  
+- Aprimorou drasticamente o desempenho do sistema com uso de filas (**Laravel Horizon**), alcançando **processamento até 500x mais rápido** em serviços de compartilhamento de viagens.  
+- Projetou e manteve **APIs escaláveis** consumidas por plataformas web e móveis.  
+- Integrou diversos serviços de terceiros, incluindo **Firebase, Google Geocoding, Overpass API, OPTA e Mailgun**.  
 
 **Principais Projetos:**  
-*   **Toot:** Desenvolveu funcionalidades de análise de rastreamento de viagens, implementou monitoramento de filas com Laravel Horizon e criou testes de API executados via **GitHub Actions**.  
-*   **Toot Market Intelligence Platform:** Construiu integrações de API para alimentar dashboards no **Power BI**.  
-*   **Fanoty:** Migrou um aplicativo iOS legado de futebol para **Laravel 5.1**, refatorou importações de dados da API OPTA e implementou pipelines de CI/CD.
+- **Toot:** Desenvolveu funcionalidades de análise de rastreamento de viagens, implementou monitoramento de filas com Laravel Horizon e criou testes de API executados via **GitHub Actions**.  
+- **Toot Market Intelligence Platform:** Construiu integrações de API para alimentar dashboards no **Power BI**.  
+- **Fanoty:** Migrou um aplicativo iOS legado de futebol para **Laravel 5.1**, refatorou importações de dados da API OPTA e implementou pipelines de CI/CD.
 
 ---
 
-#### **Engenheiro de Desenvolvimento de Software**  
+#### **Engenheiro de Desenvolvimento de Software**
 **Alfasoft** — Híbrido (Lisboa, Portugal)  
 **Abr 2018 – Nov 2018**  
-*   Realizou análise, estimativa e desenvolvimento de software com **PHP, Laravel, WordPress e Python**.  
-*   Idealizou e implementou soluções performáticas para **importação diária de grandes volumes de dados**, utilizando sistemas de filas para otimizar a carga do servidor.  
-*   Desenvolveu múltiplas aplicações web com Laravel e criou temas/plugins personalizados para WordPress.  
-*   Implementou atualizações de gráficos no **NinjaTrader** utilizando C#.  
+- Realizou análise, estimativa e desenvolvimento de software com **PHP, Laravel, WordPress e Python**.  
+- Idealizou e implementou soluções performáticas para **importação diária de grandes volumes de dados**, utilizando sistemas de filas para otimizar a carga do servidor.  
+- Desenvolveu múltiplas aplicações web com Laravel e criou temas/plugins personalizados para WordPress.  
+- Implementou atualizações de gráficos no **NinjaTrader** utilizando C#.  
 
 **Principais Projetos:**  
-*   **Sisporta:** Integrou sistemas legados usando **Python e Laravel**, melhorou a carga do servidor com **Laravel Horizon** e implementou CI/CD via **Bitbucket Pipelines**.  
-*   **MyLabel:** Desenvolveu um site corporativo para cosméticos com customizações avançadas em WordPress.
+- **Sisporta:** Integrou sistemas legados usando **Python e Laravel**, melhorou a carga do servidor com **Laravel Horizon** e implementou CI/CD via **Bitbucket Pipelines**.  
+- **MyLabel:** Desenvolveu um site corporativo para cosméticos com customizações avançadas em WordPress.
 
 ---
 
-#### **Desenvolvedor Sênior de Software**  
+#### **Desenvolvedor Sênior de Software**
 **Plugae** — Presencial (Barueri, Brasil)  
 **Nov 2017 – Fev 2018**  
-*   Liderou uma integração complexa de **múltiplos marketplaces** (Mercado Livre, B2W, Via Varejo) em uma única plataforma unificada.  
-*   Desenvolveu um sistema para **importação de pedidos** de plataformas Magento para um sistema proprietário (Spider), armazenando os dados em **MongoDB**.  
-*   Implementou atualizações de pedidos integradas ao **ERP Bling** por meio de **webhooks e jobs em fila (Redis/Laravel Horizon)**.  
+- Liderou uma integração complexa de **múltiplos marketplaces** (Mercado Livre, B2W, Via Varejo) em uma única plataforma unificada.  
+- Desenvolveu um sistema para **importação de pedidos** de plataformas Magento para um sistema proprietário (Spider), armazenando os dados em **MongoDB**.  
+- Implementou atualizações de pedidos integradas ao **ERP Bling** por meio de **webhooks e jobs em fila (Redis/Laravel Horizon)**.  
 
 **Projeto Principal:**  
-*   **Spider – Hub de Integração de E-commerce:** Arquitetou e implementou um hub centralizado em **PHP/Laravel** para orquestrar o fluxo de pedidos, estoque e preços entre marketplaces (Plugg.to, Skyhub, B2W) e ERPs (Bling, sistemas customizados). Utilizou **filas em Redis** para processamento assíncrono, **webhooks reativos** para sincronização em tempo real e **MongoDB** como fonte única da verdade. Superou desafios críticos de **overselling** e **inconsistência de dados** com lógica de enriquecimento de pedidos baseada em SKUs e rotinas de normalização automatizadas. A solução permitiu onboarding ágil de novos clientes e processamento resiliente de alto volume, com infraestrutura em **Docker** e armazenamento em **AWS S3**.
+- **Spider – Hub de Integração de E-commerce:** Arquitetou e implementou um hub centralizado em **PHP/Laravel** para orquestrar o fluxo de pedidos, estoque e preços entre marketplaces (Plugg.to, Skyhub, B2W) e ERPs (Bling, sistemas customizados). Utilizou **filas em Redis** para processamento assíncrono, **webhooks reativos** para sincronização em tempo real e **MongoDB** como fonte única da verdade. Superou desafios críticos de **overselling** e **inconsistência de dados** com lógica de enriquecimento de pedidos baseada em SKUs e rotinas de normalização automatizadas. A solução permitiu onboarding ágil de novos clientes e processamento resiliente de alto volume, com infraestrutura em **Docker** e armazenamento em **AWS S3**.
 
 ---
 #### **Software Developer 👩‍💻**
@@ -122,8 +121,8 @@ Feb 2017 - Sep 2017 · 8 mos
 Sorocaba e Região, Brasil · On-site
 **Skills:** Integration · Notification · Laravel · Event Driven Programming
 
-* **Criou uma plataforma para registro de websites e envio de notificações web push**, desenvolvida em Laravel com abordagem orientada a eventos e estrutura modular.
-* **Integrou a plataforma com OnSignal e o sistema de pagamentos Pagar.me**.
+- **Criou uma plataforma para registro de websites e envio de notificações web push**, desenvolvida em Laravel com abordagem orientada a eventos e estrutura modular.
+- **Integrou a plataforma com OnSignal e o sistema de pagamentos Pagar.me**.
 
 ---
 #### **Full Stack Developer 👩‍💻**
@@ -131,7 +130,7 @@ Sorocaba e Região, Brasil · On-site
 Jan 2016 - Jan 2017 · 1 yr 1 mo
 Sorocaba Area, Brazil
 
-* **Construiu uma ampla aplicação PHP OOP** para gerenciamento de hospitais, profissionais de saúde e pacientes.
+- **Construiu uma ampla aplicação PHP OOP** para gerenciamento de hospitais, profissionais de saúde e pacientes.
 
 ---
 
@@ -140,9 +139,9 @@ Sorocaba Area, Brazil
 Sep 2015 - Mar 2016 · 7 mos
 Sorocaba Area, Brazil · On-site
 
-* **Desenvolveu e ministrou cursos de Liderança e Coaching de 14 horas** para pequenos grupos, combinando experiência de liderança com técnicas de coaching para desenvolvimento integral.
-* **Capacitou líderes em diversas competências**, incluindo compreensão de subordinados, contratação e delegação eficaz, promoção de desenvolvimento contínuo (com foco em neuroplasticidade e segurança psicológica), feedback construtivo e análise de desempenho.
-* **Agregou valor ao aprimorar habilidades de liderança**, construir confiança, motivar equipes, otimizar delegação e avaliar resultados com ferramentas aplicáveis em diversas áreas.
+- **Desenvolveu e ministrou cursos de Liderança e Coaching de 14 horas** para pequenos grupos, combinando experiência de liderança com técnicas de coaching para desenvolvimento integral.
+- **Capacitou líderes em diversas competências**, incluindo compreensão de subordinados, contratação e delegação eficaz, promoção de desenvolvimento contínuo (com foco em neuroplasticidade e segurança psicológica), feedback construtivo e análise de desempenho.
+- **Agregou valor ao aprimorar habilidades de liderança**, construir confiança, motivar equipes, otimizar delegação e avaliar resultados com ferramentas aplicáveis em diversas áreas.
 
 ---
 
@@ -151,43 +150,37 @@ Sorocaba Area, Brazil · On-site
 Jan 1998 - Nov 2011 · 13 yrs 11 mos
 São Paulo Area, Brazil
 
-* **Participou de múltiplos projetos** e **desenvolveu diversas aplicações web**, incluindo um portal corporativo principal, website de e-commerce e plataforma de intranet.
-* **Utilizou tecnologias como Coldfusion (Servlet Java) CBD, ASP, SQL Server, Atlassian Jira, Windows Server e IIS**.
-
-
-
+- **Participou de múltiplos projetos** e **desenvolveu diversas aplicações web**, incluindo um portal corporativo principal, website de e-commerce e plataforma de intranet.
+- **Utilizou tecnologias como Coldfusion (Servlet Java) CBD, ASP, SQL Server, Atlassian Jira, Windows Server e IIS**.
 
 ---
 
 **Education**
 
-*   **Postgraduate Degree in Software Engineering with a focus on Component-Based Design and Distributed Systems**
-    *   UNIBTA Centro Universitário, Brazil | 2007 – 2008
-*   **Bachelor's Degree in E-Commerce Management**
-    *   Anhembi Morumbi University, Brazil | 2000 – 2002
+- **Postgraduate Degree in Software Engineering with a focus on Component-Based Design and Distributed Systems**
+    - UNIBTA Centro Universitário, Brazil | 2007 – 2008
+- **Bachelor's Degree in E-Commerce Management**
+    - Anhembi Morumbi University, Brazil | 2000 – 2002
 
 ---
 
 **Languages**
 
-*   **Portuguese:** Native speaker
-*   **English:** Full professional proficiency
-*   **Spanish:** Limited working proficiency
-
+- **Portuguese:** Native speaker
+- **English:** Full professional proficiency
+- **Spanish:** Limited working proficiency
 
 ---
 ## Education Details
 
-
 - [  ![UNIBTA - Centro Universitário logo](https://media.licdn.com/dms/image/v2/D4D0BAQHMHf8YbzOCHw/company-logo_100_100/company-logo_100_100/0/1685134478011/unibta_logo?e=1755129600&v=beta&t=ER_rZCYoawkica1Jwkojc7FGjo2TdfXZdDstuzzWl_o)   
     ](https://www.linkedin.com/company/30345/)
-    ## UNIBTA - Centro Universitário
-    
+## UNIBTA - Centro Universitário
+$1
 Postgraduate 👨‍🎓, Software Engineering with a focus on Component-Based Design and Distributed Systems 2007 - 2008
 
-
 Especialização focada em **Arquitetura de Software Moderna** (Microserviços, APIs RESTful, Sistemas Distribuídos) e **Engenharia de Software de Componentes**. Abrangeu **metodologias ágeis** (Scrum, XP), **DevOps, CI/CD**, gestão da qualidade, **automação de testes**, e **design patterns**, com ênfase na **governança e escalabilidade** de sistemas.
-    
+$1
 - Modern Software Architecture (Microservices, RESTful APIs, Systems Integration)  
 - Requirements Analysis and Modeling  
 - Software Design with UML and Class Modeling  
@@ -200,18 +193,15 @@ Especialização focada em **Arquitetura de Software Moderna** (Microserviços, 
 - Agile Methodologies (Scrum, XP)  
 - DevOps, CI/CD, and Deployment Automation  
 - Governance and Scalability in Distributed Systems
-    
 - [
     ![Universidade Anhembi Morumbi logo](https://media.licdn.com/dms/image/v2/C4D0BAQGcTGL2HhDUwg/company-logo_100_100/company-logo_100_100/0/1630477125888?e=1755129600&v=beta&t=F4GJoyi9ojT6vNWY33-wDJiAU_QNd1__tvO8yLQ7vfE)
     ](https://www.linkedin.com/company/166621/)
-    ## Universidade Anhembi Morumbi
-    
+## Universidade Anhembi Morumbi
+$1
     Foundation degree 🎓, E-commerce Manager 1999 - 2002
-    
+$1
     - Activities and societies: Participated in technical visits, including a study tour of Carrefour's Distribution Center in Brazil, gaining practical insights into large-scale logistics and supply chain operations.
-        
     - Coursework included:  
-              
 		- E-commerce and Digital Business Models  
 		- Marketing and Digital Strategy  
 		- Project Management  
@@ -220,16 +210,15 @@ Especialização focada em **Arquitetura de Software Moderna** (Microserviços, 
 		- Logistics and Supply Chain Management  
 		- Customer Relationship Management (CRM)  
 		- Web Technologies and Online Security  
-		  
 	- Developed a solid foundation in managing online businesses, digital operations, and customer-centric strategies in the context of a rapidly evolving internet economy.
-	  
+$1
 ### **Documento de Expertise Acadêmica: TCC - Uma Abordagem de Processo de Negócio Utilizando BPMN**
 
 Este documento sumariza a contribuição e os conhecimentos adquiridos durante a elaboração do Trabalho de Conclusão de Curso (TCC) de Pós-Graduação, que se concentrou na otimização de processos de negócio através da modelagem e análise.
 
 -----
 
-#### ✅ **Tema Central: Otimização de Processos de Negócio com BPMN**
+#### ✅ **Tema Central: Otimização de Processos de Negócio Com BPMN**
 
 O TCC explorou a relevância da gestão e modelagem de processos como estratégia fundamental para a eficiência e competitividade empresarial. A Notação de Modelagem de Processos de Negócio (BPMN) foi o pilar central para a representação e análise desses processos.
 
@@ -237,21 +226,21 @@ O TCC explorou a relevância da gestão e modelagem de processos como estratégi
 
 #### 🌟 **Conhecimentos e Habilidades Demonstradas:**
 
-  * **Compreensão Aprofundada de BPM:**
-      * Definição e importância do Business Process Management (BPM) como conjunto de metodologias e tecnologias para integrar e otimizar as operações empresariais.
-      * Reconhecimento da necessidade de uma visão holística e integrada do ambiente interno e externo da organização.
-  * **Domínio da Notação BPMN:**
-      * Capacidade de utilizar o BPMN como padrão gráfico aberto para desenhar e modelar processos de negócio.
-      * Habilidade para criar diagramas de processo claros e compreensíveis para diferentes stakeholders (negócio, TI).
-      * Aplicação prática dos elementos BPMN (Objetos de Fluxo, Objetos de Conexão, Raias e Artefatos).
-  * **Metodologia de Análise de Processos:**
-      * Execução da análise "As-Is" (processo atual) para identificação de gargalos, ineficiências e custos desnecessários.
-      * Desenvolvimento de propostas "To-Be" (processo futuro) focadas na melhoria da agilidade, satisfação do cliente e redução de custos operacionais.
-  * **Visão Estratégica e Tecnológica:**
-      * Entendimento da importância da Arquitetura Orientada a Serviço (SOA) e Business Process Management Suites (BPMS) como catalisadores para a automação e monitoramento em tempo real dos processos modelados.
-      * Percepção da interconexão entre as decisões de negócio e o suporte da tecnologia para a otimização contínua.
-  * **Resolução de Problemas no Contexto Real:**
-      * Aplicação dos conhecimentos teóricos em um estudo de caso prático (editora), demonstrando a capacidade de diagnosticar problemas e propor soluções concretas em um ambiente de negócio.
+  - **Compreensão Aprofundada de BPM:**
+      - Definição e importância do Business Process Management (BPM) como conjunto de metodologias e tecnologias para integrar e otimizar as operações empresariais.
+      - Reconhecimento da necessidade de uma visão holística e integrada do ambiente interno e externo da organização.
+  - **Domínio da Notação BPMN:**
+      - Capacidade de utilizar o BPMN como padrão gráfico aberto para desenhar e modelar processos de negócio.
+      - Habilidade para criar diagramas de processo claros e compreensíveis para diferentes stakeholders (negócio, TI).
+      - Aplicação prática dos elementos BPMN (Objetos de Fluxo, Objetos de Conexão, Raias e Artefatos).
+  - **Metodologia de Análise de Processos:**
+      - Execução da análise "As-Is" (processo atual) para identificação de gargalos, ineficiências e custos desnecessários.
+      - Desenvolvimento de propostas "To-Be" (processo futuro) focadas na melhoria da agilidade, satisfação do cliente e redução de custos operacionais.
+  - **Visão Estratégica e Tecnológica:**
+      - Entendimento da importância da Arquitetura Orientada a Serviço (SOA) e Business Process Management Suites (BPMS) como catalisadores para a automação e monitoramento em tempo real dos processos modelados.
+      - Percepção da interconexão entre as decisões de negócio e o suporte da tecnologia para a otimização contínua.
+  - **Resolução de Problemas no Contexto Real:**
+      - Aplicação dos conhecimentos teóricos em um estudo de caso prático (editora), demonstrando a capacidade de diagnosticar problemas e propor soluções concretas em um ambiente de negócio.
 
 -----
 
@@ -293,15 +282,15 @@ flowchart TD
 
 -----
 
-#### 🎯 **Contribuição para a Expertise Profissional:**
+#### 🎯 **Contribuição Para a Expertise Profissional:**
 
 A elaboração deste TCC solidificou uma base de conhecimento robusta em gestão e otimização de processos de negócio, qualificando-me para atuar em projetos que visam:
 
-  * Analisar e redesenhar fluxos de trabalho.
-  * Implementar soluções de automação de processos.
-  * Apoiar a tomada de decisões estratégicas baseadas em dados de processo.
-  * Promover a eficiência operacional e a satisfação do cliente em diversos setores.
-	  
+  - Analisar e redesenhar fluxos de trabalho.
+  - Implementar soluções de automação de processos.
+  - Apoiar a tomada de decisões estratégicas baseadas em dados de processo.
+  - Promover a eficiência operacional e a satisfação do cliente em diversos setores.
+$1
 
 ---
 ### Experiência Details
@@ -312,40 +301,40 @@ Jan 2023 - Mar 2025 · 2 yrs 3 mos
 Honolulu, Hawaii, United States · Remote
 **Skills:** Laravel · Vue.js · React Native · New Relic · Jenkins · Team Leadership
 
-* **Led** a cross-functional team, assumindo a liderança técnica em domínios críticos (Accounts, Properties, Checklists) para garantir escalabilidade e confiabilidade, elevando o desempenho do sistema e a satisfação do usuário.
-* **Arquitetou e implementou** a iniciativa "Mid-Stay Projects", que **aumentou em 30%** a retenção de usuários e aprimorou a experiência geral do cliente.
-* **Corrigiu vulnerabilidades críticas** de segurança identificadas em testes de penetração, fortalecendo a autenticação e a gestão de sessões para robustez contra ameaças cibernéticas.
-* **Reduziu em 40%** o tempo de resposta de endpoints e minimizou dívida técnica, refatorando código e otimizando queries de banco de dados, resultando em maior eficiência e melhor experiência do usuário.
-* **Refatorou mais de 100 testes falhos**, aumentando a confiabilidade do pipeline CI/CD (Jenkins) e **reduzindo o tempo de execução de testes automatizados**, garantindo entregas mais estáveis.
-* **Utilizou New Relic e Bugsnag** para detectar e resolver gargalos de desempenho e monitorar erros em tempo real.
+- **Led** a cross-functional team, assumindo a liderança técnica em domínios críticos (Accounts, Properties, Checklists) para garantir escalabilidade e confiabilidade, elevando o desempenho do sistema e a satisfação do usuário.
+- **Arquitetou e implementou** a iniciativa "Mid-Stay Projects", que **aumentou em 30%** a retenção de usuários e aprimorou a experiência geral do cliente.
+- **Corrigiu vulnerabilidades críticas** de segurança identificadas em testes de penetração, fortalecendo a autenticação e a gestão de sessões para robustez contra ameaças cibernéticas.
+- **Reduziu em 40%** o tempo de resposta de endpoints e minimizou dívida técnica, refatorando código e otimizando queries de banco de dados, resultando em maior eficiência e melhor experiência do usuário.
+- **Refatorou mais de 100 testes falhos**, aumentando a confiabilidade do pipeline CI/CD (Jenkins) e **reduzindo o tempo de execução de testes automatizados**, garantindo entregas mais estáveis.
+- **Utilizou New Relic e Bugsnag** para detectar e resolver gargalos de desempenho e monitorar erros em tempo real.
 
 ---
 
-#### **Head of Full-stack Development**
+#### **Head Of Full-stack Development**
 **Full Comms · Full-time**
 Apr 2021 - Nov 2022 · 1 yr 8 mos
 Manchester Area, United Kingdom · Remote
 **Skills:** Vue.js · Vuetify · TypeScript · Lumen · DevOps · PHP
 
-* **Desenvolveu aplicações CMS com Laravel** e um aplicativo de gerenciamento de widgets baseado em Vue.js, otimizando a gestão de conteúdo e a experiência do usuário.
-* **Construiu e manteve um sistema API escalável** com Lumen, garantindo alto desempenho.
-* **Colaborou com uma pequena equipe para implementar o novo módulo de Pós-Venda** para Kpro.
-* **Otimizou o desempenho de projetos** por meio de avaliações e melhorias contínuas, e gerenciou atualizações de PHP e Laravel para segurança e compatibilidade.
-* **Implementou testes automatizados com Dusk** (Selenium) para melhorar a confiabilidade e utilizou DeployHQ, Cercel e Laravel Forge para implantação contínua.
+- **Desenvolveu aplicações CMS com Laravel** e um aplicativo de gerenciamento de widgets baseado em Vue.js, otimizando a gestão de conteúdo e a experiência do usuário.
+- **Construiu e manteve um sistema API escalável** com Lumen, garantindo alto desempenho.
+- **Colaborou com uma pequena equipe para implementar o novo módulo de Pós-Venda** para Kpro.
+- **Otimizou o desempenho de projetos** por meio de avaliações e melhorias contínuas, e gerenciou atualizações de PHP e Laravel para segurança e compatibilidade.
+- **Implementou testes automatizados com Dusk** (Selenium) para melhorar a confiabilidade e utilizou DeployHQ, Cercel e Laravel Forge para implantação contínua.
 
 ---
 
-#### **Head of Software Development**
+#### **Head Of Software Development**
 **Evoke Mobile · Full-time**
 Mar 2019 - Apr 2021 · 2 yrs 2 mos
 Liverpool, United Kingdom · Remote
 **Skills:** Laravel · React.js · Laravel Horizon
 
-* **Liderou uma pequena equipe** no desenvolvimento de dashboards administrativos internos com React, **resolvendo uma questão crítica de performance** em renderização de mapas (mais de 200 mil registros geoespaciais) ao implementar Superfetch, **melhorando o tempo de carregamento em até 30x**.
-* **Colaborou no desenvolvimento full-stack** de CMS e APIs de backend para aplicativos móveis (iOS/Android).
-* **Aprimorou o desempenho do sistema de backend** ao utilizar filas (queues), alcançando um **processamento até 500x mais rápido** para serviços de compartilhamento de viagens.
-* **Projetou e manteve APIs escaláveis** consumidas por plataformas web e móveis.
-* **Integrou diversos serviços de terceiros**, incluindo Firebase, Google Geocoding, Overpass API, OPTA e Mailgun.
+- **Liderou uma pequena equipe** no desenvolvimento de dashboards administrativos internos com React, **resolvendo uma questão crítica de performance** em renderização de mapas (mais de 200 mil registros geoespaciais) ao implementar Superfetch, **melhorando o tempo de carregamento em até 30x**.
+- **Colaborou no desenvolvimento full-stack** de CMS e APIs de backend para aplicativos móveis (iOS/Android).
+- **Aprimorou o desempenho do sistema de backend** ao utilizar filas (queues), alcançando um **processamento até 500x mais rápido** para serviços de compartilhamento de viagens.
+- **Projetou e manteve APIs escaláveis** consumidas por plataformas web e móveis.
+- **Integrou diversos serviços de terceiros**, incluindo Firebase, Google Geocoding, Overpass API, OPTA e Mailgun.
 
 ---
 
@@ -355,10 +344,10 @@ Apr 2018 - Nov 2018 · 8 mos
 Lisbon, Portugal · Hybrid
 **Skills:** Laravel Horizon · WordPress · DevOps · Laravel · Python (Programming Language)
 
-* **Idealizou e criou uma solução performática** para importação diária de extensas bases de dados utilizando filas, otimizando o processamento do servidor.
-* **Desenvolveu múltiplas aplicações web com Laravel** e criou temas/plugins em WordPress.
-* **Implementou a atualização de gráficos no NinjaTrader** usando C#.
-* **Realizou análise e estimativa de projetos** com a ferramenta Target Process, e atuou no desenvolvimento de software com PHP, Laravel, WordPress e Python.
+- **Idealizou e criou uma solução performática** para importação diária de extensas bases de dados utilizando filas, otimizando o processamento do servidor.
+- **Desenvolveu múltiplas aplicações web com Laravel** e criou temas/plugins em WordPress.
+- **Implementou a atualização de gráficos no NinjaTrader** usando C#.
+- **Realizou análise e estimativa de projetos** com a ferramenta Target Process, e atuou no desenvolvimento de software com PHP, Laravel, WordPress e Python.
 
 ---
 
@@ -368,9 +357,9 @@ Nov 2017 - Feb 2018 · 4 mos
 Barueri · On-site
 **Skills:** MongoDB · Integration · Redis · Laravel · Horizon · OpenRefine
 
-* **Liderou uma desafiadora integração de múltiplos marketplaces** (Mercadolivre, B2W, Via Varejo) em uma única aplicação.
-* **Desenvolveu um sistema para importar pedidos** de plataformas Magento para um sistema exclusivo (Spider), armazenando dados em MongoDB.
-* **Implementou a atualização de pedidos** integrada com ERP Bling via webhooks e queue jobs.
+- **Liderou uma desafiadora integração de múltiplos marketplaces** (Mercadolivre, B2W, Via Varejo) em uma única aplicação.
+- **Desenvolveu um sistema para importar pedidos** de plataformas Magento para um sistema exclusivo (Spider), armazenando dados em MongoDB.
+- **Implementou a atualização de pedidos** integrada com ERP Bling via webhooks e queue jobs.
 
 ---
 
@@ -380,8 +369,8 @@ Feb 2017 - Sep 2017 · 8 mos
 Sorocaba e Região, Brasil · On-site
 **Skills:** Integration · Notification · Laravel · Event Driven Programming
 
-* **Criou uma plataforma para registro de websites e envio de notificações web push**, desenvolvida em Laravel com abordagem orientada a eventos e estrutura modular.
-* **Integrou a plataforma com OnSignal e o sistema de pagamentos Pagar.me**.
+- **Criou uma plataforma para registro de websites e envio de notificações web push**, desenvolvida em Laravel com abordagem orientada a eventos e estrutura modular.
+- **Integrou a plataforma com OnSignal e o sistema de pagamentos Pagar.me**.
 
 ---
 
@@ -390,7 +379,7 @@ Sorocaba e Região, Brasil · On-site
 Jan 2016 - Jan 2017 · 1 yr 1 mo
 Sorocaba Area, Brazil
 
-* **Construiu uma ampla aplicação PHP OOP** para gerenciamento de hospitais, profissionais de saúde e pacientes.
+- **Construiu uma ampla aplicação PHP OOP** para gerenciamento de hospitais, profissionais de saúde e pacientes.
 
 ---
 
@@ -399,9 +388,9 @@ Sorocaba Area, Brazil
 Sep 2015 - Mar 2016 · 7 mos
 Sorocaba Area, Brazil · On-site
 
-* **Desenvolveu e ministrou cursos de Liderança e Coaching de 14 horas** para pequenos grupos, combinando experiência de liderança com técnicas de coaching para desenvolvimento integral.
-* **Capacitou líderes em diversas competências**, incluindo compreensão de subordinados, contratação e delegação eficaz, promoção de desenvolvimento contínuo (com foco em neuroplasticidade e segurança psicológica), feedback construtivo e análise de desempenho.
-* **Agregou valor ao aprimorar habilidades de liderança**, construir confiança, motivar equipes, otimizar delegação e avaliar resultados com ferramentas aplicáveis em diversas áreas.
+- **Desenvolveu e ministrou cursos de Liderança e Coaching de 14 horas** para pequenos grupos, combinando experiência de liderança com técnicas de coaching para desenvolvimento integral.
+- **Capacitou líderes em diversas competências**, incluindo compreensão de subordinados, contratação e delegação eficaz, promoção de desenvolvimento contínuo (com foco em neuroplasticidade e segurança psicológica), feedback construtivo e análise de desempenho.
+- **Agregou valor ao aprimorar habilidades de liderança**, construir confiança, motivar equipes, otimizar delegação e avaliar resultados com ferramentas aplicáveis em diversas áreas.
 
 ---
 
@@ -410,12 +399,10 @@ Sorocaba Area, Brazil · On-site
 Jan 1998 - Nov 2011 · 13 yrs 11 mos
 São Paulo Area, Brazil
 
-* **Participou de múltiplos projetos** e **desenvolveu diversas aplicações web**, incluindo um portal corporativo principal, website de e-commerce e plataforma de intranet.
-* **Utilizou tecnologias como Coldfusion (Servlet Java) CBD, ASP, SQL Server, Atlassian Jira, Windows Server e IIS**.
+- **Participou de múltiplos projetos** e **desenvolveu diversas aplicações web**, incluindo um portal corporativo principal, website de e-commerce e plataforma de intranet.
+- **Utilizou tecnologias como Coldfusion (Servlet Java) CBD, ASP, SQL Server, Atlassian Jira, Windows Server e IIS**.
 
 ---
-
-
 
 ## Courses and Certificates
 ### AI & Machine Learning
@@ -429,7 +416,6 @@ São Paulo Area, Brazil
 **Skills:** Prompt Engineering
 
 ### Software Development & Architecture
-
 
 ![Full Cycle logo](https://media.licdn.com/dms/image/v2/C4D0BAQHwahyQD-Rolg/company-logo_100_100/company-logo_100_100/0/1630578196249?e=1756944000&v=beta&t=OuHLQlsZYFhkuXjKByj3M0dV10GC0CM1mwkciHDjgr4)
 #### SOLID Express
@@ -451,8 +437,6 @@ São Paulo Area, Brazil
 
 **Full Cycle** | Issued Nov 2021
 **Credential ID:** [6cee6606-7b1c-4977-9f04-d1b21f476d69](https://fullcycle.com.br/certificado/6cee6606-7b1c-4977-9f04-d1b21f476d69)
-
-
 
 ### Cloud Computing & AWS
 
@@ -492,12 +476,12 @@ São Paulo Area, Brazil
 **School of Net** | Issued Nov 2020
 **Credential ID:** [29ef3a2c-e654-4c8a-97ec-5b9587bc1b17](https://www.evernote.com/shard/s96/sh/34e44d74-e7fa-1878-275d-d2d71e7278b8/bc45d26674e2e65c32567dd76a3e9a19)
 
-#### API RESTFul development with Laravel - Update 2 📕
+#### API RESTFul Development with Laravel - Update 2 📕
 
 **School of Net** | Issued Mar 2018
 **Credential ID:** [5c1f2e2719d6e4034e9cd6263449e718](https://www.evernote.com/shard/s96/sh/8c23b99a-3c68-4e24-873c-fb0902232c30/5c1f2e2719d6e4034e9cd6263449e718)
 
-#### Laravel 5.5 features 📕
+#### Laravel 5.5 Features 📕
 
 **School of Net** | Issued Sep 2017
 **Credential ID:** [aa5319ff93440c9c83e381190b78b180](https://www.evernote.com/shard/s96/sh/ee5889ec-aac5-4f55-846d-540dd76df01f/aa5319ff93440c9c83e381190b78b180)
@@ -507,7 +491,7 @@ São Paulo Area, Brazil
 **School of Net** | Issued Aug 2017
 **Credential ID:** [1f1c6bd0f21227e5c21ae211133e875e](https://www.evernote.com/shard/s96/sh/f305585e-71e8-46f6-91ef-cde776d34ed8/1f1c6bd0f21227e5c21ae211133e875e)
 
-#### Laravel - Multi-Tenancy applications 📕
+#### Laravel - Multi-Tenancy Applications 📕
 
 **School of Net** | Issued Jul 2017
 **Credential ID:** [d144e2bb-abb8-48e0-8458-20262e57847d](https://www.evernote.com/shard/s96/sh/acd82b07-a21e-4f57-a165-0add8a8ae76f/125e0472d2efad5743f5ae1f0f2be4e0)
@@ -532,12 +516,12 @@ São Paulo Area, Brazil
 **School of Net** | Issued May 2017
 **Credential ID:** [586dcbf093890c677050e0faca468c7b](https://www.evernote.com/shard/s96/sh/7b90f125-3697-41e5-b6e6-bf1bf4111662/586dcbf093890c677050e0faca468c7b)
 
-#### Laravel 5.4 good practices, events and queues 📕
+#### Laravel 5.4 Good Practices, Events and Queues 📕
 
 **School of Net** | Issued Apr 2017
 **Credential ID:** [d262f669-0893-42a8-b2f4-a2d9a895c8b0](https://www.evernote.com/shard/s96/sh/bedd27a8-8f8a-4cc8-88e2-a9a8f1ac3743/536f414b349d116f1742b8b415c6cab2)
 
-#### API RESTFul development with Laravel 📕
+#### API RESTFul Development with Laravel 📕
 
 **School of Net** | Issued Mar 2017
 **Credential ID:** [5ae50017-a58b-4c94-9804-cd736a59112ec](https://www.evernote.com/shard/s96/sh/9a699fc2-c42d-4942-a0a9-d63758ce6cd9/a0b92e47d2d6a7c4025e3b8c5bc6794c)
@@ -569,7 +553,7 @@ São Paulo Area, Brazil
 
 ### Frontend Development
 
-#### Vue.js 2 with Laravel 📗+📕
+#### Vue.js 2 With Laravel 📗+📕
 
 **School of Net** | Issued Mar 2018
 **Credential ID:** [5f2ba45adc546bf08437e4e5a8d2a3ec](https://www.evernote.com/shard/s96/sh/1dc6063c-0ff2-4747-9964-00d9c0ccd5af/5f2ba45adc546bf08437e4e5a8d2a3ec)
@@ -629,12 +613,10 @@ São Paulo Area, Brazil
 **School of Net** | Issued Jan 2018
 **Credential ID:** [58595811662261ba07fa0ccb27c49ba7](https://www.evernote.com/shard/s96/sh/8039800e-7853-4961-8efa-db0468fe2345/58595811662261ba07fa0ccb27c49ba7)
 
-
-
 ### DevOps & Infrastructure
 
 ![Alura logo](https://media.licdn.com/dms/image/v2/D4D0BAQEZkMsv5FwbDA/company-logo_100_100/company-logo_100_100/0/1710187635900/aluracursos_logo?e=1756944000&v=beta&t=tIl1uJ_TlOfcW0-ecPeIUcngXIdnBb6OK4UUfGBkDoE)
-#### Docker: Creating containers without headache 🐋
+#### Docker: Creating Containers without Headache 🐋
 
 **Alura** | Issued Feb 2018
 **Credential ID:** [d88ca56676a27a263dc3e9123151f851](https://www.evernote.com/shard/s96/sh/cc4bf4ab-3400-4ceb-a94c-ae26df799d09/d88ca56676a27a263dc3e9123151f851)
@@ -665,7 +647,6 @@ São Paulo Area, Brazil
 **School of Net** | Issued Dec 2016
 **Credential ID:** [5533149b-158c-4475-98e1-394b8c93763b](https://www.evernote.com/shard/s96/sh/baf91fb1-e681-4348-945f-05e91a5e2160/497021713d6b28e1f4173684dcbe84cd)
 
-
 ### Content Management - CMS
 
 #### Theme Development with Wordpress ✍️
@@ -673,12 +654,12 @@ São Paulo Area, Brazil
 **School of Net** | Issued May 2018
 **Credential ID:** [57e6f4c4f5812f986c27ee673caf90a3](https://www.evernote.com/shard/s96/sh/4183fada-9b1f-4b3a-b9ed-1254fd020962/57e6f4c4f5812f986c27ee673caf90a3)
 
-#### Plugin development advanced with Wordpress ✍️
+#### Plugin Development Advanced with Wordpress ✍️
 
 **School of Net** | Issued Apr 2018
 **Credential ID:** [c92a461071b4dda4b0e624a159e85d31](https://www.evernote.com/shard/s96/sh/52b2a2b8-7384-49b2-a586-11362d948c4c/c92a461071b4dda4b0e624a159e85d31)
 
-#### Plugin development with Wordpress ✍️
+#### Plugin Development with Wordpress ✍️
 
 **School of Net** | Issued Apr 2018
 **Credential ID:** [b36e1053a61231c75039f0b049794fce](https://www.evernote.com/shard/s96/sh/fa9dc8b4-497e-45a9-a0cd-59c2a992f1ef/b36e1053a61231c75039f0b049794fce)
@@ -690,12 +671,10 @@ São Paulo Area, Brazil
 **School of Net** | Issued Aug 2018
 **Credential ID:** [2bca2b71a88fbfe32feace235943d118](https://www.evernote.com/shard/s96/sh/0acc621a-2a7a-42ab-bb09-b2f3b812fbda/2bca2b71a88fbfe32feace235943d118)
 
-
 ### Languages Proficiency
 
-
 ![The City of Liverpool College logo](https://media.licdn.com/dms/image/v2/D4E0BAQEOuGg4EJzHUg/company-logo_100_100/B4EZaLFZZAHoAQ-/0/1746090170351/colcollege_logo?e=1756944000&v=beta&t=40inwLDfmKeYyhxuymjs1JZfHN08p9diOsgLcDqVoIg)
-#### English for speakers of other languages
+#### English for Speakers of Other Languages
 
 **The City of Liverpool College** | Issued Nov 2020
 
@@ -712,9 +691,6 @@ São Paulo Area, Brazil
 
 **SBCoaching** | Issued Aug 2012
 
-
-
-
 ### Agile Project Management
 
  ![Scrum Alliance logo](https://media.licdn.com/dms/image/v2/D560BAQFdepbfdMhg3g/company-logo_100_100/company-logo_100_100/0/1719256430021/scrum_alliance_logo?e=1756944000&v=beta&t=7DxcG_KUTxZhG8tgUQiLHVhtsxWyjjg0W46O6qfLg6A)
@@ -722,8 +698,6 @@ São Paulo Area, Brazil
 
 **Scrum Alliance** | Issued Aug 2011
 **Credential ID:** 000150851
-
-
 
 ### Enterprise Java Development
 ![IBTA](https://i.imgur.com/A2B6nMQ.png)
@@ -739,19 +713,18 @@ São Paulo Area, Brazil
 
 ![School of Net logo](https://media.licdn.com/dms/image/v2/C4D0BAQH1yYpvcNDwIQ/company-logo_100_100/company-logo_100_100/0/1630530376388/school_of_net_logo?e=1756944000&v=beta&t=erJNtq13OSVJuvqZdgOh_J584O5j2CIfToQssGeCO1w)
 
-#### All courses completed at School of Net
+#### All Courses Completed at School of Net
 **School of Net** | Issued Jan 2010
 **Credential ID:** [luis-fernando-richter-pereira-dos-santos-2527](http://www.schoolofnet.com/portfolio/luis-fernando-richter-pereira-dos-santos-2527)
 
-
 ---
-## Another expertises
+## Another Expertises
 
 #### **Orquestração de Contêineres (Kubernetes)**
 
 Como parte da minha formação contínua e especialização, realizei o curso de **Desenvolvimento de Aplicações Modernas e Escaláveis com Microsserviços da Plataforma Fullcycle**. Nele, tive a oportunidade de aprofundar meus conhecimentos teóricos e práticos em orquestração com Kubernetes, realizando diversos testes e implementações em ambiente local. Embora a aplicação em ambiente produtivo ainda não tenha ocorrido, possuo uma base sólida sobre a arquitetura e os componentes do Kubernetes (Pods, Services, Deployments) e estou preparado para aplicar esse conhecimento em projetos de larga escala.
 
-#### **Infraestrutura como Código (IaC)**
+#### **Infraestrutura Como Código (IaC)**
 
 Possuo experiência prática com a implementação de Infraestrutura como Código utilizando **Terraform** em projetos pessoais. Nas minhas experiências corporativas, por haver times de DevOps especialistas dedicados a essa função, meu foco diário sempre foi o uso de **Docker e Docker Compose** para definir a stack da aplicação de forma declarativa e reprodutível, garantindo a consistência entre os ambientes de desenvolvimento, teste e produção.
 
@@ -759,12 +732,10 @@ Possuo experiência prática com a implementação de Infraestrutura como Códig
 
 Tenho vasta experiência na criação e manutenção de pipelines de CI/CD utilizando diversas ferramentas como **Bitbucket Pipelines, GitHub Actions, GCP Cloud Build e Jenkins**. Na minha passagem pela **Turno**, identifiquei a necessidade de aprimorarmos a análise estática e a qualidade do código em um codebase extenso e complexo. **Recomendei ativamente a introdução do SonarQube** como ferramenta padrão no nosso processo de integração contínua. A ferramenta foi adotada com sucesso enquanto eu estava na empresa, o que permitiu a realização de uma grande análise nos códigos fontes e **desencadeou um importante trabalho de refatoração e melhoria de qualidade** que foi abraçado por todas as Squads da engenharia.
 
-### **Gestão de Projetos, DevOps e Conhecimento com o Ecossistema Atlassian**
+### **Gestão de Projetos, DevOps e Conhecimento Com O Ecossistema Atlassian**
 
 Possuo vasta experiência na implementação e utilização estratégica do ecossistema Atlassian (Jira, Confluence, Bitbucket) para otimizar o ciclo de vida de desenvolvimento de software, da concepção ao deploy.
 
-* **Gestão de Projetos e Tarefas (Jira):** Minha experiência com Jira é de longa data, tendo liderado a implementação e customização da ferramenta em ambientes corporativos. Fui responsável pela configuração de dashboards, filtros personalizados e pela gestão de backlogs utilizando os módulos de Kanban e Agile. Tenho proficiência em estruturar fluxos de trabalho que aumentam a visibilidade e a produtividade das equipes, uma habilidade aplicada em diversas empresas, incluindo a Turno. Minha vivência se estende a outras ferramentas de gestão como Targetprocess (Apptio) e Trello.
-
-* **Gestão de Conhecimento e Ativos (Confluence):** Como Tech Lead na Turno, utilizei o Confluence de forma intensiva para construir e manter uma base de conhecimento robusta. Fui autor de documentações técnicas essenciais, incluindo *Spikes* para investigações, planos de desenvolvimento de soluções, *Definition of Done* (DoD), notas de retrospectivas e documentação detalhada de módulos e features, garantindo a disseminação do conhecimento e a redução da dependência de conhecimento tácito.
-
-* **DevOps e CI/CD (Bitbucket Pipelines):** Em múltiplos projetos, utilizei o Bitbucket não apenas para o versionamento de código, mas como peça central da estratégia de DevOps. Desenvolvi e implementei pipelines de CI/CD para automatizar os processos de teste e implantação, garantindo entregas mais rápidas e seguras. Realizei a gestão completa de repositórios, projetos e acessos de usuários, sempre aplicando as melhores práticas de segurança como um pré-requisito fundamental para qualquer configuração ou alteração.
+- **Gestão de Projetos e Tarefas (Jira):** Minha experiência com Jira é de longa data, tendo liderado a implementação e customização da ferramenta em ambientes corporativos. Fui responsável pela configuração de dashboards, filtros personalizados e pela gestão de backlogs utilizando os módulos de Kanban e Agile. Tenho proficiência em estruturar fluxos de trabalho que aumentam a visibilidade e a produtividade das equipes, uma habilidade aplicada em diversas empresas, incluindo a Turno. Minha vivência se estende a outras ferramentas de gestão como Targetprocess (Apptio) e Trello.
+- **Gestão de Conhecimento e Ativos (Confluence):** Como Tech Lead na Turno, utilizei o Confluence de forma intensiva para construir e manter uma base de conhecimento robusta. Fui autor de documentações técnicas essenciais, incluindo *Spikes* para investigações, planos de desenvolvimento de soluções, *Definition of Done* (DoD), notas de retrospectivas e documentação detalhada de módulos e features, garantindo a disseminação do conhecimento e a redução da dependência de conhecimento tácito.
+- **DevOps e CI/CD (Bitbucket Pipelines):** Em múltiplos projetos, utilizei o Bitbucket não apenas para o versionamento de código, mas como peça central da estratégia de DevOps. Desenvolvi e implementei pipelines de CI/CD para automatizar os processos de teste e implantação, garantindo entregas mais rápidas e seguras. Realizei a gestão completa de repositórios, projetos e acessos de usuários, sempre aplicando as melhores práticas de segurança como um pré-requisito fundamental para qualquer configuração ou alteração.

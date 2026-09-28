@@ -1,4 +1,174 @@
-### 🚀 PoC:  Cache Semântico de Alta Performance para Otimização de LLMs - PoC
+### 🚀 Challenge:  Cat Guardian
+
+#### 🎯 Visão Geral e Arquitetura da Solução
+
+Viver com sete gatos — cada um com sua personalidade e rotina — traz uma preocupação constante: o que aconteceria se um deles escapasse? Registros de saúde em papel se perdem facilmente, e as tradicionais coleiras de identificação expõem dados sensíveis do dono (como telefone e endereço) para qualquer pessoa na rua.
+
+O **Cat Guardian** nasceu dessa dor real e evoluiu para um passaporte digital de segurança felina. A plataforma combina um gerador de perfis de identificação via IA, medalhas dinâmicas de QR Code e um engenhoso sistema de "Blind Contact Relay". Do ponto de vista arquitetural, o sistema opera sob o princípio de *Privacy-First*. Quando um gato se perde e o dono ativa o "Lost Mode", a plataforma gera um alerta público. Se alguém encontra o animal e escaneia a coleira, a aplicação renderiza um passaporte de resgate público que omite os contatos do dono. A comunicação ocorre por meio de uma interface segura onde a mensagem de quem encontrou o gato é roteada pelo back-end diretamente para o e-mail do dono, garantindo anonimato e rapidez no reencontro.
+
+#### 👨‍💻 Meu Papel no Projeto
+
+- **Engenheiro de Software Full-Stack:** Liderança no desenvolvimento de ponta a ponta utilizando React 19, Vite e TypeScript, garantindo uma interface responsiva baseada em Glassmorphism e alta performance no lado do cliente.
+- **Arquiteto de Soluções & Banco de Dados:** Modelagem do banco de dados relacional no Supabase (PostgreSQL), focando em esquemas multilingues nativos via `JSONB` e na aplicação rigorosa de políticas de segurança em nível de linha (RLS).
+- **Integrador de IA:** Implementação de prompts estruturados conectando a aplicação à API do Gemini 2.0 Flash para gerar descrições físicas precisas com base nas características visuais dos felinos.
+
+#### ✨ Pontos Fortes e Desafios Superados
+
+O principal triunfo técnico do Cat Guardian é a forma como ele equilibra utilidade pública com extrema privacidade. O maior desafio inicial foi desenhar um fluxo onde quem encontra o animal pudesse contatar o dono sem que números de telefone fossem expostos no front-end ou inspecionáveis via código. Superamos isso desenvolvendo o **Blind Contact Relay**: integramos a API do Resend no back-end e configuramos o Supabase para que a tabela de `sightings` (avistamentos) acionasse notificações seguras via servidor, sem que o cliente tivesse acesso aos dados do proprietário.
+
+Outro desafio importante foi manter a consistência e a rastreabilidade do banco de dados em um ambiente de prototipagem ágil. Estabelecemos uma cultura estrita de engenharia de dados onde nunca atualizamos migrações existentes no Supabase; em vez disso, sempre criamos novas migrações (*forward-only*), garantindo um histórico seguro e reproduzível. Além disso, a barreira do idioma foi superada ao adotar uma arquitetura `JSONB` que armazena perfis gerados por IA nativamente tanto em inglês quanto em português (pt-BR).
+
+#### 🌱 Pontos Para Evolução Futura
+
+- Integração com coleiras IoT para rastreamento de localização GPS ativo e delimitação de cercas virtuais (Geofencing).
+- Expansão das funcionalidades de saúde preventiva para permitir upload e extração de dados via OCR de exames e carteiras de vacinação físicas.
+
+---
+
+#### 🛠️ Pilha de Tecnologias (Tech Stack)
+
+| Componente | Tecnologia Utilizada | Papel na Arquitetura |
+| --- | --- | --- |
+| **Front-End Core** | **React 19 & Vite 6** | Responsável pela interface interativa, renderização do dashboard de segurança e geração do QR Code dinâmico do passaporte. |
+| **Banco de Dados & Autenticação** | **Supabase (PostgreSQL)** | Armazena registros médicos, perfis multilingues (`JSONB`) e gerencia sessões de usuários com forte controle de acesso via RLS (Row Level Security). |
+| **Motor de Inteligência Artificial** | **Google Gemini 2.0 Flash** | Processa características inseridas pelo usuário para gerar perfis de identificação visual estruturados e guias de saúde preventiva. |
+| **Mensageria Segura** | **Resend API** | Atua como o motor do *Blind Contact Relay*, disparando e-mails seguros de quem encontrou o pet para o dono, sem expor dados pessoais. |
+| **Qualidade & Testes** | **Vitest & TypeScript 5.7** | Garante a tipagem estrita de todos os esquemas de dados e executa a suíte de testes automatizados nas regras de negócios essenciais (Jidoka Gate). |
+
+---
+
+#### 🗺️ Diagrama da Arquitetura
+
+```mermaid
+---
+config:
+  theme: default
+  look: handDrawn
+---
+%%{init: {'sequence': {'messageFontMaxSize': 14, 'wrap': true, 'diagramWidth': 600}}}%%
+flowchart TD
+    Owner["👤 Dono do Gato"] -->|Cadastra gato e gerencia passaporte| App["📱 Frontend React 19"]
+    App -->|Solicita descrição estruturada| AI["🧠 API do Gemini 2\.0"]
+    Finder["🔍 Pessoa que encontrou o pet"] -->|Escaneia QR Code público| App
+    App -->|Valida sessão ✅| Auth["✅ Supabase Auth"]
+    App -->|Persiste dados JSONB via RLS| DB["🗄️ Supabase PostgreSQL"]
+    Finder -->|Preenche relato de avistamento| App
+    App -->|Aciona relay de comunicação| Relay["✉️ Resend API Relay"]
+    Relay -->|Notifica anonimamente ✅| Owner
+
+```
+
+***
+
+### 🚀 Challenge:  Gerenciador de Tarefas Conversacional via E-mail 📥 Postmark Challenge
+
+#### 🎯 Visão Geral e Arquitetura da Solução
+
+Este projeto nasceu para solucionar uma dor comum no dia a dia de qualquer profissional: a fricção de transformar e-mails em tarefas acionáveis. Em vez de alternar entre a caixa de entrada e um aplicativo de To-Do, a solução transforma o próprio e-mail em uma poderosa interface de gerenciamento. O usuário pode criar, atualizar, comentar e concluir tarefas simplesmente enviando um e-mail para um endereço dedicado ou respondendo a uma conversa existente, utilizando comandos simples e intuitivos como `#prioridade` ou `#concluir`.
+
+A arquitetura foi desenhada para ser ágil e orientada a eventos. O fluxo se inicia quando o **Postmark API** recebe um e-mail e, através de um **Inbound Webhook**, notifica a aplicação **Laravel** em tempo real. Um motor de comandos customizado entra em ação, analisando o corpo do e-mail em busca de "hashtags" de ação. Cada comando aciona a lógica de negócio correspondente, atualizando o estado da tarefa no banco de dados. Para a visualização, uma interface web reativa, construída com **Livewire** e **Tailwind CSS**, exibe a lista de tarefas, que se atualiza dinamicamente sem a necessidade de recarregar a página, proporcionando uma experiência de usuário fluida e moderna.
+
+#### 👨‍💻 Meu Papel no Projeto
+
+Como idealizador e desenvolvedor da solução, minhas principais responsabilidades foram:
+
+  - **Arquitetura do Processamento de E-mails:** Implementar a lógica de recebimento e interpretação de e-mails em tempo real utilizando Postmark Inbound Webhooks, que servem como gatilho para todo o fluxo da aplicação.
+  - **Desenvolvimento do Motor de Comandos:** Criar um processador de comandos em Laravel para analisar o corpo do e-mail, identificar hashtags de ação (ex: `#comentario`, `#concluir`) e executar as operações de negócio correspondentes.
+  - **Construção do Frontend Reativo:** Desenvolver a interface de usuário para visualização das tarefas com Livewire e Tailwind CSS, garantindo atualizações dinâmicas e uma experiência moderna sem a complexidade de uma Single Page Application (SPA).
+  - **Garantia de Qualidade:** Assegurar a robustez e a confiabilidade do sistema, especialmente do motor de comandos, através de uma suíte de testes completa escrita com Pest.
+
+#### ✨ Pontos Fortes e Desafios Superados
+
+O grande trunfo do projeto é sua simplicidade e elegância: ele se integra a um fluxo de trabalho que o usuário já domina — o e-mail. A solução elimina a necessidade de um novo software, transformando uma ferramenta de comunicação em uma plataforma de produtividade.
+
+O principal desafio técnico foi criar um sistema robusto para "traduzir" o texto não estruturado de um e-mail em comandos de sistema precisos e confiáveis. Superamos isso com o **desenvolvimento de um motor de comandos customizado**, capaz de analisar o conteúdo de forma inteligente. Outra vitória foi a escolha do **Livewire**, que permitiu construir uma interface reativa e performática com a produtividade do ecossistema Laravel, evitando a complexidade de gerenciar um frontend desacoplado.
+
+#### 🌱 Pontos Para Evolução Futura
+
+Para o futuro, a solução poderia evoluir com a implementação de um processamento de linguagem natural (PLN) mais avançado, permitindo que os usuários escrevam comandos de forma mais livre, sem a rigidez das hashtags. Outra evolução seria a integração com calendários (Google Calendar, Outlook) para agendar tarefas com datas de vencimento.
+
+-----
+
+#### 🛠️ Pilha de Tecnologias (Tech Stack)
+
+| Componente | Tecnologia Utilizada | Papel na Arquitetura |
+| :--- | :--- | :--- |
+| **Backend** | **Laravel** | Orquestra toda a lógica de negócio, rotas, processamento de webhooks e interação com o banco de dados. |
+| **Frontend Reativo** | **Livewire & Tailwind CSS** | Constrói uma interface de usuário dinâmica e moderna para a visualização das tarefas, com atualizações em tempo real. |
+| **Testes Automatizados**| **Pest** | Garante a confiabilidade e a robustez das regras de negócio e do motor de comandos com uma suíte de testes limpa. |
+| **Gateway de E-mail** | **Postmark API & Webhooks** | Recebe os e-mails, dispara os eventos via webhook para a aplicação e gerencia o envio de respostas. |
+| **Modelo Arquitetural** | **Arquitetura Orientada a Eventos** | Permite que a aplicação reaja de forma assíncrona aos e-mails recebidos, garantindo um fluxo desacoplado e escalável. |
+
+-----
+
+#### 🔗 Links e Recursos
+- **🎬 Apresentação em Vídeo:** [Assista no YouTube](https://www.youtube.com/watch?v=NDFgcH2X1ZI)
+- **📂 Repositório Open Source:** [Veja o código no GitHub](https://github.com/lfrichter/Interactive-email-management)
+
+---
+
+#### 🗺️ Diagrama da Arquitetura
+
+```mermaid
+---
+config:
+  theme: default
+  look: handDrawn
+---
+flowchart TD
+    %% --- Atores e Fluxo Inicial ---
+    subgraph US["Fluxo do Usuário"]
+        style US fill:#D6EAF8,stroke:#2980B9,stroke-width:2px
+        U[👨‍💻 Usuário<br>Origina a ação enviando ou respondendo um e-mail]
+        U -- "1️⃣ Envia ou responde e-mail" --> PS[📨 Postmark API<br>Serviço de e-mail transacional]
+    end
+
+    %% --- Backend e Infraestrutura ---
+    subgraph BE["Infraestrutura e Backend"]
+        style BE fill:#D5F5E3,stroke:#27AE60,stroke-width:2px
+        PS -- "2️⃣ Envia Inbound Webhook (POST)" --> LV[🚀 Aplicação Laravel<br>Ponto central de processamento]
+        LV -- "3️⃣ Recebe o webhook" --> CMD{⚙️ Motor de Comandos<br>Orquestra execução de ações}
+        CMD -- "4️⃣ Analisa conteúdo do e-mail<br>Identifica hashtags e contexto" --> LOGIC[📈 Lógica de Negócio<br>Define regras e fluxos]
+        LOGIC -- "5️⃣ Cria ou atualiza tarefa<br>Persistência de dados" --> DB[(🗃️ Banco de Dados MySQL)]
+    end
+
+    %% --- Interface Web Reativa ---
+    subgraph UIX["Interface Web Reativa"]
+        style UIX fill:#E8DAEF,stroke:#8E44AD,stroke-width:2px
+        BROWSER[🌐 Navegador do Usuário<br>Acessa interface de gestão] -- "7️⃣ Visualiza lista de tarefas" --> UI[🖥️ UI Livewire + Tailwind<br>Renderização e interações dinâmicas]
+        UI -- "6️⃣ Lê e exibe dados" --> DB
+        UI -- "8️⃣ Solicita atualização dinâmica (AJAX)" --> LV
+    end
+```
+
+---
+#### RESUMO TÉCNICO PARA EMBEDDING
+
+A solução é um gerenciador de tarefas conversacional implementado em uma arquitetura orientada a eventos, acionada por e-mails. O fluxo é iniciado por um Inbound Webhook da Postmark API, que notifica uma aplicação backend em Laravel. Um motor de comandos customizado, com lógica de negócio robusta validada por testes automatizados em Pest, processa o corpo do e-mail para identificar e executar ações baseadas em hashtags, como `#prioridade` ou `#concluir`. O estado das tarefas é persistido em um banco de dados MySQL. A interface de usuário para visualização é um frontend reativo construído com Livewire e Tailwind CSS, garantindo atualizações dinâmicas da lista de tarefas sem a necessidade de recarregar a página. O principal desafio superado foi a tradução de texto não estruturado de e-mails em comandos de sistema precisos através do motor de comandos, evitando a complexidade de uma SPA desacoplada ao utilizar a stack TALL (Tailwind, Alpine, Livewire, Laravel). Futuras evoluções contemplam o uso de processamento de linguagem natural (PLN).
+
+#### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
+
+| Categoria | Tecnologias e Conceitos |
+| :--- | :--- |
+| **AI & Machine Learning** | Processamento de Linguagem Natural (PLN) |
+| **Software Development** | Laravel, Pest, Motor de Comandos Customizado |
+| **Architecture**| Arquitetura Orientada a Eventos, Inbound Webhook, Sistema Desacoplado, Sistema Escalável |
+| **Cloud Computing** | Postmark API (SaaS) |
+| **API RESTFul development** | Postmark API, Webhooks |
+| **Frontend Development** | Livewire, Tailwind CSS, Interface Reativa |
+| **Mobile Development** | N/A |
+| **Database** | MySQL |
+| **Data Management** | Persistência de Dados |
+| **Content Management - CMS** | N/A |
+| **System Administration** | N/A |
+| **DevOps** | Testes Automatizados |
+| **Leadership** | Idealizador, Desenvolvedor da Solução |
+| **Coaching** | N/A |
+| **Agile Project Management** |  N/A |
+
+***
+
+### 🚀 PoC:  Cache Semântico de Alta Performance Para Otimização de LLMs - PoC
 
 #### 🎯 Visão Geral e Arquitetura da Solução
 
@@ -10,10 +180,10 @@ A arquitetura funciona de maneira elegante: ao receber uma pergunta, o sistema u
 
 Como idealizador e desenvolvedor principal desta Prova de Conceito, minhas responsabilidades foram:
 
-  * **Arquitetura da Solução:** Desenhar o fluxo completo do sistema, desde a entrada do prompt até a decisão de hit/miss do cache.
-  * **Implementação do Core:** Desenvolver a lógica central em Python, integrando as bibliotecas para busca vetorial e geração de embeddings.
-  * **Integração de Tecnologias:** Orquestrar a comunicação entre o **Ollama** para a vetorização local e o **FAISS** para a busca por similaridade, garantindo uma operação coesa e performática.
-  * **Validação e Performance:** Executar testes para validar a eficácia da PoC, comprovando a redução drástica na latência para perguntas recorrentes e o impacto positivo na otimização de recursos.
+  - **Arquitetura da Solução:** Desenhar o fluxo completo do sistema, desde a entrada do prompt até a decisão de hit/miss do cache.
+  - **Implementação do Core:** Desenvolver a lógica central em Python, integrando as bibliotecas para busca vetorial e geração de embeddings.
+  - **Integração de Tecnologias:** Orquestrar a comunicação entre o **Ollama** para a vetorização local e o **FAISS** para a busca por similaridade, garantindo uma operação coesa e performática.
+  - **Validação e Performance:** Executar testes para validar a eficácia da PoC, comprovando a redução drástica na latência para perguntas recorrentes e o impacto positivo na otimização de recursos.
 
 #### ✨ Pontos Fortes e Desafios Superados
 
@@ -21,12 +191,12 @@ O maior ponto forte desta solução é sua **autonomia e eficiência**. O princi
 
 A superação veio através da combinação estratégica de tecnologias de ponta:
 
-  * **FAISS (Facebook AI Similarity Search):** Garantiu que a busca por similaridade, o coração do cache, fosse realizada em milissegundos, diretamente na memória.
-  * **Ollama:** Permitiu a geração de embeddings de alta qualidade de forma totalmente local e gratuita, eliminando chamadas de API externas e assegurando que os dados nunca saíssem do ambiente de execução.
+  - **FAISS (Facebook AI Similarity Search):** Garantiu que a busca por similaridade, o coração do cache, fosse realizada em milissegundos, diretamente na memória.
+  - **Ollama:** Permitiu a geração de embeddings de alta qualidade de forma totalmente local e gratuita, eliminando chamadas de API externas e assegurando que os dados nunca saíssem do ambiente de execução.
 
 O resultado foi uma PoC que não apenas validou uma tese, mas demonstrou um caminho viável para otimizar sistemas de IA de forma significativa, melhorando a experiência do usuário e a sustentabilidade financeira da operação.
 
-#### 🌱 Pontos para Evolução Futura
+#### 🌱 Pontos Para Evolução Futura
 
 Para evoluir esta PoC para um sistema em produção, os próximos passos poderiam incluir a implementação de uma camada de persistência para o índice vetorial (ex: usando um banco de dados vetorial como Milvus ou Weaviate) e a criação de uma API robusta para servir o cache a múltiplas aplicações.
 
@@ -128,7 +298,7 @@ Este projeto é uma Prova de Conceito (PoC) de um cache semântico de alta perfo
 
 ***
 
-### 🚀 PoC:  Análise de Jobs de Renderização com PySpark - PoC
+### 🚀 PoC:  Análise de Jobs de Renderização Com PySpark - PoC
 
 #### 🎯 Visão Geral e Arquitetura da Solução
 
@@ -140,9 +310,9 @@ A solução funciona em um ambiente interativo com Jupyter Notebook, onde um scr
 
 Como único desenvolvedor nesta Prova de Conceito, minhas responsabilidades abrangeram todo o ciclo de vida dos dados em pequena escala:
 
-  * **Engenharia de Dados:** Desenvolvi o script ETL para extração, transformação e carga dos dados, utilizando PySpark para o processamento.
-  * **Análise de Dados:** Utilizei o Jupyter Notebook para a análise exploratória e validação dos dados transformados.
-  * **Otimização de Consulta:** Elaborei a query SQL com múltiplos `LEFT JOINs` para garantir a integridade e a correta união das informações.
+  - **Engenharia de Dados:** Desenvolvi o script ETL para extração, transformação e carga dos dados, utilizando PySpark para o processamento.
+  - **Análise de Dados:** Utilizei o Jupyter Notebook para a análise exploratória e validação dos dados transformados.
+  - **Otimização de Consulta:** Elaborei a query SQL com múltiplos `LEFT JOINs` para garantir a integridade e a correta união das informações.
 
 #### ✨ Pontos Fortes e Desafios Superados
 
@@ -150,10 +320,10 @@ O principal desafio foi consolidar informações de três tabelas distintas (`re
 
 A superação veio através da construção de uma query SQL otimizada, que não apenas enriqueceu os dados dos jobs, mas também garantiu que todos os segmentos fossem corretamente associados aos seus respectivos roteiros. Embora seja um PoC, a escolha do PySpark valida a arquitetura para futura escalabilidade, permitindo que o mesmo código processe volumes de dados ordens de magnitude maiores com mínima alteração.
 
-#### 🌱 Pontos para Evolução Futura
+#### 🌱 Pontos Para Evolução Futura
 
-  * **Automação:** Agendar a execução do notebook como um job recorrente (utilizando ferramentas como Airflow ou cron).
-  * **Escalabilidade:** Migrar a fonte de dados de SQLite para um Data Lake (ex: AWS S3) para testar o pipeline com um volume de dados maior.
+  - **Automação:** Agendar a execução do notebook como um job recorrente (utilizando ferramentas como Airflow ou cron).
+  - **Escalabilidade:** Migrar a fonte de dados de SQLite para um Data Lake (ex: AWS S3) para testar o pipeline com um volume de dados maior.
 
 -----
 
@@ -194,7 +364,7 @@ graph TD
 
 ***
 
-### 🚀 PoC:  Robo de Atendimento por Voz - PoC
+### 🚀 PoC:  Robo de Atendimento Por Voz - PoC
 
 #### 🎯 Visão Geral e Arquitetura da Solução
 
@@ -206,10 +376,10 @@ A arquitetura foi concebida para ser robusta, escalável e, principalmente, **mu
 
 Como arquiteto e desenvolvedor principal desta solução, minhas responsabilidades abrangeram todo o ciclo de vida do projeto:
 
-  * **Arquitetura da Solução:** Projetei a arquitetura end-to-end, focada em comunicação de voz em tempo real e processamento de IA de baixa latência.
-  * **Desenvolvimento Back-End:** Implementei a API RESTful com Flask para gerenciar o ciclo de vida dos agentes, incluindo a orquestração da inicialização e finalização das sessões.
-  * **Integração de IA e Serviços:** Fui responsável por integrar e orquestrar o pipeline de serviços de IA, conectando o reconhecimento de fala (Deepgram), a lógica de conversação (OpenAI) e a síntese de voz (ElevenLabs).
-  * **Implementação da Lógica Multi-Tenant:** Desenvolvi o sistema de personalização dinâmica que utiliza OCR para adaptar o agente a diferentes cardápios, garantindo que cada restaurante tivesse um atendente virtual exclusivo.
+  - **Arquitetura da Solução:** Projetei a arquitetura end-to-end, focada em comunicação de voz em tempo real e processamento de IA de baixa latência.
+  - **Desenvolvimento Back-End:** Implementei a API RESTful com Flask para gerenciar o ciclo de vida dos agentes, incluindo a orquestração da inicialização e finalização das sessões.
+  - **Integração de IA e Serviços:** Fui responsável por integrar e orquestrar o pipeline de serviços de IA, conectando o reconhecimento de fala (Deepgram), a lógica de conversação (OpenAI) e a síntese de voz (ElevenLabs).
+  - **Implementação da Lógica Multi-Tenant:** Desenvolvi o sistema de personalização dinâmica que utiliza OCR para adaptar o agente a diferentes cardápios, garantindo que cada restaurante tivesse um atendente virtual exclusivo.
 
 #### ✨ Pontos Fortes e Desafios Superados
 
@@ -217,7 +387,7 @@ O maior ponto forte da solução é sua capacidade de oferecer uma interação d
 
 Outro desafio significativo foi **tornar o sistema facilmente adaptável a qualquer restaurante sem a necessidade de configuração manual complexa**. A solução foi a implementação de um fluxo de onboarding automatizado, onde o sistema utiliza OCR para "ler" uma imagem do cardápio e, a partir dela, gerar dinamicamente o roteiro e o contexto para a IA. Isso transformou um processo complexo em uma simples chamada de API, tornando a plataforma extremamente escalável.
 
-#### 🌱 Pontos para Evolução Futura
+#### 🌱 Pontos Para Evolução Futura
 
 Embora a solução atual seja robusta, existem caminhos claros para evolução, como a **integração direta com sistemas de PDV (Ponto de Venda)** para automatizar o envio do pedido à cozinha e a implementação de um **sistema de reconhecimento de clientes recorrentes** para oferecer um atendimento ainda mais personalizado.
 
@@ -350,177 +520,7 @@ Este projeto implementa um robô de atendimento por voz multi-tenant para restau
 
 ***
 
-### 🚀 Challenge:  Cat Guardian
-
-#### 🎯 Visão Geral e Arquitetura da Solução
-
-Viver com sete gatos — cada um com sua personalidade e rotina — traz uma preocupação constante: o que aconteceria se um deles escapasse? Registros de saúde em papel se perdem facilmente, e as tradicionais coleiras de identificação expõem dados sensíveis do dono (como telefone e endereço) para qualquer pessoa na rua.
-
-O **Cat Guardian** nasceu dessa dor real e evoluiu para um passaporte digital de segurança felina. A plataforma combina um gerador de perfis de identificação via IA, medalhas dinâmicas de QR Code e um engenhoso sistema de "Blind Contact Relay". Do ponto de vista arquitetural, o sistema opera sob o princípio de *Privacy-First*. Quando um gato se perde e o dono ativa o "Lost Mode", a plataforma gera um alerta público. Se alguém encontra o animal e escaneia a coleira, a aplicação renderiza um passaporte de resgate público que omite os contatos do dono. A comunicação ocorre por meio de uma interface segura onde a mensagem de quem encontrou o gato é roteada pelo back-end diretamente para o e-mail do dono, garantindo anonimato e rapidez no reencontro.
-
-#### 👨‍💻 Meu Papel no Projeto
-
-* **Engenheiro de Software Full-Stack:** Liderança no desenvolvimento de ponta a ponta utilizando React 19, Vite e TypeScript, garantindo uma interface responsiva baseada em Glassmorphism e alta performance no lado do cliente.
-* **Arquiteto de Soluções & Banco de Dados:** Modelagem do banco de dados relacional no Supabase (PostgreSQL), focando em esquemas multilingues nativos via `JSONB` e na aplicação rigorosa de políticas de segurança em nível de linha (RLS).
-* **Integrador de IA:** Implementação de prompts estruturados conectando a aplicação à API do Gemini 2.0 Flash para gerar descrições físicas precisas com base nas características visuais dos felinos.
-
-#### ✨ Pontos Fortes e Desafios Superados
-
-O principal triunfo técnico do Cat Guardian é a forma como ele equilibra utilidade pública com extrema privacidade. O maior desafio inicial foi desenhar um fluxo onde quem encontra o animal pudesse contatar o dono sem que números de telefone fossem expostos no front-end ou inspecionáveis via código. Superamos isso desenvolvendo o **Blind Contact Relay**: integramos a API do Resend no back-end e configuramos o Supabase para que a tabela de `sightings` (avistamentos) acionasse notificações seguras via servidor, sem que o cliente tivesse acesso aos dados do proprietário.
-
-Outro desafio importante foi manter a consistência e a rastreabilidade do banco de dados em um ambiente de prototipagem ágil. Estabelecemos uma cultura estrita de engenharia de dados onde nunca atualizamos migrações existentes no Supabase; em vez disso, sempre criamos novas migrações (*forward-only*), garantindo um histórico seguro e reproduzível. Além disso, a barreira do idioma foi superada ao adotar uma arquitetura `JSONB` que armazena perfis gerados por IA nativamente tanto em inglês quanto em português (pt-BR).
-
-#### 🌱 Pontos para Evolução Futura
-
-* Integração com coleiras IoT para rastreamento de localização GPS ativo e delimitação de cercas virtuais (Geofencing).
-* Expansão das funcionalidades de saúde preventiva para permitir upload e extração de dados via OCR de exames e carteiras de vacinação físicas.
-
----
-
-#### 🛠️ Pilha de Tecnologias (Tech Stack)
-
-| Componente | Tecnologia Utilizada | Papel na Arquitetura |
-| --- | --- | --- |
-| **Front-End Core** | **React 19 & Vite 6** | Responsável pela interface interativa, renderização do dashboard de segurança e geração do QR Code dinâmico do passaporte. |
-| **Banco de Dados & Autenticação** | **Supabase (PostgreSQL)** | Armazena registros médicos, perfis multilingues (`JSONB`) e gerencia sessões de usuários com forte controle de acesso via RLS (Row Level Security). |
-| **Motor de Inteligência Artificial** | **Google Gemini 2.0 Flash** | Processa características inseridas pelo usuário para gerar perfis de identificação visual estruturados e guias de saúde preventiva. |
-| **Mensageria Segura** | **Resend API** | Atua como o motor do *Blind Contact Relay*, disparando e-mails seguros de quem encontrou o pet para o dono, sem expor dados pessoais. |
-| **Qualidade & Testes** | **Vitest & TypeScript 5.7** | Garante a tipagem estrita de todos os esquemas de dados e executa a suíte de testes automatizados nas regras de negócios essenciais (Jidoka Gate). |
-
----
-
-#### 🗺️ Diagrama da Arquitetura
-
-```mermaid
----
-config:
-  theme: default
-  look: handDrawn
----
-%%{init: {'sequence': {'messageFontMaxSize': 14, 'wrap': true, 'diagramWidth': 600}}}%%
-flowchart TD
-    Owner["👤 Dono do Gato"] -->|Cadastra gato e gerencia passaporte| App["📱 Frontend React 19"]
-    App -->|Solicita descrição estruturada| AI["🧠 API do Gemini 2\.0"]
-    Finder["🔍 Pessoa que encontrou o pet"] -->|Escaneia QR Code público| App
-    App -->|Valida sessão ✅| Auth["✅ Supabase Auth"]
-    App -->|Persiste dados JSONB via RLS| DB["🗄️ Supabase PostgreSQL"]
-    Finder -->|Preenche relato de avistamento| App
-    App -->|Aciona relay de comunicação| Relay["✉️ Resend API Relay"]
-    Relay -->|Notifica anonimamente ✅| Owner
-
-```
-
-***
-
-### 🚀 Challenge:  Gerenciador de Tarefas Conversacional via E-mail 📥 Postmark Challenge
-
-#### 🎯 Visão Geral e Arquitetura da Solução
-
-Este projeto nasceu para solucionar uma dor comum no dia a dia de qualquer profissional: a fricção de transformar e-mails em tarefas acionáveis. Em vez de alternar entre a caixa de entrada e um aplicativo de To-Do, a solução transforma o próprio e-mail em uma poderosa interface de gerenciamento. O usuário pode criar, atualizar, comentar e concluir tarefas simplesmente enviando um e-mail para um endereço dedicado ou respondendo a uma conversa existente, utilizando comandos simples e intuitivos como `#prioridade` ou `#concluir`.
-
-A arquitetura foi desenhada para ser ágil e orientada a eventos. O fluxo se inicia quando o **Postmark API** recebe um e-mail e, através de um **Inbound Webhook**, notifica a aplicação **Laravel** em tempo real. Um motor de comandos customizado entra em ação, analisando o corpo do e-mail em busca de "hashtags" de ação. Cada comando aciona a lógica de negócio correspondente, atualizando o estado da tarefa no banco de dados. Para a visualização, uma interface web reativa, construída com **Livewire** e **Tailwind CSS**, exibe a lista de tarefas, que se atualiza dinamicamente sem a necessidade de recarregar a página, proporcionando uma experiência de usuário fluida e moderna.
-
-#### 👨‍💻 Meu Papel no Projeto
-
-Como idealizador e desenvolvedor da solução, minhas principais responsabilidades foram:
-
-  * **Arquitetura do Processamento de E-mails:** Implementar a lógica de recebimento e interpretação de e-mails em tempo real utilizando Postmark Inbound Webhooks, que servem como gatilho para todo o fluxo da aplicação.
-  * **Desenvolvimento do Motor de Comandos:** Criar um processador de comandos em Laravel para analisar o corpo do e-mail, identificar hashtags de ação (ex: `#comentario`, `#concluir`) e executar as operações de negócio correspondentes.
-  * **Construção do Frontend Reativo:** Desenvolver a interface de usuário para visualização das tarefas com Livewire e Tailwind CSS, garantindo atualizações dinâmicas e uma experiência moderna sem a complexidade de uma Single Page Application (SPA).
-  * **Garantia de Qualidade:** Assegurar a robustez e a confiabilidade do sistema, especialmente do motor de comandos, através de uma suíte de testes completa escrita com Pest.
-
-#### ✨ Pontos Fortes e Desafios Superados
-
-O grande trunfo do projeto é sua simplicidade e elegância: ele se integra a um fluxo de trabalho que o usuário já domina — o e-mail. A solução elimina a necessidade de um novo software, transformando uma ferramenta de comunicação em uma plataforma de produtividade.
-
-O principal desafio técnico foi criar um sistema robusto para "traduzir" o texto não estruturado de um e-mail em comandos de sistema precisos e confiáveis. Superamos isso com o **desenvolvimento de um motor de comandos customizado**, capaz de analisar o conteúdo de forma inteligente. Outra vitória foi a escolha do **Livewire**, que permitiu construir uma interface reativa e performática com a produtividade do ecossistema Laravel, evitando a complexidade de gerenciar um frontend desacoplado.
-
-#### 🌱 Pontos para Evolução Futura
-
-Para o futuro, a solução poderia evoluir com a implementação de um processamento de linguagem natural (PLN) mais avançado, permitindo que os usuários escrevam comandos de forma mais livre, sem a rigidez das hashtags. Outra evolução seria a integração com calendários (Google Calendar, Outlook) para agendar tarefas com datas de vencimento.
-
------
-
-#### 🛠️ Pilha de Tecnologias (Tech Stack)
-
-| Componente | Tecnologia Utilizada | Papel na Arquitetura |
-| :--- | :--- | :--- |
-| **Backend** | **Laravel** | Orquestra toda a lógica de negócio, rotas, processamento de webhooks e interação com o banco de dados. |
-| **Frontend Reativo** | **Livewire & Tailwind CSS** | Constrói uma interface de usuário dinâmica e moderna para a visualização das tarefas, com atualizações em tempo real. |
-| **Testes Automatizados**| **Pest** | Garante a confiabilidade e a robustez das regras de negócio e do motor de comandos com uma suíte de testes limpa. |
-| **Gateway de E-mail** | **Postmark API & Webhooks** | Recebe os e-mails, dispara os eventos via webhook para a aplicação e gerencia o envio de respostas. |
-| **Modelo Arquitetural** | **Arquitetura Orientada a Eventos** | Permite que a aplicação reaja de forma assíncrona aos e-mails recebidos, garantindo um fluxo desacoplado e escalável. |
-
------
-
-#### 🔗 Links e Recursos
-* **🎬 Apresentação em Vídeo:** [Assista no YouTube](https://www.youtube.com/watch?v=NDFgcH2X1ZI)
-* **📂 Repositório Open Source:** [Veja o código no GitHub](https://github.com/lfrichter/Interactive-email-management)
-
----
-
-#### 🗺️ Diagrama da Arquitetura
-
-```mermaid
----
-config:
-  theme: default
-  look: handDrawn
----
-flowchart TD
-    %% --- Atores e Fluxo Inicial ---
-    subgraph US["Fluxo do Usuário"]
-        style US fill:#D6EAF8,stroke:#2980B9,stroke-width:2px
-        U[👨‍💻 Usuário<br>Origina a ação enviando ou respondendo um e-mail]
-        U -- "1️⃣ Envia ou responde e-mail" --> PS[📨 Postmark API<br>Serviço de e-mail transacional]
-    end
-
-    %% --- Backend e Infraestrutura ---
-    subgraph BE["Infraestrutura e Backend"]
-        style BE fill:#D5F5E3,stroke:#27AE60,stroke-width:2px
-        PS -- "2️⃣ Envia Inbound Webhook (POST)" --> LV[🚀 Aplicação Laravel<br>Ponto central de processamento]
-        LV -- "3️⃣ Recebe o webhook" --> CMD{⚙️ Motor de Comandos<br>Orquestra execução de ações}
-        CMD -- "4️⃣ Analisa conteúdo do e-mail<br>Identifica hashtags e contexto" --> LOGIC[📈 Lógica de Negócio<br>Define regras e fluxos]
-        LOGIC -- "5️⃣ Cria ou atualiza tarefa<br>Persistência de dados" --> DB[(🗃️ Banco de Dados MySQL)]
-    end
-
-    %% --- Interface Web Reativa ---
-    subgraph UIX["Interface Web Reativa"]
-        style UIX fill:#E8DAEF,stroke:#8E44AD,stroke-width:2px
-        BROWSER[🌐 Navegador do Usuário<br>Acessa interface de gestão] -- "7️⃣ Visualiza lista de tarefas" --> UI[🖥️ UI Livewire + Tailwind<br>Renderização e interações dinâmicas]
-        UI -- "6️⃣ Lê e exibe dados" --> DB
-        UI -- "8️⃣ Solicita atualização dinâmica (AJAX)" --> LV
-    end
-```
-
----
-#### RESUMO TÉCNICO PARA EMBEDDING
-
-A solução é um gerenciador de tarefas conversacional implementado em uma arquitetura orientada a eventos, acionada por e-mails. O fluxo é iniciado por um Inbound Webhook da Postmark API, que notifica uma aplicação backend em Laravel. Um motor de comandos customizado, com lógica de negócio robusta validada por testes automatizados em Pest, processa o corpo do e-mail para identificar e executar ações baseadas em hashtags, como `#prioridade` ou `#concluir`. O estado das tarefas é persistido em um banco de dados MySQL. A interface de usuário para visualização é um frontend reativo construído com Livewire e Tailwind CSS, garantindo atualizações dinâmicas da lista de tarefas sem a necessidade de recarregar a página. O principal desafio superado foi a tradução de texto não estruturado de e-mails em comandos de sistema precisos através do motor de comandos, evitando a complexidade de uma SPA desacoplada ao utilizar a stack TALL (Tailwind, Alpine, Livewire, Laravel). Futuras evoluções contemplam o uso de processamento de linguagem natural (PLN).
-
-#### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
-
-| Categoria | Tecnologias e Conceitos |
-| :--- | :--- |
-| **AI & Machine Learning** | Processamento de Linguagem Natural (PLN) |
-| **Software Development** | Laravel, Pest, Motor de Comandos Customizado |
-| **Architecture**| Arquitetura Orientada a Eventos, Inbound Webhook, Sistema Desacoplado, Sistema Escalável |
-| **Cloud Computing** | Postmark API (SaaS) |
-| **API RESTFul development** | Postmark API, Webhooks |
-| **Frontend Development** | Livewire, Tailwind CSS, Interface Reativa |
-| **Mobile Development** | N/A |
-| **Database** | MySQL |
-| **Data Management** | Persistência de Dados |
-| **Content Management - CMS** | N/A |
-| **System Administration** | N/A |
-| **DevOps** | Testes Automatizados |
-| **Leadership** | Idealizador, Desenvolvedor da Solução |
-| **Coaching** | N/A |
-| **Agile Project Management** |  N/A |
-
-***
-
-### 🚀 SideProject:  Air Combat 3D - Um Estudo de Caso sobre Produtividade com IAs
+### 🚀 SideProject:  Air Combat 3D - Um Estudo de Caso Sobre Produtividade Com IAs
 
 #### 🎯 Visão Geral e Arquitetura da Solução
 
@@ -534,18 +534,18 @@ O resultado mais expressivo foi a validação da hipótese inicial: o uso de IDE
 
 Como único desenvolvedor e pesquisador neste estudo de caso, atuei de ponta a ponta, assumindo os seguintes papéis:
 
-  * **Arquiteto e Desenvolvedor Full-Stack:** Idealizei a arquitetura, desenvolvi o frontend interativo com Three.js, construí o servidor de backend em Node.js para a lógica de jogo e comunicação em tempo real via WebSockets.
-  * **Engenheiro DevOps:** Fui responsável por todo o ciclo de vida da infraestrutura, incluindo a conteinerização da aplicação com Docker e a automação do processo de deploy contínuo na plataforma Render.com.
-  * **Pesquisador de Fluxo de Trabalho:** Defini a metodologia para o estudo, integrei as ferramentas de IA generativa no meu fluxo de trabalho diário e mensurei ativamente o ganho de produtividade em comparação com métodos tradicionais.
+  - **Arquiteto e Desenvolvedor Full-Stack:** Idealizei a arquitetura, desenvolvi o frontend interativo com Three.js, construí o servidor de backend em Node.js para a lógica de jogo e comunicação em tempo real via WebSockets.
+  - **Engenheiro DevOps:** Fui responsável por todo o ciclo de vida da infraestrutura, incluindo a conteinerização da aplicação com Docker e a automação do processo de deploy contínuo na plataforma Render.com.
+  - **Pesquisador de Fluxo de Trabalho:** Defini a metodologia para o estudo, integrei as ferramentas de IA generativa no meu fluxo de trabalho diário e mensurei ativamente o ganho de produtividade em comparação com métodos tradicionais.
 
 #### ✨ Pontos Fortes e Desafios Superados
 
 O principal ponto forte do projeto é a demonstração clara e quantificável do poder da IA como uma ferramenta de alavancagem para desenvolvedores. O jogo funcional é a prova de conceito que materializa essa conclusão.
 
-  * **Desafio Superado:** O maior desafio técnico foi garantir a **sincronização de estado em tempo real** entre múltiplos jogadores. Manter a posição e as ações de cada avião consistentes para todos os clientes, com baixa latência, é complexo. Superei isso implementando um loop de jogo eficiente no servidor Node.js que processa as entradas dos jogadores e transmite o estado atualizado do jogo de volta aos clientes através de uma conexão WebSocket estável.
-  * **Vitória Estratégica:** A maior vitória, no entanto, foi a **validação bem-sucedida do fluxo de trabalho assistido por IA**. Provar uma redução de 40% no tempo de desenvolvimento transformou uma crença intuitiva em um dado concreto, oferecendo um forte argumento para a adoção moderna de ferramentas no ciclo de desenvolvimento de software.
+  - **Desafio Superado:** O maior desafio técnico foi garantir a **sincronização de estado em tempo real** entre múltiplos jogadores. Manter a posição e as ações de cada avião consistentes para todos os clientes, com baixa latência, é complexo. Superei isso implementando um loop de jogo eficiente no servidor Node.js que processa as entradas dos jogadores e transmite o estado atualizado do jogo de volta aos clientes através de uma conexão WebSocket estável.
+  - **Vitória Estratégica:** A maior vitória, no entanto, foi a **validação bem-sucedida do fluxo de trabalho assistido por IA**. Provar uma redução de 40% no tempo de desenvolvimento transformou uma crença intuitiva em um dado concreto, oferecendo um forte argumento para a adoção moderna de ferramentas no ciclo de desenvolvimento de software.
 
-#### 🌱 Pontos para Evolução Futura
+#### 🌱 Pontos Para Evolução Futura
 
 Embora o projeto tenha cumprido seu objetivo principal, ele possui um grande potencial para evolução. Como próximos passos, poderíamos implementar um sistema de **persistência de pontuação e ranking de jogadores**, utilizando um banco de dados como PostgreSQL ou Redis. Outra melhoria seria a criação de **salas de jogo privadas e diferentes modos de batalha** (como "Team Deathmatch"), enriquecendo a experiência multiplayer.
 
@@ -639,22 +639,22 @@ A arquitetura foi desenhada para ser "Plug & Play", utilizando Docker Compose pa
 #### 👨‍💻 Meu Papel no Projeto
 Atuei como **Engenheiro de Performance e Arquiteto de Automação**, liderando a concepção e implementação completa da solução. Minhas responsabilidades incluíram:
 
-* **Arquitetura de Observabilidade:** Design e provisionamento automático da stack de monitoramento (InfluxDB e Grafana) via Docker.
-* **Desenvolvimento de Scripts de Carga:** Criação de scripts complexos em Java (JMeter) e TypeScript (k6), implementando lógicas avançadas de correlação.
-* **Automação de Frontend:** Implementação de testes E2E com Playwright focados na captura de métricas de performance visual (Navigation Timing API).
-* **Engenharia de Resiliência:** Desenvolvimento de lógica para tratar condições de corrida e estados dinâmicos da aplicação alvo.
+- **Arquitetura de Observabilidade:** Design e provisionamento automático da stack de monitoramento (InfluxDB e Grafana) via Docker.
+- **Desenvolvimento de Scripts de Carga:** Criação de scripts complexos em Java (JMeter) e TypeScript (k6), implementando lógicas avançadas de correlação.
+- **Automação de Frontend:** Implementação de testes E2E com Playwright focados na captura de métricas de performance visual (Navigation Timing API).
+- **Engenharia de Resiliência:** Desenvolvimento de lógica para tratar condições de corrida e estados dinâmicos da aplicação alvo.
 
 #### ✨ Pontos Fortes e Desafios Superados
 O grande diferencial desta solução é a implementação da filosofia **"Performance as Code"**. O ambiente é efêmero e reprodutível: scripts de shell e configurações de *provisioning* do Grafana garantem que dashboards analíticos estejam prontos segundos após o início dos containers.
 
 **Desafios Técnicos e Superações:**
-* **Correlação Dinâmica e Segurança:** A aplicação alvo utiliza tokens Anti-CSRF e Cookies de Sessão que variam a cada requisição. O desafio foi superado implementando extratores robustos (Regex e parsers HTML) tanto no JMeter quanto no k6, garantindo a manutenção da sessão do usuário virtual.
-* **Condições de Corrida no Checkout:** O fluxo de "One Page Checkout" dependia fortemente de AJAX e atualizações de DOM assíncronas. Scripts de carga tradicionais falhavam ao tentar avançar antes da conclusão do processamento. Solucionei isso criando lógicas de espera explícita (wait strategies) que aguardam a conclusão de animações de acordeão e *loading overlays* antes de prosseguir, garantindo a integridade da transação.
-* **Gestão de Dados:** Para evitar poluição métrica entre execuções, implementei *entrypoints* customizados no Docker que realizam a limpeza automática de relatórios HTML e dados antigos do InfluxDB, mantendo a análise de resultados sempre limpa e confiável.
+- **Correlação Dinâmica e Segurança:** A aplicação alvo utiliza tokens Anti-CSRF e Cookies de Sessão que variam a cada requisição. O desafio foi superado implementando extratores robustos (Regex e parsers HTML) tanto no JMeter quanto no k6, garantindo a manutenção da sessão do usuário virtual.
+- **Condições de Corrida no Checkout:** O fluxo de "One Page Checkout" dependia fortemente de AJAX e atualizações de DOM assíncronas. Scripts de carga tradicionais falhavam ao tentar avançar antes da conclusão do processamento. Solucionei isso criando lógicas de espera explícita (wait strategies) que aguardam a conclusão de animações de acordeão e *loading overlays* antes de prosseguir, garantindo a integridade da transação.
+- **Gestão de Dados:** Para evitar poluição métrica entre execuções, implementei *entrypoints* customizados no Docker que realizam a limpeza automática de relatórios HTML e dados antigos do InfluxDB, mantendo a análise de resultados sempre limpa e confiável.
 
-#### 🌱 Pontos para Evolução Futura
-* **Integração CI/CD:** Incorporar a execução do `npm run test:full` em pipelines do GitHub Actions ou Jenkins para feedback contínuo a cada *commit*.
-* **Testes de Carga Distribuídos:** Evoluir a configuração do k6 e JMeter para suportar execução em modo *cluster* (Kubernetes), permitindo a simulação de cargas massivas distribuídas geograficamente.
+#### 🌱 Pontos Para Evolução Futura
+- **Integração CI/CD:** Incorporar a execução do `npm run test:full` em pipelines do GitHub Actions ou Jenkins para feedback contínuo a cada *commit*.
+- **Testes de Carga Distribuídos:** Evoluir a configuração do k6 e JMeter para suportar execução em modo *cluster* (Kubernetes), permitindo a simulação de cargas massivas distribuídas geograficamente.
 
 ---
 
@@ -747,62 +747,55 @@ Este projeto open-source é uma Suíte de Engenharia de Performance projetada pa
 
 ### 🚀 SideProject:  Favorite Products API
 
-#### 🎯 Visão Geral e Arquitetura da Solução
+#### 🎯 Visão Geral E Arquitetura Da Solução
 
 A **Favorite Products API** é uma solução RESTful robusta, desenvolvida em Laravel, que serve como um backend completo para gerenciar usuários e suas listas de produtos favoritos. O principal objetivo foi criar uma API que não apenas fosse funcional, mas que também exemplificasse as melhores práticas de design de software, como **SOLID**, **Clean Architecture** e segurança.
 
 A arquitetura foi desenhada para ser desacoplada, testável e escalável. O fluxo de uma requisição é orquestrado de forma limpa e eficiente:
 
-1.  As requisições chegam aos **Controllers**, que atuam como uma fina camada de entrada, delegando imediatamente a lógica de validação e autorização para classes de **Form Request** dedicadas. Isso mantém os controllers enxutos e focados em sua responsabilidade principal: gerenciar o fluxo HTTP.
-2.  Uma vez validada, a requisição é passada para a **Camada de Serviços**, o coração da lógica de negócio. Serviços como `FavoriteProductService` orquestram as operações, como buscar os IDs dos produtos favoritos no banco de dados (PostgreSQL) e, em seguida, solicitar os detalhes completos desses produtos.
-3.  A comunicação com a API externa (`FakeStoreAPI`) é abstraída por um **Contrato (Interface)**, o `ProductServiceContract`. Essa inversão de dependência permite que a implementação concreta (`FakeStoreApiService`) seja facilmente trocada ou "mockada" em testes, garantindo flexibilidade e altíssima testabilidade.
-4.  Para garantir a consistência e a segurança dos dados, a aplicação utiliza **DTOs (Data Transfer Objects)** para representar os produtos internamente, desacoplando a lógica de negócio da estrutura da API externa.
-5.  Finalmente, todas as respostas são padronizadas através de **API Resources**, que garantem um contrato de API consistente e seguro, evitando o vazamento de dados sensíveis do banco de dados.
+1. As requisições chegam aos **Controllers**, que atuam como uma fina camada de entrada, delegando imediatamente a lógica de validação e autorização para classes de **Form Request** dedicadas. Isso mantém os controllers enxutos e focados em sua responsabilidade principal: gerenciar o fluxo HTTP.
+2. Uma vez validada, a requisição é passada para a **Camada de Serviços**, o coração da lógica de negócio. Serviços como `FavoriteProductService` orquestram as operações, como buscar os IDs dos produtos favoritos no banco de dados (PostgreSQL) e, em seguida, solicitar os detalhes completos desses produtos.
+3. A comunicação com a API externa (`FakeStoreAPI`) é abstraída por um **Contrato (Interface)**, o `ProductServiceContract`. Essa inversão de dependência permite que a implementação concreta (`FakeStoreApiService`) seja facilmente trocada ou "mockada" em testes, garantindo flexibilidade e altíssima testabilidade.
+4. Para garantir a consistência e a segurança dos dados, a aplicação utiliza **DTOs (Data Transfer Objects)** para representar os produtos internamente, desacoplando a lógica de negócio da estrutura da API externa.
+5. Finalmente, todas as respostas são padronizadas através de **API Resources**, que garantem um contrato de API consistente e seguro, evitando o vazamento de dados sensíveis do banco de dados.
 
 Todo o sistema é protegido por **Laravel Sanctum**, uma solução de autenticação leve e ideal para SPAs e aplicações móveis. Para completar, a API é auto-documentada usando **OpenAPI (Swagger)**, gerando uma documentação interativa diretamente a partir de anotações no código, o que acelera drasticamente a integração com equipes de frontend.
 
 Este projeto é **open-source** e o código-fonte completo está disponível no GitHub: **[https://github.com/lfrichter/favorite-products-api](https://github.com/lfrichter/favorite-products-api)**.
 
-#### 👨‍💻 Meu Papel no Projeto
+#### 👨‍💻 Meu Papel No Projeto
 
 Como **Arquiteto de Soluções** e **Desenvolvedor Back-End Sênior**, fui responsável por:
 
-  * **Desenhar a arquitetura da aplicação**, focando em desacoplamento, testabilidade e escalabilidade através da implementação de padrões como Services, Contracts e DTOs.
-  * **Implementar a lógica de negócio principal**, incluindo a integração com a API externa e a gestão do ciclo de vida dos produtos favoritos.
-  * **Garantir a segurança da API**, implementando autenticação com Sanctum e corrigindo vulnerabilidades críticas como Insecure Direct Object Reference (IDOR).
-  * **Otimizar o desempenho da aplicação**, identificando e solucionando gargalos como o problema de requisições N+1.
-  * **Estruturar um ambiente de desenvolvimento robusto** com Docker e estabelecer uma suíte de testes automatizados com Pest para garantir a qualidade e a estabilidade do código.
+  - **Desenhar a arquitetura da aplicação**, focando em desacoplamento, testabilidade e escalabilidade através da implementação de padrões como Services, Contracts e DTOs.
+  - **Implementar a lógica de negócio principal**, incluindo a integração com a API externa e a gestão do ciclo de vida dos produtos favoritos.
+  - **Garantir a segurança da API**, implementando autenticação com Sanctum e corrigindo vulnerabilidades críticas como Insecure Direct Object Reference (IDOR).
+  - **Otimizar o desempenho da aplicação**, identificando e solucionando gargalos como o problema de requisições N+1.
+  - **Estruturar um ambiente de desenvolvimento robusto** com Docker e estabelecer uma suíte de testes automatizados com Pest para garantir a qualidade e a estabilidade do código.
 
-#### ✨ Pontos Fortes e Desafios Superados
+#### ✨ Pontos Fortes E Desafios Superados
 
 O projeto se destaca por sua arquitetura limpa e resiliente, mas o caminho até ela envolveu superar desafios técnicos significativos:
 
-  * **Desafio de Desempenho (N+1 Requisições):** A abordagem inicial para buscar os detalhes dos produtos favoritos era extremamente ineficiente, gerando uma chamada de API externa para cada item na lista de um usuário.
+  - **Desafio de Desempenho (N+1 Requisições):** A abordagem inicial para buscar os detalhes dos produtos favoritos era extremamente ineficiente, gerando uma chamada de API externa para cada item na lista de um usuário.
+      - **Superação:** Refatorei a camada de serviço para implementar um método de busca em massa (`findProductsByIds`). Essa mudança transformou N requisições HTTP em uma única operação orquestrada, resultando em uma melhoria drástica na latência e na experiência do usuário.
+  - **Vulnerabilidade de Segurança (IDOR):** Uma falha crítica de autorização permitia que qualquer usuário autenticado modificasse o perfil de outro usuário, bastando conhecer seu ID.
+      - **Superação:** Implementei uma lógica de autorização baseada em propriedade diretamente na `Form Request` correspondente. A regra agora verifica se o ID do usuário autenticado corresponde ao ID do recurso que ele está tentando modificar. Para garantir que a falha não retorne, criei testes de feature que cobrem cenários de sucesso (200), falha de autorização (403) e não autenticado (401), blindando a aplicação contra regressões.
+  - **Rigidez e Baixa Testabilidade:** O acoplamento direto com a implementação do cliente HTTP e a classe de serviço concreta dificultava a criação de testes unitários rápidos e isolados.
+      - **Superação:** Adotei os princípios da **Inversão de Dependência (SOLID)**, introduzindo uma interface (`ProductServiceContract`) para o serviço de produtos e utilizando injeção de dependência. Isso desacoplou completamente os controllers da implementação, permitindo "mockar" a dependência nos testes e tornando o sistema flexível para futuras mudanças, como trocar a fonte de dados dos produtos.
+  - **Falhas Silenciosas em Serviços Externos:** A API mascarava erros de comunicação com o serviço externo, retornando respostas vazias com status `200 OK`, o que confundia o usuário final e dificultava a depuração.
+      - **Superação:** Implementei um tratamento explícito de falhas. Agora, o serviço lança uma exceção customizada (`FakeStoreApiException`) quando a integração falha. Um handler global captura essa exceção e retorna uma resposta HTTP semanticamente correta (ex: `503 Service Unavailable`), comunicando a falha de forma transparente para o cliente.
 
-      * **Superação:** Refatorei a camada de serviço para implementar um método de busca em massa (`findProductsByIds`). Essa mudança transformou N requisições HTTP em uma única operação orquestrada, resultando em uma melhoria drástica na latência e na experiência do usuário.
-
-  * **Vulnerabilidade de Segurança (IDOR):** Uma falha crítica de autorização permitia que qualquer usuário autenticado modificasse o perfil de outro usuário, bastando conhecer seu ID.
-
-      * **Superação:** Implementei uma lógica de autorização baseada em propriedade diretamente na `Form Request` correspondente. A regra agora verifica se o ID do usuário autenticado corresponde ao ID do recurso que ele está tentando modificar. Para garantir que a falha não retorne, criei testes de feature que cobrem cenários de sucesso (200), falha de autorização (403) e não autenticado (401), blindando a aplicação contra regressões.
-
-  * **Rigidez e Baixa Testabilidade:** O acoplamento direto com a implementação do cliente HTTP e a classe de serviço concreta dificultava a criação de testes unitários rápidos e isolados.
-
-      * **Superação:** Adotei os princípios da **Inversão de Dependência (SOLID)**, introduzindo uma interface (`ProductServiceContract`) para o serviço de produtos e utilizando injeção de dependência. Isso desacoplou completamente os controllers da implementação, permitindo "mockar" a dependência nos testes e tornando o sistema flexível para futuras mudanças, como trocar a fonte de dados dos produtos.
-
-  * **Falhas Silenciosas em Serviços Externos:** A API mascarava erros de comunicação com o serviço externo, retornando respostas vazias com status `200 OK`, o que confundia o usuário final e dificultava a depuração.
-
-      * **Superação:** Implementei um tratamento explícito de falhas. Agora, o serviço lança uma exceção customizada (`FakeStoreApiException`) quando a integração falha. Um handler global captura essa exceção e retorna uma resposta HTTP semanticamente correta (ex: `503 Service Unavailable`), comunicando a falha de forma transparente para o cliente.
-
-#### 🌱 Pontos para Evolução Futura
+#### 🌱 Pontos Para Evolução Futura
 
 Embora a solução atual seja robusta, a arquitetura foi preparada para evoluções futuras, como:
 
-  * **Implementação de Cache com Redis:** O método `findProductsByIds` cria a base perfeita para adicionar uma camada de cache, reduzindo ainda mais a latência e o número de chamadas à API externa.
-  * **Paralelização de Requisições:** A lógica de busca em lote pode ser otimizada utilizando `Promise` ou `Pool` para executar as chamadas HTTP à API externa em paralelo, melhorando o tempo de resposta para listas de favoritos muito grandes.
+  - **Implementação de Cache com Redis:** O método `findProductsByIds` cria a base perfeita para adicionar uma camada de cache, reduzindo ainda mais a latência e o número de chamadas à API externa.
+  - **Paralelização de Requisições:** A lógica de busca em lote pode ser otimizada utilizando `Promise` ou `Pool` para executar as chamadas HTTP à API externa em paralelo, melhorando o tempo de resposta para listas de favoritos muito grandes.
 
 -----
 
-#### 🛠️ Pilha de Tecnologias (Tech Stack)
+#### 🛠️ Pilha De Tecnologias (Tech Stack)
 
 | Componente | Tecnologia Utilizada | Papel na Arquitetura |
 | :--- | :--- | :--- |
@@ -816,7 +809,7 @@ Embora a solução atual seja robusta, a arquitetura foi preparada para evoluç�
 
 -----
 
-#### 🗺️ Diagrama da Arquitetura
+#### 🗺️ Diagrama Da Arquitetura
 
 ```mermaid
 ---
@@ -910,42 +903,163 @@ Este documento detalha a arquitetura de uma **API RESTful**, a **Favorite Produc
 
 ***
 
-### 🚀 SideProject:  Framework de Engenharia de Software Guiado por IA v2.0 Master
+### 🚀 SideProject:  AI Engineering Framework V2.1 Master
+
+**Categoria:** 🏆 Tier 1: AI, Cloud Architecture & SaaS
+
+#### 🎯 Visão Geral E Arquitetura Da Solução
+
+A revolução da Inteligência Artificial no desenvolvimento de software trouxe agilidade, mas também revelou um grande risco: tratar agentes autônomos como "geradores mágicos de código", o que frequentemente resulta em bases frágeis, regressões silenciosas e perda de governança. Para resolver essa dor profunda da engenharia moderna, criei o **AI Engineering Framework V2.1 Master** — uma Constituição Universal de Engenharia Agêntica.
+
+O objetivo central foi projetar uma arquitetura de governança, independente de ferramentas específicas (Tool Agnostic), capaz de orquestrar a atuação de LLMs no ciclo de vida de um software. A solução estabelece fronteiras claras entre intenção (definida por humanos na `META_SPEC`), execução e verificação. Implementei um ciclo de vida estruturado chamado **SPARC+DD** (Discovery, Specification, Pseudocode, Architecture, Refinement, Completion, Deployment, Documentation) e adotei a técnica de Ponteiros Declarativos para integrar a documentação sem duplicação de dados. Com isso, a IA atua não como um substituto sem controle, mas como um multiplicador cirúrgico das capacidades de engenharia.
+
+#### 👨‍💻 Meu Papel No Projeto
+
+Como **AI Solutions Architect e Tech Lead**, atuei na definição estratégica, conceitual e arquitetural do framework:
+
+- **Design de Governança:** Criei a máquina de estados (Bootstrap ➡️ Discovery ➡️ Foundation ➡️ Execution ➡️ Checkpoint) garantindo a autoridade do desenvolvedor humano em portões críticos (*Gate_1_Review*).
+- **Engenharia de Contexto (WSCI):** Defini a metodologia de gestão de contexto (Write, Select, Compress, Isolate) para prevenir alucinações por *Poisoning* ou *Distraction*.
+- **Topologia Multi-Agent:** Projetei a segregação de responsabilidades entre agentes virtuais (Analyst, Architect, Developer, QA), implementando o princípio do Menor Privilégio (*Least Privilege*).
+- **Arquitetura de i18n:** Desenvolvi a solução de "Single Source of Truth + Localized Mirror", onde a documentação canônica permanece em inglês para precisão técnica das IAs, enquanto espelhos localizados em português atendem aos requisitos humanos.
+
+#### 📊 Resultados Quantificados
+
+- **Padronização de Processos:** 100% de uniformidade na execução de agentes através de pipelines padronizados (RED ➡️ Implement ➡️ GREEN ➡️ Regression ➡️ Review).
+- **Redução de Débito Técnico de IA:** Erradicação de "alterações adjacentes silenciosas" através da implantação da regra estrita de *Surgical Changes* e verificações baseadas em evidências (*Evidence Before Assumption*).
+- **Escalabilidade Tool-Agnostic:** Criação de uma base arquitetural capaz de suportar diferentes runtimes e adapters (Claude Code, RAG, MCP Servers) sem a necessidade de reescrever as regras centrais.
+
+#### 🛡️ Segurança & Mitigações OWASP Top 10
+
+- **Prompt Injection Boundary:** Implementação da diretriz rigorosa de que conteúdos externos recuperados (RAG, Web, Issues) são tratados puramente como *dados*, sem autoridade de instrução, blindando o framework contra comandos maliciosos embutidos em textos de terceiros.
+- **Security by Default & Least Privilege:** Adoção de uma matriz de permissões segregada. Agentes de análise têm permissão estrita de *Read-Only*, enquanto agentes de infraestrutura exigem processos de autorização explícita para ações destrutivas no banco de dados, protegendo contra execuções arbitrárias de código e manipulação indevida de secrets.
+
+#### ✨ Pontos Fortes E Desafios Superados
+
+O principal desafio técnico foi conciliar o contexto canônico necessário para as inteligências artificiais com o consumo de informações pelas equipes de desenvolvimento local. A solução inicial resultaria em documentação duplicada, o que geraria conflitos de fonte da verdade (Source of Truth). Superei esse bloqueio projetando a estratégia de **Ponteiros Declarativos**, mantendo arquivos canônicos, como `META_SPEC\.md` e ADRs, inalterados em seus locais de origem (em inglês) e criando uma camada de reflexo (*Localized Mirror*) para consumo humano.
+
+Outro marco foi mitigar o excesso de autonomia dos agentes que muitas vezes gerava reescritas de código desnecessárias (*refactoring* especulativo). Resolvi isso formalizando a técnica **Think Before Coding** e a obrigatoriedade de ancorar qualquer ação destrutiva ou criativa a um *Checkpoint* verificável, exigindo evidências antes de premissas.
+
+#### 🌱 Pontos Para Evolução Futura
+
+- Implementação de hooks automatizados de CI/CD para validar nativamente os *Checkpoints* da máquina de estado de governança antes de permitir *merges*.
+- Criação de métricas de telemetria baseadas em logs das camadas de raciocínio (Plan Mode) para otimizar a tokenização de contexto nos LLMs.
+
+---
+
+#### 🛠️ Pilha De Tecnologias (Tech Stack)
+
+| Componente | Tecnologia Utilizada | Papel na Arquitetura |
+| --- | --- | --- |
+| **Constituição Canônica** | Markdown & Git (`META_SPEC.md`) | Constituição universal e única fonte de autoridade, blindada contra alterações não supervisionadas. |
+| **Camada de Adapters (v2.1)** | CLI, Model, Isolation, Verification | Camada desacoplada (`adapters/`) que isola regras do framework de tecnologias específicas (Claw Code, Ollama, Git Worktrees). |
+| **CLI Runtime de Alta Performance** | Claw Code (~73% Rust + Python) | Adaptador CLI de primeira classe com 19 ferramentas nativas, 15 slash commands e suporte a MCP em 6 transportes. |
+| **Model Adapters (LLMs)** | Ollama (Local) & Google Gemini / OpenAI | Execução local *zero-cost* e offline (qwen2.5-coder, deepseek-r1) com fallback transparente para APIs comerciais. |
+| **Isolamento & SRE** | Git Worktrees & Jidoka (Andon Cord) | Isolamento físico de execução por sub-agente (`git-worktree/`) e mecanismo de parada e reset limpo sob anomalias. |
+| **Plugins & Guias Integrados** | ECC, Karpathy, Ruflo, Superpowers | Padrões avançados de agentes (ECC), princípios Software 2.0 (Karpathy), topologia de enxames (Ruflo) e Open Design (MCP). |
+| **Automação de Provisionamento** | `bootstrap.sh` & Templates Bilíngues | Provisionamento determinístico de novos projetos com espelhos localizados para humanos (`docs/pt-br/`). |
+
+---
+
+#### 🗺️ Diagrama Da Arquitetura
+
+```mermaid
+---
+config:
+  theme: default
+  look: handDrawn
+---
+%%{init: {'sequence': {'messageFontMaxSize': 14, 'wrap': true, 'diagramWidth': 600}}}%%
+flowchart TD
+    A["🏛️ Constituição Canônica [META_SPEC.md]"] -->|Contrato Abstrato| B["🔌 Camada de Adapters (v2.1)"]
+    A -->|Espelho Localizado| Mirror["📖 Camada pt-BR [docs/pt-br/]"]
+    
+    subgraph Adapters ["Camada de Adapters Modulares"]
+        B --> C["🖥️ CLI Adapters<br>(Claw Code Rust/Python | Agy | Generic)"]
+        B --> D["🧠 Model Adapters<br>(Ollama Local | Gemini | Anthropic)"]
+        B --> E["🌳 Isolation Adapters<br>(Git Worktrees)"]
+        B --> F["🧪 Verification Adapters<br>(Local Test Runner / Linter)"]
+    end
+    
+    subgraph Plugins ["Plugins & Integrações v2.1"]
+        G["🦀 Claw Code (19 Tools, MCP 6 Transports)"]
+        H["⚡ Everything Claude Code (ECC)"]
+        I["📐 Karpathy Guidelines (Software 2.0)"]
+        J["🐝 Ruflo Swarm Topology"]
+        K["🦸 Superpowers & Open Design (MCP)"]
+    end
+    
+    Adapters -. Integração .- Plugins
+    
+    C --> L["⚙️ Pipeline SPARC+DD (WSCI)"]
+    D --> L
+    E --> L
+    
+    L --> M{"🛡️ Jidoka / Andon Cord"}
+    M -- "Anomalia / Regressão" --> N["🛑 Clean Reset Protocol"]
+    N --> L
+    M -- "Evidência Comprovada" --> O["🏁 Checkpoint & Merge"]
+    O --> Mirror
+```
+
+***
+
+### 🚀 SideProject:  Learning Intelligence Platform 2.0
+
+**Categoria:** 🏆 Tier 1: AI, Cloud Architecture & SaaS
 
 #### 🎯 Visão Geral e Arquitetura da Solução
 
-A integração de Inteligência Artificial no desenvolvimento de software frequentemente esbarra em um obstáculo crítico: tratar os modelos como "geradores mágicos" acaba gerando códigos insustentáveis, alucinações e perda do controle arquitetural. Para resolver essa dor, criei o **Framework v2.0 Master**, um ecossistema definitivo que transforma IAs em membros estruturados e operacionais da equipe de engenharia.
+Imagine transformar horas de treinamentos em vídeo estáticos em uma base de conhecimento estruturada, pesquisável e altamente interativa. A **Learning Intelligence Platform 2.0** nasceu para resolver a fricção no consumo de conteúdo educacional denso. Trata-se de uma plataforma local, orquestrada via CLI, que processa vídeos brutos através de um pipeline robusto de 8 estágios.
 
-A solução atua como um maestro rigoroso. No coração do sistema, abandonamos o código-fonte como fonte primária da verdade e adotamos o paradigma *Spec-as-Code* através da **META SPEC** (Constituição do Projeto). A arquitetura orquestra um "Enxame" de agentes (via conceitos do *Ruflo*) liderados por um orquestrador central (*Chief of Staff*). Para garantir que a IA não saia dos trilhos, implementei as diretrizes de Andrej Karpathy para o comportamento dos agentes e o princípio *Jidoka* (Andon Cord) — garantindo que qualquer anomalia no código ou desvio da arquitetura interrompa a execução imediatamente para um "reset limpo", impedindo que erros se propaguem em cascata ao longo das 7 fases do ciclo de vida **SPARC+DD**.
+A arquitetura extrai o áudio e os frames visualmente relevantes, transcreve com timestamps exatos e utiliza modelos avançados locais (como LLMs via Ollama e Whisper) para sintetizar conceitos. O resultado não é apenas um resumo, mas um ecossistema vivo: a plataforma gera dossiês completos em Markdown e alimenta um banco de dados relacional e vetorial. Isso habilita recursos poderosos como o **AI Tutor** (busca híbrida textual e semântica com *Reciprocal Rank Fusion*) e o **AI Copilot**, que atua na explicação, resolução de erros e geração de código a partir das aulas. Tudo isso orquestrado sob rígidos princípios de *Spec-as-Code* e rastreabilidade absoluta de proveniência.
 
 #### 👨‍💻 Meu Papel no Projeto
 
-* **Arquiteto de Soluções de IA:** Idealizei e desenhei a topologia de enxames hierárquicos e o subsistema de memória isolada.
-* **Tech Lead:** Estruturei as diretrizes de governança técnica, definindo os checkpoints de validação rigorosa (Jidoka) e adaptando as regras comportamentais de Karpathy para o contexto de agentes autônomos.
-* **Engenheiro de Processos:** Criei o ciclo de vida SPARC+DD e o modelo de engenharia de contexto (WSCI) para garantir escalabilidade na automação do código.
+Como **AI Solutions Architect & Tech Lead**, fui o principal responsável por desenhar a arquitetura V2, garantindo a transição segura a partir do sistema legado (V1) e elevando o rigor de engenharia:
+
+- **Desenho Arquitetural:** Modelei os domínios via Pydantic e formalizei a evolução do sistema através de 15 *Architecture Decision Records* (ADRs).
+- **Engenharia de Dados e Pipeline:** Construí o orquestrador *End-to-End* que gerencia a ingestão, transcrição, análise visual e síntese de inteligência hierárquica (Aula ➔ Módulo ➔ Curso).
+- **Integração de IA:** Implementei os motores de RAG (Busca Híbrida) e a conexão nativa com modelos locais (Ollama / deepseek-r1), priorizando o isolamento de dependências externas.
+- **Cultura de Qualidade:** Instituí o princípio *Jidoka* (Andon Cord) e criei o *IsolationAuditorV5*, um mecanismo focado na contenção de alucinações de IA.
+
+#### 📊 Resultados Quantificados
+
+- **Qualidade Inabalável:** 106 testes unitários e de integração desenvolvidos com **100% de aprovação em apenas 1.25s**, garantindo resiliência em cada *commit*.
+- **Otimização de Infraestrutura:** Implementação de pipeline de compressão H.265 (HEVC) de processamento em lote, reduzindo o espaço de armazenamento de vídeo em **~80%** de forma idempotente.
+- **Fidelidade de IA (Zero Alucinação):** Validação estrita de 100% do dossiê através das 5 invariantes do escopo de processamento (*ProcessingScope*), atingindo taxa perfeita de isolamento de fonte no *Quality Gate*.
+- **Aceleração Operacional:** Transformou processos de estruturação manual de aprendizado, que levariam semanas, em um pipeline comandado por uma única instrução (`./course-ai run`), pulando fluxos já oxidados de forma automática (0.05s no desvio de cache).
+
+#### 🛡️ Segurança & Mitigações OWASP Top 10
+
+- **Privacidade de Dados por Design (Local AI):** Todo o processamento cognitivo (Whisper, Ollama) ocorre localmente, blindando a propriedade intelectual e eliminando a exposição de dados a APIs de terceiros.
+- **Prevenção contra Envenenamento e Alucinação (AI Security):** Desenvolvi o `IsolationAuditorV5.1` para garantir que a IA não sofra *Data Contamination*. Toda afirmação gerada é rigidamente atrelada a uma evidência real (timestamp/frame), mitigando injeção de prompts indiretos e falsas inferências.
+- **Governança Estrita de Banco de Dados:** Para garantir a integridade estrutural, a rastreabilidade e evitar corrupção acidental durante *deployments*, implementei uma regra inegociável de *forward-only migrations* na integração Supabase/PostgreSQL: **nunca atualizamos migrações existentes, sempre criamos novas**.
+- **Tratamento Seguro de Artefatos Externos:** As abstrações de extração midiática via FFmpeg eliminam vulnerabilidades comuns de injeção e execução arbitrária na leitura de mídias corrompidas, delegando o controle a fluxos estritos de *subprocess*.
 
 #### ✨ Pontos Fortes e Desafios Superados
 
-O framework brilha ao trazer o rigor da engenharia de software tradicional para o universo estocástico das IAs.
+Um dos maiores desafios técnicos da V2 era unificar motores variados (Visão Computacional, Áudio, LLM) em um *pipeline* que não colapsasse com grandes volumes de vídeos. Se o script falhasse no meio, o reprocessamento de horas de processamento de rede neural seria inviável.
 
-Um dos desafios mais profundos e complexos que enfrentamos foi a **degradação da janela de contexto** (envenenamento e distração) quando os agentes precisavam lidar com bases de código muito grandes ou execuções longas. Superamos isso implementando a **Engenharia de Contexto WSCI** (Write, Select, Compress, Isolate). Ao invés de jogar todo o repositório para o LLM, estruturamos ferramentas precisas que selecionam apenas a AST necessária, comprimem o histórico e isolam a execução em sub-agentes especialistas utilizando **Git Worktrees** (*Superpowers*). Isso não apenas zerou as colisões de arquivos, como blindou a memória de trabalho da IA, permitindo execuções cirúrgicas e altamente confiáveis.
+Superei isso implementando um padrão rigoroso de **Idempotência**. Projetei um cache inteligente onde o sistema detecta se arquivos como `.transcript.json` ou mídias H.265 já existem. Se eu adiciono 3 aulas novas em um diretório com 30, a plataforma pula silenciosamente as antigas (status: `SKIPPED`) e processa apenas as novas, recombinando o conhecimento global hierarquicamente.
+Além disso, migrar o legado V1 sem quebrar integrações existentes exigiu a criação de uma camada de compatibilidade estruturada com tipagem forte (Pydantic), isolando o ruído antigo da nova estrutura de domínio limpa.
 
-#### 🌱 Pontos para Evolução Futura
+#### 🌱 Pontos Para Evolução Futura
 
-* Implementar um mecanismo de **telemetria descentralizada** para medir a eficiência (tempo/tokens) de cada sub-agente sem comprometer a política *Zero-Trust* e a soberania dos dados.
-* Automatizar a geração dos registros de decisão (ADRs) a partir de debates síncronos entre múltiplos agentes durante a fase de Arquitetura do SPARC+DD.
+- Implementação de uma interface *Web* ou *Desktop App* (Electron/Tauri) sobre a CLI existente, democratizando o uso para não-desenvolvedores.
+- Adicionar suporte à ingestão e transcrição nativa de eventos ao vivo (*streams* via RTMP) para geração de anotações em tempo real.
 
 ---
 
 #### 🛠️ Pilha de Tecnologias (Tech Stack)
 
-| Componente | Tecnologia / Conceito Utilizado | Papel na Arquitetura |
-| --- | --- | --- |
-| **Governança de IA** | **Spec-as-Code (META SPEC)** | Atua como a "Constituição" imutável do projeto, servindo como a fonte da verdade para o alinhamento e regras de negócio lidas pelos agentes. |
-| **Engenharia de Contexto** | **Framework WSCI** | Gerencia a carga cognitiva da IA executando persistência (Write), curadoria de arquivos (Select), sumarização (Compress) e isolamento em sub-agentes (Isolate). |
-| **Orquestração de Agentes** | **Ruflo (Queen-Led Swarm)** | Mantém a topologia de enxame onde um nó central (Chief of Staff) coordena tarefas em paralelo para agentes especialistas em janelas de contexto separadas. |
-| **Gestão Visual e UI** | **Open Design (MCP)** | Subsistema condicional (`ui_enabled`) via Model Context Protocol para injetar componentes padronizados quando o agente atua no Frontend. |
-| **Controle de Qualidade** | **Jidoka & Superpowers** | Realiza validações Andon Cord contínuas, forçando testes reproduzíveis e utilizando *Git Worktrees* para isolar o código de possíveis execuções destrutivas. |
+| Componente                 | Tecnologia Utilizada       | Papel na Arquitetura                                                                                                                           |
+| -------------------------- | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Linguagem Principal**    | Python (Pydantic, Typer)   | Orquestração do CLI, tipagem estrita de domínio, abstração de interfaces (*Strategy*) e manipulação de fluxos de E/S.                          |
+| **AI & Processamento NLP** | Ollama, Whisper            | Modelos de inferência locais (ex: `deepseek-r1:8b`) e transcrição de áudio via LLM para extração profunda de conhecimento.                     |
+| **Processamento de Mídia** | FFmpeg / FFprobe           | Extração de áudio, geração estrita de keyframes, detecção de cena em lote e compressão espacial H.265.                                         |
+| **Persistência de Dados**  | SQLite (FTS5) & PostgreSQL | Armazenamento relacional e *Full-Text Search* do ecossistema, utilizando integração com o Supabase.                                            |
+| **Busca Vetorial & RAG**   | `pgvector`                 | Motor vetorial por similaridade de cosseno, atrelado ao algoritmo RRF (*Reciprocal Rank Fusion*) para recuperação semântica no AI Tutor.       |
+| **Testes e Qualidade**     | Pytest                     | Suíte mandatória que inviabiliza quebras (*Andon Cord*), rodando 106 testes unitários e de integração focados em rastreabilidade e isolamento. |
 
 ---
 
@@ -957,22 +1071,324 @@ config:
   theme: default
   look: handDrawn
 ---
+%%{init: {'sequence': {'messageFontMaxSize': 14, 'wrap': true, 'diagramWidth': 600}}}%%
+flowchart TD
+    RawVideos["🎬 Vídeos Brutos\n[mp4, mkv]"] --> CLI["⚙️ Orquestrador E2E\n[course-ai run]"]
+    CLI --> Media["🎵 Media Pipeline\n[FFmpeg/FFprobe]"]
+    
+    Media --> Audio["Áudio .mp3"]
+    Media --> Frames["Keyframes & OCR"]
+    
+    Audio --> Whisper["🎙️ Transcrição\n[Whisper]"]
+    Frames --> Vision["👁️ Vision Pipeline\n[OCR / Categorização]"]
+    
+    Whisper --> LessonIntel["🧠 Lesson Intelligence\n[LLM Local - Ollama]"]
+    Vision --> LessonIntel
+    
+    LessonIntel --> Hierarchical["🏗️ Agregação Hierárquica\n[Aula ➔ Módulo ➔ Curso]"]
+    
+    Hierarchical --> Dossier["📚 Dossiê Padronizado\n[10 Arquivos .md]"]
+    Hierarchical --> Storage["🗄️ Storage & Vetores\n[SQLite/pgvector]"]
+    
+    Storage --> AITutor["🤖 AI Tutor\n[Busca Híbrida / RRF]"]
+    Storage --> AICopilot["💻 AI Copilot\n[Explain, Exercise, Solve, Code]"]
+    
+    QualityGate["🛡️ Auditor de Isolamento\n[Quality Gate V5.1]"] -.->|Valida Proveniência ✅| Dossier
+    
+    classDef main fill:#f9f9f9,stroke:#333,stroke-width:2px;
+    class CLI,Media,LessonIntel,Hierarchical,Storage main;
+
+```
+
+***
+
+### 🚀 SideProject:  My Bookmarks
+
+**Categoria:** 🏆 Tier 1: AI, Cloud Architecture & SaaS
+
+#### 🎯 Visão Geral e Arquitetura da Solução
+
+Ao longo dos anos, nossos navegadores se tornam cemitérios de links: milhares de URLs, pastas sobrepostas e referências esquecidas que crescem organicamente até se tornarem inavegáveis. O problema central do "My Bookmarks" não era simplesmente gerenciar favoritos, mas sim extrair conhecimento de uma coleção histórica caótica sem destruir sua taxonomia original.
+
+Para resolver isso, arquitetei a solução tratando os favoritos como um verdadeiro **pipeline de engenharia de dados**. Em vez de acoplar a solução ao formato interno do Google Chrome, criei um *Modelo Canônico* independente e versionado, seguindo um princípio rígido: **A IA sugere, os sistemas determinísticos validam, o humano autoriza e o motor executa.**
+
+A arquitetura evoluiu através de 9 Milestones (M1 a M9), começando por uma ingestão segura (leitura de HTML), passando por análises determinísticas (estatísticas, duplicatas, entropia de domínios), culminando em um motor RAG (Retrieval-Augmented Generation) conversacional e um sistema de governança de IA local (Ollama) que sugere reorganizações estruturais sem nunca corromper os dados originais. Uma verdadeira ponte bidirecional foi construída para reconciliar alterações atômicas entre a base canônica e o perfil físico do Chrome.
+
+#### 👨‍💻 Meu Papel no Projeto
+
+- **Engenheiro de Software Principal & Arquiteto de Soluções:** Desenho ponta a ponta da arquitetura do pipeline de dados, definindo os limites imutáveis entre ingestão, modelo canônico e execução.
+- **Tech Lead (IA & Dados):** Implementação da estratégia de governança humana sobre decisões da IA e desenvolvimento da camada RAG utilizando Ollama (qwen2.5 / deepseek-r1).
+- **Engenheiro de Testes & Qualidade:** Criação da rigorosa suíte de testes com validação JIDOKA e garantias criptográficas SHA-256 para prevenir perda de dados.
+
+#### 📊 Resultados Quantificados
+
+- **100% de Confiabilidade na Reconciliação:** O algoritmo de *Stable Identity Matcher* (M7) reduziu 4.388 diferenças estruturais iniciais para **0 conflitos**, garantindo alinhamento semântico 1:1 perfeito com o Chrome.
+- **Zero Perda de Dados:** Processamento de **2.628 favoritos e 904 pastas** validado criptograficamente byte-a-byte, sem nenhuma corrupção estrutural em simulações transacionais em memória.
+- **Qualidade de Engenharia Inquestionável:** Cobertura de código blindada com **153 testes unitários e de integração** distribuídos em 23 arquivos (Vitest), todos com 100% de aprovação.
+- **Redução de Falsos Positivos de IA:** Refinamento do motor heurístico (M3.2) eliminou 49 fusões falsas (ex: `Caching` vs `Coaching`), barrando estruturalmente propostas perigosas antes mesmo do *scoring*.
+
+#### 🛡️ Segurança & Mitigações OWASP Top 10
+
+- **Privacidade e LLM Local:** Utilização exclusiva de modelos rodando localmente (Ollama) para classificação e RAG, garantindo que o histórico de navegação sensível do usuário nunca seja enviado a APIs de terceiros na nuvem.
+- **Prevenção de Prompt Injection:** Os dados extraídos dos favoritos são isolados de forma estrita em blocos `<untrusted_bookmark_data>`, e o motor RAG utiliza um validador de *grounding* (M9) para rejeitar instruções vazadas e alucinações.
+- **Integridade de Dados (Hash Lineage):** Implementação de travas de linhagem criptográfica (SHA-256). Cada estado da aplicação (M3 Plan, M4 Manifest, M5 Execution) possui um hash único; execuções físicas e *rollbacks* são abortados instantaneamente se houver adulteração dos arquivos JSON base (Prevenção contra Insecure Direct Object References e Data Tampering).
+
+#### ✨ Pontos Fortes e Desafios Superados
+
+O maior desafio técnico foi a **Guerra dos Falsos Positivos na Reconciliação Bidirecional (M7)**. Inicialmente, o sistema detectou milhares de "mudanças" no Chrome porque URLs idênticas existiam legitimamente em pastas diferentes, confundindo o motor clássico de diff. Superei isso desenvolvendo o *Stable Identity Matcher*, um motor de identidade composto por `URL + folderPath + ocorrência`, que estabilizou as árvores e trouxe o diff exato a zero.
+
+Outro momento de virada foi o desafio do *Over-Merging* semântico da IA (M3.1), onde a máquina sugeria fundir pastas de clientes distintos apenas porque ambas continham a palavra "Testing". A superação veio com a arquitetura de **Hard Safety Gates (M3.2)**, inserindo barreiras determinísticas de escopo (GLOBAL, PROJECT, CLIENT) que rejeitam aberrações semânticas antes que a IA possa sequer avaliá-las.
+
+#### 🌱 Pontos Para Evolução Futura
+
+- **Extensão Nativa para Navegador:** Desenvolver um *companion app* em formato de extensão para capturar e classificar novos bookmarks no momento do clique, integrando-se diretamente ao pipeline de ingestão.
+- **Dashboard Visual Interativo:** Evoluir da CLI para uma interface web local (TUI ou SPA) para tornar a revisão de propostas da IA e o diff visual de árvores de pastas ainda mais fluídos e amigáveis.
+
+---
+
+#### 🛠️ Pilha de Tecnologias (Tech Stack)
+
+| Componente | Tecnologia Utilizada | Papel na Arquitetura |
+| --- | --- | --- |
+| **Core & Orquestração** | TypeScript, Node.js | Base do pipeline de dados, garantindo tipagem forte em todo o modelo canônico. |
+| **Interface CLI** | Commander | Ponto de entrada do usuário, roteando comandos de validação, sincronização, inteligência e revisão. |
+| **Parser & Ingestão** | Cheerio | Travessia e extração precisa dos nós HTML (formato Netscape do Chrome) sem perdas estruturais. |
+| **Validação & Schemas** | Zod | Garantia rigorosa de invariantes em tempo de execução, modelando identidades e propostas de transação. |
+| **Inteligência Local** | Ollama (qwen2.5, deepseek) | Provedor RAG e motor heurístico de classificação rodando de forma 100% privada e local. |
+| **Qualidade & Segurança** | Vitest, SHA-256 | Suíte de testes (153 cenários) e geração de hashes criptográficos para travas de época (*Epoch Lock*) e *rollbacks*. |
+
+---
+
+#### 🗺️ Diagrama da Arquitetura
+
+```mermaid
+---
+config:
+  theme: default
+  look: handDrawn
+---
+%%{init: {'sequence': {'messageFontMaxSize': 14, 'wrap': true, 'diagramWidth': 600}}}%%
+flowchart TD
+    A["Chrome Export \.html"] --> B["HTML Parser Adapter"]
+    B --> C["Canonical Domain Model"]
+    
+    subgraph Inteligencia Determinística
+        C --> D["Stats & Duplicate Analysis"]
+        D --> E["Taxonomy & Domain Engine"]
+    end
+    
+    subgraph Governanca e IA
+        E --> F["M8 AI Organization (Ollama local)"]
+        F --> G["Proposal Generator"]
+        G --> H["Human Review Queue ✅"]
+    end
+    
+    subgraph Execucao e Sync
+        H --> I["In-Memory Simulation & JIDOKA"]
+        I --> J["Controlled Physical Execution"]
+        J --> C
+        C <--> K["M7 Bidirectional Chrome Sync ✅"]
+    end
+
+```
+
+***
+
+### 🚀 SideProject:  Twin Quest: Desafio Full-Stack
+
+#### 🎯 Visão Geral e Arquitetura da Solução
+
+O "Twin Quest" nasceu como uma resposta criativa a um desafio, a arquitetura foi desenhada para ser moderna, robusta e reativa. O coração da aplicação é um **backend em Laravel** que serve uma API RESTful segura e eficiente. Ele é o maestro que orquestra a comunicação com a API. No frontend, uma interface limpa e fluida, construída com **Vue 3 (Composition API) e TypeScript**, oferece uma experiência de usuário impecável. O estado da aplicação é gerenciado de forma centralizada pelo **Pinia**, garantindo que os dados fluam de maneira reativa e instantânea da API para a tela do usuário.
+
+#### 👨‍💻 Meu Papel no Projeto
+
+Como idealizador e único desenvolvedor deste projeto, atuei em todas as frentes como **Desenvolvedor Full-Stack**, com as seguintes responsabilidades:
+
+  - **Arquitetura e Desenvolvimento Back-End:** Construí toda a API RESTful com Laravel, definindo os endpoints, a lógica de negócio e a orquestração da comunicação com o serviço de IA.
+  - **Desenvolvimento Front-End:** Criei a interface de usuário reativa utilizando Vue 3, TypeScript e a Composition API, focando em uma experiência limpa e intuitiva.
+  - **Gestão de Estado:** Implementei o Pinia para um gerenciamento de estado global eficiente e previsível no lado do cliente.
+  - **Qualidade de Código e Testes:** Garanti a estabilidade e a confiabilidade da API escrevendo uma suíte de testes completa com Pest, adotando uma abordagem TDD.
+
+#### ✨ Pontos Fortes e Desafios Superados
+
+O maior trunfo do projeto é a sua **execução técnica coesa e moderna**, integrando perfeitamente o frontend e o backend. A utilização de TypeScript de ponta a ponta trouxe uma camada extra de segurança e manutenibilidade ao código.
+
+Um desafio significativo foi implementação de uma **suíte de testes robusta com Pest** foi crucial para garantir que a lógica de negócio da API fosse à prova de falhas, um pilar para a qualidade do projeto.
+
+#### 🌱 Pontos Para Evolução Futura
+
+Para o futuro, a aplicação poderia evoluir com a implementação de um **sistema de cache (como Redis)** para temas populares, otimizando custos de API e a velocidade de resposta. Outra melhoria seria adicionar **autenticação de usuários** para que eles possam salvar e revisitar seu histórico de "quests".
+
+-----
+
+#### 🛠️ Pilha de Tecnologias (Tech Stack)
+
+| Componente                  | Tecnologia Utilizada        | Papel na Arquitetura                                                                                                |
+| :-------------------------- | :-------------------------- | :------------------------------------------------------------------------------------------------------------------ |
+| **Backend (API)**           | **Laravel**                 | Orquestra a lógica de negócio, gerencia as rotas da API e se comunica com o serviço de IA Generativa.               |
+| **Frontend (UI)**           | **Vue 3 (Composition API)** | Constrói a interface de usuário reativa e dinâmica, permitindo uma interação fluida com o usuário.                  |
+| **Tipagem de Código**       | **TypeScript**              | Garante a segurança de tipos em todo o projeto, tanto no frontend quanto no backend (se aplicável), reduzindo bugs. |
+| **Gerenciamento de Estado** | **Pinia**                   | Centraliza e gerencia o estado da aplicação no frontend de forma simples, reativa e eficiente.                      |
+| **Testes Automatizados**    | **Pest**                    | Garante a confiabilidade e a qualidade da API do Laravel através de uma suíte de testes elegante e poderosa (TDD).  |
+
+-----
+
+#### 🗺️ Diagrama da Arquitetura
+
+```mermaid
+---
+config:
+  theme: default
+  look: handDrawn
+---
 graph TD
-    A["Desenvolvedor Humano"] -->|Define Visão via| B["META SPEC (Spec-as-Code)"]
-    B --> C["Agente Orquestrador (Chief of Staff)"]
-    C -->|Aplica WSCI| D["Gestor de Janela de Contexto"]
-    C -->|Topologia Ruflo| E["Enxame de Sub-agentes"]
+    %% Cliente
+    subgraph "💻 Cliente (Browser)"
+        style U fill:#D6EAF8,stroke:#3498DB,stroke-width:2px
+        style FE fill:#AED6F1,stroke:#1F618D,stroke-width:2px
+        U[👨‍💻 Usuário]
+        FE["🌐 Frontend <br> Vue.js, TypeScript, Pinia"]
+        U --> FE
+    end
+
+    %% Servidor
+    subgraph "🖥️ Servidor (Backend)"
+        style BE fill:#D5F5E3,stroke:#27AE60,stroke-width:2px
+        style Testes fill:#ABEBC6,stroke:#1E8449,stroke-width:2px
+        BE[⚙️ Backend API <br> Laravel, Pest]
+        Testes(🧪 Suíte de Testes <br> Pest)
+        BE <--> Testes
+    end
+
+    %% Banco de Dados em Docker
+    subgraph "📦 Infraestrutura"
+        style DB fill:#FADBD8,stroke:#C0392B,stroke-width:2px
+        style Docker fill:#F5B7B1,stroke:#922B21,stroke-width:2px
+        subgraph Docker["🐳 Docker"]
+            DB[(🗄️ PostgreSQL)]
+        end
+    end
+
+    %% Fluxos
+    FE -- "Requisição HTTP (Tema)" --> BE
+    BE -- "Resposta JSON (Gêmeos)" --> FE
+    BE <--> DB
+
+```
+
+---
+#### RESUMO TÉCNICO PARA EMBEDDING
+
+Desenvolvimento de uma aplicação web full-stack, "Twin Quest", a arquitetura da solução é baseada em um backend com Laravel que serve uma API RESTful. O frontend é uma interface de usuário reativa construída com Vue 3, Composition API e TypeScript para garantir tipagem segura. O gerenciamento de estado global no lado do cliente é realizado de forma centralizada pelo Pinia. A qualidade e estabilidade da API foram asseguradas através de uma suíte de testes automatizados com Pest, adotando uma abordagem TDD (Test-Driven Development). A infraestrutura inclui PostgreSQL, com planos de evolução para implementar um sistema de cache com Redis e autenticação de usuários.
+
+#### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
+
+| Categoria                    | Tecnologias e Conceitos                                                                                               |
+| :--------------------------- | :-------------------------------------------------------------------------------------------------------------------- |
+| **Software Development**     | Desenvolvedor Full-Stack, Laravel, Vue 3, TypeScript, Pinia, Pest, Test-Driven Development (TDD), Qualidade de Código |
+| **Architecture**             | Arquitetura Full-Stack, API RESTful, Gestão de Estado (Pinia), Sistema de Cache (Redis), Autenticação de Usuários     |
+| **Cloud Computing**          | N/A                                                                                                                   |
+| **API RESTFul development**  | API RESTful, Laravel, Endpoints, Requisição HTTP, Resposta JSON                                                       |
+| **Frontend Development**     | Vue 3 (Composition API), TypeScript, Pinia, Interface de Usuário Reativa                                              |
+| **Mobile Development**       | N/A                                                                                                                   |
+| **Database**                 | PostgreSQL, Redis                                                                                                     |
+| **Data Management**          | N/A                                                                                                                   |
+| **Content Management - CMS** | N/A                                                                                                                   |
+| **System Administration**    | N/A                                                                                                                   |
+| **DevOps**                   | Testes Automatizados, Pest, Docker                                                                                    |
+| **Leadership**               | Liderança Técnica (Idealizador e único desenvolvedor)                                                                 |
+| **Coaching**                 | N/A                                                                                                                   |
+| **Agile Project Management** | N/A                                                                                                                   |
+
+***
+
+### 🚀 SideProject:  Web3 React dApp Prototype
+
+#### 🎯 Visão Geral e Arquitetura da Solução
+
+A transição da Web2 para a Web3 pode ser um terreno intimidador, cheio de jargões e integrações complexas. O objetivo central deste projeto foi criar um *boilerplate* fundamental e limpo para aplicações descentralizadas (dApps). Ele resolve a dor inicial de configuração, entregando uma base robusta que demonstra as funcionalidades essenciais da Web3: conexão de carteira, leitura de dados *on-chain* e interação com *smart contracts* na rede de testes Sepolia.
+
+Do ponto de vista arquitetural, a solução foi desenhada para ser rápida e reativa. O usuário interage com uma interface moderna servida pelo Vite e construída em React. Quando o usuário clica em "Connect", a aplicação utiliza os *hooks* do Wagmi para se comunicar com a extensão de carteira do navegador (como o MetaMask). A partir daí, o Viem atua como o motor de comunicação com a blockchain Ethereum (Sepolia), permitindo ler a saudação pública de um contrato inteligente "Greeter" e enviar transações para alterá-la, tudo com um gerenciamento de estado elegante fornecido pelo React Query.
+
+#### 👨‍💻 Meu Papel no Projeto
+
+Neste projeto, atuei de ponta a ponta na construção do front-end descentralizado, assumindo os seguintes chapéus:
+
+- **Desenvolvedor Front-End Web3:** Responsável por estruturar a interface em React com TypeScript, garantindo uma tipagem estática segura e uma experiência de usuário fluida.
+- **Integrador de Blockchain:** Configurei os clientes do Wagmi e Viem para estabelecer a ponte de comunicação entre a interface web e a rede Sepolia, gerenciando as conexões via *injected providers* (MetaMask).
+- **Engenheiro de UX/UI para Web3:** Implementei o tratamento de estados de carregamento e confirmações de transações, transformando a latência natural da blockchain em uma experiência transparente para o usuário final.
+
+#### ✨ Pontos Fortes e Desafios Superados
+
+O grande ponto forte desta solução é a sua base tecnológica modernizada (Vite + Wagmi + Viem), que substitui bibliotecas legadas mais pesadas por uma abordagem reativa e otimizada para a experiência do desenvolvedor (DX).
+
+O principal desafio técnico enfrentado foi **o gerenciamento do estado assíncrono das transações na blockchain**. Na Web3, uma transação não é instantânea; ela precisa ser assinada, enviada para a rede e minerada, o que pode deixar a interface congelada ou confusa se não for bem tratado.
+**Como superamos:** Orquestramos um fluxo reativo utilizando os *hooks* `useContractWrite` e `useWaitForTransactionReceipt`. Em vez de fazer o usuário adivinhar o status da operação, a interface monitora ativamente o recibo da transação na blockchain. Assim que a rede confirma o bloco, o sistema dispara automaticamente uma nova leitura (`useContractRead`), atualizando a mensagem na tela em tempo real, sem a necessidade de *reloads* manuais, transformando um processo complexo em uma vitória de usabilidade.
+
+#### 🌱 Pontos Para Evolução Futura
+
+- **Suporte a Múltiplas Carteiras:** Integrar o WalletConnect para permitir o acesso via carteiras mobile, expandindo a acessibilidade do dApp.
+- **Suporte Multichain:** Abstrair a configuração de rede para permitir que o usuário alterne fluidamente entre Sepolia, Mainnet, Arbitrum ou Optimism diretamente pela interface.
+
+---
+
+#### 🛠️ Pilha de Tecnologias (Tech Stack)
+
+| Componente | Tecnologia Utilizada | Papel na Arquitetura |
+| --- | --- | --- |
+| **Front-End / UI** | **React.js & Vite** | Responsável pela renderização da interface do usuário de forma reativa e pelo empacotamento ultrarrápido do código em ambiente de desenvolvimento. |
+| **Linguagem** | **TypeScript** | Adiciona tipagem estática ao projeto, prevenindo erros em tempo de execução e melhorando a integração com os ABIs dos contratos inteligentes. |
+| **Gerenciamento Web3** | **wagmi & React Query** | Fornece *hooks* React otimizados para interagir com contas, provedores e contratos, gerenciando o cache e o estado assíncrono das requisições com a blockchain. |
+| **Comunicação Blockchain** | **Viem** | Atua como a biblioteca de baixo nível para interagir com a Ethereum, substituindo o ethers.js com foco em performance e tamanho de *bundle* reduzido. |
+| **Carteira / Provedor** | **MetaMask (Injected)** | Gerencia as chaves privadas do usuário, injeta o provedor Web3 no navegador e assina as transações enviadas para a rede Sepolia. |
+
+---
+
+#### 🗺️ Diagrama da Arquitetura
+
+```mermaid
+graph TD
+    %% O diagrama gerado pela IA começa aqui %%
     
-    E --> F["Agente Desenvolvedor"]
-    E --> G["Agente Code Reviewer"]
+    %% Definindo os nós
+    User(("👤 Usuário"))
     
-    F -->|Ciclo SPARC+DD| H["Git Worktree (Isolamento)"]
-    G -->|Zero-Trust/AIDefence| H
+    subgraph "💻 Front-end (React + Vite)"
+        UI_Connect["🔘 Botão 'Connect Wallet'"]
+        UI_Display["📜 Exibição da Saudação"]
+        UI_Form["📝 Formulário 'Change Greeting'"]
+        
+        subgraph "⚛️ Wagmi Hooks & Estado"
+            Hook_Connect["useConnect()"]
+            Hook_Read["useContractRead()"]
+            Hook_Write["useContractWrite()"]
+            Hook_Wait["useWaitForTransactionReceipt()"]
+        end
+    end
     
-    H --> I{"Validação Jidoka / Andon Cord"}
-    I -- "Anomalia Detectada" --> J["Apagar para Recomeçar (Reset Limpo)"]
-    J --> C
-    I -- "Testes Aprovados" --> K["Integração e Documentação Atualizada"]
+    subgraph "🦊 Infraestrutura Web3 & Blockchain"
+        Wallet["MetaMask (Injected Provider)"]
+        Contract[/"📜 'Greeter' Smart Contract (Rede Sepolia)"/]
+    end
+
+    %% Fluxo de Conexão
+    User -->|Clica| UI_Connect
+    UI_Connect -->|Dispara| Hook_Connect
+    Hook_Connect -->|Solicita Permissão| Wallet
+    Wallet -->|Conexão Aprovada| Hook_Read
+    
+    %% Fluxo de Leitura (Read)
+    Hook_Read -->|Chama função greet| Contract
+    Contract -.->|Retorna texto atual| UI_Display
+    UI_Display -.->|Exibe para| User
+    
+    %% Fluxo de Escrita (Write)
+    User -->|Digita e Envia| UI_Form
+    UI_Form -->|Passa novo texto| Hook_Write
+    Hook_Write -->|Solicita Assinatura de Tx| Wallet
+    Wallet -->|Tx Aprovada e Enviada| Hook_Wait
+    Hook_Wait -->|Monitora status na rede| Contract
+    Contract -.->|Confirmação de Mineração| Hook_Read
 
 ```
 
@@ -986,9 +1402,9 @@ Em um cenário onde o Telegram se tornou um vasto repositório de conhecimento, 
 
 Para resolver isso, projetei uma suíte de automação modular em Python, que transforma coleções dispersas de mensagens em uma biblioteca de aprendizado pessoal, organizada e pronta para consumo. A arquitetura foi pensada em um fluxo de trabalho de três etapas independentes e sequenciais, garantindo clareza e manutenibilidade:
 
-1.  **Descoberta e Mapeamento (`listarGrupos.py`):** A primeira etapa atua como um radar, conectando-se à API do Telegram para catalogar todos os cursos em que o usuário está inscrito. O resultado é um "mapa" em formato JSON (`cursos-telegram.json`), que serve como a fonte da verdade para o restante do processo.
-2.  **Indexação e Estruturação (`listarVideos.py`):** O coração da solução. Este módulo consome o mapa gerado e, para cada curso, extrai meticulosamente o histórico de mensagens. Usando expressões regulares para identificar padrões como "Módulo" e "Aula", ele estrutura o conteúdo bruto e o converte em sumários elegantes em formato Markdown, um para cada curso.
-3.  **Consumo e Download (`downloadVideosById.py`):** Com os sumários em mãos, o usuário pode tomar decisões estratégicas sobre o que estudar. Esta etapa final permite o download sob demanda de todo o conteúdo de vídeo de um curso específico, de forma otimizada para evitar duplicatas e com uma barra de progresso (`tqdm`) para uma experiência de usuário aprimorada.
+1. **Descoberta e Mapeamento (`listarGrupos.py`):** A primeira etapa atua como um radar, conectando-se à API do Telegram para catalogar todos os cursos em que o usuário está inscrito. O resultado é um "mapa" em formato JSON (`cursos-telegram.json`), que serve como a fonte da verdade para o restante do processo.
+2. **Indexação e Estruturação (`listarVideos.py`):** O coração da solução. Este módulo consome o mapa gerado e, para cada curso, extrai meticulosamente o histórico de mensagens. Usando expressões regulares para identificar padrões como "Módulo" e "Aula", ele estrutura o conteúdo bruto e o converte em sumários elegantes em formato Markdown, um para cada curso.
+3. **Consumo e Download (`downloadVideosById.py`):** Com os sumários em mãos, o usuário pode tomar decisões estratégicas sobre o que estudar. Esta etapa final permite o download sob demanda de todo o conteúdo de vídeo de um curso específico, de forma otimizada para evitar duplicatas e com uma barra de progresso (`tqdm`) para uma experiência de usuário aprimorada.
 
 O resultado final é o empoderamento do usuário, que agora possui uma biblioteca de aprendizado curada, acessível e pronta para consumo offline.
 
@@ -996,25 +1412,25 @@ O resultado final é o empoderamento do usuário, que agora possui uma bibliotec
 
 Como idealizador e único desenvolvedor deste projeto, minhas responsabilidades abrangeram todo o ciclo de vida da solução:
 
-  * **Arquiteto da Solução:** Defini a arquitetura modular em três etapas, garantindo que cada componente tivesse uma responsabilidade única e que o fluxo de dados entre eles fosse limpo e eficiente.
-  * **Desenvolvedor Python:** Escrevi todo o código para os scripts de automação, desde a interação com a API do Telegram usando a biblioteca `Telethon` até a lógica de parsing com expressões regulares e a manipulação do sistema de arquivos.
-  * **Engenheiro de Dados (em pequena escala):** Modelei o fluxo de dados, definindo como as informações seriam extraídas (dados brutos), armazenadas temporariamente (JSON) e transformadas em um produto final de valor (sumários em Markdown).
-  * **Product Owner:** Identifiquei a dor inicial (minha própria necessidade), defini os objetivos e requisitos do projeto e validei que a solução final atendia efetivamente ao problema proposto.
+  - **Arquiteto da Solução:** Defini a arquitetura modular em três etapas, garantindo que cada componente tivesse uma responsabilidade única e que o fluxo de dados entre eles fosse limpo e eficiente.
+  - **Desenvolvedor Python:** Escrevi todo o código para os scripts de automação, desde a interação com a API do Telegram usando a biblioteca `Telethon` até a lógica de parsing com expressões regulares e a manipulação do sistema de arquivos.
+  - **Engenheiro de Dados (em pequena escala):** Modelei o fluxo de dados, definindo como as informações seriam extraídas (dados brutos), armazenadas temporariamente (JSON) e transformadas em um produto final de valor (sumários em Markdown).
+  - **Product Owner:** Identifiquei a dor inicial (minha própria necessidade), defini os objetivos e requisitos do projeto e validei que a solução final atendia efetivamente ao problema proposto.
 
 #### ✨ Pontos Fortes e Desafios Superados
 
 A principal força do projeto reside em sua capacidade de **transformar caos em clareza**. O maior desafio era lidar com conteúdo valioso, porém totalmente não estruturado, dentro do Telegram.
 
-  * **Superação do Caos com Inteligência de Parsing:** O ponto de virada técnico foi a implementação de uma lógica de parsing robusta com expressões regulares (`re`). Essa "inteligência" permitiu que o script `listarVideos.py` lesse textos de formato livre e os organizasse em uma hierarquia lógica de módulos e aulas, criando os sumários que são o principal entregável de valor do projeto.
-  * **Eficiência e Experiência do Usuário:** Em vez de uma abordagem simplista, o script de download foi projetado para ser eficiente. Ele verifica a existência e o tamanho dos arquivos antes de iniciar o download, economizando tempo e banda. A inclusão da biblioteca `tqdm` foi uma decisão consciente para melhorar a experiência do usuário em processos demorados, fornecendo feedback visual claro e profissional.
-  * **Arquitetura Modular:** A separação em três scripts distintos não só organiza o código, mas também permite a execução seletiva. O usuário pode apenas atualizar o mapa de cursos ou re-gerar um sumário sem precisar executar o fluxo completo, tornando a ferramenta flexível e ágil.
+  - **Superação do Caos com Inteligência de Parsing:** O ponto de virada técnico foi a implementação de uma lógica de parsing robusta com expressões regulares (`re`). Essa "inteligência" permitiu que o script `listarVideos.py` lesse textos de formato livre e os organizasse em uma hierarquia lógica de módulos e aulas, criando os sumários que são o principal entregável de valor do projeto.
+  - **Eficiência e Experiência do Usuário:** Em vez de uma abordagem simplista, o script de download foi projetado para ser eficiente. Ele verifica a existência e o tamanho dos arquivos antes de iniciar o download, economizando tempo e banda. A inclusão da biblioteca `tqdm` foi uma decisão consciente para melhorar a experiência do usuário em processos demorados, fornecendo feedback visual claro e profissional.
+  - **Arquitetura Modular:** A separação em três scripts distintos não só organiza o código, mas também permite a execução seletiva. O usuário pode apenas atualizar o mapa de cursos ou re-gerar um sumário sem precisar executar o fluxo completo, tornando a ferramenta flexível e ágil.
 
-#### 🌱 Pontos para Evolução Futura
+#### 🌱 Pontos Para Evolução Futura
 
 Embora a solução seja totalmente funcional para seu propósito inicial, existem caminhos claros para evolução:
 
-1.  **Interface Gráfica (UI):** Desenvolver uma interface de usuário simples (Web com Flask/Streamlit ou Desktop com PyQt) para eliminar a necessidade de executar scripts manualmente via terminal, tornando a ferramenta acessível a um público menos técnico.
-2.  **Busca Avançada:** Implementar uma funcionalidade de busca que permita ao usuário pesquisar por palavras-chave em todos os sumários gerados, ajudando a encontrar aulas específicas sobre um determinado tópico em toda a sua biblioteca de cursos.
+1. **Interface Gráfica (UI):** Desenvolver uma interface de usuário simples (Web com Flask/Streamlit ou Desktop com PyQt) para eliminar a necessidade de executar scripts manualmente via terminal, tornando a ferramenta acessível a um público menos técnico.
+2. **Busca Avançada:** Implementar uma funcionalidade de busca que permita ao usuário pesquisar por palavras-chave em todos os sumários gerados, ajudando a encontrar aulas específicas sobre um determinado tópico em toda a sua biblioteca de cursos.
 
 -----
 
@@ -1109,204 +1525,3 @@ Este projeto implementa uma suíte de automação em Python para organizar conte
 | **Leadership** | Arquitetura de Solução, Product Ownership, Tomada de Decisão Técnica |
 | **Coaching** | N/A |
 | **Agile Project Management** | Definição de Requisitos, Validação de Solução, Product Owner |
-
-***
-
-### 🚀 SideProject:  Twin Quest: Desafio Full-Stack
-
-#### 🎯 Visão Geral e Arquitetura da Solução
-
-O "Twin Quest" nasceu como uma resposta criativa a um desafio, a arquitetura foi desenhada para ser moderna, robusta e reativa. O coração da aplicação é um **backend em Laravel** que serve uma API RESTful segura e eficiente. Ele é o maestro que orquestra a comunicação com a API. No frontend, uma interface limpa e fluida, construída com **Vue 3 (Composition API) e TypeScript**, oferece uma experiência de usuário impecável. O estado da aplicação é gerenciado de forma centralizada pelo **Pinia**, garantindo que os dados fluam de maneira reativa e instantânea da API para a tela do usuário.
-
-#### 👨‍💻 Meu Papel no Projeto
-
-Como idealizador e único desenvolvedor deste projeto, atuei em todas as frentes como **Desenvolvedor Full-Stack**, com as seguintes responsabilidades:
-
-  * **Arquitetura e Desenvolvimento Back-End:** Construí toda a API RESTful com Laravel, definindo os endpoints, a lógica de negócio e a orquestração da comunicação com o serviço de IA.
-  * **Desenvolvimento Front-End:** Criei a interface de usuário reativa utilizando Vue 3, TypeScript e a Composition API, focando em uma experiência limpa e intuitiva.
-  * **Gestão de Estado:** Implementei o Pinia para um gerenciamento de estado global eficiente e previsível no lado do cliente.
-  * **Qualidade de Código e Testes:** Garanti a estabilidade e a confiabilidade da API escrevendo uma suíte de testes completa com Pest, adotando uma abordagem TDD.
-
-#### ✨ Pontos Fortes e Desafios Superados
-
-O maior trunfo do projeto é a sua **execução técnica coesa e moderna**, integrando perfeitamente o frontend e o backend. A utilização de TypeScript de ponta a ponta trouxe uma camada extra de segurança e manutenibilidade ao código.
-
-Um desafio significativo foi implementação de uma **suíte de testes robusta com Pest** foi crucial para garantir que a lógica de negócio da API fosse à prova de falhas, um pilar para a qualidade do projeto.
-
-#### 🌱 Pontos para Evolução Futura
-
-Para o futuro, a aplicação poderia evoluir com a implementação de um **sistema de cache (como Redis)** para temas populares, otimizando custos de API e a velocidade de resposta. Outra melhoria seria adicionar **autenticação de usuários** para que eles possam salvar e revisitar seu histórico de "quests".
-
------
-
-#### 🛠️ Pilha de Tecnologias (Tech Stack)
-
-| Componente                  | Tecnologia Utilizada        | Papel na Arquitetura                                                                                                |
-| :-------------------------- | :-------------------------- | :------------------------------------------------------------------------------------------------------------------ |
-| **Backend (API)**           | **Laravel**                 | Orquestra a lógica de negócio, gerencia as rotas da API e se comunica com o serviço de IA Generativa.               |
-| **Frontend (UI)**           | **Vue 3 (Composition API)** | Constrói a interface de usuário reativa e dinâmica, permitindo uma interação fluida com o usuário.                  |
-| **Tipagem de Código**       | **TypeScript**              | Garante a segurança de tipos em todo o projeto, tanto no frontend quanto no backend (se aplicável), reduzindo bugs. |
-| **Gerenciamento de Estado** | **Pinia**                   | Centraliza e gerencia o estado da aplicação no frontend de forma simples, reativa e eficiente.                      |
-| **Testes Automatizados**    | **Pest**                    | Garante a confiabilidade e a qualidade da API do Laravel através de uma suíte de testes elegante e poderosa (TDD).  |
-
-
------
-
-#### 🗺️ Diagrama da Arquitetura
-
-```mermaid
----
-config:
-  theme: default
-  look: handDrawn
----
-graph TD
-    %% Cliente
-    subgraph "💻 Cliente (Browser)"
-        style U fill:#D6EAF8,stroke:#3498DB,stroke-width:2px
-        style FE fill:#AED6F1,stroke:#1F618D,stroke-width:2px
-        U[👨‍💻 Usuário]
-        FE["🌐 Frontend <br> Vue.js, TypeScript, Pinia"]
-        U --> FE
-    end
-
-    %% Servidor
-    subgraph "🖥️ Servidor (Backend)"
-        style BE fill:#D5F5E3,stroke:#27AE60,stroke-width:2px
-        style Testes fill:#ABEBC6,stroke:#1E8449,stroke-width:2px
-        BE[⚙️ Backend API <br> Laravel, Pest]
-        Testes(🧪 Suíte de Testes <br> Pest)
-        BE <--> Testes
-    end
-
-    %% Banco de Dados em Docker
-    subgraph "📦 Infraestrutura"
-        style DB fill:#FADBD8,stroke:#C0392B,stroke-width:2px
-        style Docker fill:#F5B7B1,stroke:#922B21,stroke-width:2px
-        subgraph Docker["🐳 Docker"]
-            DB[(🗄️ PostgreSQL)]
-        end
-    end
-
-    %% Fluxos
-    FE -- "Requisição HTTP (Tema)" --> BE
-    BE -- "Resposta JSON (Gêmeos)" --> FE
-    BE <--> DB
-
-```
-
----
-#### RESUMO TÉCNICO PARA EMBEDDING
-
-Desenvolvimento de uma aplicação web full-stack, "Twin Quest", a arquitetura da solução é baseada em um backend com Laravel que serve uma API RESTful. O frontend é uma interface de usuário reativa construída com Vue 3, Composition API e TypeScript para garantir tipagem segura. O gerenciamento de estado global no lado do cliente é realizado de forma centralizada pelo Pinia. A qualidade e estabilidade da API foram asseguradas através de uma suíte de testes automatizados com Pest, adotando uma abordagem TDD (Test-Driven Development). A infraestrutura inclui PostgreSQL, com planos de evolução para implementar um sistema de cache com Redis e autenticação de usuários.
-
-#### CLASSIFICAÇÃO DE TECNOLOGIAS E CONCEITOS
-
-| Categoria                    | Tecnologias e Conceitos                                                                                               |
-| :--------------------------- | :-------------------------------------------------------------------------------------------------------------------- |
-| **Software Development**     | Desenvolvedor Full-Stack, Laravel, Vue 3, TypeScript, Pinia, Pest, Test-Driven Development (TDD), Qualidade de Código |
-| **Architecture**             | Arquitetura Full-Stack, API RESTful, Gestão de Estado (Pinia), Sistema de Cache (Redis), Autenticação de Usuários     |
-| **Cloud Computing**          | N/A                                                                                                                   |
-| **API RESTFul development**  | API RESTful, Laravel, Endpoints, Requisição HTTP, Resposta JSON                                                       |
-| **Frontend Development**     | Vue 3 (Composition API), TypeScript, Pinia, Interface de Usuário Reativa                                              |
-| **Mobile Development**       | N/A                                                                                                                   |
-| **Database**                 | PostgreSQL, Redis                                                                                                     |
-| **Data Management**          | N/A                                                                                                                   |
-| **Content Management - CMS** | N/A                                                                                                                   |
-| **System Administration**    | N/A                                                                                                                   |
-| **DevOps**                   | Testes Automatizados, Pest, Docker                                                                                    |
-| **Leadership**               | Liderança Técnica (Idealizador e único desenvolvedor)                                                                 |
-| **Coaching**                 | N/A                                                                                                                   |
-| **Agile Project Management** | N/A                                                                                                                   |
-
-***
-
-### 🚀 SideProject:  Web3 React dApp Prototype
-
-#### 🎯 Visão Geral e Arquitetura da Solução
-
-A transição da Web2 para a Web3 pode ser um terreno intimidador, cheio de jargões e integrações complexas. O objetivo central deste projeto foi criar um *boilerplate* fundamental e limpo para aplicações descentralizadas (dApps). Ele resolve a dor inicial de configuração, entregando uma base robusta que demonstra as funcionalidades essenciais da Web3: conexão de carteira, leitura de dados *on-chain* e interação com *smart contracts* na rede de testes Sepolia.
-
-Do ponto de vista arquitetural, a solução foi desenhada para ser rápida e reativa. O usuário interage com uma interface moderna servida pelo Vite e construída em React. Quando o usuário clica em "Connect", a aplicação utiliza os *hooks* do Wagmi para se comunicar com a extensão de carteira do navegador (como o MetaMask). A partir daí, o Viem atua como o motor de comunicação com a blockchain Ethereum (Sepolia), permitindo ler a saudação pública de um contrato inteligente "Greeter" e enviar transações para alterá-la, tudo com um gerenciamento de estado elegante fornecido pelo React Query.
-
-#### 👨‍💻 Meu Papel no Projeto
-
-Neste projeto, atuei de ponta a ponta na construção do front-end descentralizado, assumindo os seguintes chapéus:
-
-* **Desenvolvedor Front-End Web3:** Responsável por estruturar a interface em React com TypeScript, garantindo uma tipagem estática segura e uma experiência de usuário fluida.
-* **Integrador de Blockchain:** Configurei os clientes do Wagmi e Viem para estabelecer a ponte de comunicação entre a interface web e a rede Sepolia, gerenciando as conexões via *injected providers* (MetaMask).
-* **Engenheiro de UX/UI para Web3:** Implementei o tratamento de estados de carregamento e confirmações de transações, transformando a latência natural da blockchain em uma experiência transparente para o usuário final.
-
-#### ✨ Pontos Fortes e Desafios Superados
-
-O grande ponto forte desta solução é a sua base tecnológica modernizada (Vite + Wagmi + Viem), que substitui bibliotecas legadas mais pesadas por uma abordagem reativa e otimizada para a experiência do desenvolvedor (DX).
-
-O principal desafio técnico enfrentado foi **o gerenciamento do estado assíncrono das transações na blockchain**. Na Web3, uma transação não é instantânea; ela precisa ser assinada, enviada para a rede e minerada, o que pode deixar a interface congelada ou confusa se não for bem tratado.
-**Como superamos:** Orquestramos um fluxo reativo utilizando os *hooks* `useContractWrite` e `useWaitForTransactionReceipt`. Em vez de fazer o usuário adivinhar o status da operação, a interface monitora ativamente o recibo da transação na blockchain. Assim que a rede confirma o bloco, o sistema dispara automaticamente uma nova leitura (`useContractRead`), atualizando a mensagem na tela em tempo real, sem a necessidade de *reloads* manuais, transformando um processo complexo em uma vitória de usabilidade.
-
-#### 🌱 Pontos para Evolução Futura
-
-* **Suporte a Múltiplas Carteiras:** Integrar o WalletConnect para permitir o acesso via carteiras mobile, expandindo a acessibilidade do dApp.
-* **Suporte Multichain:** Abstrair a configuração de rede para permitir que o usuário alterne fluidamente entre Sepolia, Mainnet, Arbitrum ou Optimism diretamente pela interface.
-
----
-
-#### 🛠️ Pilha de Tecnologias (Tech Stack)
-
-| Componente | Tecnologia Utilizada | Papel na Arquitetura |
-| --- | --- | --- |
-| **Front-End / UI** | **React.js & Vite** | Responsável pela renderização da interface do usuário de forma reativa e pelo empacotamento ultrarrápido do código em ambiente de desenvolvimento. |
-| **Linguagem** | **TypeScript** | Adiciona tipagem estática ao projeto, prevenindo erros em tempo de execução e melhorando a integração com os ABIs dos contratos inteligentes. |
-| **Gerenciamento Web3** | **wagmi & React Query** | Fornece *hooks* React otimizados para interagir com contas, provedores e contratos, gerenciando o cache e o estado assíncrono das requisições com a blockchain. |
-| **Comunicação Blockchain** | **Viem** | Atua como a biblioteca de baixo nível para interagir com a Ethereum, substituindo o ethers.js com foco em performance e tamanho de *bundle* reduzido. |
-| **Carteira / Provedor** | **MetaMask (Injected)** | Gerencia as chaves privadas do usuário, injeta o provedor Web3 no navegador e assina as transações enviadas para a rede Sepolia. |
-
----
-
-#### 🗺️ Diagrama da Arquitetura
-
-```mermaid
-graph TD
-    %% O diagrama gerado pela IA começa aqui %%
-    
-    %% Definindo os nós
-    User(("👤 Usuário"))
-    
-    subgraph "💻 Front-end (React + Vite)"
-        UI_Connect["🔘 Botão 'Connect Wallet'"]
-        UI_Display["📜 Exibição da Saudação"]
-        UI_Form["📝 Formulário 'Change Greeting'"]
-        
-        subgraph "⚛️ Wagmi Hooks & Estado"
-            Hook_Connect["useConnect()"]
-            Hook_Read["useContractRead()"]
-            Hook_Write["useContractWrite()"]
-            Hook_Wait["useWaitForTransactionReceipt()"]
-        end
-    end
-    
-    subgraph "🦊 Infraestrutura Web3 & Blockchain"
-        Wallet["MetaMask (Injected Provider)"]
-        Contract[/"📜 'Greeter' Smart Contract (Rede Sepolia)"/]
-    end
-
-    %% Fluxo de Conexão
-    User -->|Clica| UI_Connect
-    UI_Connect -->|Dispara| Hook_Connect
-    Hook_Connect -->|Solicita Permissão| Wallet
-    Wallet -->|Conexão Aprovada| Hook_Read
-    
-    %% Fluxo de Leitura (Read)
-    Hook_Read -->|Chama função greet| Contract
-    Contract -.->|Retorna texto atual| UI_Display
-    UI_Display -.->|Exibe para| User
-    
-    %% Fluxo de Escrita (Write)
-    User -->|Digita e Envia| UI_Form
-    UI_Form -->|Passa novo texto| Hook_Write
-    Hook_Write -->|Solicita Assinatura de Tx| Wallet
-    Wallet -->|Tx Aprovada e Enviada| Hook_Wait
-    Hook_Wait -->|Monitora status na rede| Contract
-    Contract -.->|Confirmação de Mineração| Hook_Read
-
-```
