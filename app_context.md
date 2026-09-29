@@ -67,8 +67,8 @@ ask-richter/
 │   ├── eslint-config/    # Configurações canônicas de linting (@repo/eslint-config)
 │   └── typescript-config/# Configurações base do TypeScript (@repo/typescript-config)
 └── docs/
-    ├── adr/              # Registros formais de Decisões Arquiteturais (ADR-0001 a ADR-0009)
-    ├── snapshots/        # Snapshots de congelamento de baseline (2026-08-26, 2026-08-27, 2026-09-28)
+    ├── adr/              # Registros formais de Decisões Arquiteturais (ADR-0001 a ADR-0010)
+    ├── snapshots/        # Snapshots de congelamento de baseline (2026-08-26, 2026-08-27, 2026-09-28, 2026-09-29)
     └── Plans/            # Planos e Roadmaps de Evolução Arquitetural
 ```
 
