@@ -147,8 +147,8 @@ Em **28 de Setembro de 2026**, no commit `d13b4be`, foi realizado o congelamento
 * Motor RAG Serverless V2 plenamente operacional em produção;
 * Isolamento total do Supabase e rotas da Vercel.
 
-### 🚀 Marcos Concluídos: Plataforma Sanity (M1 Foundation & M2 Structured Retrieval)
-Em **29 de Setembro de 2026**, a arquitetura de conhecimento estruturado e recuperação híbrida foi implementada e validada de ponta a ponta:
+### 🚀 Marcos Concluídos: Plataforma Sanity (M1 Foundation, M2 Structured & M3 Semantic Retrieval)
+Em **29 de Setembro de 2026**, a arquitetura de conhecimento estruturado e recuperação semântica/híbrida foi implementada e validada de ponta a ponta:
 
 1. **M1 Foundation (100% Concluído):**
    * **M1.1 (Studio Setup):** `apps/studio` configurado com Sanity v3.78.0, React 19 e ESLint 9.
@@ -166,13 +166,23 @@ Em **29 de Setembro de 2026**, a arquitetura de conhecimento estruturado e recup
      * `orchestrator.ts`: Máquina de fallback determinístico com status explícito (`success`, `fallback_success`, `no_evidence`, `retrieval_error`) e `abstained: true`.
    * **Phase B (Integração Cirúrgica no `/api/chat`):**
      * Roteamento de consultas estruturadas para o Sanity com fallback automático para `smartSearch` / `TSVectorStore`.
-     * Preservação integral do RAG legado para perguntas livres (`free-form`).
      * Abstenção explícita no endpoint (`[STATUS: NENHUMA EVIDÊNCIA FACTUAL ENCONTRADA NA BASE DE DADOS]`) eliminando alucinações.
-     * Suíte de testes expandida de 84 para **104 testes verdes (100% pass)**.
-     * Validação real de ponta a ponta via smoke tests HTTP (HTTP-01 structured, HTTP-02 free-form, HTTP-03 no-evidence/double-empty com abstenção comprovada).
-     * Baseline de latência do caminho Structured registrado: ~8.3s.
+     * Suíte de testes expandida para 104 testes verdes.
+
+3. **M3 Semantic Retrieval & Hybrid Search (100% Concluído — Gate GO):**
+   * **M3.1 (Habilitação de Dataset Embeddings no Content Lake):**
+     * Dataset Embeddings nativos configurados e ativos no dataset `production` com projeção multi-tipo sem referências (`->`), status `ready` e embeddings gerenciados 100% pelo Sanity.
+   * **Phase A (Módulo Isolado `SemanticRetriever`):**
+     * `semantic-retriever.ts`: Motor de busca semântica, lexical e híbrida com cálculo de score via `text::semanticSimilarity($query)` + `score()`, deduplicação de entidades, formatação com metadados estruturados e poda estrita de tokens (`CONTEXT_BUDGET_TOKENS = 2800`).
+     * Suíte T11–T20 em `semantic-retriever.test.ts` (10/10 PASS).
+     * Avaliação empírica comparativa em 5 categorias demonstrando superioridade de recall contextual em modo `semantic`.
+   * **Phase B (Integração no Orquestrador e `/api/chat`):**
+     * `RetrievalOrchestrator.orchestrateFreeform()`: Roteamento de perguntas abertas/livres para o `SemanticRetriever` do Sanity com fallback transparente para `TSVectorStore` em caso de erro/timeout.
+     * Suíte B11–B20 em `semantic-integration.test.ts` (10/10 PASS).
+     * Total de testes do monorepo elevado para **124 testes verdes (105 frontend + 19 backend)**.
+     * Verificação real de ponta a ponta via smoke tests HTTP validando M2 Structured, M3 Semantic, Multilíngue (EN) e Abstenção segura contra alucinações.
 
 ### Débitos Técnicos Identificados & Áreas em Transição
-1. **Coexistência de Fontes de Verdade em Transição:** O `TSVectorStore` (`docstore.json` / `vectors.json`) atua como fallback seguro e retriever para consultas livres, coexistindo harmonicamente com o Sanity Content Lake.
+1. **Coexistência de Fontes de Verdade em Transição:** O `TSVectorStore` (`docstore.json` / `vectors.json`) atua como fallback resiliente e secundário caso o Sanity Content Lake fique indisponível.
 2. **Scripts Legados no Backend:** O diretório `apps/backend/src/scripts/` ainda possui ferramentas legadas do LangChain/FAISS mantidas como documentação histórica e toolkit offline.
-3. **Otimização de Latência Futura:** Com a funcionalidade de Structured Retrieval comprovada (M2), otimizações de cache de consultas GROQ e latência do pipeline LLM poderão ser consideradas em fases posteriores de refinamento.
+

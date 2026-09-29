@@ -7,37 +7,48 @@ import {
   CONTEXT_BUDGET_TOKENS,
   estimateTokens,
 } from './structured-retriever'
+import {
+  SemanticRetriever,
+  SemanticRetrievalOutput,
+  SemanticSearchOptions,
+} from './semantic-retriever'
 
 export interface LegacyFallbackAdapter {
-  search: (intent: string, params: Record<string, any>) => Promise<Array<{ pageContent: string; metadata?: Record<string, any> }>>
+  search: (intentOrQuery: string, params: Record<string, any>) => Promise<Array<{ pageContent: string; metadata?: Record<string, any> }>>
 }
 
 export interface OrchestrationOptions {
   client?: SanityServerClient
-  retriever?: SanityStructuredRetriever
+  structuredRetriever?: SanityStructuredRetriever
+  semanticRetriever?: SemanticRetriever
   fallbackAdapter?: LegacyFallbackAdapter
 }
 
 export class RetrievalOrchestrator {
-  private readonly retriever: SanityStructuredRetriever
+  private readonly structuredRetriever: SanityStructuredRetriever
+  private readonly semanticRetriever: SemanticRetriever
   private readonly fallbackAdapter?: LegacyFallbackAdapter
 
   constructor(options: OrchestrationOptions = {}) {
-    this.retriever = options.retriever || new SanityStructuredRetriever(options.client || new SanityServerClient())
+    const client = options.client || new SanityServerClient()
+    this.structuredRetriever = options.structuredRetriever || new SanityStructuredRetriever(client)
+    this.semanticRetriever = options.semanticRetriever || new SemanticRetriever({ client })
     this.fallbackAdapter = options.fallbackAdapter
   }
 
+  /**
+   * Orquestra consultas de intenção estruturada (M2 GROQ declarativo com fallback).
+   */
   public async orchestrate(
     intent: StructuredIntent,
     params: Record<string, any> = {}
   ): Promise<StructuredRetrievalOutput> {
     let sanityOutput: StructuredRetrievalOutput | null = null
-    let sanityError: Error | null = null
 
     try {
-      sanityOutput = await this.retriever.retrieve(intent, params)
-    } catch (err: any) {
-      sanityError = err
+      sanityOutput = await this.structuredRetriever.retrieve(intent, params)
+    } catch {
+      sanityOutput = null
     }
 
     // 1. Se Sanity foi bem-sucedido e encontrou entidades (> 0)
@@ -53,14 +64,12 @@ export class RetrievalOrchestrator {
       try {
         const fallbackDocs = await this.fallbackAdapter.search(intent, params)
         if (fallbackDocs && fallbackDocs.length > 0) {
-          // Formata contexto do fallback
           let formattedFallback = `[EVIDÊNCIA RECUPERADA - LEGACY RAG]\nINTENÇÃO: ${intent}\nTOTAL DE CHUNKS: ${fallbackDocs.length}\n\n`
           for (const doc of fallbackDocs) {
             formattedFallback += `${doc.pageContent.trim()}\n\n`
           }
           formattedFallback = formattedFallback.trim()
 
-          // Respeita estritamente o orçamento de 2800 tokens
           let estimated = estimateTokens(formattedFallback)
           if (estimated > CONTEXT_BUDGET_TOKENS) {
             formattedFallback = formattedFallback.slice(0, CONTEXT_BUDGET_TOKENS * 4).trim()
@@ -79,7 +88,6 @@ export class RetrievalOrchestrator {
           }
         }
       } catch (fallbackErr: any) {
-        // Erro no fallback
         return {
           intent,
           matchedCount: 0,
@@ -94,9 +102,100 @@ export class RetrievalOrchestrator {
       }
     }
 
-    // 3. Se ambos retornaram 0 resultados sem erro de rede -> no_evidence explícito
+    // 3. Se ambos retornaram 0 resultados -> no_evidence explícito
     return {
       intent,
+      matchedCount: 0,
+      rawEntities: [],
+      formattedContext: '',
+      estimatedTokens: 0,
+      source: 'fallback_ts_vector_store',
+      retrievalStatus: 'no_evidence',
+      abstained: true,
+    }
+  }
+
+  /**
+   * Orquestra consultas livres / não estruturadas (M3 Sanity Semantic/Hybrid com fallback para Legacy RAG).
+   */
+  public async orchestrateFreeform(
+    query: string,
+    options?: SemanticSearchOptions
+  ): Promise<StructuredRetrievalOutput> {
+    const searchOptions: SemanticSearchOptions = {
+      mode: options?.mode || 'semantic',
+      limit: options?.limit || 5,
+      ...options,
+    }
+
+    let semanticOutput: SemanticRetrievalOutput | null = null
+
+    try {
+      semanticOutput = await this.semanticRetriever.search(query, searchOptions)
+    } catch {
+      semanticOutput = null
+    }
+
+    // 1. Se Sanity Semantic retornou entidades válidas (> 0) com sucesso
+    if (semanticOutput && semanticOutput.retrievalStatus === 'success' && semanticOutput.matchedCount > 0) {
+      return {
+        intent: 'FREE_FORM',
+        matchedCount: semanticOutput.matchedCount,
+        rawEntities: semanticOutput.rawEntities,
+        formattedContext: semanticOutput.formattedContext,
+        estimatedTokens: semanticOutput.estimatedTokens,
+        source: 'sanity_content_lake',
+        retrievalStatus: 'success',
+        abstained: false,
+      }
+    }
+
+    // 2. Se Sanity Semantic falhou, estourou timeout ou retornou 0 -> Fallback para Legacy RAG (TSVectorStore)
+    if (this.fallbackAdapter) {
+      try {
+        const fallbackDocs = await this.fallbackAdapter.search('FREE_FORM', { query })
+        if (fallbackDocs && fallbackDocs.length > 0) {
+          let formattedFallback = `[EVIDÊNCIA RECUPERADA - LEGACY RAG]\nCONSULTA: ${query}\nTOTAL DE CHUNKS: ${fallbackDocs.length}\n\n`
+          for (const doc of fallbackDocs) {
+            formattedFallback += `${doc.pageContent.trim()}\n\n`
+          }
+          formattedFallback = formattedFallback.trim()
+
+          let estimated = estimateTokens(formattedFallback)
+          if (estimated > CONTEXT_BUDGET_TOKENS) {
+            formattedFallback = formattedFallback.slice(0, CONTEXT_BUDGET_TOKENS * 4).trim()
+            estimated = estimateTokens(formattedFallback)
+          }
+
+          return {
+            intent: 'FREE_FORM',
+            matchedCount: fallbackDocs.length,
+            rawEntities: fallbackDocs,
+            formattedContext: formattedFallback,
+            estimatedTokens: estimated,
+            source: 'fallback_ts_vector_store',
+            retrievalStatus: 'fallback_success',
+            abstained: false,
+          }
+        }
+      } catch (fallbackErr: any) {
+        return {
+          intent: 'FREE_FORM',
+          matchedCount: 0,
+          rawEntities: [],
+          formattedContext: '',
+          estimatedTokens: 0,
+          source: 'fallback_ts_vector_store',
+          retrievalStatus: 'retrieval_error',
+          abstained: true,
+          error: `Fallback error: ${fallbackErr?.message || String(fallbackErr)}`,
+        }
+      }
+    }
+
+    // 3. Se ambos retornaram 0 resultados -> no_evidence explícito
+    return {
+      intent: 'FREE_FORM',
       matchedCount: 0,
       rawEntities: [],
       formattedContext: '',

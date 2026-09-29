@@ -139,25 +139,35 @@ export async function POST(req: NextRequest) {
         structuredContext = retrievalOutput.formattedContext;
       }
     } else {
-      // Caminho Livre / Pergunta Geral: RAG Híbrido Legado
-      console.log('[LEGACY RAG] Pergunta não-estruturada, executando RAG híbrido...');
-      const searchResults = await smartSearch(queryPlan, queryEmbedding, vectorStore, retriever);
-      let topResults: [Document, number][];
+      // Caminho M3: Free-form com Sanity Semantic/Hybrid Retrieval + Fallback para Legacy RAG
+      console.log('[M3 SEMANTIC RETRIEVAL] Pergunta livre, executando busca semântica no Sanity...');
+      const fallbackAdapter: LegacyFallbackAdapter = {
+        search: async () => {
+          const searchResults = await smartSearch(queryPlan, queryEmbedding, vectorStore, retriever);
+          let topResults: [Document, number][];
 
-      if (queryPlan.type === 'LIST_PROJECTS') {
-        topResults = searchResults.slice(0, 1);
-      } else if (queryPlan.type === 'PROJECT_TECHNOLOGY_SEARCH') {
-        const sorted = searchResults.sort((a, b) => b[1] - a[1]);
-        topResults = applyDiversityFilter(sorted, 6, 1);
+          if (queryPlan.type === 'LIST_PROJECTS') {
+            topResults = searchResults.slice(0, 1);
+          } else if (queryPlan.type === 'PROJECT_TECHNOLOGY_SEARCH') {
+            const sorted = searchResults.sort((a, b) => b[1] - a[1]);
+            topResults = applyDiversityFilter(sorted, 6, 1);
+          } else {
+            topResults = searchResults.sort((a, b) => b[1] - a[1]).slice(0, 5);
+          }
+
+          topResults = pruneChunksToTokenBudget(topResults, 2800);
+          return topResults.map(([doc]) => ({ pageContent: doc.pageContent, metadata: doc.metadata }));
+        },
+      };
+
+      const orchestrator = new RetrievalOrchestrator({ fallbackAdapter });
+      const semanticOutput = await orchestrator.orchestrateFreeform(question);
+
+      if (semanticOutput.abstained || !semanticOutput.formattedContext) {
+        structuredContext = '[STATUS: NENHUMA EVIDÊNCIA FACTUAL ENCONTRADA NA BASE DE DADOS]';
       } else {
-        topResults = searchResults.sort((a, b) => b[1] - a[1]).slice(0, 5);
+        structuredContext = semanticOutput.formattedContext;
       }
-
-      topResults = pruneChunksToTokenBudget(topResults, 2800);
-      const rawLegacyContext = assembleStructuredContext(topResults);
-      structuredContext = rawLegacyContext
-        ? `[EVIDÊNCIA RECUPERADA - LEGACY RAG]\n\n${rawLegacyContext}`
-        : '[STATUS: NENHUMA EVIDÊNCIA FACTUAL ENCONTRADA NA BASE DE DADOS]';
     }
 
     const systemPrompt = `Você é um assistente especialista na carreira de Luis Fernando Richter e atua de forma direta, profissional e precisa.
