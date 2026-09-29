@@ -179,10 +179,29 @@ Em **29 de Setembro de 2026**, a arquitetura de conhecimento estruturado e recup
    * **Phase B (Integração no Orquestrador e `/api/chat`):**
      * `RetrievalOrchestrator.orchestrateFreeform()`: Roteamento de perguntas abertas/livres para o `SemanticRetriever` do Sanity com fallback transparente para `TSVectorStore` em caso de erro/timeout.
      * Suíte B11–B20 em `semantic-integration.test.ts` (10/10 PASS).
-     * Total de testes do monorepo elevado para **124 testes verdes (105 frontend + 19 backend)**.
-     * Verificação real de ponta a ponta via smoke tests HTTP validando M2 Structured, M3 Semantic, Multilíngue (EN) e Abstenção segura contra alucinações.
+     * Total de testes do monorepo elevado para 124 testes verdes.
+
+4. **M4 Agentic Capabilities & Knowledge Graph (100% Concluído — Gate GO):**
+   * **Phase A (Motor Isolado de Grafo de Conhecimento):**
+     * `knowledge-graph-retriever.ts`: Travessia determinística multi-hop (Hop 0, Hop 1 referências diretas, Hop 2 conexões secundárias e métricas STAR) com guardas estritas (`MAX_TOOL_HOPS = 2`, `MAX_TOOL_CALLS = 4`, `GLOBAL_TIMEOUT_MS = 4000`, detecção de ciclos e zero-mutation).
+     * Suíte A1–A18 em `knowledge-graph-retriever.test.ts` (100% PASS).
+   * **Phase B (Planejador Agêntico e Schemas de Ferramentas):**
+     * `agent-planner.ts`: Schemas JSON formais para as 6 ferramentas de leitura (`ALLOWED_TOOLS`), planejamento determinístico, sanitização contra Prompt Injection e execução limitada.
+     * Suíte B1–B18 em `agent-planner.test.ts` (100% PASS).
+   * **Phase C (Integração da Tri-Retrieval Engine no `/api/chat`):**
+     * `agent-eligibility.ts`: Política semântica estrutural para seleção de consultas relacionais multi-hop sem hardcodes de entidades.
+     * `orchestrator.ts`: Adicionado `orchestrateAgentic()` com proveniência completa e fallback determinístico para `TSVectorStore`.
+     * `route.ts`: Roteamento seletivo:
+       1. **M2 Structured Intent:** GROQ declarativo
+       2. **M4 Agentic Multi-Hop:** AgentPlanner + KnowledgeGraph
+       3. **M3 Free-form Semantic:** Dataset Embeddings
+       4. **Fallback:** `TSVectorStore` com abstenção segura
+     * Suíte C1–C16 em `agent-integration.test.ts` (100% PASS).
+     * Total de testes do monorepo elevado para **168 testes verdes (149 frontend + 19 backend)**.
+     * Smoke tests HTTP reais (C18 & C19) executados contra todas as engines com 100% de aprovação e auditoria de latência.
 
 ### Débitos Técnicos Identificados & Áreas em Transição
 1. **Coexistência de Fontes de Verdade em Transição:** O `TSVectorStore` (`docstore.json` / `vectors.json`) atua como fallback resiliente e secundário caso o Sanity Content Lake fique indisponível.
 2. **Scripts Legados no Backend:** O diretório `apps/backend/src/scripts/` ainda possui ferramentas legadas do LangChain/FAISS mantidas como documentação histórica e toolkit offline.
+
 
