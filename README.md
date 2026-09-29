@@ -75,6 +75,7 @@ Todo ciclo de evolução e correção de bugs no repositório segue estritamente
 
 ## 🚀 Principais Features & Inovações Recentes
 
+- **Sanity Content Lake & Structured Retrieval (M1 & M2):** Evolução da base de conhecimento para um Content Lake relacional no Sanity (`apps/studio`), contendo 101 documentos canônicos tipados (skills, experiências, projetos, formação, métricas de impacto e ADRs). Roteamento inteligente de intenções estruturadas via GROQ estático com fallback transparente para o RAG Serverless híbrido e proteção contra alucinações via abstenção explícita (`no_evidence`).
 - **Alinhamento Multilíngue de Respostas (M15 / Multilingual RAG):** Suporte inteligente a múltiplos idiomas (Inglês, Português, Espanhol). A IA identifica a língua da pergunta do usuário e gera a resposta no mesmo idioma, priorizando a mensagem do usuário sobre a língua do contexto factual recuperado do banco de dados.
 - **RAG 100% Serverless V2 (Next.js App Router):** Motor de RAG executando em funções Serverless no Vercel (ADR-0007/ADR-0008), eliminando a necessidade de contêineres ou servidores dedicados 24/7.
 - **Invariantes de Roteamento de Produção (Zero Render Fallback):** Sanitização automática de URLs em tempo de execução que elimina qualquer desvio para o Render legado em produção, forçando o uso de rotas relativas nativas Vercel (`/api/chat`, `/api/supabase/status`, `/api/supabase/restore`, `/api/ready`).
@@ -82,7 +83,7 @@ Todo ciclo de evolução e correção de bugs no repositório segue estritamente
 - **Regra de Ouro da Não-Inferência de Pausa:** Garantia por software de que falhas de rede (`fetch failed`), estouros de tempo (`AbortError`) ou falhas de chave API nunca são falsamente marcados como "Supabase Pausado".
 - **Descongelamento Server-Side Seguro (`POST /api/supabase/restore`):** Comunicação com a Supabase Management API realizada exclusivamente via rotas de servidor Next.js, mantendo tokens de administração (`SUPABASE_MANAGEMENT_TOKEN`) 100% isolados do navegador.
 - **UX Resiliente com Polling Sequencial & SLA Calibrado:** Polling no modal frontend (`supabase-unfreeze-modal.tsx`) com *progressive backoff* (2s, 3s, 5s, 8s, 13s, teto 15s), `AbortController` por tentativa, trava de idempotência contra chamadas duplicadas e SLA total de 300s (5 minutos), calibrado com a medição real em produção do ciclo de inicialização do Supabase.
-- **Arquitetura Provider-Agnostic de IA:** Suporte dinâmico a múltiplos provedores via `GoogleGenAI` (`gemini-3.6-flash` e `gemini-embedding-2`), com fallbacks e suporte local com Ollama (`deepseek-r1:8b`).
+- **Arquitetura Provider-Agnostic de IA:** Suporte dinâmico a múltiplos provedores via `GoogleGenAI` (`gemini-3.6-flash`, `gemini-flash-lite-latest` e `gemini-embedding-2`), com fallbacks e suporte local com Ollama (`deepseek-r1:8b`).
 - **Monorepo com Turborepo 2.x:** Pipeline otimizada de compilação, linting, checagem de tipos e validação Jidoka com cache distribuído.
 
 ---
@@ -108,7 +109,7 @@ Gemini    Ollama   OpenRouter HuggingFace Gemini
 
 | Componente | Provedor | Modelo Padrão | Status | Custos / Impacto Financeiro |
 | :--- | :--- | :--- | :--- | :--- |
-| **LLM** | **Gemini** | `gemini-3.6-flash` | **Ativo (Padrão)** | Gratuito dentro das quotas do Google AI Free Tier (`@google/genai`). |
+| **LLM** | **Gemini** | `gemini-3.6-flash` / `gemini-flash-lite-latest` | **Ativo (Padrão)** | Gratuito dentro das quotas do Google AI Free Tier (`@google/genai`). |
 | **LLM** | **Ollama** | `deepseek-r1:8b` | **Opção (Dev / Fallback)** | Zero custo (executado localmente no hardware da máquina). |
 | **LLM** | **OpenRouter** | `google/gemma-4-26b-a4b-it:free` | **Opção (Fallback 1)** | Variável conforme modelo selecionado no OpenRouter. |
 | **LLM** | **Hugging Face** | `meta-llama/Llama-3.1-8B-Instruct:novita` | **Opção (Fallback 2)** | Sujeito a cobrança conforme plano/créditos na Hugging Face. |
@@ -116,7 +117,7 @@ Gemini    Ollama   OpenRouter HuggingFace Gemini
 
 ---
 
-## ☁️ Arquitetura de Nuvem Resiliente (Serverless V2)
+## ☁️ Arquitetura Híbrida de Recuperação & Conhecimento (M2)
 
 ```mermaid
 graph TD
@@ -128,11 +129,17 @@ graph TD
         Frontend["⚛️ UI & App Router<br>ask-richter.vercel.app"]
         StatusApi["🔍 /api/supabase/status<br>(Status Classifier)"]
         RestoreApi["⚡ /api/supabase/restore<br>(Server-side Recovery)"]
-        ChatApi["🤖 /api/chat<br>(Serverless RAG Engine + Multilingual M15)"]
+        ChatApi["🤖 /api/chat<br>(Retrieval Orchestrator)"]
+        Orchestrator["🎯 Orchestrator & Intent Classifier"]
+        TSVec["📦 TSVectorStore (Legacy RAG)"]
+    end
+
+    subgraph "Sanity Cloud (Knowledge Graph)"
+        SanityLake["🧠 Sanity Content Lake<br>(101 Docs / GROQ)"]
     end
 
     subgraph "Nuvem Supabase"
-        SupabaseREST["📦 Supabase REST / Storage"]
+        SupabaseREST["📦 Supabase Logs & Telemetria"]
         SupabaseMgmt["🔐 Supabase Management API"]
     end
 
@@ -140,24 +147,30 @@ graph TD
         GeminiAPI["🌐 Google GenAI API<br>(gemini-3.6-flash)"]
     end
 
-    User -- "1. Pergunta em linguagem natural (PT/EN/ES)" --> Frontend
+    User -- "1. Pergunta (PT/EN/ES)" --> Frontend
     Frontend -- "2. Verifica disponibilidade" --> StatusApi
-    StatusApi -- "3. Ping de saúde (REST + Mgmt)" --> SupabaseREST
+    StatusApi -- "3. Ping de saúde" --> SupabaseREST
 
     Frontend -. "4. Se pausado: solicita descongelamento" .-> RestoreApi
-    RestoreApi -- "5. Dispara Restore (Secret Server-side)" --> SupabaseMgmt
-    RestoreApi -. "6. Polling sequencial + Backoff" .-> StatusApi
+    RestoreApi -- "5. Dispara Restore" --> SupabaseMgmt
 
-    Frontend -- "7. Consulta com RAG Híbrido" --> ChatApi
-    ChatApi -- "8. Busca vetorial & léxica" --> SupabaseREST
-    ChatApi -- "9. Gera resposta alinhada ao idioma" --> GeminiAPI
-    ChatApi -- "10. Retorna resposta JSON no idioma do usuário" --> User
+    Frontend -- "6. Consulta" --> ChatApi
+    ChatApi --> Orchestrator
+
+    Orchestrator -- "7a. Intenção Estruturada" --> SanityLake
+    SanityLake -. "7b. Fallback (empty/error/timeout)" .-> TSVec
+    Orchestrator -- "7c. Pergunta Livre" --> TSVec
+
+    ChatApi -- "8. Contexto Formatado + Prompt" --> GeminiAPI
+    GeminiAPI -- "9. Resposta Factual / Abstenção Segura" --> User
 
     style User fill:#D6EAF8
     style Frontend fill:#E8DAEF
     style StatusApi fill:#D5F5E3
     style RestoreApi fill:#D5F5E3
     style ChatApi fill:#D5F5E3
+    style SanityLake fill:#FAD7A0
+    style TSVec fill:#D4EFDF
     style SupabaseREST fill:#FEF9E7
     style SupabaseMgmt fill:#FEF9E7
     style GeminiAPI fill:#FDEDEC
