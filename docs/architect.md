@@ -60,6 +60,7 @@ Todas as decisões arquiteturais e mudanças estruturais no projeto são registr
 | [ADR-0007](adr/0007-faiss-elimination-and-ts-vector-search.md) | Eliminação do FAISS/Render & Migração para Serverless RAG em TypeScript (Vercel) | 2026-08-26 | Aprovado |
 | [ADR-0008](adr/0008-lexical-retriever-modernization.md) | Modernização da Busca Léxica (SimpleTfIdf em TS Puro) | 2026-08-26 | Aprovado |
 | [ADR-0009](adr/0009-supabase-resilience-and-state-machine.md) | Máquina de Estados e Resiliência Operacional do Supabase (Fase 2) | 2026-08-26 | Aprovado |
+| [ADR-0010](adr/0010-tri-retrieval-engine-and-sanity-content-lake.md) | Tri-Retrieval Engine & Sanity Content Lake | 2026-09-29 | Aprovado |
 
 ---
 

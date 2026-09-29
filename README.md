@@ -29,7 +29,7 @@ O desenvolvimento do AskRichter segue regras estritas de governança estruturada
 5. **Engenharia de Contexto WSCI (World-Scope Context Isolation):**  
    Separação estrita por escopos (Frontend, Backend, Infraestrutura). Operações no dia a dia utilizam filtros de workspace (ex: `npm run dev --workspace=frontend`) e refatorações estruturais utilizam `git worktree`.
 6. **Governança por ADRs ([`docs/architect.md`](docs/architect.md) & [`docs/adr/`](docs/adr/)):**  
-   Todas as decisões arquiteturais geram registros imutáveis numerados no diretório [`docs/adr/`](docs/adr/) (ex: [`ADR-0001`](docs/adr/0001-meta-spec-e-governanca-de-arquitetura.md) a [`ADR-0009`](docs/adr/0009-supabase-resilience-and-state-machine.md)).
+   Todas as decisões arquiteturais geram registros imutáveis numerados no diretório [`docs/adr/`](docs/adr/) (ex: [`ADR-0001`](docs/adr/0001-meta-spec-e-governanca-de-arquitetura.md) a [`ADR-0010`](docs/adr/0010-tri-retrieval-engine-and-sanity-content-lake.md)).
 7. **Protocolo Jidoka / Andon Cord Unificado (`npm run jidoka`):**  
    Comando único no Turborepo que executa `check-types`, `lint` e `build` em paralelo com grafo de dependências. Se houver falha (exit code != 0), o ciclo é interrompido imediatamente para Reset Limpo e correção na origem.
 8. **Fluxo de Trabalho em Duas Fases ([`.ai/workflows/development-workflow.md`](.ai/workflows/development-workflow.md)):**  
@@ -186,7 +186,7 @@ graph TD
 | | Constituição de Agentes ([`AGENTS.md`](AGENTS.md)) | Regras operacionais Zero-Trust e protocolo Jidoka. |
 | | Regras Operacionais ([`docs/Rules.md`](docs/Rules.md)) | Fonte da verdade para processos e reindexação auditável. |
 | | Workflow de Desenvolvimento ([`.ai/workflows/`](.ai/workflows/development-workflow.md)) | Protocolo de 2 fases com Gate Humano, templates e Clean Reset. |
-| | Decisões de Arquitetura ([`docs/adr/`](docs/adr/)) | Registros formais ADR-0001 a ADR-0009. |
+| | Decisões de Arquitetura ([`docs/adr/`](docs/adr/)) | Registros formais ADR-0001 a ADR-0010. |
 | **🧠 Knowledge Lake & Agentic Engine** | Sanity Content Lake ([`apps/studio`](apps/studio)) | Ontologia canônica com 101 documentos, 121 referências e Studio v3.78. |
 | | Tri-Retrieval Engine ([`route.ts`](file:///Users/master/projects/chatbot/ask-richter/apps/frontend/src/app/api/chat/route.ts)) | Roteamento seletivo: M2 Structured GROQ, M4 Agentic Multi-Hop, M3 Semantic Search. |
 | | `KnowledgeGraphRetriever` | Travessia determinística em grafo multi-hop com limites de 2 hops, 4 calls e deadline de 4s. |
@@ -289,9 +289,10 @@ Este comando executa a pipeline unificada do Turborepo (`check-types`, `lint` e 
 | [ADR-0004](docs/adr/0004-isolamento-de-escopo-de-metadados-em-ingestao.md) | Isolamento de Escopo de Metadados em Ingestão | Aceito |
 | [ADR-0005](docs/adr/0005-provider-agnostic-ai-architecture.md) | Provider-Agnostic AI Architecture | Aceito |
 | [ADR-0006](docs/adr/0006-llm-provider-resilience-and-fallback.md) | LLM Provider Resilience and Fallback | Aceito |
-| [ADR-0007](docs/adr/adr-0007-faiss-elimination-and-ts-vector-search.md) | FAISS Elimination & TS Vector Search | Aceito |
-| [ADR-0008](docs/adr/adr-0008-lexical-retriever-modernization.md) | Modernização da Busca Léxica (TF-IDF) | Aceito |
-| [ADR-0009](docs/adr/adr-0009-supabase-resilience-and-state-machine.md) | Máquina de Estados e Resiliência do Supabase | Aceito |
+| [ADR-0007](docs/adr/0007-faiss-elimination-and-ts-vector-search.md) | FAISS Elimination & TS Vector Search | Aceito |
+| [ADR-0008](docs/adr/0008-lexical-retriever-modernization.md) | Modernização da Busca Léxica (TF-IDF) | Aceito |
+| [ADR-0009](docs/adr/0009-supabase-resilience-and-state-machine.md) | Máquina de Estados e Resiliência do Supabase | Aceito |
+| [ADR-0010](docs/adr/0010-tri-retrieval-engine-and-sanity-content-lake.md) | Tri-Retrieval Engine & Sanity Content Lake | Aceito |
 
 ---
 
