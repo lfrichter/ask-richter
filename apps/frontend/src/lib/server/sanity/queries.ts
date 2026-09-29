@@ -191,8 +191,10 @@ export function detectStructuredIntent(
 ): { intent: StructuredIntent; params: Record<string, any> } | null {
   const lower = (query || '').toLowerCase()
 
-  // 1. Projetos por Tecnologia (Prioridade quando há tecnologias explícitas na pergunta)
-  if (queryPlan?.type === 'PROJECT_TECHNOLOGY_SEARCH') {
+  const isAdrQuery = /adr[-\s]?0*([1-9])/i.test(lower) || lower.includes('decisão de arquitetura') || lower.includes('decisões de arquitetura') || lower.includes('decisão arquitetural') || lower.includes('decisões arquiteturais')
+
+  // 1. Projetos por Tecnologia (Prioridade quando há tecnologias explícitas na pergunta e não for ADR)
+  if (!isAdrQuery && queryPlan?.type === 'PROJECT_TECHNOLOGY_SEARCH') {
     const techs = queryPlan.payload?.technologies || (queryPlan.payload?.technology ? [queryPlan.payload.technology] : [])
     if (techs.length > 0) {
       return { intent: 'PROJECT_BY_TECH', params: { technologies: techs } }

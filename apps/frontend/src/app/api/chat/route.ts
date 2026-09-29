@@ -12,6 +12,7 @@ import {
 } from '@/lib/rag/hybrid-retriever';
 import { GeminiEmbeddingService, GeminiLLMProvider } from '@/lib/ai/llm-provider';
 import { detectStructuredIntent } from '@/lib/server/sanity/queries';
+import { isAgenticMultiHopQuery } from '@/lib/server/sanity/agent-eligibility';
 import { RetrievalOrchestrator, LegacyFallbackAdapter } from '@/lib/server/sanity/orchestrator';
 
 let vectorStoreInstance: TSVectorStore | null = null;
@@ -104,33 +105,37 @@ export async function POST(req: NextRequest) {
     // 1. Gera embedding da pergunta para compatibilidade e fallback
     const queryEmbedding = await embeddingService.embedQuery(question);
 
-    // 2. Classifica a pergunta
+    // 2. Classifica a pergunta e avalia elegibilidade
     const queryPlan = decomposeQuery(question);
     const structuredMatch = detectStructuredIntent(question, queryPlan);
+    const isMultiHop = isAgenticMultiHopQuery(question, !!structuredMatch);
 
     let structuredContext = '';
 
-    if (structuredMatch) {
-      // Caminho M2: Structured Retrieval com Fallback Determinístico
-      console.log(`[M2 STRUCTURED RETRIEVAL] Intent detectada: ${structuredMatch.intent}`);
-      const fallbackAdapter: LegacyFallbackAdapter = {
-        search: async () => {
-          const searchResults = await smartSearch(queryPlan, queryEmbedding, vectorStore, retriever);
-          let topResults: [Document, number][];
-          if (queryPlan.type === 'LIST_PROJECTS') {
-            topResults = searchResults.slice(0, 1);
-          } else if (queryPlan.type === 'PROJECT_TECHNOLOGY_SEARCH') {
-            const sorted = searchResults.sort((a, b) => b[1] - a[1]);
-            topResults = applyDiversityFilter(sorted, 6, 1);
-          } else {
-            topResults = searchResults.sort((a, b) => b[1] - a[1]).slice(0, 5);
-          }
-          topResults = pruneChunksToTokenBudget(topResults, 2800);
-          return topResults.map(([doc]) => ({ pageContent: doc.pageContent, metadata: doc.metadata }));
-        },
-      };
+    const fallbackAdapter: LegacyFallbackAdapter = {
+      search: async () => {
+        const searchResults = await smartSearch(queryPlan, queryEmbedding, vectorStore, retriever);
+        let topResults: [Document, number][];
 
-      const orchestrator = new RetrievalOrchestrator({ fallbackAdapter });
+        if (queryPlan.type === 'LIST_PROJECTS') {
+          topResults = searchResults.slice(0, 1);
+        } else if (queryPlan.type === 'PROJECT_TECHNOLOGY_SEARCH') {
+          const sorted = searchResults.sort((a, b) => b[1] - a[1]);
+          topResults = applyDiversityFilter(sorted, 6, 1);
+        } else {
+          topResults = searchResults.sort((a, b) => b[1] - a[1]).slice(0, 5);
+        }
+
+        topResults = pruneChunksToTokenBudget(topResults, 2800);
+        return topResults.map(([doc]) => ({ pageContent: doc.pageContent, metadata: doc.metadata }));
+      },
+    };
+
+    const orchestrator = new RetrievalOrchestrator({ fallbackAdapter });
+
+    if (structuredMatch) {
+      // Caminho M2: Structured Retrieval Declarativo GROQ
+      console.log(`[M2 STRUCTURED RETRIEVAL] Intent detectada: ${structuredMatch.intent}`);
       const retrievalOutput = await orchestrator.orchestrate(structuredMatch.intent, structuredMatch.params);
 
       if (retrievalOutput.abstained || !retrievalOutput.formattedContext) {
@@ -138,29 +143,19 @@ export async function POST(req: NextRequest) {
       } else {
         structuredContext = retrievalOutput.formattedContext;
       }
+    } else if (isMultiHop) {
+      // Caminho M4: Agentic Multi-Hop Knowledge Graph Retrieval
+      console.log('[M4 AGENTIC RETRIEVAL] Pergunta multi-hop detectada, executando AgentPlanner e KnowledgeGraph...');
+      const agentOutput = await orchestrator.orchestrateAgentic(question);
+
+      if (agentOutput.abstained || !agentOutput.formattedContext) {
+        structuredContext = '[STATUS: NENHUMA EVIDÊNCIA FACTUAL ENCONTRADA NA BASE DE DADOS]';
+      } else {
+        structuredContext = agentOutput.formattedContext;
+      }
     } else {
-      // Caminho M3: Free-form com Sanity Semantic/Hybrid Retrieval + Fallback para Legacy RAG
+      // Caminho M3: Free-form com Sanity Semantic/Hybrid Retrieval
       console.log('[M3 SEMANTIC RETRIEVAL] Pergunta livre, executando busca semântica no Sanity...');
-      const fallbackAdapter: LegacyFallbackAdapter = {
-        search: async () => {
-          const searchResults = await smartSearch(queryPlan, queryEmbedding, vectorStore, retriever);
-          let topResults: [Document, number][];
-
-          if (queryPlan.type === 'LIST_PROJECTS') {
-            topResults = searchResults.slice(0, 1);
-          } else if (queryPlan.type === 'PROJECT_TECHNOLOGY_SEARCH') {
-            const sorted = searchResults.sort((a, b) => b[1] - a[1]);
-            topResults = applyDiversityFilter(sorted, 6, 1);
-          } else {
-            topResults = searchResults.sort((a, b) => b[1] - a[1]).slice(0, 5);
-          }
-
-          topResults = pruneChunksToTokenBudget(topResults, 2800);
-          return topResults.map(([doc]) => ({ pageContent: doc.pageContent, metadata: doc.metadata }));
-        },
-      };
-
-      const orchestrator = new RetrievalOrchestrator({ fallbackAdapter });
       const semanticOutput = await orchestrator.orchestrateFreeform(question);
 
       if (semanticOutput.abstained || !semanticOutput.formattedContext) {
