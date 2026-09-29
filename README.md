@@ -187,13 +187,15 @@ graph TD
 | | Regras Operacionais ([`docs/Rules.md`](docs/Rules.md)) | Fonte da verdade para processos e reindexação auditável. |
 | | Workflow de Desenvolvimento ([`.ai/workflows/`](.ai/workflows/development-workflow.md)) | Protocolo de 2 fases com Gate Humano, templates e Clean Reset. |
 | | Decisões de Arquitetura ([`docs/adr/`](docs/adr/)) | Registros formais ADR-0001 a ADR-0009. |
-| | Turborepo 2.x ([`turbo.json`](turbo.json)) | Orquestração de tarefas (`build`, `lint`, `check-types`, `jidoka`). |
-| | npm Workspaces ([`package.json`](package.json)) | Gerenciamento de dependências e workspaces (`apps/*`, `packages/*`). |
-| **⚡ Serverless RAG Engine** | Next.js 15 App Router ([`apps/frontend`](apps/frontend)) | RAG Serverless V2 rodando nativamente na Vercel (ADR-0007/0008). |
-| | `TSVectorStore` | Busca vetorial por similaridade de cosseno em TypeScript puro (dim: 768). |
+| **🧠 Knowledge Lake & Agentic Engine** | Sanity Content Lake ([`apps/studio`](apps/studio)) | Ontologia canônica com 101 documentos, 121 referências e Studio v3.78. |
+| | Tri-Retrieval Engine ([`route.ts`](file:///Users/master/projects/chatbot/ask-richter/apps/frontend/src/app/api/chat/route.ts)) | Roteamento seletivo: M2 Structured GROQ, M4 Agentic Multi-Hop, M3 Semantic Search. |
+| | `KnowledgeGraphRetriever` | Travessia determinística em grafo multi-hop com limites de 2 hops, 4 calls e deadline de 4s. |
+| | `AgentPlanner` & `agent-eligibility` | Planejamento determinístico e elegibilidade semântica com proteção contra prompt injection. |
+| **⚡ Serverless RAG Engine & Fallback** | Next.js 15 App Router ([`apps/frontend`](apps/frontend)) | RAG Serverless V2 rodando nativamente na Vercel (ADR-0007/0008). |
+| | `TSVectorStore` | Busca vetorial por similaridade de cosseno em TypeScript puro como fallback de alta resiliência. |
 | | `SimpleTfIdf` | Busca léxica TF-IDF em TypeScript puro sem dependências C++. |
 | | `@google/genai` | SDK oficial do Google GenAI para `gemini-3.6-flash` e `gemini-embedding-2`. |
-| | Multilingual RAG (M15) | Geração de resposta no idioma exato da pergunta (PT/EN/ES). |
+| | Multilingual RAG | Geração de resposta no idioma exato da pergunta (PT/EN/ES). |
 | | Status Classifier ([`status-classifier.ts`](file:///Users/master/projects/chatbot/ask-richter/apps/frontend/src/lib/supabase/status-classifier.ts)) | Classificação estrita de disponibilidade com 7 estados operacionais (ADR-0009). |
 | | Server-side Restore ([`restore-service.ts`](file:///Users/master/projects/chatbot/ask-richter/apps/frontend/src/lib/supabase/restore-service.ts)) | Restauração server-side via Supabase Management API com idempotência. |
 | **⚛️ Frontend UX** | React 19 + Next.js 15 | Interface reativa moderna e componetizada. |
@@ -234,6 +236,9 @@ Preencha as chaves no arquivo `.env.local`:
 ```env
 GEMINI_API_KEY="sua-chave-gemini"
 GEMINI_MODEL="gemini-3.6-flash"
+NEXT_PUBLIC_SANITY_PROJECT_ID="q19ey6yx"
+NEXT_PUBLIC_SANITY_DATASET="production"
+SANITY_API_READ_TOKEN="seu-token-leitura"
 NEXT_PUBLIC_SUPABASE_URL="https://[SEU-PROJETO].supabase.co"
 NEXT_PUBLIC_SUPABASE_ANON_KEY="sua-chave-anon"
 SUPABASE_MANAGEMENT_TOKEN="sbp_sua-chave-de-gerenciamento"
@@ -246,17 +251,21 @@ A partir da raiz do monorepo, inicie o ambiente de desenvolvimento:
 npm run dev
 ```
 - Aplicação: `http://localhost:3000`
+- Sanity Studio: `http://localhost:3333`
 
 ---
 
 ## 🧪 Suíte de Testes Automatizados & Protocolo Jidoka
 
-### 1. Testes Unitários de Resiliência, Roteamento & Multilíngue
-Para executar a suíte completa com **65 testes automatizados** divididos em 8 módulos (paridade vetorial, classificação de status, resiliência, invariantes de roteamento em produção e alinhamento multilíngue M15):
+### 1. Testes Unitários de Resiliência, Roteamento, Sanity & Multilíngue
+Para executar a suíte completa com **168 testes automatizados** no monorepo (149 no frontend cobrindo Sanity GROQ declarativo M2, Dataset Embeddings M3, Knowledge Graph M4, paridade vetorial, resiliência e alinhamento multilíngue + 19 no backend):
 
 ```bash
-cd apps/frontend
-npm test
+# Executa os 149 testes do frontend
+npm --prefix apps/frontend test
+
+# Executa os 19 testes do backend
+npm --prefix apps/backend test
 ```
 
 ### 2. Validação Jidoka (Andon Cord)
