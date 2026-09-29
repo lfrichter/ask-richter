@@ -44,11 +44,22 @@ export class SanityServerClient {
   public async fetch<T = any>(
     query: string,
     params: Record<string, any> = {},
-    customTimeoutMs?: number
+    optionsOrTimeout?: number | { signal?: AbortSignal; timeoutMs?: number }
   ): Promise<T> {
-    const timeout = customTimeoutMs || this.timeoutMs
+    const timeout = typeof optionsOrTimeout === 'number'
+      ? optionsOrTimeout
+      : optionsOrTimeout?.timeoutMs || this.timeoutMs
+    const externalSignal = typeof optionsOrTimeout === 'object' ? optionsOrTimeout?.signal : undefined
+
     const controller = new AbortController()
     const timer = setTimeout(() => controller.abort(), timeout)
+    if (externalSignal) {
+      if (externalSignal.aborted) {
+        controller.abort()
+      } else {
+        externalSignal.addEventListener('abort', () => controller.abort())
+      }
+    }
 
     try {
       const response = await this.fetchFn(this.getEndpoint(), {
