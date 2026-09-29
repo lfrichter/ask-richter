@@ -11,6 +11,9 @@ import {
   QueryPlan
 } from '@/lib/rag/hybrid-retriever';
 import { GeminiEmbeddingService, GeminiLLMProvider } from '@/lib/ai/llm-provider';
+import { detectStructuredIntent } from '@/lib/server/sanity/queries';
+import { isAgenticMultiHopQuery } from '@/lib/server/sanity/agent-eligibility';
+import { RetrievalOrchestrator, LegacyFallbackAdapter } from '@/lib/server/sanity/orchestrator';
 
 let vectorStoreInstance: TSVectorStore | null = null;
 let retrieverInstance: ServerlessHybridRetriever | null = null;
@@ -99,26 +102,84 @@ export async function POST(req: NextRequest) {
     const { vectorStore, retriever } = await getRAGInstances();
     const embeddingService = new GeminiEmbeddingService();
 
-    // 1. Gera embedding da pergunta
+    // 1. Gera embedding da pergunta para compatibilidade e fallback
     const queryEmbedding = await embeddingService.embedQuery(question);
 
-    // 2. Classifica a pergunta e planeja a busca
+    // 2. Classifica a pergunta e avalia elegibilidade
     const queryPlan = decomposeQuery(question);
-    const searchResults = await smartSearch(queryPlan, queryEmbedding, vectorStore, retriever);
+    const structuredMatch = detectStructuredIntent(question, queryPlan);
+    const isMultiHop = isAgenticMultiHopQuery(question, !!structuredMatch);
 
-    let topResults: [Document, number][];
+    let structuredContext = '';
 
-    if (queryPlan.type === 'LIST_PROJECTS') {
-      topResults = searchResults.slice(0, 1);
-    } else if (queryPlan.type === 'PROJECT_TECHNOLOGY_SEARCH') {
-      const sorted = searchResults.sort((a, b) => b[1] - a[1]);
-      topResults = applyDiversityFilter(sorted, 6, 1);
+    const fallbackAdapter: LegacyFallbackAdapter = {
+      search: async () => {
+        const searchResults = await smartSearch(queryPlan, queryEmbedding, vectorStore, retriever);
+        let topResults: [Document, number][];
+
+        if (queryPlan.type === 'LIST_PROJECTS') {
+          topResults = searchResults.slice(0, 1);
+        } else if (queryPlan.type === 'PROJECT_TECHNOLOGY_SEARCH') {
+          const sorted = searchResults.sort((a, b) => b[1] - a[1]);
+          topResults = applyDiversityFilter(sorted, 6, 1);
+        } else {
+          topResults = searchResults.sort((a, b) => b[1] - a[1]).slice(0, 5);
+        }
+
+        topResults = pruneChunksToTokenBudget(topResults, 2800);
+        return topResults.map(([doc]) => ({ pageContent: doc.pageContent, metadata: doc.metadata }));
+      },
+    };
+
+    const orchestrator = new RetrievalOrchestrator({ fallbackAdapter });
+    const retrievalStart = performance.now();
+
+    if (structuredMatch) {
+      // Caminho M2: Structured Retrieval Declarativo GROQ
+      const retrievalOutput = await orchestrator.orchestrate(structuredMatch.intent, structuredMatch.params);
+      const latencyMs = Math.round(performance.now() - retrievalStart);
+      const isFallback = retrievalOutput.source === 'fallback_ts_vector_store';
+
+      console.log(
+        `[RETRIEVAL] engine=M2_STRUCTURED intent=${structuredMatch.intent} latency_ms=${latencyMs} matched_count=${retrievalOutput.matchedCount} estimated_tokens=${retrievalOutput.estimatedTokens} status=${retrievalOutput.retrievalStatus} fallback=${isFallback}`
+      );
+
+      if (retrievalOutput.abstained || !retrievalOutput.formattedContext) {
+        structuredContext = '[STATUS: NENHUMA EVIDÊNCIA FACTUAL ENCONTRADA NA BASE DE DADOS]';
+      } else {
+        structuredContext = retrievalOutput.formattedContext;
+      }
+    } else if (isMultiHop) {
+      // Caminho M4: Agentic Multi-Hop Knowledge Graph Retrieval
+      const agentOutput = await orchestrator.orchestrateAgentic(question);
+      const latencyMs = Math.round(performance.now() - retrievalStart);
+      const isFallback = agentOutput.source === 'fallback_ts_vector_store';
+
+      console.log(
+        `[RETRIEVAL] engine=M4_AGENTIC latency_ms=${latencyMs} matched_count=${agentOutput.matchedCount} estimated_tokens=${agentOutput.estimatedTokens} status=${agentOutput.retrievalStatus} fallback=${isFallback}`
+      );
+
+      if (agentOutput.abstained || !agentOutput.formattedContext) {
+        structuredContext = '[STATUS: NENHUMA EVIDÊNCIA FACTUAL ENCONTRADA NA BASE DE DADOS]';
+      } else {
+        structuredContext = agentOutput.formattedContext;
+      }
     } else {
-      topResults = searchResults.sort((a, b) => b[1] - a[1]).slice(0, 5);
-    }
+      // Caminho M3: Free-form com Sanity Semantic/Hybrid Retrieval
+      const semanticOutput = await orchestrator.orchestrateFreeform(question);
+      const latencyMs = Math.round(performance.now() - retrievalStart);
+      const isFallback = semanticOutput.source === 'fallback_ts_vector_store';
 
-    topResults = pruneChunksToTokenBudget(topResults, 2800);
-    const structuredContext = assembleStructuredContext(topResults);
+      console.log(
+        `[RETRIEVAL] engine=M3_SEMANTIC latency_ms=${latencyMs} matched_count=${semanticOutput.matchedCount} estimated_tokens=${semanticOutput.estimatedTokens} status=${semanticOutput.retrievalStatus} fallback=${isFallback}`
+      );
+
+      if (semanticOutput.abstained || !semanticOutput.formattedContext) {
+        structuredContext = '[STATUS: NENHUMA EVIDÊNCIA FACTUAL ENCONTRADA NA BASE DE DADOS]';
+      } else {
+        structuredContext = semanticOutput.formattedContext;
+      }
+    }
 
     const systemPrompt = `Você é um assistente especialista na carreira de Luis Fernando Richter e atua de forma direta, profissional e precisa.
 
@@ -126,7 +187,7 @@ REGRAS OBRIGATÓRIAS E INEGOCIÁVEIS:
 1. IDIOMA / LANGUAGE ALIGNMENT: Responda SEMPRE no mesmo idioma da pergunta do usuário (Answer ALWAYS in the exact same language as the user's message). Se a pergunta for em Inglês, responda em Inglês. Se for em Português, responda em Português. Se for em Espanhol, responda em Espanhol. O idioma da mensagem do usuário tem prioridade absoluta sobre o idioma do contexto recuperado. O contexto recuperado serve exclusivamente como fonte de evidência factual.
 2. FONTE DA VERDADE: Use APENAS o contexto fornecido pelo usuário. NUNCA use seu conhecimento prévio. NUNCA faça inferências ou suposições.
 3. DESAMBIGUAÇÃO CRÍTICA: Quando questionado sobre "projetos", refira-se ESTRITAMENTE a "Projetos de Software" (sistemas, aplicações desenvolvidas). Cursos, Treinamentos e Certificações NÃO SÃO projetos de software e NUNCA devem ser listados.
-4. AUSÊNCIA DE DADOS: Se a resposta não estiver no contexto exato, informe no mesmo idioma da pergunta do usuário que não possui os detalhes no momento (ex em PT: "Com base nas informações que recuperei no momento, não tenho os detalhes para responder a essa pergunta." | em EN: "Based on the retrieved information, I do not have the details to answer this question."). NÃO invente.
+4. AUSÊNCIA DE DADOS: Se a resposta não estiver no contexto exato ou o contexto indicar ausência de evidência, informe no mesmo idioma da pergunta do usuário que não possui os detalhes no momento (ex em PT: "Com base nas informações que recuperei no momento, não tenho os detalhes para responder a essa pergunta." | em EN: "Based on the retrieved information, I do not have the details to answer this question."). NÃO invente.
 5. FORMATAÇÃO: Ao listar projetos, SEMPRE use o formato: "* Projeto: [Nome] - [Descrição/Tecnologias]".
 6. LIMITE DE CARGA COGNITIVA (PAGINAÇÃO): Se o contexto retornar uma lista longa (mais de 7 projetos), NUNCA liste todos de uma vez. Escolha e liste apenas os 7 mais relevantes. Ao final da lista, adicione OBRIGATORIAMENTE uma frase no idioma da pergunta convidando o usuário a explorar o restante.`;
 

@@ -33,7 +33,8 @@ graph LR
 ## 2. Taxonomia de Componentes
 
 ### 2.1 Workspaces de Aplicação (`/apps`)
-- **[`frontend`](../apps/frontend/package.json):** Next.js 15 (App Router, React 19), Serverless RAG Engine V2, `TSVectorStore`, `SimpleTfIdf`, Status Classifier do Supabase, `SupabaseUnfreezeModal`, internacionalização e componentes Tailwind CSS/Framer Motion.
+- **[`frontend`](../apps/frontend/package.json):** Next.js 15 (App Router, React 19), Serverless RAG Engine V2, `RetrievalOrchestrator` (Sanity GROQ + TSVectorStore Fallback), Status Classifier do Supabase, `SupabaseUnfreezeModal`, internacionalização e componentes Tailwind CSS/Framer Motion.
+- **[`studio`](../apps/studio/package.json):** Sanity Studio v3 (React 19, TypeScript, ESLint 9), modelagem ontológica de conteúdo (6 schemas tipados), Content Lake (`production`), scripts de migração determinística e manifesto auditável.
 - **[`backend`](../apps/backend/package.json):** Repositório da Base de Conhecimento (`src/knowledge-base/`), scripts de reindexação e exportação de vetores (`src/scripts/`), suite agnóstica de provedores (`ProviderFactory`) com fallback resiliente.
 
 ### 2.2 Infraestrutura & Configurações Globais
@@ -59,6 +60,7 @@ Todas as decisões arquiteturais e mudanças estruturais no projeto são registr
 | [ADR-0007](adr/0007-faiss-elimination-and-ts-vector-search.md) | Eliminação do FAISS/Render & Migração para Serverless RAG em TypeScript (Vercel) | 2026-08-26 | Aprovado |
 | [ADR-0008](adr/0008-lexical-retriever-modernization.md) | Modernização da Busca Léxica (SimpleTfIdf em TS Puro) | 2026-08-26 | Aprovado |
 | [ADR-0009](adr/0009-supabase-resilience-and-state-machine.md) | Máquina de Estados e Resiliência Operacional do Supabase (Fase 2) | 2026-08-26 | Aprovado |
+| [ADR-0010](adr/0010-tri-retrieval-engine-and-sanity-content-lake.md) | Tri-Retrieval Engine & Sanity Content Lake | 2026-09-29 | Aprovado |
 
 ---
 

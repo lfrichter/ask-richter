@@ -29,7 +29,7 @@ O desenvolvimento do AskRichter segue regras estritas de governança estruturada
 5. **Engenharia de Contexto WSCI (World-Scope Context Isolation):**  
    Separação estrita por escopos (Frontend, Backend, Infraestrutura). Operações no dia a dia utilizam filtros de workspace (ex: `npm run dev --workspace=frontend`) e refatorações estruturais utilizam `git worktree`.
 6. **Governança por ADRs ([`docs/architect.md`](docs/architect.md) & [`docs/adr/`](docs/adr/)):**  
-   Todas as decisões arquiteturais geram registros imutáveis numerados no diretório [`docs/adr/`](docs/adr/) (ex: [`ADR-0001`](docs/adr/0001-meta-spec-e-governanca-de-arquitetura.md) a [`ADR-0009`](docs/adr/0009-supabase-resilience-and-state-machine.md)).
+   Todas as decisões arquiteturais geram registros imutáveis numerados no diretório [`docs/adr/`](docs/adr/) (ex: [`ADR-0001`](docs/adr/0001-meta-spec-e-governanca-de-arquitetura.md) a [`ADR-0010`](docs/adr/0010-tri-retrieval-engine-and-sanity-content-lake.md)).
 7. **Protocolo Jidoka / Andon Cord Unificado (`npm run jidoka`):**  
    Comando único no Turborepo que executa `check-types`, `lint` e `build` em paralelo com grafo de dependências. Se houver falha (exit code != 0), o ciclo é interrompido imediatamente para Reset Limpo e correção na origem.
 8. **Fluxo de Trabalho em Duas Fases ([`.ai/workflows/development-workflow.md`](.ai/workflows/development-workflow.md)):**  
@@ -75,6 +75,7 @@ Todo ciclo de evolução e correção de bugs no repositório segue estritamente
 
 ## 🚀 Principais Features & Inovações Recentes
 
+- **Sanity Content Lake & Structured Retrieval (M1 & M2):** Evolução da base de conhecimento para um Content Lake relacional no Sanity (`apps/studio`), contendo 101 documentos canônicos tipados (skills, experiências, projetos, formação, métricas de impacto e ADRs). Roteamento inteligente de intenções estruturadas via GROQ estático com fallback transparente para o RAG Serverless híbrido e proteção contra alucinações via abstenção explícita (`no_evidence`).
 - **Alinhamento Multilíngue de Respostas (M15 / Multilingual RAG):** Suporte inteligente a múltiplos idiomas (Inglês, Português, Espanhol). A IA identifica a língua da pergunta do usuário e gera a resposta no mesmo idioma, priorizando a mensagem do usuário sobre a língua do contexto factual recuperado do banco de dados.
 - **RAG 100% Serverless V2 (Next.js App Router):** Motor de RAG executando em funções Serverless no Vercel (ADR-0007/ADR-0008), eliminando a necessidade de contêineres ou servidores dedicados 24/7.
 - **Invariantes de Roteamento de Produção (Zero Render Fallback):** Sanitização automática de URLs em tempo de execução que elimina qualquer desvio para o Render legado em produção, forçando o uso de rotas relativas nativas Vercel (`/api/chat`, `/api/supabase/status`, `/api/supabase/restore`, `/api/ready`).
@@ -82,7 +83,7 @@ Todo ciclo de evolução e correção de bugs no repositório segue estritamente
 - **Regra de Ouro da Não-Inferência de Pausa:** Garantia por software de que falhas de rede (`fetch failed`), estouros de tempo (`AbortError`) ou falhas de chave API nunca são falsamente marcados como "Supabase Pausado".
 - **Descongelamento Server-Side Seguro (`POST /api/supabase/restore`):** Comunicação com a Supabase Management API realizada exclusivamente via rotas de servidor Next.js, mantendo tokens de administração (`SUPABASE_MANAGEMENT_TOKEN`) 100% isolados do navegador.
 - **UX Resiliente com Polling Sequencial & SLA Calibrado:** Polling no modal frontend (`supabase-unfreeze-modal.tsx`) com *progressive backoff* (2s, 3s, 5s, 8s, 13s, teto 15s), `AbortController` por tentativa, trava de idempotência contra chamadas duplicadas e SLA total de 300s (5 minutos), calibrado com a medição real em produção do ciclo de inicialização do Supabase.
-- **Arquitetura Provider-Agnostic de IA:** Suporte dinâmico a múltiplos provedores via `GoogleGenAI` (`gemini-3.6-flash` e `gemini-embedding-2`), com fallbacks e suporte local com Ollama (`deepseek-r1:8b`).
+- **Arquitetura Provider-Agnostic de IA:** Suporte dinâmico a múltiplos provedores via `GoogleGenAI` (`gemini-3.6-flash`, `gemini-flash-lite-latest` e `gemini-embedding-2`), com fallbacks e suporte local com Ollama (`deepseek-r1:8b`).
 - **Monorepo com Turborepo 2.x:** Pipeline otimizada de compilação, linting, checagem de tipos e validação Jidoka com cache distribuído.
 
 ---
@@ -108,7 +109,7 @@ Gemini    Ollama   OpenRouter HuggingFace Gemini
 
 | Componente | Provedor | Modelo Padrão | Status | Custos / Impacto Financeiro |
 | :--- | :--- | :--- | :--- | :--- |
-| **LLM** | **Gemini** | `gemini-3.6-flash` | **Ativo (Padrão)** | Gratuito dentro das quotas do Google AI Free Tier (`@google/genai`). |
+| **LLM** | **Gemini** | `gemini-3.6-flash` / `gemini-flash-lite-latest` | **Ativo (Padrão)** | Gratuito dentro das quotas do Google AI Free Tier (`@google/genai`). |
 | **LLM** | **Ollama** | `deepseek-r1:8b` | **Opção (Dev / Fallback)** | Zero custo (executado localmente no hardware da máquina). |
 | **LLM** | **OpenRouter** | `google/gemma-4-26b-a4b-it:free` | **Opção (Fallback 1)** | Variável conforme modelo selecionado no OpenRouter. |
 | **LLM** | **Hugging Face** | `meta-llama/Llama-3.1-8B-Instruct:novita` | **Opção (Fallback 2)** | Sujeito a cobrança conforme plano/créditos na Hugging Face. |
@@ -116,7 +117,7 @@ Gemini    Ollama   OpenRouter HuggingFace Gemini
 
 ---
 
-## ☁️ Arquitetura de Nuvem Resiliente (Serverless V2)
+## ☁️ Arquitetura Híbrida de Recuperação & Conhecimento (M2)
 
 ```mermaid
 graph TD
@@ -128,11 +129,17 @@ graph TD
         Frontend["⚛️ UI & App Router<br>ask-richter.vercel.app"]
         StatusApi["🔍 /api/supabase/status<br>(Status Classifier)"]
         RestoreApi["⚡ /api/supabase/restore<br>(Server-side Recovery)"]
-        ChatApi["🤖 /api/chat<br>(Serverless RAG Engine + Multilingual M15)"]
+        ChatApi["🤖 /api/chat<br>(Retrieval Orchestrator)"]
+        Orchestrator["🎯 Orchestrator & Intent Classifier"]
+        TSVec["📦 TSVectorStore (Legacy RAG)"]
+    end
+
+    subgraph "Sanity Cloud (Knowledge Graph)"
+        SanityLake["🧠 Sanity Content Lake<br>(101 Docs / GROQ)"]
     end
 
     subgraph "Nuvem Supabase"
-        SupabaseREST["📦 Supabase REST / Storage"]
+        SupabaseREST["📦 Supabase Logs & Telemetria"]
         SupabaseMgmt["🔐 Supabase Management API"]
     end
 
@@ -140,24 +147,30 @@ graph TD
         GeminiAPI["🌐 Google GenAI API<br>(gemini-3.6-flash)"]
     end
 
-    User -- "1. Pergunta em linguagem natural (PT/EN/ES)" --> Frontend
+    User -- "1. Pergunta (PT/EN/ES)" --> Frontend
     Frontend -- "2. Verifica disponibilidade" --> StatusApi
-    StatusApi -- "3. Ping de saúde (REST + Mgmt)" --> SupabaseREST
+    StatusApi -- "3. Ping de saúde" --> SupabaseREST
 
     Frontend -. "4. Se pausado: solicita descongelamento" .-> RestoreApi
-    RestoreApi -- "5. Dispara Restore (Secret Server-side)" --> SupabaseMgmt
-    RestoreApi -. "6. Polling sequencial + Backoff" .-> StatusApi
+    RestoreApi -- "5. Dispara Restore" --> SupabaseMgmt
 
-    Frontend -- "7. Consulta com RAG Híbrido" --> ChatApi
-    ChatApi -- "8. Busca vetorial & léxica" --> SupabaseREST
-    ChatApi -- "9. Gera resposta alinhada ao idioma" --> GeminiAPI
-    ChatApi -- "10. Retorna resposta JSON no idioma do usuário" --> User
+    Frontend -- "6. Consulta" --> ChatApi
+    ChatApi --> Orchestrator
+
+    Orchestrator -- "7a. Intenção Estruturada" --> SanityLake
+    SanityLake -. "7b. Fallback (empty/error/timeout)" .-> TSVec
+    Orchestrator -- "7c. Pergunta Livre" --> TSVec
+
+    ChatApi -- "8. Contexto Formatado + Prompt" --> GeminiAPI
+    GeminiAPI -- "9. Resposta Factual / Abstenção Segura" --> User
 
     style User fill:#D6EAF8
     style Frontend fill:#E8DAEF
     style StatusApi fill:#D5F5E3
     style RestoreApi fill:#D5F5E3
     style ChatApi fill:#D5F5E3
+    style SanityLake fill:#FAD7A0
+    style TSVec fill:#D4EFDF
     style SupabaseREST fill:#FEF9E7
     style SupabaseMgmt fill:#FEF9E7
     style GeminiAPI fill:#FDEDEC
@@ -173,14 +186,16 @@ graph TD
 | | Constituição de Agentes ([`AGENTS.md`](AGENTS.md)) | Regras operacionais Zero-Trust e protocolo Jidoka. |
 | | Regras Operacionais ([`docs/Rules.md`](docs/Rules.md)) | Fonte da verdade para processos e reindexação auditável. |
 | | Workflow de Desenvolvimento ([`.ai/workflows/`](.ai/workflows/development-workflow.md)) | Protocolo de 2 fases com Gate Humano, templates e Clean Reset. |
-| | Decisões de Arquitetura ([`docs/adr/`](docs/adr/)) | Registros formais ADR-0001 a ADR-0009. |
-| | Turborepo 2.x ([`turbo.json`](turbo.json)) | Orquestração de tarefas (`build`, `lint`, `check-types`, `jidoka`). |
-| | npm Workspaces ([`package.json`](package.json)) | Gerenciamento de dependências e workspaces (`apps/*`, `packages/*`). |
-| **⚡ Serverless RAG Engine** | Next.js 15 App Router ([`apps/frontend`](apps/frontend)) | RAG Serverless V2 rodando nativamente na Vercel (ADR-0007/0008). |
-| | `TSVectorStore` | Busca vetorial por similaridade de cosseno em TypeScript puro (dim: 768). |
+| | Decisões de Arquitetura ([`docs/adr/`](docs/adr/)) | Registros formais ADR-0001 a ADR-0010. |
+| **🧠 Knowledge Lake & Agentic Engine** | Sanity Content Lake ([`apps/studio`](apps/studio)) | Ontologia canônica com 101 documentos, 121 referências e Studio v3.78. |
+| | Tri-Retrieval Engine ([`route.ts`](file:///Users/master/projects/chatbot/ask-richter/apps/frontend/src/app/api/chat/route.ts)) | Roteamento seletivo: M2 Structured GROQ, M4 Agentic Multi-Hop, M3 Semantic Search. |
+| | `KnowledgeGraphRetriever` | Travessia determinística em grafo multi-hop com limites de 2 hops, 4 calls e deadline de 4s. |
+| | `AgentPlanner` & `agent-eligibility` | Planejamento determinístico e elegibilidade semântica com proteção contra prompt injection. |
+| **⚡ Serverless RAG Engine & Fallback** | Next.js 15 App Router ([`apps/frontend`](apps/frontend)) | RAG Serverless V2 rodando nativamente na Vercel (ADR-0007/0008). |
+| | `TSVectorStore` | Busca vetorial por similaridade de cosseno em TypeScript puro como fallback de alta resiliência. |
 | | `SimpleTfIdf` | Busca léxica TF-IDF em TypeScript puro sem dependências C++. |
 | | `@google/genai` | SDK oficial do Google GenAI para `gemini-3.6-flash` e `gemini-embedding-2`. |
-| | Multilingual RAG (M15) | Geração de resposta no idioma exato da pergunta (PT/EN/ES). |
+| | Multilingual RAG | Geração de resposta no idioma exato da pergunta (PT/EN/ES). |
 | | Status Classifier ([`status-classifier.ts`](file:///Users/master/projects/chatbot/ask-richter/apps/frontend/src/lib/supabase/status-classifier.ts)) | Classificação estrita de disponibilidade com 7 estados operacionais (ADR-0009). |
 | | Server-side Restore ([`restore-service.ts`](file:///Users/master/projects/chatbot/ask-richter/apps/frontend/src/lib/supabase/restore-service.ts)) | Restauração server-side via Supabase Management API com idempotência. |
 | **⚛️ Frontend UX** | React 19 + Next.js 15 | Interface reativa moderna e componetizada. |
@@ -221,6 +236,9 @@ Preencha as chaves no arquivo `.env.local`:
 ```env
 GEMINI_API_KEY="sua-chave-gemini"
 GEMINI_MODEL="gemini-3.6-flash"
+NEXT_PUBLIC_SANITY_PROJECT_ID="q19ey6yx"
+NEXT_PUBLIC_SANITY_DATASET="production"
+SANITY_API_READ_TOKEN="seu-token-leitura"
 NEXT_PUBLIC_SUPABASE_URL="https://[SEU-PROJETO].supabase.co"
 NEXT_PUBLIC_SUPABASE_ANON_KEY="sua-chave-anon"
 SUPABASE_MANAGEMENT_TOKEN="sbp_sua-chave-de-gerenciamento"
@@ -233,17 +251,21 @@ A partir da raiz do monorepo, inicie o ambiente de desenvolvimento:
 npm run dev
 ```
 - Aplicação: `http://localhost:3000`
+- Sanity Studio: `http://localhost:3333`
 
 ---
 
 ## 🧪 Suíte de Testes Automatizados & Protocolo Jidoka
 
-### 1. Testes Unitários de Resiliência, Roteamento & Multilíngue
-Para executar a suíte completa com **65 testes automatizados** divididos em 8 módulos (paridade vetorial, classificação de status, resiliência, invariantes de roteamento em produção e alinhamento multilíngue M15):
+### 1. Testes Unitários de Resiliência, Roteamento, Sanity & Multilíngue
+Para executar a suíte completa com **168 testes automatizados** no monorepo (149 no frontend cobrindo Sanity GROQ declarativo M2, Dataset Embeddings M3, Knowledge Graph M4, paridade vetorial, resiliência e alinhamento multilíngue + 19 no backend):
 
 ```bash
-cd apps/frontend
-npm test
+# Executa os 149 testes do frontend
+npm --prefix apps/frontend test
+
+# Executa os 19 testes do backend
+npm --prefix apps/backend test
 ```
 
 ### 2. Validação Jidoka (Andon Cord)
@@ -267,9 +289,10 @@ Este comando executa a pipeline unificada do Turborepo (`check-types`, `lint` e 
 | [ADR-0004](docs/adr/0004-isolamento-de-escopo-de-metadados-em-ingestao.md) | Isolamento de Escopo de Metadados em Ingestão | Aceito |
 | [ADR-0005](docs/adr/0005-provider-agnostic-ai-architecture.md) | Provider-Agnostic AI Architecture | Aceito |
 | [ADR-0006](docs/adr/0006-llm-provider-resilience-and-fallback.md) | LLM Provider Resilience and Fallback | Aceito |
-| [ADR-0007](docs/adr/adr-0007-faiss-elimination-and-ts-vector-search.md) | FAISS Elimination & TS Vector Search | Aceito |
-| [ADR-0008](docs/adr/adr-0008-lexical-retriever-modernization.md) | Modernização da Busca Léxica (TF-IDF) | Aceito |
-| [ADR-0009](docs/adr/adr-0009-supabase-resilience-and-state-machine.md) | Máquina de Estados e Resiliência do Supabase | Aceito |
+| [ADR-0007](docs/adr/0007-faiss-elimination-and-ts-vector-search.md) | FAISS Elimination & TS Vector Search | Aceito |
+| [ADR-0008](docs/adr/0008-lexical-retriever-modernization.md) | Modernização da Busca Léxica (TF-IDF) | Aceito |
+| [ADR-0009](docs/adr/0009-supabase-resilience-and-state-machine.md) | Máquina de Estados e Resiliência do Supabase | Aceito |
+| [ADR-0010](docs/adr/0010-tri-retrieval-engine-and-sanity-content-lake.md) | Tri-Retrieval Engine & Sanity Content Lake | Aceito |
 
 ---
 
