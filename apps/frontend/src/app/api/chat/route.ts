@@ -132,11 +132,17 @@ export async function POST(req: NextRequest) {
     };
 
     const orchestrator = new RetrievalOrchestrator({ fallbackAdapter });
+    const retrievalStart = performance.now();
 
     if (structuredMatch) {
       // Caminho M2: Structured Retrieval Declarativo GROQ
-      console.log(`[M2 STRUCTURED RETRIEVAL] Intent detectada: ${structuredMatch.intent}`);
       const retrievalOutput = await orchestrator.orchestrate(structuredMatch.intent, structuredMatch.params);
+      const latencyMs = Math.round(performance.now() - retrievalStart);
+      const isFallback = retrievalOutput.source === 'fallback_ts_vector_store';
+
+      console.log(
+        `[RETRIEVAL] engine=M2_STRUCTURED intent=${structuredMatch.intent} latency_ms=${latencyMs} matched_count=${retrievalOutput.matchedCount} estimated_tokens=${retrievalOutput.estimatedTokens} status=${retrievalOutput.retrievalStatus} fallback=${isFallback}`
+      );
 
       if (retrievalOutput.abstained || !retrievalOutput.formattedContext) {
         structuredContext = '[STATUS: NENHUMA EVIDÊNCIA FACTUAL ENCONTRADA NA BASE DE DADOS]';
@@ -145,8 +151,13 @@ export async function POST(req: NextRequest) {
       }
     } else if (isMultiHop) {
       // Caminho M4: Agentic Multi-Hop Knowledge Graph Retrieval
-      console.log('[M4 AGENTIC RETRIEVAL] Pergunta multi-hop detectada, executando AgentPlanner e KnowledgeGraph...');
       const agentOutput = await orchestrator.orchestrateAgentic(question);
+      const latencyMs = Math.round(performance.now() - retrievalStart);
+      const isFallback = agentOutput.source === 'fallback_ts_vector_store';
+
+      console.log(
+        `[RETRIEVAL] engine=M4_AGENTIC latency_ms=${latencyMs} matched_count=${agentOutput.matchedCount} estimated_tokens=${agentOutput.estimatedTokens} status=${agentOutput.retrievalStatus} fallback=${isFallback}`
+      );
 
       if (agentOutput.abstained || !agentOutput.formattedContext) {
         structuredContext = '[STATUS: NENHUMA EVIDÊNCIA FACTUAL ENCONTRADA NA BASE DE DADOS]';
@@ -155,8 +166,13 @@ export async function POST(req: NextRequest) {
       }
     } else {
       // Caminho M3: Free-form com Sanity Semantic/Hybrid Retrieval
-      console.log('[M3 SEMANTIC RETRIEVAL] Pergunta livre, executando busca semântica no Sanity...');
       const semanticOutput = await orchestrator.orchestrateFreeform(question);
+      const latencyMs = Math.round(performance.now() - retrievalStart);
+      const isFallback = semanticOutput.source === 'fallback_ts_vector_store';
+
+      console.log(
+        `[RETRIEVAL] engine=M3_SEMANTIC latency_ms=${latencyMs} matched_count=${semanticOutput.matchedCount} estimated_tokens=${semanticOutput.estimatedTokens} status=${semanticOutput.retrievalStatus} fallback=${isFallback}`
+      );
 
       if (semanticOutput.abstained || !semanticOutput.formattedContext) {
         structuredContext = '[STATUS: NENHUMA EVIDÊNCIA FACTUAL ENCONTRADA NA BASE DE DADOS]';
