@@ -1,9 +1,9 @@
 # META_SPEC — ask-richter
 
-**Version:** 2.1.0  
-**Status:** Active  
-**Last Updated:** 2026-09-02  
-**Owner:** Luis Fernando Richter  
+**Version:** 2.1.0
+**Status:** Active
+**Last Updated:** 2026-09-02
+**Owner:** Luis Fernando Richter
 
 ---
 
@@ -15,7 +15,7 @@
 
 ## 1.2 One-Line Description
 
-> An intelligent, interactive portfolio chatbot that transforms Luiz F. Richter's professional career, engineering projects, and technical leadership into an authoritative conversational RAG assistant.
+> An intelligent, interactive portfolio chatbot that transforms Luis F. Richter's professional career, engineering projects, and technical leadership into an authoritative conversational RAG assistant.
 
 ## 1.3 Problem
 
@@ -68,7 +68,7 @@ To deliver a gold-standard, zero-hallucination interactive portfolio powered by 
 # 4. Functional Requirements
 
 ### FR-001 — Intelligent Conversational RAG (`POST /api/chat`)
-**Requirement:** The system must accept natural language queries, classify query intent (`SIMPLE_SEARCH`, `PROJECT_TECHNOLOGY_SEARCH`, `LIST_PROJECTS`), execute hybrid vector and lexical retrieval, assemble a token-budgeted context, and generate an evidence-grounded response.  
+**Requirement:** The system must accept natural language queries, classify query intent (`SIMPLE_SEARCH`, `PROJECT_TECHNOLOGY_SEARCH`, `LIST_PROJECTS`), execute hybrid vector and lexical retrieval, assemble a token-budgeted context, and generate an evidence-grounded response.
 **Acceptance Criteria:**
 * [ ] Decomposes queries according to intent and extracted technologies.
 * [ ] Enforces a maximum token budget of 2,800 tokens for assembled context chunks.
@@ -76,7 +76,7 @@ To deliver a gold-standard, zero-hallucination interactive portfolio powered by 
 * [ ] Refuses to invent facts when query context is absent, returning an explicit boundary message.
 
 ### FR-002 — Multilingual Response Alignment (M15)
-**Requirement:** The language of the user's message dictates the language of the output response, regardless of the language of retrieved context chunks.  
+**Requirement:** The language of the user's message dictates the language of the output response, regardless of the language of retrieved context chunks.
 **Acceptance Criteria:**
 * [ ] Questions asked in English receive answers strictly in English.
 * [ ] Questions asked in Portuguese receive answers strictly in Portuguese.
@@ -84,28 +84,28 @@ To deliver a gold-standard, zero-hallucination interactive portfolio powered by 
 * [ ] Factual Portuguese context documents are translated accurately in-flight without losing technical terms.
 
 ### FR-003 — Supabase Operational State Machine (ADR-0009)
-**Requirement:** The system must classify database/storage availability into one of seven mutually exclusive operational states: `READY`, `PAUSED`, `WAKING`, `UNAVAILABLE`, `TIMEOUT`, `AUTH_ERROR`, or `UNKNOWN`.  
+**Requirement:** The system must classify database/storage availability into one of seven mutually exclusive operational states: `READY`, `PAUSED`, `WAKING`, `UNAVAILABLE`, `TIMEOUT`, `AUTH_ERROR`, or `UNKNOWN`.
 **Acceptance Criteria:**
 * [ ] Enforces the **Golden Rule of Non-Inference**: Generic network failures (`fetch failed`, `ENOTFOUND`, `ECONNREFUSED`), timeouts, and auth errors are NEVER classified as `PAUSED`.
 * [ ] Only explicit Supabase pause signatures (e.g., HTTP 503 with `"project_paused"`) result in state `PAUSED`.
 * [ ] Exposes health and state via `GET /api/supabase/status`.
 
 ### FR-004 — Server-Side Project Restoration (`POST /api/supabase/restore`)
-**Requirement:** When Supabase is paused, the server must securely call the Supabase Management API v1 to trigger project reactivation.  
+**Requirement:** When Supabase is paused, the server must securely call the Supabase Management API v1 to trigger project reactivation.
 **Acceptance Criteria:**
 * [ ] Executes exclusively server-side using `SUPABASE_MANAGEMENT_TOKEN`.
 * [ ] Enforces an in-memory idempotency lock (10-second window) preventing duplicate restore requests.
 * [ ] Returns sanitized recovery status to the client without exposing internal API tokens.
 
 ### FR-005 — Client-Side Progressive Unfreezing Modal
-**Requirement:** If Supabase dormancy is detected, the UI must present an unfreeze modal with sequential, progressive polling.  
+**Requirement:** If Supabase dormancy is detected, the UI must present an unfreeze modal with sequential, progressive polling.
 **Acceptance Criteria:**
 * [ ] Polling intervals back off progressively: 2s, 3s, 5s, 8s, 13s, with a maximum cap of 15s.
 * [ ] Each polling attempt employs an independent `AbortController`.
 * [ ] Total SLA is calibrated to 300 seconds (5 minutes) before declaring an unrecoverable timeout.
 
 ### FR-006 — Unified Quality Verification (Andon Cord Protocol)
-**Requirement:** A single root command must execute the entire verification pipeline with dependency graph orchestration.  
+**Requirement:** A single root command must execute the entire verification pipeline with dependency graph orchestration.
 **Acceptance Criteria:**
 * [ ] `npm run jidoka` orchestrates `check-types`, `lint`, and `build` in parallel.
 * [ ] Any failure (exit code != 0) acts as an Andon Cord, aborting the release or commit cycle.

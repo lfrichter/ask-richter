@@ -1,13 +1,13 @@
 # META_SPEC — ask-richter (pt-BR)
 
-> 🇧🇷 **Tradução de Leitura.**  
-> A versão canônica e autoritativa deste documento é: `../../META_SPEC.md`.  
+> 🇧🇷 **Tradução de Leitura.**
+> A versão canônica e autoritativa deste documento é: `../../META_SPEC.md`.
 > Em caso de divergência, a versão canônica em inglês prevalece.
 
-**Versão:** 2.1.0  
-**Status:** Ativo  
-**Última Atualização:** 2026-09-02  
-**Responsável:** Luis Fernando Richter  
+**Versão:** 2.1.0
+**Status:** Ativo
+**Última Atualização:** 2026-09-02
+**Responsável:** Luis Fernando Richter
 
 ---
 
@@ -17,7 +17,7 @@
 `ask-richter`
 
 ## 1.2 Descrição Em Uma Frase
-> Um chatbot de portfólio inteligente e interativo que transforma a trajetória profissional, projetos de engenharia e liderança técnica de Luiz F. Richter em um assistente conversacional RAG autoritativo.
+> Um chatbot de portfólio inteligente e interativo que transforma a trajetória profissional, projetos de engenharia e liderança técnica de Luis F. Richter em um assistente conversacional RAG autoritativo.
 
 ## 1.3 Problema
 Currículos tradicionais e sites de portfólio estáticos oferecem experiências de leitura unidimensionais e passivas. Recrutadores técnicos, gerentes de engenharia e lideranças executivas necessitam de respostas rápidas, precisas e verificáveis para dúvidas específicas — como liderança arquitetural, stacks tecnológicas específicas (ex: PHP/Laravel, Node.js/TypeScript, Python, orquestração de LLMs) e impacto real de projetos — sem navegar por documentos estáticos densos.
