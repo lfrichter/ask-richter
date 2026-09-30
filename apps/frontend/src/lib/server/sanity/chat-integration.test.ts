@@ -43,8 +43,8 @@ describe('M2 Phase B — Chat Integration & Intent Routing Suite', () => {
     const techMatch = detectStructuredIntent('Quais projetos usam Laravel e Redis?')
     assert.ok(techMatch)
     assert.strictEqual(techMatch.intent, 'PROJECT_BY_TECH')
-    assert.ok(techMatch.params.technologies.includes('laravel'))
-    assert.ok(techMatch.params.technologies.includes('redis'))
+    assert.ok(techMatch.params.technologies.some((t: string) => t.toLowerCase() === 'laravel'))
+    assert.ok(techMatch.params.technologies.some((t: string) => t.toLowerCase() === 'redis'))
 
     // 4. CAREER_TIMELINE
     const careerMatch = detectStructuredIntent('Qual foi a trajetória profissional dele na Turno?')
@@ -240,4 +240,61 @@ describe('M2 Phase B — Chat Integration & Intent Routing Suite', () => {
     assert.strictEqual(match.intent, 'PROJECT_BY_TECH')
     assert.deepStrictEqual(match.params.technologies, ['PHP', 'Laravel'])
   })
+
+  // B11: NATURAL_VARIATIONS_ROUTING (M5 Hardening)
+  it('B11-NATURAL_VARIATIONS_ROUTING: Suporta variações linguísticas naturais para LIST_PROJECTS e outros sem drift', () => {
+    const projectVariations = [
+      'Quais projetos?',
+      'Quais são os projetos?',
+      'Quais foram os projetos?',
+      'Quais os projetos?',
+      'Liste os projetos',
+      'Me mostre os projetos',
+      'Todos os projetos',
+      'Quais projetos o Richter desenvolveu?',
+      'Em quais projetos o Richter atuou?',
+      'Quais são os projetos em que o Richter atuou?',
+      'Quais projetos ele desenvolveu?',
+      'Quais são os projetos desenvolvidos pelo Richter?',
+      'Mostre os projetos realizados',
+      'Quantos projetos o Richter tem?',
+    ]
+
+    for (const q of projectVariations) {
+      const match = detectStructuredIntent(q)
+      assert.ok(match, `Query "${q}" deve ser detectada como estruturada`)
+      assert.strictEqual(match.intent, 'LIST_PROJECTS', `Query "${q}" deve mapear para LIST_PROJECTS`)
+    }
+
+    const techVariations = [
+      { query: 'Quais projetos usam Laravel?', tech: 'Laravel' },
+      { query: 'Quais são os projetos com React?', tech: 'React' },
+      { query: 'Quais projetos Python ele desenvolveu?', tech: 'Python' },
+    ]
+
+    for (const { query, tech } of techVariations) {
+      const match = detectStructuredIntent(query)
+      assert.ok(match, `Query "${query}" deve ser detectada como estruturada`)
+      assert.strictEqual(match.intent, 'PROJECT_BY_TECH')
+      assert.ok(match.params.technologies.includes(tech))
+    }
+
+    const otherVariations = [
+      { query: 'Onde o Richter trabalhou?', intent: 'CAREER_TIMELINE' },
+      { query: 'Empresas onde o Richter atuou', intent: 'CAREER_TIMELINE' },
+      { query: 'Quais tecnologias o Richter domina?', intent: 'SKILLS_MATRIX' },
+      { query: 'Quais são as suas habilidades técnicas?', intent: 'SKILLS_MATRIX' },
+      { query: 'Qual a formação acadêmica dele?', intent: 'EDUCATION_CERTS' },
+      { query: 'Onde o Richter estudou?', intent: 'EDUCATION_CERTS' },
+      { query: 'Quais as principais métricas e resultados alcançados?', intent: 'PROVEN_IMPACT' },
+      { query: 'Explique a decisão de arquitetura ADR-0001', intent: 'ADR_GOVERNANCE' },
+    ]
+
+    for (const { query, intent } of otherVariations) {
+      const match = detectStructuredIntent(query)
+      assert.ok(match, `Query "${query}" deve ser detectada como estruturada`)
+      assert.strictEqual(match.intent, intent, `Query "${query}" deve mapear para ${intent}`)
+    }
+  })
 })
+

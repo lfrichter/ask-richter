@@ -17,13 +17,11 @@ const knownTechnologiesOriginal = [
   'LiveKit', 'WebRTC', 'Ollama', 'LangChain.js', 'FAISS', 'OpenAI', 'Hugging Face',
   'Next.js', 'FastAPI', 'Node.js', 'Express',
 ];
-const knownTechnologies = knownTechnologiesOriginal.map(tech => tech.toLowerCase());
+import { detectStructuredIntent } from '../server/sanity/queries';
 
 export function detectListQuery(query: string): boolean {
-  const lowerCaseQuery = query.toLowerCase();
-  const keywords = ['listar', 'liste', 'quais', 'todos', 'projetos', 'disponíveis'];
-  const matches = keywords.filter(kw => lowerCaseQuery.includes(kw)).length;
-  return matches >= 2;
+  const structured = detectStructuredIntent(query);
+  return structured?.intent === 'LIST_PROJECTS';
 }
 
 export function expandQuery(query: string): string {
@@ -44,10 +42,18 @@ export function expandQuery(query: string): string {
 }
 
 export function classifyIntent(query: string): string {
-  const lowerCaseQuery = query.toLowerCase();
-  if (detectListQuery(query)) {
+  const structured = detectStructuredIntent(query);
+  if (structured?.intent === 'LIST_PROJECTS') {
     return 'LIST_PROJECTS';
   }
+  if (structured?.intent === 'PROJECT_BY_TECH') {
+    return 'PROJECT_BY_TECH';
+  }
+  if (structured?.intent === 'SKILLS_MATRIX') {
+    return 'TECH_QUESTION';
+  }
+
+  const lowerCaseQuery = query.toLowerCase();
   if (lowerCaseQuery.includes('detalhes sobre') || lowerCaseQuery.includes('me fale sobre')) {
     return 'PROJECT_DETAILS';
   }
@@ -58,31 +64,25 @@ export function classifyIntent(query: string): string {
 }
 
 export function decomposeQuery(query: string): QueryPlan {
-  const lowerCaseQuery = query.toLowerCase();
-  const foundTechnologies: string[] = [];
-
-  for (let i = 0; i < knownTechnologies.length; i++) {
-    const tech = knownTechnologies[i];
-    if (!tech) continue;
-    const techRegex = new RegExp(`\\b${tech.replace('.', '\\.')}\\b`, 'i');
-    if (techRegex.test(lowerCaseQuery)) {
-      const canonicalTech = tech === 'vue' ? 'vue.js' : (knownTechnologiesOriginal[i] ?? tech);
-      if (!foundTechnologies.some(t => t.toLowerCase() === canonicalTech.toLowerCase())) {
-        foundTechnologies.push(canonicalTech);
-      }
+  const structured = detectStructuredIntent(query);
+  if (structured) {
+    if (structured.intent === 'PROJECT_BY_TECH') {
+      const technologies = structured.params.technologies || [];
+      return {
+        type: 'PROJECT_TECHNOLOGY_SEARCH',
+        payload: {
+          technologies,
+          technology: technologies[0],
+          originalQuery: query
+        }
+      };
     }
-  }
-
-  if (foundTechnologies.length > 0) {
-    return {
-      type: 'PROJECT_TECHNOLOGY_SEARCH',
-      payload: { technologies: foundTechnologies, technology: foundTechnologies[0], originalQuery: query }
-    };
-  }
-
-  const listTriggers = ['todos os projetos', 'lista completa', 'quantos projetos', 'liste os projetos', 'projetos disponíveis'];
-  if (listTriggers.some(trigger => lowerCaseQuery.includes(trigger))) {
-    return { type: 'LIST_PROJECTS', payload: { originalQuery: query } };
+    if (structured.intent === 'LIST_PROJECTS') {
+      return {
+        type: 'LIST_PROJECTS',
+        payload: { originalQuery: query }
+      };
+    }
   }
 
   return {

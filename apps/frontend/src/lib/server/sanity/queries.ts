@@ -181,6 +181,62 @@ export const STRUCTURED_QUERIES: Record<StructuredIntent, ParameterizedQueryDef>
   },
 }
 
+function normalizeQuery(text: string): string {
+  return (text || '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+export const KNOWN_TECHNOLOGIES: Array<{ slug: string; name: string }> = [
+  { slug: 'laravel', name: 'Laravel' },
+  { slug: 'lumen', name: 'Lumen' },
+  { slug: 'php', name: 'PHP' },
+  { slug: 'typescript', name: 'TypeScript' },
+  { slug: 'javascript', name: 'JavaScript' },
+  { slug: 'python', name: 'Python' },
+  { slug: 'vue', name: 'Vue' },
+  { slug: 'vue.js', name: 'Vue.js' },
+  { slug: 'vuejs', name: 'Vue.js' },
+  { slug: 'react', name: 'React' },
+  { slug: 'react.js', name: 'React' },
+  { slug: 'reactjs', name: 'React' },
+  { slug: 'next.js', name: 'Next.js' },
+  { slug: 'nextjs', name: 'Next.js' },
+  { slug: 'docker', name: 'Docker' },
+  { slug: 'kubernetes', name: 'Kubernetes' },
+  { slug: 'redis', name: 'Redis' },
+  { slug: 'mongodb', name: 'MongoDB' },
+  { slug: 'mysql', name: 'MySQL' },
+  { slug: 'postgresql', name: 'PostgreSQL' },
+  { slug: 'sqlite', name: 'SQLite' },
+  { slug: 'sql server', name: 'SQL Server' },
+  { slug: 'supabase', name: 'Supabase' },
+  { slug: 'sanity', name: 'Sanity' },
+  { slug: 'rag', name: 'RAG' },
+  { slug: 'langchain', name: 'LangChain' },
+  { slug: 'langchain.js', name: 'LangChain.js' },
+  { slug: 'c#', name: 'C#' },
+  { slug: 'aws', name: 'AWS' },
+  { slug: 'gcp', name: 'GCP' },
+  { slug: 'fastapi', name: 'FastAPI' },
+  { slug: 'node.js', name: 'Node.js' },
+  { slug: 'nodejs', name: 'Node.js' },
+  { slug: 'express', name: 'Express' },
+  { slug: 'livekit', name: 'LiveKit' },
+  { slug: 'webrtc', name: 'WebRTC' },
+  { slug: 'ollama', name: 'Ollama' },
+  { slug: 'faiss', name: 'FAISS' },
+  { slug: 'openai', name: 'OpenAI' },
+  { slug: 'hugging face', name: 'Hugging Face' },
+  { slug: 'git', name: 'Git' },
+  { slug: 'github actions', name: 'GitHub Actions' },
+  { slug: 'jenkins', name: 'Jenkins' },
+  { slug: 'bitbucket pipelines', name: 'Bitbucket Pipelines' }
+]
+
 /**
  * Detecta se a pergunta do usuário mapeia para uma intenção estruturada suportada pelo Sanity.
  * Retorna null para perguntas livres/não-estruturadas, direcionando-as ao RAG híbrido existente.
@@ -189,83 +245,110 @@ export function detectStructuredIntent(
   query: string,
   queryPlan?: { type?: string; payload?: { technologies?: string[]; technology?: string } }
 ): { intent: StructuredIntent; params: Record<string, any> } | null {
-  const lower = (query || '').toLowerCase()
+  const normalized = normalizeQuery(query)
+  if (!normalized) return null
 
-  const isAdrQuery = /adr[-\s]?0*([1-9])/i.test(lower) || lower.includes('decisão de arquitetura') || lower.includes('decisões de arquitetura') || lower.includes('decisão arquitetural') || lower.includes('decisões arquiteturais')
+  // 1. Decisões Arquiteturais e Governança (ADRs)
+  const isAdrQuery =
+    /\badr[-\s]?0*([1-9]\d*)\b/i.test(normalized) ||
+    /\bdecis(ao|oes)\s+(de\s+)?arquitetura(l|is)?\b/i.test(normalized) ||
+    /\bprotocolo\s+jidoka\b/i.test(normalized) ||
+    /\bgovernanca\s+de\s+arquitetura\b/i.test(normalized) ||
+    /\bmeta\s+spec\b/i.test(normalized)
 
-  // 1. Projetos por Tecnologia (Prioridade quando há tecnologias explícitas na pergunta e não for ADR)
-  if (!isAdrQuery && queryPlan?.type === 'PROJECT_TECHNOLOGY_SEARCH') {
+  if (isAdrQuery) {
+    const adrMatch = normalized.match(/adr[-\s]?0*([1-9]\d*)/i)
+    const adrNumber = adrMatch ? parseInt(adrMatch[1], 10) : null
+    return { intent: 'ADR_GOVERNANCE', params: { adrNumber } }
+  }
+
+  // 2. Projetos por Tecnologia (Prioridade quando há tecnologias explícitas na pergunta e intenção de projeto)
+  if (queryPlan?.type === 'PROJECT_TECHNOLOGY_SEARCH') {
     const techs = queryPlan.payload?.technologies || (queryPlan.payload?.technology ? [queryPlan.payload.technology] : [])
     if (techs.length > 0) {
       return { intent: 'PROJECT_BY_TECH', params: { technologies: techs } }
     }
   }
 
-  const knownTechs = [
-    'laravel', 'lumen', 'php', 'typescript', 'javascript', 'python', 'vue', 'vue.js', 'vuejs',
-    'react', 'next.js', 'nextjs', 'docker', 'redis', 'mongodb', 'mysql', 'postgresql',
-    'supabase', 'sanity', 'rag', 'langchain', 'c#', 'sql server'
-  ]
-  if (lower.includes('projetos') || lower.includes('projeto')) {
-    const techMatches: string[] = []
-    for (const t of knownTechs) {
-      // Regex boundary para evitar match parcial
-      const regex = new RegExp(`\\b${t.replace('.', '\\.')}\\b`, 'i')
-      if (regex.test(lower)) {
-        techMatches.push(t)
+  const techMatches: string[] = []
+  for (const t of KNOWN_TECHNOLOGIES) {
+    const regex = new RegExp(`(^|[^a-z0-9#])${t.slug.replace('.', '\\.')}(?=$|[^a-z0-9#])`, 'i')
+    if (regex.test(normalized)) {
+      if (!techMatches.includes(t.name)) {
+        techMatches.push(t.name)
       }
-    }
-    if (techMatches.length > 0) {
-      return { intent: 'PROJECT_BY_TECH', params: { technologies: techMatches } }
     }
   }
 
-  // 2. Catálogo Exaustivo de Projetos (Sem tecnologia específica)
+  const hasProjectContext =
+    /\bprojeto(s)?\b/i.test(normalized) ||
+    /\b(desenvolveu|criou|construiu|atuou|trabalhou)\b/i.test(normalized)
+
+  if (techMatches.length > 0 && hasProjectContext) {
+    return { intent: 'PROJECT_BY_TECH', params: { technologies: techMatches } }
+  }
+
+  // 3. Catálogo Exaustivo de Projetos (Sem tecnologia específica)
   if (queryPlan?.type === 'LIST_PROJECTS') {
     return { intent: 'LIST_PROJECTS', params: {} }
   }
-  const listKeywords = ['listar projetos', 'liste os projetos', 'quais projetos', 'todos os projetos', 'projetos desenvolvidos', 'portfolio de projetos', 'portfólio de projetos']
-  if (listKeywords.some((k) => lower.includes(k))) {
+
+  const isListProjectsQuery =
+    /\b(quais|qual|listar|liste|lista|mostre|me mostre|ver|exibir|todos os|todos|catalogo de|portfolio de)\b.*?\bprojeto(s)?\b/i.test(normalized) ||
+    /\bem quais projetos\b/i.test(normalized) ||
+    /\bprojeto(s)?\b.*?\b(desenvolvido(s)?|criado(s)?|atuou|trabalhou|realizado(s)?|disponiveis|feitos?)\b/i.test(normalized) ||
+    /\b(quantos|lista de|catalogo de|portfolio de)\b.*?\bprojeto(s)?\b/i.test(normalized) ||
+    /\bprojetos\s+(do\s+)?richter\b/i.test(normalized)
+
+  if (isListProjectsQuery) {
     return { intent: 'LIST_PROJECTS', params: {} }
   }
 
-  // 3. Matriz de Skills / Competências Técnicas
-  const skillKeywords = ['quais tecnologias', 'quais skills', 'quais linguagens', 'tecnologias que domina', 'stack técnico', 'stack tecnico', 'competências técnicas', 'competencias tecnicas', 'habilidades técnicas', 'habilidades tecnicas']
-  if (skillKeywords.some((k) => lower.includes(k))) {
+  // 4. Matriz de Skills / Competências Técnicas
+  const isSkillsQuery =
+    /\b(quais|qual|listar|liste|mostrar|me mostre|todas as|quais sao as)\b.*?\b(tecnologias|skills|linguagens|ferramentas|competencias|habilidades)\b/i.test(normalized) ||
+    /\b(stack|conhecimentos|skills|competencias|habilidades)\b.*?\btecnic(o|as|os)\b/i.test(normalized) ||
+    /\btecnologias que (domina|conhece|utiliza|trabalha|usa)\b/i.test(normalized) ||
+    /\bmatriz de (skills|competencias|habilidades)\b/i.test(normalized)
+
+  if (isSkillsQuery) {
     return { intent: 'SKILLS_MATRIX', params: {} }
   }
 
-  // 4. Linha do Tempo e Experiências Profissionais
-  const careerKeywords = ['trajetória profissional', 'trajetoria profissional', 'histórico profissional', 'historico profissional', 'onde trabalhou', 'empresas onde trabalhou', 'experiência profissional', 'experiencia profissional', 'trabalhou na turno', 'trabalhou na accenture', 'trabalhou na full comms', 'trabalhou na evoke']
-  if (careerKeywords.some((k) => lower.includes(k))) {
+  // 5. Linha do Tempo e Experiências Profissionais
+  const isCareerQuery =
+    /\b(trajetoria|historico|experiencia)\b.*?\b(profissional|de trabalho|de carreira|carreira)\b/i.test(normalized) ||
+    /\bonde\b.*?\b(trabalhou|atuou|passou)\b/i.test(normalized) ||
+    /\bempresas\b.*?\b(onde|que)\b.*?\b(trabalhou|atuou|passou)\b/i.test(normalized) ||
+    /\btrabalhou na\b/i.test(normalized) ||
+    /\bcarreira do richter\b/i.test(normalized)
+
+  if (isCareerQuery) {
     let company: string | null = null
-    if (lower.includes('turno')) company = 'Turno'
-    else if (lower.includes('accenture')) company = 'Accenture'
-    else if (lower.includes('full comms')) company = 'Full Comms'
-    else if (lower.includes('evoke')) company = 'Evoke'
-    else if (lower.includes('ftd')) company = 'Editora FTD'
-    else if (lower.includes('plugae')) company = 'Plugae'
+    if (normalized.includes('turno')) company = 'Turno'
+    else if (normalized.includes('accenture')) company = 'Accenture'
+    else if (normalized.includes('full comms')) company = 'Full Comms'
+    else if (normalized.includes('evoke')) company = 'Evoke'
+    else if (normalized.includes('ftd')) company = 'Editora FTD'
+    else if (normalized.includes('plugae')) company = 'Plugae'
     return { intent: 'CAREER_TIMELINE', params: { company } }
   }
 
-  // 5. Educação e Certificações
-  const eduKeywords = ['formação acadêmica', 'formacao academica', 'graduação', 'graduacao', 'pós-graduação', 'pos-graduacao', 'certificações', 'certificacoes', 'cursos concluídos', 'faculdade']
-  if (eduKeywords.some((k) => lower.includes(k))) {
+  // 6. Educação e Certificações
+  const isEduQuery =
+    /\b(formacao\s+academica|graduacao|pos-graduacao|certificacoes|faculdade|diploma|cursos\s+concluidos)\b/i.test(normalized) ||
+    /\bonde\b.*?\b(estudou|se formou)\b/i.test(normalized)
+
+  if (isEduQuery) {
     return { intent: 'EDUCATION_CERTS', params: {} }
   }
 
-  // 6. Impacto e Métricas Comprovadas
-  const impactKeywords = ['principais métricas', 'principais metricas', 'impacto gerado', 'resultados alcançados', 'cases de sucesso', 'ganho de performance', 'otimizações de impacto']
-  if (impactKeywords.some((k) => lower.includes(k))) {
-    return { intent: 'PROVEN_IMPACT', params: {} }
-  }
+  // 7. Impacto e Métricas Comprovadas
+  const isImpactQuery =
+    /\b(principais\s+)?(metricas|impacto gerado|resultados\s+alcancados|cases\s+de\s+sucesso|ganho\s+de\s+performance|otimizacoes\s+de\s+impacto)\b/i.test(normalized)
 
-  // 7. Decisões Arquiteturais e Governança (ADRs)
-  const adrKeywords = ['decisões de arquitetura', 'decisoes de arquitetura', 'adr', 'adrs', 'protocolo jidoka', 'meta spec', 'governança de arquitetura']
-  if (adrKeywords.some((k) => lower.includes(k))) {
-    const adrMatch = lower.match(/adr[-\s]?0*([1-9])/i)
-    const adrNumber = adrMatch ? parseInt(adrMatch[1], 10) : null
-    return { intent: 'ADR_GOVERNANCE', params: { adrNumber } }
+  if (isImpactQuery) {
+    return { intent: 'PROVEN_IMPACT', params: {} }
   }
 
   return null
