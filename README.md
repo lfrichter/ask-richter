@@ -75,8 +75,12 @@ Todo ciclo de evolução e correção de bugs no repositório segue estritamente
 
 ## 🚀 Principais Features & Inovações Recentes
 
-- **Sanity Content Lake & Structured Retrieval (M1 & M2):** Evolução da base de conhecimento para um Content Lake relacional no Sanity (`apps/studio`), contendo 101 documentos canônicos tipados (skills, experiências, projetos, formação, métricas de impacto e ADRs). Roteamento inteligente de intenções estruturadas via GROQ estático com fallback transparente para o RAG Serverless híbrido e proteção contra alucinações via abstenção explícita (`no_evidence`).
-- **Alinhamento Multilíngue de Respostas (M15 / Multilingual RAG):** Suporte inteligente a múltiplos idiomas (Inglês, Português, Espanhol). A IA identifica a língua da pergunta do usuário e gera a resposta no mesmo idioma, priorizando a mensagem do usuário sobre a língua do contexto factual recuperado do banco de dados.
+- **Sanity Content Lake & Tri-Retrieval Engine (M1 a M6-B):** Evolução da base de conhecimento para um Content Lake relacional no Sanity (`apps/studio`), contendo 101 documentos canônicos tipados (skills, experiências, projetos, formação, métricas de impacto e ADRs). Roteamento inteligente de intenções em 4 camadas:
+  1. **M2 Structured Intent:** Consultas declarativas GROQ (`LIST_PROJECTS`, `PROJECT_BY_TECH`, etc.).
+  2. **M4 Agentic Multi-Hop:** Travessia em grafo determinística via `AgentPlanner` e `KnowledgeGraphRetriever` (máx. 2 hops, 4 calls, deadline 4s).
+  3. **M3 Semantic Search:** Busca semântica e híbrida nativa via Dataset Embeddings do Sanity com pontuação combinada.
+  4. **Fallback Determinístico:** `TSVectorStore` in-memory com abstenção factual estrita (`no_evidence`) eliminando alucinações.
+- **Alinhamento Multilíngue de Respostas (M15 & M6-B / Multilingual RAG):** Suporte nativo a múltiplos idiomas (Inglês, Português, Espanhol). A IA identifica a língua da pergunta do usuário e gera a resposta no mesmo idioma, com vocabulário de roteamento paritário em todas as engines.
 - **RAG 100% Serverless V2 (Next.js App Router):** Motor de RAG executando em funções Serverless no Vercel (ADR-0007/ADR-0008), eliminando a necessidade de contêineres ou servidores dedicados 24/7.
 - **Invariantes de Roteamento de Produção (Zero Render Fallback):** Sanitização automática de URLs em tempo de execução que elimina qualquer desvio para o Render legado em produção, forçando o uso de rotas relativas nativas Vercel (`/api/chat`, `/api/supabase/status`, `/api/supabase/restore`, `/api/ready`).
 - **Resiliência do Supabase & Máquina de Estados Operacional (ADR-0009):** Sistema robusto de detecção de disponibilidade e descongelamento automático do Supabase com 7 estados operacionais estritos (`READY`, `PAUSED`, `WAKING`, `UNAVAILABLE`, `TIMEOUT`, `AUTH_ERROR`, `UNKNOWN`).
@@ -97,8 +101,8 @@ Todo ciclo de evolução e correção de bugs no repositório segue estritamente
              │                           │
         LLM Provider              Embedding Provider
              │                           │
-   ┌─────────┼─────────┬─────────┐       │
-   │         │         │         │       │
+    ┌─────────┼─────────┬─────────┐       │
+    │         │         │         │       │
 Gemini    Ollama   OpenRouter HuggingFace Gemini
 ```
 
@@ -117,7 +121,7 @@ Gemini    Ollama   OpenRouter HuggingFace Gemini
 
 ---
 
-## ☁️ Arquitetura Híbrida de Recuperação & Conhecimento (M2)
+## ☁️ Arquitetura Híbrida da Tri-Retrieval Engine & Sanity Content Lake
 
 ```mermaid
 graph TD
@@ -130,12 +134,14 @@ graph TD
         StatusApi["🔍 /api/supabase/status<br>(Status Classifier)"]
         RestoreApi["⚡ /api/supabase/restore<br>(Server-side Recovery)"]
         ChatApi["🤖 /api/chat<br>(Retrieval Orchestrator)"]
-        Orchestrator["🎯 Orchestrator & Intent Classifier"]
-        TSVec["📦 TSVectorStore (Legacy RAG)"]
+        Orchestrator["🎯 Orchestrator & Router"]
+        TSVec["📦 TSVectorStore (Fallback Resiliente)"]
     end
 
-    subgraph "Sanity Cloud (Knowledge Graph)"
+    subgraph "Sanity Cloud (Knowledge Graph & Content Lake)"
         SanityLake["🧠 Sanity Content Lake<br>(101 Docs / GROQ)"]
+        SanityEmb["🔮 Sanity Dataset Embeddings<br>(text::semanticSimilarity)"]
+        KnowledgeGraph["🕸️ Knowledge Graph Retriever<br>(Multi-Hop Traversal)"]
     end
 
     subgraph "Nuvem Supabase"
@@ -157,9 +163,10 @@ graph TD
     Frontend -- "6. Consulta" --> ChatApi
     ChatApi --> Orchestrator
 
-    Orchestrator -- "7a. Intenção Estruturada" --> SanityLake
-    SanityLake -. "7b. Fallback (empty/error/timeout)" .-> TSVec
-    Orchestrator -- "7c. Pergunta Livre" --> TSVec
+    Orchestrator -- "7a. M2 Structured Intent" --> SanityLake
+    Orchestrator -- "7b. M4 Agentic Multi-Hop" --> KnowledgeGraph
+    Orchestrator -- "7c. M3 Semantic Search" --> SanityEmb
+    SanityLake -. "7d. Fallback (error/empty/timeout)" .-> TSVec
 
     ChatApi -- "8. Contexto Formatado + Prompt" --> GeminiAPI
     GeminiAPI -- "9. Resposta Factual / Abstenção Segura" --> User
@@ -170,6 +177,8 @@ graph TD
     style RestoreApi fill:#D5F5E3
     style ChatApi fill:#D5F5E3
     style SanityLake fill:#FAD7A0
+    style SanityEmb fill:#FAD7A0
+    style KnowledgeGraph fill:#FAD7A0
     style TSVec fill:#D4EFDF
     style SupabaseREST fill:#FEF9E7
     style SupabaseMgmt fill:#FEF9E7
@@ -258,10 +267,10 @@ npm run dev
 ## 🧪 Suíte de Testes Automatizados & Protocolo Jidoka
 
 ### 1. Testes Unitários de Resiliência, Roteamento, Sanity & Multilíngue
-Para executar a suíte completa com **168 testes automatizados** no monorepo (149 no frontend cobrindo Sanity GROQ declarativo M2, Dataset Embeddings M3, Knowledge Graph M4, paridade vetorial, resiliência e alinhamento multilíngue + 19 no backend):
+Para executar a suíte completa com **170 testes automatizados** no monorepo (151 no frontend cobrindo Sanity GROQ declarativo M2, Dataset Embeddings M3, Knowledge Graph M4, paridade vetorial, resiliência e alinhamento multilíngue + 19 no backend):
 
 ```bash
-# Executa os 149 testes do frontend
+# Executa os 151 testes do frontend
 npm --prefix apps/frontend test
 
 # Executa os 19 testes do backend

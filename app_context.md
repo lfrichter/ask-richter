@@ -1,6 +1,6 @@
 # App Context Snapshot
 
-**Generated on:** 2026-09-29  
+**Generated on:** 2026-09-30  
 **Application Name:** Ask Richter — AI Career Agent & Structured Knowledge Platform
 
 ---
@@ -118,13 +118,19 @@ ask-richter/
 * **Testing Frameworks:**
   * Node.js Native Test Runner (`node:test` via `npx tsx --test`) para frontend e backend.
   * Turborepo pipeline para paralelização e caching de testes e linters.
-* **Test Coverage (104 testes / 13 suítes — 100% Pass):**
-  * **Frontend (85 testes):**
+* **Test Coverage (170 testes / 16 suítes — 100% Pass):**
+  * **Frontend (151 testes):**
+    * `server/sanity/agent-eligibility.test.ts` (14 testes): Elegibilidade de queries agênticas multi-hop e conexões em PT e EN.
+    * `server/sanity/agent-integration.test.ts` (16 testes): Integração M4 Agentic no orquestrador e rota `/api/chat`.
+    * `server/sanity/agent-planner.test.ts` (18 testes): Planejamento determinístico e validação de ferramentas permitidas.
+    * `server/sanity/chat-integration.test.ts` (23 testes): Integração e despacho de intenções, abstenções factuais e paridade multilíngue/negativa (B12).
+    * `server/sanity/knowledge-graph-retriever.test.ts` (18 testes): Travessia em grafo, expansão STAR, detecção de ciclos e limites.
+    * `server/sanity/semantic-integration.test.ts` (10 testes): Integração M3 Semantic Retrieval e fallback de buscas livres.
+    * `server/sanity/semantic-retriever.test.ts` (10 testes): Motor de busca semântica e cálculo de score.
+    * `server/sanity/structured-retriever.test.ts` (10 testes): M2 Structured Retrieval, consultas GROQ e orçamentação de tokens.
     * `m15-multilingual.test.ts` (3 testes): Paridade e alinhamento multilíngue (EN/PT/ES).
     * `rag/parity.test.ts` (4 testes): Similaridade de cosseno, decomposição de queries e poda de tokens.
     * `routing.test.ts` (4 testes): Isolamento de rotas relativas na Vercel e invariantes de produção.
-    * `server/sanity/structured-retriever.test.ts` (10 testes): M2 Phase A — Módulo isolado de recuperação estruturada, despacho GROQ estático, timeout de 2.5s, fallbacks determinísticos e token budget.
-    * `server/sanity/chat-integration.test.ts` (10 testes): M2 Phase B — Roteamento de intenções, integração `/api/chat`, abstenção factual (`no_evidence`), isolamento de erro e preservação do RAG livre.
     * `supabase/chaos-verification.test.ts` (28 testes): Matriz de 22 cenários de caos, 5 invariantes comportamentais e Regra da Não-Inferência.
     * `supabase/restore-service.test.ts` (12 testes): Descongelamento via Management API e idempotência.
     * `supabase/status-classifier.test.ts` (14 testes): Classificação dos 7 estados da máquina de status.
@@ -134,7 +140,7 @@ ask-richter/
     * `providers/resilient-llm-provider.test.ts` (10 testes): Resiliência e cascata de fallbacks de LLM.
 * **Quality & Governance Tools:**
   * ESLint 9 (Flat Config no Studio via `@sanity/eslint-config-studio`, ESLint clássico nos apps Next.js).
-  * TypeScript 5.8.3 (`check-types` sem emissão em todos os pacotes).
+  * TypeScript 5.8.3 (`check-types` sem emissão em todos os 8 pacotes).
   * Protocolo Jidoka (`npm run jidoka` executando 14 tasks com Full Turbo).
 
 ---
@@ -147,8 +153,8 @@ Em **28 de Setembro de 2026**, no commit `d13b4be`, foi realizado o congelamento
 * Motor RAG Serverless V2 plenamente operacional em produção;
 * Isolamento total do Supabase e rotas da Vercel.
 
-### 🚀 Marcos Concluídos: Plataforma Sanity (M1 Foundation, M2 Structured & M3 Semantic Retrieval)
-Em **29 de Setembro de 2026**, a arquitetura de conhecimento estruturado e recuperação semântica/híbrida foi implementada e validada de ponta a ponta:
+### 🚀 Marcos Concluídos: Plataforma Sanity (M1 a M6-B)
+Em **29 e 30 de Setembro de 2026**, a arquitetura de conhecimento estruturado e recuperação semântica/agêntica/híbrida foi implementada, testada e consolidada de ponta a ponta:
 
 1. **M1 Foundation (100% Concluído):**
    * **M1.1 (Studio Setup):** `apps/studio` configurado com Sanity v3.78.0, React 19 e ESLint 9.
@@ -167,7 +173,6 @@ Em **29 de Setembro de 2026**, a arquitetura de conhecimento estruturado e recup
    * **Phase B (Integração Cirúrgica no `/api/chat`):**
      * Roteamento de consultas estruturadas para o Sanity com fallback automático para `smartSearch` / `TSVectorStore`.
      * Abstenção explícita no endpoint (`[STATUS: NENHUMA EVIDÊNCIA FACTUAL ENCONTRADA NA BASE DE DADOS]`) eliminando alucinações.
-     * Suíte de testes expandida para 104 testes verdes.
 
 3. **M3 Semantic Retrieval & Hybrid Search (100% Concluído — Gate GO):**
    * **M3.1 (Habilitação de Dataset Embeddings no Content Lake):**
@@ -179,7 +184,6 @@ Em **29 de Setembro de 2026**, a arquitetura de conhecimento estruturado e recup
    * **Phase B (Integração no Orquestrador e `/api/chat`):**
      * `RetrievalOrchestrator.orchestrateFreeform()`: Roteamento de perguntas abertas/livres para o `SemanticRetriever` do Sanity com fallback transparente para `TSVectorStore` em caso de erro/timeout.
      * Suíte B11–B20 em `semantic-integration.test.ts` (10/10 PASS).
-     * Total de testes do monorepo elevado para 124 testes verdes.
 
 4. **M4 Agentic Capabilities & Knowledge Graph (100% Concluído — Gate GO):**
    * **Phase A (Motor Isolado de Grafo de Conhecimento):**
@@ -191,14 +195,19 @@ Em **29 de Setembro de 2026**, a arquitetura de conhecimento estruturado e recup
    * **Phase C (Integração da Tri-Retrieval Engine no `/api/chat`):**
      * `agent-eligibility.ts`: Política semântica estrutural para seleção de consultas relacionais multi-hop sem hardcodes de entidades.
      * `orchestrator.ts`: Adicionado `orchestrateAgentic()` com proveniência completa e fallback determinístico para `TSVectorStore`.
-     * `route.ts`: Roteamento seletivo:
-       1. **M2 Structured Intent:** GROQ declarativo
-       2. **M4 Agentic Multi-Hop:** AgentPlanner + KnowledgeGraph
-       3. **M3 Free-form Semantic:** Dataset Embeddings
-       4. **Fallback:** `TSVectorStore` com abstenção segura
+     * `route.ts`: Roteamento seletivo em 4 camadas (M2 Structured ➔ M4 Agentic ➔ M3 Semantic ➔ Fallback TSVectorStore).
      * Suíte C1–C16 em `agent-integration.test.ts` (100% PASS).
-     * Total de testes do monorepo elevado para **168 testes verdes (149 frontend + 19 backend)**.
-     * Smoke tests HTTP reais (C18 & C19) executados contra todas as engines com 100% de aprovação e auditoria de latência.
+
+5. **M5 Smoke & Bug Resolution (100% Concluído):**
+   * Resolução da quota do Tier 1, correção de schemas de retorno e validação HTTP em tempo real.
+
+6. **M6 Full Regression Suite & M6-B Surgical Intent Routing Fix (100% Concluído — GREEN `c858972`):**
+   * Resolução cirúrgica dos gaps de routing identificados na auditoria de regressão:
+     - **T07:** Detecção de relacionamentos multi-entidade roteando para `M4_AGENTIC`.
+     - **T10:** Guarda ordinal/específica (`isOrdinalOrRelational`) separando consultas pontuais de catálogo e roteando para `M3_SEMANTIC` com abstenção factual segura (Zero Hallucination).
+     - **ML_EN:** Paridade multilíngue completa no vocabulário de projetos (`hasProjectContext`), permitindo que "Which projects use React?" ative `M2_STRUCTURED / PROJECT_BY_TECH` com paridade perfeita em relação ao PT e ES.
+   * Execução e aprovação de 17/17 casos HTTP reais na suíte de regressão de ponta a ponta (`docs/Plans/Evolve-to-Sanity/Test-Runs/`).
+   * Total de testes elevado para **170 testes verdes** (151 frontend + 19 backend) sem regressões.
 
 ### Débitos Técnicos Identificados & Áreas em Transição
 1. **Coexistência de Fontes de Verdade em Transição:** O `TSVectorStore` (`docstore.json` / `vectors.json`) atua como fallback resiliente e secundário caso o Sanity Content Lake fique indisponível.
