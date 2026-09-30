@@ -20,8 +20,10 @@ const MULTI_HOP_PATTERNS = [
   /como (?:o|a|os|as) .+ (?:influenciou|impactou|resultou em|gerou)/i,
   /qual (?:a|o) rela[çc][aã]o entre .+ e .+/i,
   /como .+ se relaciona(?:m)? com .+/i,
+  /quais .+ (?:conectam|ligam|relacionam) .+ (?:a|ao|à|às|com|e) .+/i,
   /how did .+ (?:influence|impact|result in|affect) .+/i,
   /what is the (?:relationship|connection|link) between .+ and .+/i,
+  /(?:which|what) (?:technologies|tools|skills|concepts)?\s*(?:connect|link|relate) .+ to .+/i,
 ]
 
 // Padrões estruturais para Conquistas / Métricas ligadas a Contexto Operacional

@@ -19,8 +19,10 @@ describe('M4 — Agent Eligibility Module', () => {
   it('Deve reconhecer padrões de Causalidade e Relacionamento Multi-Entidade', () => {
     assert.strictEqual(isAgenticMultiHopQuery('Como a liderança técnica influenciou a retenção de clientes?'), true)
     assert.strictEqual(isAgenticMultiHopQuery('Qual a relação entre o projeto Mid-Stay e o aumento de faturamento?'), true)
+    assert.strictEqual(isAgenticMultiHopQuery('Quais tecnologias conectam o projeto Ask Richter às experiências profissionais do Richter?'), true)
     assert.strictEqual(isAgenticMultiHopQuery('How did the migration impact the system performance?'), true)
     assert.strictEqual(isAgenticMultiHopQuery('What is the connection between his role at Turno and the CI/CD pipeline?'), true)
+    assert.strictEqual(isAgenticMultiHopQuery('Which technologies connect the Ask Richter project to his professional career?'), true)
   })
 
   it('Deve reconhecer padrões de Impacto e Métricas em Contexto', () => {

@@ -258,7 +258,7 @@ export function detectStructuredIntent(
 
   if (isAdrQuery) {
     const adrMatch = normalized.match(/adr[-\s]?0*([1-9]\d*)/i)
-    const adrNumber = adrMatch ? parseInt(adrMatch[1], 10) : null
+    const adrNumber = adrMatch && adrMatch[1] ? parseInt(adrMatch[1], 10) : null
     return { intent: 'ADR_GOVERNANCE', params: { adrNumber } }
   }
 
@@ -281,8 +281,8 @@ export function detectStructuredIntent(
   }
 
   const hasProjectContext =
-    /\bprojeto(s)?\b/i.test(normalized) ||
-    /\b(desenvolveu|criou|construiu|atuou|trabalhou)\b/i.test(normalized)
+    /\b(projeto|projetos|project|projects|proyecto|proyectos)\b/i.test(normalized) ||
+    /\b(desenvolveu|criou|construiu|atuou|trabalhou|developed|created|built|worked\s+on|worked\s+with|desarrollo|creo|construyo|trabajo)\b/i.test(normalized)
 
   if (techMatches.length > 0 && hasProjectContext) {
     return { intent: 'PROJECT_BY_TECH', params: { technologies: techMatches } }
@@ -293,12 +293,22 @@ export function detectStructuredIntent(
     return { intent: 'LIST_PROJECTS', params: {} }
   }
 
+  // Anti-greedy guards: não interceptar consultas relacionais, comparativas ou ordinais/únicas como catálogo
+  const isOrdinalOrRelational =
+    /\b(primeiro|ultimo|first|last|primer|unico|single)\s+(projeto|project|proyecto)\b/i.test(normalized) ||
+    /\b(conectam|conectan|connect|relaciona|relacao|relationship)\b/i.test(normalized)
+
   const isListProjectsQuery =
-    /\b(quais|qual|listar|liste|lista|mostre|me mostre|ver|exibir|todos os|todos|catalogo de|portfolio de)\b.*?\bprojeto(s)?\b/i.test(normalized) ||
-    /\bem quais projetos\b/i.test(normalized) ||
-    /\bprojeto(s)?\b.*?\b(desenvolvido(s)?|criado(s)?|atuou|trabalhou|realizado(s)?|disponiveis|feitos?)\b/i.test(normalized) ||
-    /\b(quantos|lista de|catalogo de|portfolio de)\b.*?\bprojeto(s)?\b/i.test(normalized) ||
-    /\bprojetos\s+(do\s+)?richter\b/i.test(normalized)
+    !isOrdinalOrRelational &&
+    (/\b(quais|qual|listar|liste|lista|mostre|me mostre|ver|exibir)\s+(sao\s+os\s+|foram\s+os\s+|os\s+|de\s+)?(projetos|projects|proyectos)\b/i.test(normalized) ||
+      /\b(todos\s+os|todos\s+los|all\s+the|all)\s+(projetos|projects|proyectos)\b/i.test(normalized) ||
+      /\b(catalogo|portfolio|portfólio|lista)\s+(de\s+)?(projetos|projects|proyectos)\b/i.test(normalized) ||
+      /\b(em\s+quais|in\s+which|en\s+que)\s+(projetos|projects|proyectos)\b/i.test(normalized) ||
+      /\b(quantos|how\s+many|cuantos)\s+(projetos|projects|proyectos)\b/i.test(normalized) ||
+      /\b(projetos|projects|proyectos)\s+(do\s+|de\s+|by\s+)?richter\b/i.test(normalized) ||
+      /\b(projetos|projects|proyectos)\s+(desenvolvidos|criados|realizados|disponiveis|feitos|developed|created|built)\b/i.test(normalized) ||
+      /\b(quais|which)\s+(projetos|projects|proyectos)\s+(o\s+richter|ele|he|el)\s+(desenvolveu|criou|fez|atuou|trabalhou|developed|built|created)\b/i.test(normalized) ||
+      /\b(which|list)\s+projects\b/i.test(normalized))
 
   if (isListProjectsQuery) {
     return { intent: 'LIST_PROJECTS', params: {} }
@@ -306,10 +316,11 @@ export function detectStructuredIntent(
 
   // 4. Matriz de Skills / Competências Técnicas
   const isSkillsQuery =
-    /\b(quais|qual|listar|liste|mostrar|me mostre|todas as|quais sao as)\b.*?\b(tecnologias|skills|linguagens|ferramentas|competencias|habilidades)\b/i.test(normalized) ||
-    /\b(stack|conhecimentos|skills|competencias|habilidades)\b.*?\btecnic(o|as|os)\b/i.test(normalized) ||
-    /\btecnologias que (domina|conhece|utiliza|trabalha|usa)\b/i.test(normalized) ||
-    /\bmatriz de (skills|competencias|habilidades)\b/i.test(normalized)
+    !isOrdinalOrRelational &&
+    (/\b(quais|qual|listar|liste|mostrar|me mostre|todas as|quais sao as)\b.*?\b(tecnologias|skills|linguagens|ferramentas|competencias|habilidades)\b/i.test(normalized) ||
+      /\b(stack|conhecimentos|skills|competencias|habilidades)\b.*?\btecnic(o|as|os)\b/i.test(normalized) ||
+      /\btecnologias que (domina|conhece|utiliza|trabalha|usa)\b/i.test(normalized) ||
+      /\bmatriz de (skills|competencias|habilidades)\b/i.test(normalized))
 
   if (isSkillsQuery) {
     return { intent: 'SKILLS_MATRIX', params: {} }

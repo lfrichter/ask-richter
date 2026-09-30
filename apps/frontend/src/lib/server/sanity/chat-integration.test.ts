@@ -296,5 +296,52 @@ describe('M2 Phase B — Chat Integration & Intent Routing Suite', () => {
       assert.strictEqual(match.intent, intent, `Query "${query}" deve mapear para ${intent}`)
     }
   })
+
+  // B12: MULTILINGUAL_AND_NEGATIVE_ROUTING (M6-B Hardening)
+  it('B12-MULTILINGUAL_AND_NEGATIVE_ROUTING: Paridade PT/EN/ES em PROJECT_BY_TECH e anti-regressão negativa em LIST_PROJECTS', () => {
+    // 1. Positive Multilingual Parity for PROJECT_BY_TECH
+    const multilingualTechCases = [
+      { query: 'Quais projetos usam React?', tech: 'React' },
+      { query: 'Which projects use React?', tech: 'React' },
+      { query: '¿Qué proyectos utilizan React?', tech: 'React' },
+      { query: 'Projects developed with Laravel', tech: 'Laravel' },
+      { query: 'Proyectos creados con Vue', tech: 'Vue' },
+    ]
+
+    for (const { query, tech } of multilingualTechCases) {
+      const match = detectStructuredIntent(query)
+      assert.ok(match, `Query "${query}" deve ser detectada como estruturada`)
+      assert.strictEqual(match.intent, 'PROJECT_BY_TECH', `Query "${query}" deve mapear para PROJECT_BY_TECH`)
+      assert.ok(match.params.technologies.includes(tech), `Query "${query}" deve extrair a tecnologia ${tech}`)
+    }
+
+    // 2. Positive Catalog Listing
+    const positiveCatalog = [
+      'Quais projetos existem?',
+      'Quais são os projetos?',
+      'Which projects did Richter develop?',
+      'All the projects',
+      'List all projects',
+    ]
+    for (const q of positiveCatalog) {
+      const match = detectStructuredIntent(q)
+      assert.ok(match, `Query "${q}" deve ser detectada como estruturada`)
+      assert.strictEqual(match.intent, 'LIST_PROJECTS', `Query "${q}" deve mapear para LIST_PROJECTS`)
+    }
+
+    // 3. Negative / Anti-regression guards (queries contendo "projeto/project" que NÃO são catálogo)
+    const negativeCatalogQueries = [
+      'Quais tecnologias conectam o projeto Ask Richter às experiências profissionais do Richter?',
+      'Qual foi o primeiro projeto do Richter usando tecnologia XYZ-UNEXISTENT?',
+      'Como o projeto Ask Richter se relaciona com a carreira dele?',
+      'Which technologies connect the Ask Richter project to his career?',
+      'Which was the first project using XYZ-UNEXISTENT?',
+    ]
+
+    for (const q of negativeCatalogQueries) {
+      const match = detectStructuredIntent(q)
+      assert.notStrictEqual(match?.intent, 'LIST_PROJECTS', `Query "${q}" NÃO deve ser classificada como LIST_PROJECTS`)
+    }
+  })
 })
 
