@@ -26,3 +26,17 @@
 - Vercel is deprecating Node.js 20.x on September 30, 2026.
 - Setting `engines.node` to `>=22` ensures Vercel and CI/CD pipelines compile and deploy using Node.js 22 LTS, removing build deprecation warnings.
 
+## 2026-10-15 - Vercel Node.js 22.x Engine Explicit Alignment
+
+### Changes
+- Updated root `package.json`:
+  - `engines.node`: `>=22` -> `22.x`
+- Updated `apps/frontend/package.json`:
+  - Added `engines.node`: `22.x`
+- Updated `apps/web/package.json`:
+  - Added `engines.node`: `22.x`
+
+### Rationale
+- Following Node.js 20.x full discontinuation on Vercel, open-ended semver ranges such as `>=22` failed to map to a discrete runtime, causing Vercel to fall back to the deprecated project setting (`20.x`) and reject deployments.
+- Setting explicit `22.x` in root and workspace package manifests ensures Vercel unambiguously resolves Node.js 22 LTS runtime during build initialization and takes precedence over project-level defaults.
+
