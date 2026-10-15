@@ -1,14 +1,9 @@
 {
   "mcpServers": {
-    "sanity": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@sanity/mcp-server@latest"
-      ],
-      "env": {
-        "SANITY_PROJECT_ID": "q19ey6yx",
-        "SANITY_DATASET": "production"
+    "Sanity": {
+      "serverUrl": "https://mcp.sanity.io",
+      "headers": {
+        "Authorization": "Bearer skT5gppaCtFtlQ1vYgPHx0nQS1MbtIsQSXhj5L9nTBaXutKX7ycgsK2ASF48xavJLd5plJKtHXEZuBCnx"
       }
     }
   }

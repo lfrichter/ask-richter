@@ -1,0 +1,19 @@
+{
+  "servers": {
+    "Sanity": {
+      "url": "https://mcp.sanity.io",
+      "headers": {
+        "Authorization": "Bearer skT5gppaCtFtlQ1vYgPHx0nQS1MbtIsQSXhj5L9nTBaXutKX7ycgsK2ASF48xavJLd5plJKtHXEZuBCnx"
+      }
+    }
+  },
+  "mcpServers": {
+    "Sanity": {
+      "serverUrl": "https://mcp.sanity.io",
+      "url": "https://mcp.sanity.io",
+      "headers": {
+        "Authorization": "Bearer skT5gppaCtFtlQ1vYgPHx0nQS1MbtIsQSXhj5L9nTBaXutKX7ycgsK2ASF48xavJLd5plJKtHXEZuBCnx"
+      }
+    }
+  }
+}
