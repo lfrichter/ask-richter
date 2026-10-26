@@ -34,5 +34,5 @@
 This directory contains comprehensive evidence and artifacts prepared for the Sanity Challenge review:
 
 1. 🎬 **[Demo Script (`demo-script.md`)](demo-script.md)**: The validated 6-question demonstration script showing M2, M3, M4, cardinality, and zero-trust safety.
-2. 🏛️ **[Deep Architecture (`architecture.md`)](architecture.md)**: Detailed breakdown of the Content Lake ontologies, Tri-Retrieval Engine, and fallback mechanisms.
+2. 🏛️ **[Deep Architecture (`architecture.md`)](A-Projetos/AskRichter/Docs/submission/architecture.md)**: Detailed breakdown of the Content Lake ontologies, Tri-Retrieval Engine, and fallback mechanisms.
 3. 🧪 **[Test & Verification Evidence (`test-evidence.md`)](test-evidence.md)**: Complete test execution logs, Jidoka gate results, and regression reports.

@@ -3,7 +3,7 @@
     "Sanity": {
       "serverUrl": "https://mcp.sanity.io",
       "headers": {
-        "Authorization": "Bearer skT5gppaCtFtlQ1vYgPHx0nQS1MbtIsQSXhj5L9nTBaXutKX7ycgsK2ASF48xavJLd5plJKtHXEZuBCnx"
+        "Authorization": "Bearer ${env:SANITY_AUTH_TOKEN}"
       }
     }
   }
