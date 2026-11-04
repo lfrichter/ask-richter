@@ -1,16 +1,15 @@
 'use client';
 
-import React from 'react';
 import { AIChatInput } from "@/components/ui/ai-chat-input";
 import { BackgroundPaths } from "@/components/ui/background-paths";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SupabaseUnfreezeModal } from "@/components/ui/supabase-unfreeze-modal";
-import Markdown from 'markdown-to-jsx';
-import Image from 'next/image';
-import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
-import dynamic from 'next/dynamic';
 import { ExternalLink } from 'lucide-react';
-import myAdjustedOk from '../../public/images/AvatarCircle.png';
+import Markdown from 'markdown-to-jsx';
+import dynamic from 'next/dynamic';
+import Image from 'next/image';
+import React, { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
+import logoAskRichter from '../../public/images/Logo-askRichter-03a.png';
 
 const CodeBlock = dynamic(
   () => import('../components/CodeBlock').then(mod => mod.CodeBlock),
@@ -178,13 +177,14 @@ export default function Chat() {
                     title="To learn more about this project, visit my website."
                     aria-label="To learn more about this project, visit my website."
                   >
-                    <div className="relative flex-shrink-0">
+                    <div className="relative flex-shrink-0 flex items-center justify-center">
                       <Image
-                        src={myAdjustedOk}
-                        alt="Luis Fernando Richter"
-                        width={50}
-                        height={50}
-                        className="rounded-full transition-transform duration-300 group-hover:scale-105 ring-2 ring-transparent group-hover:ring-blue-500/40"
+                        src={logoAskRichter}
+                        alt="Logo Ask Richter"
+                        width={56}
+                        height={56}
+                        className="w-14 h-14 object-contain rounded-xl transition-transform duration-300 group-hover:scale-105 shadow-sm"
+                        priority
                       />
                     </div>
                     <div className="text-left">
