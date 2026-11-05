@@ -282,6 +282,10 @@ describe('M2 Phase B — Chat Integration & Intent Routing Suite', () => {
     const otherVariations = [
       { query: 'Onde o Richter trabalhou?', intent: 'CAREER_TIMELINE' },
       { query: 'Empresas onde o Richter atuou', intent: 'CAREER_TIMELINE' },
+      { query: 'Quais empresas ele trabalhou?', intent: 'CAREER_TIMELINE' },
+      { query: 'Em quais empresas atuou?', intent: 'CAREER_TIMELINE' },
+      { query: 'Which companies did he work for?', intent: 'CAREER_TIMELINE' },
+      { query: 'Where did he work?', intent: 'CAREER_TIMELINE' },
       { query: 'Quais tecnologias o Richter domina?', intent: 'SKILLS_MATRIX' },
       { query: 'Quais são as suas habilidades técnicas?', intent: 'SKILLS_MATRIX' },
       { query: 'Qual a formação acadêmica dele?', intent: 'EDUCATION_CERTS' },

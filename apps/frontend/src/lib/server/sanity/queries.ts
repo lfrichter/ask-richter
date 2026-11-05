@@ -328,20 +328,26 @@ export function detectStructuredIntent(
 
   // 5. Linha do Tempo e Experiências Profissionais
   const isCareerQuery =
-    /\b(trajetoria|historico|experiencia)\b.*?\b(profissional|de trabalho|de carreira|carreira)\b/i.test(normalized) ||
-    /\bonde\b.*?\b(trabalhou|atuou|passou)\b/i.test(normalized) ||
-    /\bempresas\b.*?\b(onde|que)\b.*?\b(trabalhou|atuou|passou)\b/i.test(normalized) ||
-    /\btrabalhou na\b/i.test(normalized) ||
-    /\bcarreira do richter\b/i.test(normalized)
+    /\b(trajetoria|historico|experiencia|experiencias|carreira|career|trajectory|trayectoria)\b.*?\b(profissional|profissionais|de trabalho|de carreira|carreira|professional|laboral)\b/i.test(normalized) ||
+    /\b(carreira|career|trayectoria)\s+(do|de|of)?\s*richter\b/i.test(normalized) ||
+    /\b(onde|where|donde)\b.*?\b(trabalhou|atuou|passou|work|worked|trabajo|laboro)\b/i.test(normalized) ||
+    /\b(empresas|companhias|companies|companias)\b.*?\b(trabalhou|atuou|passou|work|worked|trabajo|laboro)\b/i.test(normalized) ||
+    /\b(quais|qual|em quais|quais sao|quais foram|which|what|en que)\b.*?\b(empresas|companhias|companies|companias)\b/i.test(normalized) ||
+    /\b(lista|listar|liste|list|ver|mostrar|me mostre)\s+(das?\s+|de\s+)?(empresas|experiencias|experiencias profissionais)\b/i.test(normalized) ||
+    /\btrabalhou na\b/i.test(normalized)
 
   if (isCareerQuery) {
     let company: string | null = null
     if (normalized.includes('turno')) company = 'Turno'
     else if (normalized.includes('accenture')) company = 'Accenture'
-    else if (normalized.includes('full comms')) company = 'Full Comms'
+    else if (normalized.includes('full comms') || normalized.includes('fullcomms')) company = 'Full Comms'
     else if (normalized.includes('evoke')) company = 'Evoke'
     else if (normalized.includes('ftd')) company = 'Editora FTD'
     else if (normalized.includes('plugae')) company = 'Plugae'
+    else if (normalized.includes('alfasoft')) company = 'Alfasoft'
+    else if (normalized.includes('pilha')) company = 'Pilha Digital'
+    else if (normalized.includes('promoedu')) company = 'Promoedu'
+    else if (normalized.includes('aso')) company = 'ASO'
     return { intent: 'CAREER_TIMELINE', params: { company } }
   }
 
