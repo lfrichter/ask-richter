@@ -986,12 +986,12 @@ export const projects: SanityDoc[] = [
   {
     _id: 'proj-brnow-voice-saas',
     _type: 'project',
-    name: 'BrNow Voice Support SaaS & AI Platform',
+    name: 'EuPizza / Robô de Atendimento por Voz (BRNow Voice Support)',
     slug: { _type: 'slug', current: 'brnow-voice-saas' },
     category: 'production_saas',
     status: 'completed',
     summary:
-      'Plataforma de atendimento por voz com IA generativa e telefonia SIP/WebRTC em tempo real orquestrada em Docker Swarm com modelo multi-tenant SaaS e billing por minuto.',
+      'Plataforma SaaS de atendimento por voz com IA generativa e telefonia SIP/WebRTC em tempo real orquestrada em Docker Swarm com modelo multi-tenant e billing por minuto.',
     description:
       'Arquitetura de microsserviços separando Controller API e Voice Agent, com integração LiveKit, Deepgram STT, OpenAI/ElevenLabs TTS e Supabase com Row Level Security.',
     architecture:
@@ -1382,58 +1382,86 @@ export const projects: SanityDoc[] = [
     legacyFile: 'apps/backend/src/knowledge-base/CV-Consolidated.md',
   },
   {
-    _id: 'proj-financial-ai-agent',
+    _id: 'proj-video-factory',
     _type: 'project',
-    name: 'Financial Analysis & Stock Intelligence AI Agent',
-    slug: { _type: 'slug', current: 'financial-ai-agent' },
-    category: 'ai_engineering_poc',
+    name: 'Fábrica de Vídeos Automatizada para YouTube (Video Factory)',
+    slug: { _type: 'slug', current: 'video-factory-automated' },
+    category: 'ai_automation',
     status: 'completed',
     summary:
-      'Agente de Inteligência Financeira e Análise de Ações utilizando LangChain, modelos LLM e recuperação RAG de demonstrações financeiras (DRE/Balanços).',
+      'Fábrica autônoma de criação e publicação de vídeos para YouTube com arquitetura em Monolito Modular em Python 3.11, síntese de voz (TTS ElevenLabs e Coqui offline), legendas Whisper, montagem em 2 etapas no FFmpeg e microserviço REST em Flask.',
     description:
-      'Sistema capaz de interpretar dados financeiros de empresas de capital aberto, sintetizar relatórios trimestrais e responder perguntas complexas sobre múltiplos de valuation.',
-    architecture: 'Python, LangChain, embeddings vetoriais, FastAPI e frontend interativo em Next.js.',
+      'Pipeline de automação de ponta a ponta com banco de dados SQLite, controle de enquadramento vertical, ambientação sonoro com Jamendo API e agendamento de publicações autônomas via YouTube Data API v3 e macOS launchd.',
+    architecture: 'Python 3.11, Flask REST API, SQLite 3.45, FFmpeg, Whisper local, Coqui TTS, ElevenLabs API e YouTube Data API v3.',
     challenges: [
       {
-        challenge: 'Garantir precisão numérica rigorosa e evitar alucinações em dados contábeis',
-        solution: 'Recuperação baseada em tabelas com extração determinística e grounding estrito em notas explicativas',
-        result: 'Análises financeiras estruturadas e confiáveis com fontes auditáveis',
+        challenge: 'Eliminar tremores e instabilidade visual (judder/jitter) na montagem automática de vídeos verticais',
+        solution: 'Desenvolvimento de algoritmo de renderização em duas etapas com filtros dinâmicos de enquadramento no FFmpeg',
+        result: 'Vídeos verticais perfeitamente estabilizados e alta qualidade visual para Shorts do YouTube',
       },
     ],
     technologies: [
       { _type: 'reference', _ref: 'skill-python' },
-      { _type: 'reference', _ref: 'skill-rag' },
-      { _type: 'reference', _ref: 'skill-nextjs' },
-    ],
-    legacySourceId: 'project:financial-ai-agent',
-    legacyFile: 'apps/backend/src/knowledge-base/PoC-Challenges-SideProjects-Consolidated.md',
-  },
-  {
-    _id: 'proj-rag-multimodal-poc',
-    _type: 'project',
-    name: 'Multimodal Document RAG & Vision Analysis PoC',
-    slug: { _type: 'slug', current: 'rag-multimodal-poc' },
-    category: 'ai_engineering_poc',
-    status: 'completed',
-    summary:
-      'PoC de RAG multimodal processando simultaneamente texto, tabelas e diagramas arquiteturais em PDFs complexos com modelos de visão e embeddings.',
-    description:
-      'Pipeline de indexação e recuperação que segmenta páginas em blocos visuais e textuais, permitindo perguntas sobre gráficos e fluxogramas.',
-    architecture: 'Python, Gemini Multimodal API, LangChain, TSVectorStore e contêineres Docker.',
-    challenges: [
-      {
-        challenge: 'Extrair significado semântico de diagramas e fluxogramas contidos em documentos PDF',
-        solution: 'Uso de modelos de visão generativa para transcrição semântica de imagens e indexação combinada',
-        result: 'Capacidade de resposta fundamentada sobre especificações visuais de engenharia',
-      },
-    ],
-    technologies: [
-      { _type: 'reference', _ref: 'skill-python' },
-      { _type: 'reference', _ref: 'skill-rag' },
+      { _type: 'reference', _ref: 'skill-sqlite' },
       { _type: 'reference', _ref: 'skill-docker' },
     ],
-    legacySourceId: 'project:rag-multimodal-poc',
-    legacyFile: 'apps/backend/src/knowledge-base/PoC-Challenges-SideProjects-Consolidated.md',
+    legacySourceId: 'project:video-factory',
+    legacyFile: 'B-Areas/Particular/Curriculo/Projects/2025-2026/Project - Video Factory Automated.md',
+  },
+  {
+    _id: 'proj-semantic-cache',
+    _type: 'project',
+    name: 'Cache Semântico FAISS para LLMs (Semantic Cache)',
+    slug: { _type: 'slug', current: 'semantic-cache' },
+    category: 'ai_engineering_poc',
+    status: 'completed',
+    summary:
+      'PoC de cache semântico de alta performance utilizando FAISS e OpenAI text-embedding-3-small, reduzindo custos de API em até 85% e latência de ~1.5s para ~15ms em consultas redundantes.',
+    description:
+      'Microsserviço em FastAPI com threshold dinâmico de similaridade cosseno, indexação vetorial FAISS, persistência de metadados em Redis e telemetria de cache hit/miss.',
+    architecture: 'Python, FastAPI, FAISS (Facebook AI Similarity Search), OpenAI Embeddings, Redis e Docker.',
+    challenges: [
+      {
+        challenge: 'Reduzir custos e tempo de resposta de chamadas repetitivas ou semanticamente equivalentes a LLMs',
+        solution: 'Indexação de embeddings com busca vetorial exata em memória via FAISS e fallback para API de LLM apenas em cache miss',
+        result: 'Economia de 85% em tokens de inferência e tempo de resposta abaixo de 20ms',
+      },
+    ],
+    technologies: [
+      { _type: 'reference', _ref: 'skill-python' },
+      { _type: 'reference', _ref: 'skill-openai-api' },
+      { _type: 'reference', _ref: 'skill-redis' },
+      { _type: 'reference', _ref: 'skill-docker' },
+    ],
+    repositoryUrl: 'https://github.com/lfrichter/semantic-cache',
+    legacySourceId: 'project:semantic-cache',
+    legacyFile: 'B-Areas/Particular/Curriculo/Projects/2025-2026/PoC - Cache Semântico de Alta Performance.md',
+  },
+  {
+    _id: 'proj-pyspark-analysis',
+    _type: 'project',
+    name: 'Análise de Jobs de Renderização com PySpark e Jupyter',
+    slug: { _type: 'slug', current: 'pyspark-jobs-analysis' },
+    category: 'ai_engineering_poc',
+    status: 'completed',
+    summary:
+      'PoC de processamento distribuído de big data com PySpark e Jupyter Notebooks para análise de 100k+ registros de renderização, identificando gargalos e otimizando pipelines de renderização.',
+    description:
+      'Ambiente analítico conteinerizado em Docker com cluster Spark local, processamento de DataFrames com transformações distribuídas, agregações estatísticas e visualizações gráficas de performance.',
+    architecture: 'Python, Apache Spark / PySpark, Jupyter Lab, Pandas, Matplotlib e Docker.',
+    challenges: [
+      {
+        challenge: 'Processar e extrair padrões estatísticos de volumosos logs de jobs de renderização de vídeo',
+        solution: 'Utilização do Apache Spark com PySpark para processamento paralelo distribuído de DataFrames em contêiner Docker',
+        result: 'Identificação precisa de anomalias de latência e consumo de recursos nos jobs de renderização',
+      },
+    ],
+    technologies: [
+      { _type: 'reference', _ref: 'skill-python' },
+      { _type: 'reference', _ref: 'skill-docker' },
+    ],
+    legacySourceId: 'project:pyspark-jobs',
+    legacyFile: 'B-Areas/Particular/Curriculo/Projects/2025-2026/PoC - Data Analisys using Spark and Jupyter.md',
   },
 ]
 

@@ -1,14 +1,14 @@
 {
   "version": "1.0.0",
-  "generatedAt": "2026-09-29T13:02:59.679Z",
+  "generatedAt": "2026-11-05T13:57:11.410Z",
   "counts": {
     "experience": 10,
-    "project": 18,
+    "project": 19,
     "skill": 38,
     "education": 14,
     "achievement": 12,
     "architectureDecision": 9,
-    "total": 101
+    "total": 102
   },
   "documents": [
     {
@@ -935,7 +935,7 @@
     {
       "_id": "proj-brnow-voice-saas",
       "_type": "project",
-      "titleOrName": "BrNow Voice Support SaaS & AI Platform",
+      "titleOrName": "EuPizza / Robô de Atendimento por Voz (BRNow Voice Support)",
       "sourceFile": "apps/backend/src/knowledge-base/Experience-Consolidated.md",
       "legacySourceId": "project:brnow-voice-saas",
       "referenceCount": 3,
@@ -1181,16 +1181,34 @@
       }
     },
     {
-      "_id": "proj-financial-ai-agent",
+      "_id": "proj-video-factory",
       "_type": "project",
-      "titleOrName": "Financial Analysis & Stock Intelligence AI Agent",
-      "sourceFile": "apps/backend/src/knowledge-base/PoC-Challenges-SideProjects-Consolidated.md",
-      "legacySourceId": "project:financial-ai-agent",
+      "titleOrName": "Fábrica de Vídeos Automatizada para YouTube (Video Factory)",
+      "sourceFile": "B-Areas/Particular/Curriculo/Projects/2025-2026/Project - Video Factory Automated.md",
+      "legacySourceId": "project:video-factory",
       "referenceCount": 3,
       "references": [
         "skill-python",
-        "skill-rag",
-        "skill-nextjs"
+        "skill-sqlite",
+        "skill-docker"
+      ],
+      "fieldsSummary": {
+        "category": "ai_automation",
+        "status": "completed"
+      }
+    },
+    {
+      "_id": "proj-semantic-cache",
+      "_type": "project",
+      "titleOrName": "Cache Semântico FAISS para LLMs (Semantic Cache)",
+      "sourceFile": "B-Areas/Particular/Curriculo/Projects/2025-2026/PoC - Cache Semântico de Alta Performance.md",
+      "legacySourceId": "project:semantic-cache",
+      "referenceCount": 4,
+      "references": [
+        "skill-python",
+        "skill-openai-api",
+        "skill-redis",
+        "skill-docker"
       ],
       "fieldsSummary": {
         "category": "ai_engineering_poc",
@@ -1198,15 +1216,14 @@
       }
     },
     {
-      "_id": "proj-rag-multimodal-poc",
+      "_id": "proj-pyspark-analysis",
       "_type": "project",
-      "titleOrName": "Multimodal Document RAG & Vision Analysis PoC",
-      "sourceFile": "apps/backend/src/knowledge-base/PoC-Challenges-SideProjects-Consolidated.md",
-      "legacySourceId": "project:rag-multimodal-poc",
-      "referenceCount": 3,
+      "titleOrName": "Análise de Jobs de Renderização com PySpark e Jupyter",
+      "sourceFile": "B-Areas/Particular/Curriculo/Projects/2025-2026/PoC - Data Analisys using Spark and Jupyter.md",
+      "legacySourceId": "project:pyspark-jobs",
+      "referenceCount": 2,
       "references": [
         "skill-python",
-        "skill-rag",
         "skill-docker"
       ],
       "fieldsSummary": {
